@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://dghoogotf0r7u"]
+
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_43a8g"]
+[ext_resource type="Script" path="res://Scenes/Actors/Fish.gd" id="1_074yi"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_34u5r"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_84wnk"]
+atlas = ExtResource("1_43a8g")
+region = Rect2(595, 187, 16, 16)
+
+[node name="Fish" type="CharacterBody2D"]
+script = ExtResource("1_074yi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_34u5r")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = SubResource("AtlasTexture_84wnk")

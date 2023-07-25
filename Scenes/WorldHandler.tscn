@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0xxl3pylly7j"]
+
+[ext_resource type="Script" path="res://Scenes/WorldHandler.gd" id="1_o8f5f"]
+
+[node name="WorldHandler" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_o8f5f")

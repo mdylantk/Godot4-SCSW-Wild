@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://iipxt41yiebb"]
+
+[ext_resource type="FontFile" uid="uid://balaot7vew3u4" path="res://Data/Assets/Kenney_fonts/Kenney Mini Square Mono.ttf" id="1_wf56d"]
+
+[resource]
+default_font = ExtResource("1_wf56d")
+RichTextLabel/colors/default_color = Color(0.808594, 0.773438, 0.71875, 1)

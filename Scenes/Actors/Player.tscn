@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://bugclr6n3igb4"]
+
+[ext_resource type="Script" path="res://Scenes/Actors/Player.gd" id="1_2ubai"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_a6mdm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
+size = Vector2(14, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l57v0"]
+atlas = ExtResource("2_a6mdm")
+region = Rect2(493, 119, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_21snw"]
+atlas = ExtResource("2_a6mdm")
+region = Rect2(442, 187, 16, 16)
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+collision_layer = 17
+collision_mask = 17
+script = ExtResource("1_2ubai")
+speed = 32.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_fb00q")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+y_sort_enabled = true
+texture_filter = 1
+texture = SubResource("AtlasTexture_l57v0")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
+[node name="Direction" type="Sprite2D" parent="."]
+position = Vector2(12, 0)
+scale = Vector2(0.25, 0.25)
+texture = SubResource("AtlasTexture_21snw")

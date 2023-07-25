@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://ba1djs75axgrn"]
+
+[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_b3wol"]
+[ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_fjgrn"]
+
+[node name="TileMap" type="TileMap"]
+y_sort_enabled = true
+texture_filter = 1
+tile_set = ExtResource("1_b3wol")
+format = 2
+layer_0/y_sort_enabled = true
+script = ExtResource("2_fjgrn")

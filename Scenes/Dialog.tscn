@@ -1,0 +1,95 @@
+[gd_scene load_steps=7 format=3 uid="uid://ctvmde4ov5w2x"]
+
+[ext_resource type="Script" path="res://Scenes/Dialog.gd" id="1_up48a"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_wav0b"]
+[ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Data/Assets/Main_Theme.tres" id="3_mlfjr"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ilfco"]
+atlas = ExtResource("2_wav0b")
+region = Rect2(799, 136, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fakkd"]
+atlas = ExtResource("2_wav0b")
+region = Rect2(816, 255, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jkry8"]
+atlas = ExtResource("2_wav0b")
+region = Rect2(442, 170, 16, 16)
+
+[node name="Dialog" type="CanvasLayer"]
+script = ExtResource("1_up48a")
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 34.0
+offset_top = -134.0
+offset_right = -34.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("AtlasTexture_ilfco")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = -136.0
+offset_right = -32.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("AtlasTexture_fakkd")
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+
+[node name="Name" type="RichTextLabel" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -48.0
+offset_right = 152.0
+offset_bottom = -28.0
+grow_vertical = 0
+theme = ExtResource("3_mlfjr")
+bbcode_enabled = true
+text = "[center]Name"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Text" type="RichTextLabel" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 144.0
+offset_top = -120.0
+offset_right = -48.0
+offset_bottom = -48.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("3_mlfjr")
+bbcode_enabled = true
+text = "Text"
+
+[node name="Icon" type="TextureRect" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = -120.0
+offset_right = 128.0
+offset_bottom = -56.0
+grow_vertical = 0
+texture = SubResource("AtlasTexture_jkry8")

@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://dlylyvjyir5df"]
+
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_h63da"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_34u5r"]
+size = Vector2(10, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_84wnk"]
+atlas = ExtResource("1_h63da")
+region = Rect2(408, 102, 16, 16)
+
+[node name="NCP" type="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_34u5r")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = SubResource("AtlasTexture_84wnk")
