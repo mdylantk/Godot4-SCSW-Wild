@@ -1,24 +1,24 @@
 [gd_scene load_steps=6 format=3 uid="uid://bugclr6n3igb4"]
 
-[ext_resource type="Script" path="res://Scenes/Actors/Player.gd" id="1_2ubai"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_a6mdm"]
+[ext_resource type="Script" path="res://Data/Scenes/Actors/Player.gd" id="1_07gio"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
 size = Vector2(14, 6)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_l57v0"]
-atlas = ExtResource("2_a6mdm")
+atlas = ExtResource("2_ps8hu")
 region = Rect2(493, 119, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_21snw"]
-atlas = ExtResource("2_a6mdm")
+atlas = ExtResource("2_ps8hu")
 region = Rect2(442, 187, 16, 16)
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D"]
 collision_layer = 17
 collision_mask = 17
-script = ExtResource("1_2ubai")
-speed = 32.0
+script = ExtResource("1_07gio")
+speed = 64.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

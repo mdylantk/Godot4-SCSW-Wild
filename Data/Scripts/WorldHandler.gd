@@ -22,24 +22,40 @@ extends Node2D
 var chunk_distance = tile_size*(chunk_size+1)
 var offset = Vector2(-2,-2)
 var loaded_point = Vector2(0,0)
-var default_scene = preload("res://Scenes/TilemapTemplate.tscn") #NOTE: this may change if file moves
-var rare_scene = preload("res://Scenes/RareTemplate.tscn")
+#note, unable to use uid for preload
+var default_scene = preload("res://Data/Scenes/TilemapTemplate.tscn") #NOTE: this may change if file moves
+var rare_scene = preload("res://Data/Scenes/RareTemplate.tscn")
 
 var loaded_chunks = {}
 
+#var loaders = [] #since it is an array, adding/removing should not happen often
+#need a setter function. alse should auto remove null. could also just use the player pawn
+
 
 func _ready():
+	print("world_handler loaded")
+	#call_deferred("generate_chunks")
+	#may not need to call deferred since the chunks generate after
+	#also should use frig location in name, not scaling id. could lead to large names in long playthroughts
 	generate_chunks()
 
 func _process(_delta):
-	if Global.local_player != null:
+	
+	var player_ref = Global.get_player_handler().pawn
+	#if (Global.local_player != null):
+	#	player_ref = Global.local_player
+	#need to use the payer ref in Player handlers
+	#maybe have a system that store loader ref in an array. likr regestering them as one instead of just grabing it
+	#if was c++ the type be nod2d or a child of it that have position
+	
+	if player_ref != null:
 		var current_origin = loaded_point * chunk_distance
-		if (Global.local_player.get_position().x >= current_origin.x + chunk_distance ||
-			Global.local_player.get_position().x <= current_origin.x - chunk_distance ||
-			Global.local_player.get_position().y >= current_origin.y + chunk_distance ||
-			Global.local_player.get_position().y <= current_origin.y - chunk_distance ) :
+		if (player_ref.get_position().x >= current_origin.x + chunk_distance ||
+			player_ref.get_position().x <= current_origin.x - chunk_distance ||
+			player_ref.get_position().y >= current_origin.y + chunk_distance ||
+			player_ref.get_position().y <= current_origin.y - chunk_distance ) :
 				
-			loaded_point = (Global.local_player.get_position()/chunk_distance).round()
+			loaded_point = (player_ref.get_position()/chunk_distance).round()
 			
 			generate_chunks()
 			

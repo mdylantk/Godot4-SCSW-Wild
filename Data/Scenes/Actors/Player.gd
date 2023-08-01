@@ -1,10 +1,14 @@
 extends CharacterMovement
+#signal notify() #the issue is the fish calling the notify for gui
+#so i need a way to do that logic but send it here instead of connecting to some random object?
 
 var fish_turnin = 0 #temp way to get specal messages
 
 func _ready():
+	print("player loaded")
 	Global.local_player = self
-	randomize() #need to have it int in global.
+	#randomize() #need to have it int in global.
+	
 
 func _process(_delta):
 	$Direction.position = facing_dirction*12
@@ -33,6 +37,8 @@ func _input(event) :
 				pass
 			else:
 				#print(result["collider"])
+				#probably should have a componet that handles on_interacts
+				#with some default options with an option for the parent to take control
 				if result["collider"].has_method("on_interact"):
 					result["collider"].on_interact(self)
 				if result["collider"].has_meta("Dialog") :

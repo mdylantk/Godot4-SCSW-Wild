@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://ctvmde4ov5w2x"]
 
-[ext_resource type="Script" path="res://Scenes/Dialog.gd" id="1_up48a"]
+[ext_resource type="Script" path="res://Data/Scripts/Dialog.gd" id="1_up48a"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_wav0b"]
 [ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Data/Assets/Main_Theme.tres" id="3_mlfjr"]
 

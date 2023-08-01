@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://df500lm7ih60h"]
+
+[ext_resource type="Script" path="res://Data/Scripts/FishNotify.gd" id="1_ylxog"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_sabk1"]
+[ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Data/Assets/Main_Theme.tres" id="3_shrd2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yh7fh"]
+atlas = ExtResource("2_sabk1")
+region = Rect2(799, 136, 16, 16)
+
+[node name="Notify" type="CanvasLayer"]
+script = ExtResource("1_ylxog")
+
+[node name="NotifyBox" type="NinePatchRect" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = 84.0
+offset_right = 128.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_yh7fh")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="NotifyText" type="RichTextLabel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -112.0
+offset_top = 92.0
+offset_right = 120.0
+offset_bottom = 132.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_shrd2")
+bbcode_enabled = true
+text = "[center]A Fish was caught"
+fit_content = true

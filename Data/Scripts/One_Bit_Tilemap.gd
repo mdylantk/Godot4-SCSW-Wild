@@ -4,6 +4,7 @@ class_name One_Bit_Tilemap extends TileMap
 @export var bounds_offset : Vector2 = Vector2(-16,-16)
 
 func _ready():
+	print("chunk loaded:" + str(self))
 	#randomize()
 	if !y_sort_enabled:
 		y_sort_enabled = true #note this override it,but currently y sort is wanted and new tilemaps is not including it

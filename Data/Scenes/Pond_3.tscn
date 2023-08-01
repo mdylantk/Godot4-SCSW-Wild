@@ -2,7 +2,7 @@
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_afn6e"]
 [ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_x6uql"]
-[ext_resource type="PackedScene" uid="uid://dghoogotf0r7u" path="res://Scenes/Actors/Fish.tscn" id="3_hnumo"]
+[ext_resource type="PackedScene" uid="uid://dghoogotf0r7u" path="res://Data/Scenes/Actors/Fish.tscn" id="3_hnumo"]
 
 [node name="Pond_0" type="TileMap"]
 y_sort_enabled = true
@@ -14,19 +14,19 @@ script = ExtResource("2_x6uql")
 
 [node name="Fish" parent="." instance=ExtResource("3_hnumo")]
 position = Vector2(-24, -88)
+rare_catch = false
 
 [node name="Fish2" parent="." instance=ExtResource("3_hnumo")]
 position = Vector2(16, -16)
-single_catch = false
+rare_catch = false
 
 [node name="Fish3" parent="." instance=ExtResource("3_hnumo")]
 position = Vector2(-112, -24)
-single_catch = false
 
 [node name="Fish4" parent="." instance=ExtResource("3_hnumo")]
 position = Vector2(80, 80)
-single_catch = false
+rare_catch = false
 
 [node name="Fish5" parent="." instance=ExtResource("3_hnumo")]
 position = Vector2(-64, 48)
-single_catch = false
+rare_catch = false

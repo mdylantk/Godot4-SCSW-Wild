@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://bh5qglvs6rygh"]
+
+[ext_resource type="Script" path="res://Data/Scripts/Score.gd" id="1_xhj6g"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_cdi6i"]
+[ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Data/Assets/Main_Theme.tres" id="3_vjhty"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yh7fh"]
+atlas = ExtResource("2_cdi6i")
+region = Rect2(799, 136, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5p3lt"]
+atlas = ExtResource("2_cdi6i")
+region = Rect2(561, 289, 16, 16)
+
+[node name="Score" type="CanvasLayer"]
+script = ExtResource("1_xhj6g")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 256.0
+offset_bottom = 64.0
+texture = SubResource("AtlasTexture_yh7fh")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="ScoreText" type="RichTextLabel" parent="."]
+offset_left = 64.0
+offset_top = 16.0
+offset_right = 248.0
+offset_bottom = 56.0
+theme = ExtResource("3_vjhty")
+bbcode_enabled = true
+text = "[center]Common : 0
+Rare: 0"
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 56.0
+offset_bottom = 56.0
+texture = SubResource("AtlasTexture_5p3lt")
