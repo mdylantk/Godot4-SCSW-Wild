@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnt60muvh63sj"]
+
+[sub_resource type="GDScript" id="GDScript_fjqi6"]
+script/source = "class_name Interact_Component extends Node
+
+signal on_interaction(source)
+
+@export var type : String #placeholder. may just use children
+
+#NOTE: the main reason for this is to share a set of signals/functions with teh parent
+#it may handle filtering of interaction and maybe handling of difftrnt type
+#might even add a resource it could pull logic from...but that may be risky
+
+#the big issue is knowing about the child. a collsion shape may be needed to diectly acesses, but
+#it my be better to have ncp type have the func/signal than a component 
+
+func on_interact(source):
+	print(str(source) + \" interacted with \" + str(self))
+	emit_signal(\"on_interaction\", source)
+"
+
+[node name="Interact_Component" type="Node"]
+script = SubResource("GDScript_fjqi6")

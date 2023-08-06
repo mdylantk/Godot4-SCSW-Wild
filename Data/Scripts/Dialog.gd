@@ -21,14 +21,21 @@ var dialog_data #note: this may make it so data can not be swap out when being u
 #or could make a binding even, but not sure how without knowing about the gui
 #i mean the gui can be easly found, but may cause a two way Dependency 
 
-func _ready():
-	Global.dialog = self
+#func _ready():
+	#Global.dialog = self
 
-func start_dialog(new_target) :
+func start_dialog(new_target, new_data) :
+	#targer is needed to know if player get too far form it.
+	#could also be a point, but an object allow more option
+	#but could hold it in the dialog_data...but having owner ref there seem redundent 
 	if new_target != null :
 		target = new_target
-		if target.has_meta("Dialog"):
+		if new_data is Dialog_Data:
+			dialog_data = new_data
+		elif target.has_meta("Dialog"):
 			dialog_data = target.get_meta("Dialog")
+		
+		if dialog_data != null :
 			$Name.text = "[center]"+dialog_data.name
 			$Icon.texture = dialog_data.icon
 			#update_text() process seem to run after this, may need to use signal and timers instead of processes
@@ -55,7 +62,7 @@ func _process(_delta):
 	#		update_text()
 	#		visible = true
 	else:
-		if (Global.local_player.global_position - target.global_position).length() > 64 :
+		if (Global.get_player_handler().pawn.global_position - target.global_position).length() > 64 :
 			end_dialog()
 			
 		if Input.is_action_just_pressed("Accept") :

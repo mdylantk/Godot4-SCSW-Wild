@@ -20,6 +20,7 @@ script = ExtResource("2_md5v3")
 [node name="NCP" parent="." instance=ExtResource("3_rgbia")]
 position = Vector2(152, -136)
 script = ExtResource("4_3ysk3")
+dialog_data = ExtResource("4_vlv8c")
 metadata/Dialog = ExtResource("4_vlv8c")
 
 [node name="Fish" parent="." instance=ExtResource("5_ige8h")]

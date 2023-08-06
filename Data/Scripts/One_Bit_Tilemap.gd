@@ -3,37 +3,75 @@ class_name One_Bit_Tilemap extends TileMap
 @export var bounds : Vector2 = Vector2(32,32) #the bounds which generated content may extends to
 @export var bounds_offset : Vector2 = Vector2(-16,-16)
 
+@export var empty_tiles : Array[Vector2] #if an array is provided, will skip the generation and use the array instead
+
+var is_ready : bool = false #a flag to state if the tilemap ready to be used or still running eneration logic
+
+#note if so, it possible the array could go out side of bounds
+#so there may need checks...also offset
+#COULD use a tooling system probably to prebake the array
+
+#note, if add multiplayer, should catched the changes to send to other players instead of trying to get the same gen
+#unless seed base generation becomes the same generation (current not)
+
+#NOTE: need to wait when spawning or teleporting for the chunk to generate
+#a loading screen or hiding the map untill generated may help
+#JUST need to have the init spawn(and teleports) frezze logic (and hide screen for a bit) untill it is loaded
+#also have a spot on the map that can be spawn on (or force remove object at spawn point if not importaint)
+
+
+func _process(delta):
+	var count = 16
+	while count > 0:
+		if empty_tiles.is_empty():
+			set_process(false) #turn it off, but may need to be removed if other logic is added here
+			visible = true
+			count = 0
+			is_ready = true
+			break
+		else:
+			var random_tile = pick_foliage_tile()
+			var tile_location = empty_tiles.pop_back() + bounds_offset
+			if random_tile != Vector2i.ZERO:
+				set_cell(0,tile_location,0,random_tile)
+		count -= 1
+		
 func _ready():
-	print("chunk loaded:" + str(self))
+	#print("chunk loaded:" + str(self))
 	#randomize()
 	if !y_sort_enabled:
 		y_sort_enabled = true #note this override it,but currently y sort is wanted and new tilemaps is not including it
 	#if !layer[0].y_sort_enabled:
 	#	layer[0].y_sort_enabled = true
-	var x = 0
-	var y = 0
-	while x <= bounds.x:
-		while y <= bounds.y:
-			
-			
-			var tile_location = Vector2(x,y) + bounds_offset
-			#print(tile_location)
-			if get_cell_tile_data(0,tile_location) == null : #&& get_cell_tile_data(1,tile_location) == null && get_cell_tile_data(2,tile_location) == null :
-				
-				var random_tile = pick_foliage_tile()
-				if random_tile != Vector2i.ZERO:
-					set_cell(0,tile_location,0,random_tile)
-			#must keep below
-			y += 1
-		y = 0
-		#must keep below
-		x += 1
-		
-		#print(Vector2(x,y))
-		#if get_cell_tile_data(0,Vector2(x,y)) == null && get_cell_tile_data(2,Vector2(x,y)) == null :
-				
-		#	set_cell(0,Vector2(x,y),0,Vector2i(1, 1))
+	if empty_tiles.is_empty():
+		visible = false
+		var x = 0
+		var y = 0
+		while x <= bounds.x:
+			while y <= bounds.y:
+				var tile_location = Vector2(x,y)  + bounds_offset #bound is needed for the null check
+				#print(tile_location)
+				if get_cell_tile_data(0,tile_location) == null : #&& get_cell_tile_data(1,tile_location) == null && get_cell_tile_data(2,tile_location) == null :
+					empty_tiles.append(Vector2(x,y)) #incase static array is used...best to have a rar grid not base on offset, then add it
+					#note: if static array is provided, objects on the map may be overrided
+					#static map a last case solution and if it is used, could move this logic up
+				y += 1
+			y = 0
+			x += 1
+		set_process(true) #incase it is off. also could use a timer and an await, but this works for now
 func pick_foliage_tile():
+	
+	#note: should roll a few numbers and store to decide major aspects of the generation
+	#this would be rolled once on ready
+	#and smaller roll for fine details which would happen here
+	#an array,dict, or resource would be used to full types out of.
+	#grasses would be an array of vector2 that a random roll could pic the index.
+	#will help with some of the assests so spread appart. 
+	#with a resource, could design a bioem. also could double up on altas coords  to make some tiles more common
+	#or do an exp and round system so ones farther way would be less common
+	#or have serval arrays that use a weight system 
+	#many ways. there also could use noise and try to genrate bloches so things may feel group together instead of fully random
+	
 	#randi() % 8 #0-7
 	#note: could have an array for each type. grass, tree, cover, rocky and others
 	#could even have a float or int as an id(like generic weight) maybe add up the weight and rand with that pluss null offset

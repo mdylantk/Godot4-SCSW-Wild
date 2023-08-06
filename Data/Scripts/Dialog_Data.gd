@@ -62,7 +62,7 @@ func get_text(index = 0): #index is ignored if default and random. also invald m
 	return text
 	#return null if all fail
 	#may forward index just because it be easier to track.
-	print("NOTHING SHOULD BE RAN PAST HERE IF TESTING NEW STUFF")
+	
 
 	
 ##NOTE: the is_visit var is reset when ncp is unloaded so global var is needed

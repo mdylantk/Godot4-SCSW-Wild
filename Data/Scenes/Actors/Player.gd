@@ -4,9 +4,9 @@ extends CharacterMovement
 
 var fish_turnin = 0 #temp way to get specal messages
 
-func _ready():
-	print("player loaded")
-	Global.local_player = self
+#func _ready():
+	#print("player loaded")
+	#Global.local_player = self
 	#randomize() #need to have it int in global.
 	
 
@@ -41,5 +41,5 @@ func _input(event) :
 				#with some default options with an option for the parent to take control
 				if result["collider"].has_method("on_interact"):
 					result["collider"].on_interact(self)
-				if result["collider"].has_meta("Dialog") :
-						Global.dialog.start_dialog(result["collider"])
+				#if result["collider"].has_meta("Dialog") :
+				#		Global.dialog.start_dialog(result["collider"])

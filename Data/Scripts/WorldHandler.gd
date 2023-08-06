@@ -1,5 +1,13 @@
 extends Node2D
 
+#NOTE: may need to have actor/player acess this and this handle letting them know which chunk is loaded
+#unloaded chunks would caouse actors to freeze or act if there no land(a colsion boarder mat be better
+#or better yet, add a c-box on the zone untill it is loaded (unlesses it need to check for collsion onn generation))
+#the main point is for actords to get a ref to the timemap they are standing on.
+#and get acess to display info and status of the chunk
+#the main point is having a function that can take a location and convert it to chink space correctly
+#probably part of the get chink function so less fnction are needed to be known about
+
 #need to load in 9 scenes. idealy a func to run future checks (so certain types may spawn or fix areas will spawn)
 #currently 0,0 may be ignored for the staring tile
 
