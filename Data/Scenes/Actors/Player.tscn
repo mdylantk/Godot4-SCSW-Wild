@@ -18,7 +18,7 @@ region = Rect2(442, 187, 16, 16)
 collision_layer = 17
 collision_mask = 17
 script = ExtResource("1_07gio")
-speed = 64.0
+use_input = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

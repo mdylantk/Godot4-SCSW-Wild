@@ -5,6 +5,7 @@ extends CharacterMovement
 var fish_turnin = 0 #temp way to get specal messages
 
 #func _ready():
+	#Global.get_hud().loading = true #note, need to press a button to exit
 	#print("player loaded")
 	#Global.local_player = self
 	#randomize() #need to have it int in global.
@@ -13,8 +14,19 @@ var fish_turnin = 0 #temp way to get specal messages
 func _process(_delta):
 	$Direction.position = facing_dirction*12
 	
+	#this is here since use_input is tied with the loading screen. a state system is needed in the future 
+	var active_chunk = Global.get_world_handler().get_current_chunk(global_position)
+	#this is a temp way to diable movement if chunk is loading. 
+	if active_chunk != null:
+		use_input = active_chunk.is_ready
+		#Global.get_hud().loading = !active_chunk.is_ready
+	
 func _input(event) :
+	
+	
 	if event.is_action("Accept") && event.is_action_pressed("Accept"):
+		#print(Global.get_world_handler().get_current_chunk(global_position).is_ready)
+		
 		var space_state = get_world_2d().direct_space_state #can get a lot just with the player
 		# use global coordinates, not local to node
 		var query = PhysicsRayQueryParameters2D.create(

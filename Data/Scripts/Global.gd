@@ -13,11 +13,7 @@ func get_world_handler():
 func get_hud(): 
 	return get_node("/root/GameHandler/HUD")
 	
-func get_player_handler_from_pawn(pawn): #a (possibly)slow way to get the correct player state from a pawn ref
-	#as long as tthis is not called on ready at the start, it should work
-	#and should not break, but the best way is either
-	#get pawn parent if it a child of player_handler or
-	#have pawn have a ref to it's player_handler or an idex to look it up
+func get_player_handler_from_pawn(pawn): 
 	var vaild_player_index = true
 	var index = 0
 	while vaild_player_index:

@@ -6,17 +6,18 @@ extends CanvasLayer
 @onready var gui_score = $Score
 @onready var gui_dialog = $Dialog
 
-#NOTE: signals general is parent to children.
-#BUT that to communicate back up
-#so still not sure. stills seem useful only to listen to children or non static relationships
+@onready var loading : bool = true :
+	set (value):
+		#print("changing loading stat to " + str(value))
+		await get_tree().create_timer(1).timeout #A delay so things can finish up.
+		#mostly when loading in at first or possible teleporting.
+		#main purpous is a cheap way to hide other chunk loading without needing to 
+		#check their state since only the active chunk is importaint. the others are extra
+		$LoadingScreen.visible = value
+		loading = value
+	get: 
+		return loading
 
-#this handles most of the logic for GUI and input.
-#its main porpous is to manage all the gui elements as well as when to listen to input
-#all other gui should be simple and indepent of it's tasks and this will thell them when to 
-#run and what infomation to display (direct or by object ref and other parameters)
-
-#may have an input listener here. game handler or player hander could have a flag to state which is 
-#is listen for first
 
 func _process(_delta):
 	var player_data = Global.get_player_handler().player_state
@@ -25,9 +26,22 @@ func _process(_delta):
 		$Score.update_data()
 	else:
 		$Score.update_data({"Common":player_data.metadata["total_common_fish_caught"],"Rare":player_data.metadata["total_rare_fish_caught"]})
-	#the hud may or may not update gui elements. 
-	#for less dynamic system, this be easier to handle updates and stuff
-	#but if gui format have to change in various ways, it may be better to have childrent
-	#update themselves. also depends on how may are updated and how pasuing works
-	#pass
+	
+	#this being put here untill a timer or state system can take care of it
+	var player_pawn = Global.get_player_handler().pawn
+	if player_pawn != null:
+		if loading == player_pawn.use_input:
+			loading = !player_pawn.use_input
+			
+	#testing a way to point back to home
+	#print(get_viewport().get_visible_rect().size)
+	var current_size = get_viewport().get_visible_rect().size
+	if player_pawn.global_position.length() > current_size.length() :
+		$HomePoint.visible = true
+		$HomePoint/TextureRect.position = (-player_pawn.global_position).clamp(Vector2.ZERO, (current_size -Vector2(16,16)))
+	else:
+		$HomePoint.visible = false
+
+
+
 

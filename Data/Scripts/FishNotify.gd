@@ -6,14 +6,6 @@ extends CanvasLayer
 var notify_list = {}
 var is_active = false
 
-#note, may not need to remove array elements
-#could loop to the end then clear
-#maybe a failsafe to cull array if too big
-#if notify is used too much, it could be spammy
-#may need to add a system that stacks similar elements
-#also could remove the item so above sould find similar ones
-#if a dict is used, the key would be what is displayed and the value would be a x # amount
-
 func add_notify_message(message = "", amount = 1):
 	if message != "" :
 		if amount != 0: #if 0, it just nulls it.
@@ -55,11 +47,4 @@ func _ready():
 #	Global.message_box = self
 	visible = false
 	
-#func set_message(fish_name):
-#	visible = true
-#	$NotifyText.text = "[center]Caught a " + str(fish_name)
-	
-#	await get_tree().create_timer(display_time).timeout
-	
-#	visible = false
 	

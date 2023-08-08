@@ -3,26 +3,7 @@ extends CanvasLayer
 var target = null
 var cooldown_timer : float = 0
 var dialog_index = 0
-var dialog_data #note: this may make it so data can not be swap out when being used. should not be an issue in the current state
-
-#pretty much just need to have states/flags
-#as well as an id probably in the dialog so things can be temp stored
-#state pretty much state if it procing or being cleared. basiscy switchs that may change the logic 
-#from the normal cont. to end of topic.
-#should be check each major step since it the fail switch as well
-#or if a typic is change, the state should change to state a topic change
-#could be bitflags stating conditions that change. 
-#basicly this just display base on the state of the dialog data
-#and may modify it so that the object know the state
-#basicly gui should have more write power over index and object have more write power over everything else
-#the data probably should have set and modify functions
-#then the gui just read and listen to it
-#probably could listen for change if that an option for resorces.
-#or could make a binding even, but not sure how without knowing about the gui
-#i mean the gui can be easly found, but may cause a two way Dependency 
-
-#func _ready():
-	#Global.dialog = self
+var dialog_data 
 
 func start_dialog(new_target, new_data) :
 	#targer is needed to know if player get too far form it.
@@ -54,13 +35,7 @@ func _process(_delta):
 		if visible :
 			visible = false
 		set_process(false)
-	#elif !visible:
-	#	if target.has_meta("Dialog"):
-	#		dialog_data = target.get_meta("Dialog")
-	#		$Name.text = dialog_data.name
-	#		$Icon.texture = dialog_data.icon
-	#		update_text()
-	#		visible = true
+
 	else:
 		if (Global.get_player_handler().pawn.global_position - target.global_position).length() > 64 :
 			end_dialog()

@@ -22,6 +22,6 @@ game_state = SubResource("Resource_4kute")
 [node name="PlayerHandler0" parent="." instance=ExtResource("3_67w6c")]
 
 [node name="Player" parent="PlayerHandler0" instance=ExtResource("4_yib42")]
-position = Vector2(192, -2)
+position = Vector2(248, -88)
 
 [node name="WorldHandler" parent="." instance=ExtResource("5_jaupa")]

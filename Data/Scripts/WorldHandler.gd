@@ -41,7 +41,7 @@ var loaded_chunks = {}
 
 
 func _ready():
-	print("world_handler loaded")
+	#print("world_handler loaded")
 	#call_deferred("generate_chunks")
 	#may not need to call deferred since the chunks generate after
 	#also should use frig location in name, not scaling id. could lead to large names in long playthroughts
@@ -58,6 +58,7 @@ func _process(_delta):
 	
 	if player_ref != null:
 		var current_origin = loaded_point * chunk_distance
+		#Note: also could have the wait for chunk to load link here, but that only useful for spawn/teleport
 		if (player_ref.get_position().x >= current_origin.x + chunk_distance ||
 			player_ref.get_position().x <= current_origin.x - chunk_distance ||
 			player_ref.get_position().y >= current_origin.y + chunk_distance ||
@@ -125,3 +126,11 @@ func load_chunk(ref,location = Vector2(), is_loaded = true) :
 	map.transform[2] = chunk_distance * location
 	add_child(map)
 	loaded_chunks[location] = map
+
+func get_current_chunk(location):
+	var chunk_pos = (location/chunk_distance).round()
+	#print(chunk_pos)
+	if loaded_chunks.has(chunk_pos):
+		return loaded_chunks[chunk_pos]
+	else:
+		return null
