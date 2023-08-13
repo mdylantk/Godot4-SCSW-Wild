@@ -12,11 +12,11 @@ func _ready():
 	if game_state.random_seed == 0 :
 		randomize()
 		game_state.random_seed = randi()
-		print(game_state.random_seed)
+		#print(game_state.random_seed)
 		#set to random seed base on system time. 
 		#then generate a storable random number to use as the actual seed
 		#NOTE: dose not generate the same so would need to look up how to sync values for same randoms
-	print("game_handler loaded")
+	#print("game_handler loaded")
 	seed(game_state.random_seed)
 
 

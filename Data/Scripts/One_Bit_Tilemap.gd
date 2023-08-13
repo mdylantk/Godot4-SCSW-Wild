@@ -1,11 +1,52 @@
 class_name One_Bit_Tilemap extends TileMap
 
 @export var bounds : Vector2 = Vector2(32,32) #the bounds which generated content may extends to
-@export var bounds_offset : Vector2 = Vector2(-16,-16)
+@export var bounds_offset : Vector2 #= Vector2(-16,-16)#since most maps are currently built around 0,0 instead of starting from it
+#offset is used to correct it. ir remove offset, all maps need to be redesign to start from 0,0, not centered around it
 
 @export var empty_tiles : Array[Vector2] #if an array is provided, will skip the generation and use the array instead
 
-var is_ready : bool = false #a flag to state if the tilemap ready to be used or still running eneration logic
+var is_ready : bool = false: #a flag to state if the tilemap ready to be used or still running eneration logic
+	#could use a signal here
+	set (value):
+		if is_ready != value:
+			is_ready = value
+			if is_ready:
+				visible = true
+			else:
+				visible = false
+	get:
+		return is_ready
+
+#this is a test system. thi data should be held in a resource so diffrent generation can be used
+#@export var ground_tiles : Array[Vector2] #current no tile will be used. 
+@export var grass_tiles : Array[Vector2i] = [
+	Vector2i(5,0),
+	Vector2i(6,0),
+	Vector2i(7,0),
+	Vector2i(0,2),
+	#Vector2i(2,2), #a bit odd of a tile. look like a tree like vine more than grass
+	#Vector2i(1,2)
+	
+]
+@export var tree_tiles : Array[Vector2i] = [
+	Vector2i(0,1),
+	Vector2i(1,1),
+	Vector2i(2,1),
+	Vector2i(3,1),
+	Vector2i(4,1),
+	Vector2i(5,1),
+	Vector2i(3,2),
+	Vector2i(4,2),
+	Vector2i(6,2)
+]
+@export var rock_tiles : Array[Vector2i] = [
+	Vector2i(5,2),
+	Vector2i(1,0),
+	Vector2i(2,0),
+	Vector2i(3,0),
+	Vector2i(4,0)
+]
 
 #note if so, it possible the array could go out side of bounds
 #so there may need checks...also offset
@@ -20,12 +61,12 @@ var is_ready : bool = false #a flag to state if the tilemap ready to be used or 
 #also have a spot on the map that can be spawn on (or force remove object at spawn point if not importaint)
 
 
-func _process(delta):
+func _process(_delta):
 	var count = 16
 	while count > 0:
 		if empty_tiles.is_empty():
 			set_process(false) #turn it off, but may need to be removed if other logic is added here
-			visible = true
+			#visible = true
 			count = 0
 			is_ready = true
 			break
@@ -72,21 +113,48 @@ func pick_foliage_tile():
 	#or have serval arrays that use a weight system 
 	#many ways. there also could use noise and try to genrate bloches so things may feel group together instead of fully random
 	
+	#this is a bit easier to understand. the first roll is stored
+	#so lower on the list are just as possible as higher up since the number is not rerolled
+	#then it pulls from an array instead from a line. allow more typews to be group without
+	#editing the assets
+	#also the staric ranges should be converted to dynamic so that the ratio can be randomized
+	#like adding the roll and using it as a base for the next check. the random ranges
+	#for these bounds should also dynamily adjust to prevent overbounding...or just clamp the values
+	# maybe having 10 offset for each, so the 60 is split beween each(like 1-20 each) or something
+	#or have a weight system, and max roll for random roll is the total wieght
+	#that be better, but the eypes may need to be stored in an array.
+	#also may need to be dict of arrays of int and vector2i to support additinal tilesets
+	#the resource that should be made to hold this data should have getters so
+	#it decide the logic, not the tilemap
+	var random_roll = randi() % 100
+	if random_roll <= 30:
+		#grass_tiles
+		return grass_tiles[randi() % grass_tiles.size()]
+	elif random_roll <= 60:
+		#tree_tiles
+		return tree_tiles[randi() % tree_tiles.size()]
+	elif random_roll <= 70:
+		#rock_tiles
+		return rock_tiles[randi() % rock_tiles.size()]
+	else:
+		return Vector2i(0, 0)
+	
+	
 	#randi() % 8 #0-7
 	#note: could have an array for each type. grass, tree, cover, rocky and others
 	#could even have a float or int as an id(like generic weight) maybe add up the weight and rand with that pluss null offset
 	#the tree path nice too, just messy. forest-> grass, tree, plain-> grasses, paths, trees
 	#there noise that could be used too, but a bit compucated. could draw masks out on the tile map as well, but the theme somewhat compucate that
-	if randi() % 10 >= 4:
-		if randi() % 10 >= 4:
-			return Vector2i(5 + randi() % 3, 0)
-		elif randi() % 10 > 6:
-			return Vector2i(3 + randi() % 3, 1)
-		else:
-			return Vector2i(randi() % 6, 1)
-	elif randi() % 10 > 4:
-		return Vector2i(1 + randi() % 4, 0)
+	#if randi() % 10 >= 4:
+	#	if randi() % 10 >= 4:
+	#		return Vector2i(5 + randi() % 3, 0)
+	#	elif randi() % 10 > 6:
+	#		return Vector2i(3 + randi() % 3, 1)
+	#	else:
+	#		return Vector2i(randi() % 6, 1)
+	#elif randi() % 10 > 4:
+	#	return Vector2i(1 + randi() % 4, 0)
 		#5 + randi() % 3 #5 + 0-3 = 5-7
 	#if RandomNumberGenerator
 	#a temp way to pick random tiles
-	return Vector2i(0, 0)
+	#return Vector2i(0, 0)

@@ -20,12 +20,18 @@ func _process(_delta):
 	if active_chunk != null:
 		use_input = active_chunk.is_ready
 		#Global.get_hud().loading = !active_chunk.is_ready
-	
+
+var test_index = 0	
 func _input(event) :
 	
 	
 	if event.is_action("Accept") && event.is_action_pressed("Accept"):
 		#print(Global.get_world_handler().get_current_chunk(global_position).is_ready)
+		
+		#TEST
+		#Global.get_world_handler().visible = !Global.get_world_handler().visible
+		#Global.get_world_handler().preloaded_chunks[Vector2.ZERO].visible = !Global.get_world_handler().preloaded_chunks[Vector2.ZERO].visible 
+		#TEST END
 		
 		var space_state = get_world_2d().direct_space_state #can get a lot just with the player
 		# use global coordinates, not local to node
@@ -55,3 +61,20 @@ func _input(event) :
 					result["collider"].on_interact(self)
 				#if result["collider"].has_meta("Dialog") :
 				#		Global.dialog.start_dialog(result["collider"])
+		#else:
+			#var test_array = [
+			#	Vector2(0,0), 
+			#	Vector2(4,8),
+			#	Vector2(7,-2),
+			#	Vector2(-4,5),
+			#	Vector2(-9,-6),
+			#	Vector2(-3,0),
+			#	Vector2(0,11),
+			#	Vector2(0,-21),
+			#	Vector2(42,0)
+			#]
+			#if test_index >= test_array.size():
+			#	test_index = 0
+			#global_position = test_array[test_index] * (16*32)
+			#use_input = false #need a proper way to force loading. noo much of a delay or depency on input
+			#test_index += 1

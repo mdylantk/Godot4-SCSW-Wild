@@ -1,5 +1,15 @@
 extends Node2D
 
+#note: @tool is risky and may spam error so if ever adding it, need to gate the logic
+
+###TODO: either save and unload or hide and disable collsions so that other instances can be loaded in
+#another option is to laod another instance and idle the current one, but for now that a bit complex
+#also need a way to know where a player spawn, but then again global position is fine...just need to
+#make sure there no colsion at that point. may need to store player global as world position
+#if instnace have another exit, it could offset this. note that a static chunk (or empty chuck)
+#would need to exist at the exit chuck or an improper chunk may spawn (player spawning in the middel
+#of a lake for an example)
+
 #NOTE: may need to have actor/player acess this and this handle letting them know which chunk is loaded
 #unloaded chunks would caouse actors to freeze or act if there no land(a colsion boarder mat be better
 #or better yet, add a c-box on the zone untill it is loaded (unlesses it need to check for collsion onn generation))
@@ -11,12 +21,18 @@ extends Node2D
 #need to load in 9 scenes. idealy a func to run future checks (so certain types may spawn or fix areas will spawn)
 #currently 0,0 may be ignored for the staring tile
 
+
+
 #need to know the player location or players. these will be loading nodes
 #so a for loop to check each node location and see what map to load
 @export var tile_size : float = 16
 @export var chunk_size : float = 32
-@export var static_chunks : Dictionary = {
-	Vector2(0,0):"uid://blyxjt47otoln",
+#NOTE: may add the chunks in editor?
+#and only store dynmicly generated and loacted chunks
+#but any loaded chunks need to be hidden or even unloaded if it hurts performance
+#or keep this and try to have @tool load it in
+@export var static_chunks : Dictionary = { #Maybe have this elsewhere or generated with a tool componet
+	Vector2(0,0):"uid://blyxjt47otoln", 
 	Vector2(4,8):"uid://clicnkneu0ddm",
 	Vector2(7,-2):"uid://bngicde5fixcp",
 	Vector2(-4,5):"uid://cyg3wosoq0787",
@@ -34,6 +50,10 @@ var loaded_point = Vector2(0,0)
 var default_scene = preload("res://Data/Scenes/TilemapTemplate.tscn") #NOTE: this may change if file moves
 var rare_scene = preload("res://Data/Scenes/RareTemplate.tscn")
 
+#var preloaded_chunks = {} #tilemaps placed in the editor
+#NOTE: Above may be remove since it may add more nodes and best to load/unload it
+#may need a world map scene as a tool to map their position. 
+#or
 var loaded_chunks = {}
 
 #var loaders = [] #since it is an array, adding/removing should not happen often
@@ -41,6 +61,14 @@ var loaded_chunks = {}
 
 
 func _ready():
+	#for child in get_children(): 
+	#	if child is TileMap:
+	#		var child_chunk_location = (child.position/chunk_distance).round()
+	#		if child_chunk_location * chunk_distance != child.position:
+	#			child.position= child_chunk_location * chunk_distance
+			#also might need to force adjust anything offgrid...as a failsafe
+	#		preloaded_chunks[child_chunk_location] = child #placeholder. need the chunk grid location
+	#loop children and map tilemaps?
 	#print("world_handler loaded")
 	#call_deferred("generate_chunks")
 	#may not need to call deferred since the chunks generate after
@@ -76,14 +104,14 @@ func _process(_delta):
 	#may store them in an array or dict
 
 func generate_chunks() :
-	var chunk_distance = tile_size*(chunk_size+1)
+	#var chunk_distance = tile_size*(chunk_size+1)
 	var old_chunk_coord = loaded_chunks.keys()
 	var x = 0
 	var y = 0
 	while x <= 3:
 		while y <= 3:
 			var grid_position = Vector2(x,y) + offset + loaded_point
-			if true : #chunk_distance * (grid_position) != Vector2.ZERO:
+			if true: #!preloaded_chunks.has(grid_position) : #chunk_distance * (grid_position) != Vector2.ZERO:
 				if !loaded_chunks.has(grid_position):
 					var map
 					if static_chunks.has(grid_position) :
@@ -106,6 +134,8 @@ func generate_chunks() :
 					
 				else:
 					old_chunk_coord.remove_at(old_chunk_coord.find(grid_position))
+			#else:
+				#preloaded_chunks[grid_position].visible = true
 			y += 1
 		y = 0
 		x += 1
@@ -132,5 +162,7 @@ func get_current_chunk(location):
 	#print(chunk_pos)
 	if loaded_chunks.has(chunk_pos):
 		return loaded_chunks[chunk_pos]
+	#elif preloaded_chunks.has(chunk_pos):
+	#	return preloaded_chunks[chunk_pos]
 	else:
 		return null

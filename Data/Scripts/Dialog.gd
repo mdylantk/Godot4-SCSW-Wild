@@ -19,12 +19,15 @@ func start_dialog(new_target, new_data) :
 		if dialog_data != null :
 			$Name.text = "[center]"+dialog_data.name
 			$Icon.texture = dialog_data.icon
+			dialog_data.state = 1 #need a way to let owner od dialog know it is cycling through text. this is one possbility
 			#update_text() process seem to run after this, may need to use signal and timers instead of processes
 			set_process(true)
 
 func end_dialog():
 	visible = false
 	target = null
+	if dialog_data != null :
+		dialog_data.state = 0
 	dialog_data = null
 	set_process(false)
 	dialog_index = 0

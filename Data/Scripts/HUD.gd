@@ -18,6 +18,8 @@ extends CanvasLayer
 	get: 
 		return loading
 
+func _ready():
+	$LoadingScreen.visible = loading
 
 func _process(_delta):
 	var player_data = Global.get_player_handler().player_state
@@ -38,7 +40,8 @@ func _process(_delta):
 	var current_size = get_viewport().get_visible_rect().size
 	if player_pawn.global_position.length() > current_size.length() :
 		$HomePoint.visible = true
-		$HomePoint/TextureRect.position = (-player_pawn.global_position).clamp(Vector2.ZERO, (current_size -Vector2(16,16)))
+		$HomePoint/TextureRect.position = (-(player_pawn.global_position - Vector2(16*32,16*32))).clamp(Vector2.ZERO, (current_size -Vector2(16,16)))
+		#Vector2(16*32,16*32) is the offset. should be the player orginal spawn or the old man global location
 	else:
 		$HomePoint.visible = false
 
