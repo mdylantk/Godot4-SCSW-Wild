@@ -2,6 +2,6 @@
 
 [ext_resource type="Script" path="res://Data/Scripts/InstanceHandler.gd" id="1_3q4ti"]
 
-[node name="InstanceHandler" type="Node2D"]
+[node name="InstanceHandler" type="Node2D" groups=["Instance_Handler"]]
 y_sort_enabled = true
 script = ExtResource("1_3q4ti")

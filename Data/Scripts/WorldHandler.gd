@@ -25,7 +25,7 @@ extends Node2D
 
 #need to know the player location or players. these will be loading nodes
 #so a for loop to check each node location and see what map to load
-@export var tile_size : float = 16
+@export var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 @export var chunk_size : float = 32
 #NOTE: may add the chunks in editor?
 #and only store dynmicly generated and loacted chunks
@@ -85,6 +85,8 @@ func _process(_delta):
 	#if was c++ the type be nod2d or a child of it that have position
 	
 	if player_ref != null:
+		#todo: probably should  have this as a callable that either the player or game handler calls
+		#could reduce logic in this tick and reduce the need to know the player ref
 		var current_origin = loaded_point * chunk_distance
 		#Note: also could have the wait for chunk to load link here, but that only useful for spawn/teleport
 		if (player_ref.get_position().x >= current_origin.x + chunk_distance ||
@@ -156,6 +158,7 @@ func load_chunk(ref,location = Vector2(), is_loaded = true) :
 	map.transform[2] = chunk_distance * location
 	add_child(map)
 	loaded_chunks[location] = map
+	map.connect("on_chunk_ready", chuck_ready)
 
 func get_current_chunk(location):
 	var chunk_pos = (location/chunk_distance).round()
@@ -166,3 +169,6 @@ func get_current_chunk(location):
 	#	return preloaded_chunks[chunk_pos]
 	else:
 		return null
+		
+func chuck_ready(pos):
+	get_tree().call_group("Player_Handlers", "chunk_ready", pos, chunk_size * tile_size)

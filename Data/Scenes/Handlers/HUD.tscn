@@ -15,7 +15,7 @@ region = Rect2(816, 357, 16, 16)
 atlas = ExtResource("5_inin8")
 region = Rect2(697, 272, 16, 16)
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" groups=["HUD"]]
 script = ExtResource("1_6ahfw")
 
 [node name="Dialog" parent="." instance=ExtResource("2_26pa4")]
@@ -29,7 +29,6 @@ visible = false
 
 [node name="LoadingScreen" type="CanvasLayer" parent="."]
 layer = 10
-visible = false
 
 [node name="ColorRect" type="ColorRect" parent="LoadingScreen"]
 anchors_preset = 15

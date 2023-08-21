@@ -12,7 +12,7 @@ metadata = {
 "unquie_fish_locations": []
 }
 
-[node name="PlayerHandler" type="Node2D"]
+[node name="PlayerHandler" type="Node2D" groups=["Player_Handlers"]]
 y_sort_enabled = true
 script = ExtResource("1_qta4b")
 player_state = SubResource("Resource_najbs")

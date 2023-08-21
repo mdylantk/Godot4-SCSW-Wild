@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dakbjl3ve5cul"]
+
+[ext_resource type="Script" path="res://Data/Scripts/Interactive_Body2d.gd" id="1_26mle"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w13t4"]
+size = Vector2(16, 16)
+
+[node name="Sprite_Object" type="StaticBody2D"]
+script = ExtResource("1_26mle")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_w13t4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]

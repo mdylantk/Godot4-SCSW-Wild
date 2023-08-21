@@ -12,14 +12,9 @@ var last_velocity : Vector2 #for caculating facing direction or other conditions
 
 func _physics_process(_delta) :
 	last_velocity = velocity
-	if use_input : 
-		var input_dir = Vector2(Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")).normalized()
-		if input_dir != Vector2.ZERO:
-			facing_dirction = input_dir
-		input_dir *= (1+Input.get_action_strength("Sprint")*sprint_modifier)
-		velocity = input_dir * speed
 	if velocity != Vector2.ZERO :
 		move_and_slide()
+		velocity = Vector2.ZERO
 		
 	if sprite != null :
 		if facing_dirction.x < 0 :
@@ -27,3 +22,10 @@ func _physics_process(_delta) :
 		elif facing_dirction.x > 0: 
 			sprite.flip_h = false
 
+#this is simple and will override any movement that been set. basily a handler(player or ai) can tell it to move
+#in a dir every physic update. may also have a move to location task, but then again the handler could do that
+func move(direction : Vector2):
+	if direction != Vector2.ZERO:
+		facing_dirction = direction
+		direction *= (1+Input.get_action_strength("Sprint")*sprint_modifier)
+		velocity = direction * speed

@@ -1,4 +1,5 @@
 class_name One_Bit_Tilemap extends TileMap
+signal on_chunk_ready(pos)
 
 @export var bounds : Vector2 = Vector2(32,32) #the bounds which generated content may extends to
 @export var bounds_offset : Vector2 #= Vector2(-16,-16)#since most maps are currently built around 0,0 instead of starting from it
@@ -13,6 +14,12 @@ var is_ready : bool = false: #a flag to state if the tilemap ready to be used or
 			is_ready = value
 			if is_ready:
 				visible = true
+				#should add a signal to tell world handler this is ready
+				#then have world handler call this or a signal version of this
+				#groups are more abstract, but signals might be faster and more ideal for a mostly static case
+				#get_tree().call_group("Player_Handlers", "chunk_ready", global_position)
+				on_chunk_ready.emit(global_position) #may need to include tile size. then world times that by map size
+				#but these values should be a const someplace since change them in certain cases(like world) would bread the grid
 			else:
 				visible = false
 	get:
@@ -78,6 +85,10 @@ func _process(_delta):
 		count -= 1
 		
 func _ready():
+	var children_positions = {}
+	for child in get_children():
+		children_positions[(child.global_position/(16)).floor()] = child
+	#print(children_positions)
 	#print("chunk loaded:" + str(self))
 	#randomize()
 	if !y_sort_enabled:
@@ -92,8 +103,9 @@ func _ready():
 			while y <= bounds.y:
 				var tile_location = Vector2(x,y)  + bounds_offset #bound is needed for the null check
 				#print(tile_location)
-				if get_cell_tile_data(0,tile_location) == null : #&& get_cell_tile_data(1,tile_location) == null && get_cell_tile_data(2,tile_location) == null :
-					empty_tiles.append(Vector2(x,y)) #incase static array is used...best to have a rar grid not base on offset, then add it
+				if !children_positions.has(tile_location):
+					if get_cell_tile_data(0,tile_location) == null : #&& get_cell_tile_data(1,tile_location) == null && get_cell_tile_data(2,tile_location) == null :
+						empty_tiles.append(Vector2(x,y)) #incase static array is used...best to have a rar grid not base on offset, then add it
 					#note: if static array is provided, objects on the map may be overrided
 					#static map a last case solution and if it is used, could move this logic up
 				y += 1

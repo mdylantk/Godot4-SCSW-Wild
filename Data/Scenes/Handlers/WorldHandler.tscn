@@ -2,6 +2,6 @@
 
 [ext_resource type="Script" path="res://Data/Scripts/WorldHandler.gd" id="1_57p0l"]
 
-[node name="WorldHandler" type="Node2D"]
+[node name="WorldHandler" type="Node2D" groups=["World_Handler"]]
 y_sort_enabled = true
 script = ExtResource("1_57p0l")

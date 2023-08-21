@@ -13,7 +13,7 @@ script = ExtResource("2_3hwqf")
 random_seed = 0
 metadata = {}
 
-[node name="GameHandler" type="Node2D"]
+[node name="GameHandler" type="Node2D" groups=["Game_Handler"]]
 y_sort_enabled = true
 script = ExtResource("1_m1g8b")
 game_state = SubResource("Resource_4kute")

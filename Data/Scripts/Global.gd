@@ -9,6 +9,9 @@ func get_game_handler():
 	
 func get_world_handler(): 
 	return get_node("/root/GameHandler/WorldHandler")
+
+func get_instance_handler():
+	return get_node("/root/GameHandler/InstanceHandler")
 	
 func get_hud(): 
 	return get_node("/root/GameHandler/HUD")
@@ -33,4 +36,19 @@ func is_client_player(source): #either player handler or pawn
 		return true
 	return false
 
+func change_parents(child_ref, new_parent):
+	if child_ref != null && new_parent != null:
+		var old_parent = child_ref.get_parent()
+		if old_parent != null:
+			old_parent.remove_child(child_ref)
+			new_parent.add_child(child_ref)
+			
+		else:
+			new_parent.add_child(child_ref)
+		print(str(child_ref))
+		print("is now child of ")
+		print(child_ref.get_parent())
+		print(" from : " + str(old_parent))
+		return true
+	return false
 

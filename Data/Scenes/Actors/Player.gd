@@ -17,6 +17,7 @@ func _process(_delta):
 	#this is here since use_input is tied with the loading screen. a state system is needed in the future 
 	var active_chunk = Global.get_world_handler().get_current_chunk(global_position)
 	#this is a temp way to diable movement if chunk is loading. 
+	#TODO, move to player handler
 	if active_chunk != null:
 		use_input = active_chunk.is_ready
 		#Global.get_hud().loading = !active_chunk.is_ready

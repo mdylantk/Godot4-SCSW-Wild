@@ -18,5 +18,6 @@ func _ready():
 		#NOTE: dose not generate the same so would need to look up how to sync values for same randoms
 	#print("game_handler loaded")
 	seed(game_state.random_seed)
+	
 
 
