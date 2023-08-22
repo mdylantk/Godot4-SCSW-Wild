@@ -6,25 +6,9 @@ extends CanvasLayer
 @onready var gui_score = $Score
 @onready var gui_dialog = $Dialog
 
-#@onready var loading : bool = true :
-	#set (value):
-		#print("changing loading stat to " + str(value))
-	#	await get_tree().create_timer(1).timeout #A delay so things can finish up.
-		#mostly when loading in at first or possible teleporting.
-		#main purpous is a cheap way to hide other chunk loading without needing to 
-		#check their state since only the active chunk is importaint. the others are extra
-	#	$LoadingScreen.visible = value
-	#	loading = value
-	#get: 
-	#	return loading
 
-func _ready():
-	#$LoadingScreen.visible = loading
-	#loading(true)
-	#NOTE: new issue if player go faster than loading. there currently no way to prevent that
-	#may need to add that collsion square and disble it when loading complete just to block player
-	#from entering a loading zone
-	pass
+#func _ready():
+	#pass
 
 func _process(_delta):
 	var player_data = Global.get_player_handler().player_state
@@ -36,10 +20,7 @@ func _process(_delta):
 	
 	#this being put here untill a timer or state system can take care of it
 	var player_pawn = Global.get_player_handler().pawn
-	#if player_pawn != null:
-	#	if loading == player_pawn.use_input:
-	#		loading = !player_pawn.use_input
-			
+
 	#testing a way to point back to home
 	#print(get_viewport().get_visible_rect().size)
 	var current_size = get_viewport().get_visible_rect().size
