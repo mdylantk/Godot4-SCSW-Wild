@@ -3,22 +3,21 @@ extends Node2D
 @export var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 @export var chunk_size : float = 32
 
-#below should be a resource that can be inputed. A tool may be needed to generate the resource form a node
-#may need to have regions and load this data from disk base on the current regions
-#that only nessary if the world have a lot of static chunks
-#so it may be a dict/array of resources or a resource that pull data from disk/other sources when
-#location provide is not loaded in
-@export var static_chunks : Dictionary = { 
-	Vector2(0,0):"uid://blyxjt47otoln", 
-	Vector2(4,8):"uid://clicnkneu0ddm",
-	Vector2(7,-2):"uid://bngicde5fixcp",
-	Vector2(-4,5):"uid://cyg3wosoq0787",
-	Vector2(-9,-6):"uid://t7rhh625brgr",
-	Vector2(-3,0):"uid://duqgklvehxux0",
-	Vector2(0,11):"uid://bbaafkh4f04vx",
-	Vector2(0,-21):"uid://t7rhh625brgr",
-	Vector2(42,0):"uid://clicnkneu0ddm"
-	}
+
+@export var level_data : Level_Data_2D
+#TODO: maybe just have one handler for world, and how it load is determin by a resource
+#stating static chunks and if it generate void chunks or not
+#@export var static_chunks : Dictionary = { 
+#	Vector2(0,0):"uid://blyxjt47otoln", 
+#	Vector2(4,8):"uid://clicnkneu0ddm",
+#	Vector2(7,-2):"uid://bngicde5fixcp",
+#	Vector2(-4,5):"uid://cyg3wosoq0787",
+#	Vector2(-9,-6):"uid://t7rhh625brgr",
+#	Vector2(-3,0):"uid://duqgklvehxux0",
+#	Vector2(0,11):"uid://bbaafkh4f04vx",
+#	Vector2(0,-21):"uid://t7rhh625brgr",
+#	Vector2(42,0):"uid://clicnkneu0ddm"
+#	}
 var chunk_distance = tile_size*(chunk_size+1)
 var offset = Vector2(-2,-2)
 var loaded_point = Vector2(0,0)
@@ -40,7 +39,6 @@ func load_chunks(pos):
 		pos.y <= current_origin.y - chunk_distance ) :
 			loaded_point = (pos/chunk_distance).round()
 			generate_chunks()
-			#print("MEOW!!!")
 
 #func _process(_delta):
 	#pass
@@ -56,18 +54,16 @@ func generate_chunks() :
 			if true: #!preloaded_chunks.has(grid_position) : #chunk_distance * (grid_position) != Vector2.ZERO:
 				if !loaded_chunks.has(grid_position):
 					var map
-					if static_chunks.has(grid_position) :
-						var scene_ref = static_chunks[grid_position]
-						#map = scene_ref.instantiate()
-						#pretty much look up a cord in a dict and then use the value(a scene path) to spawn it in
-						#print("init a diffrent scene")
-						#if map == null:
-						#	map = default_scene.instantiate()
-						#	print("if init fail, init default")
-						#load_chunk(scene_ref,grid_position,true)
-						call_deferred("load_chunk",scene_ref,grid_position,false)
+					if level_data != null:
+						var chunk_ref = level_data.get_chunk(grid_position)
+						if chunk_ref != null:
+							print("loading: " + str(chunk_ref))
+							call_deferred("load_chunk",chunk_ref,grid_position,!chunk_ref is String)
+					#elif static_chunks.has(grid_position) :
+						#var scene_ref = static_chunks[grid_position]
+						#call_deferred("load_chunk",scene_ref,grid_position,false)
 					elif randi() % 100 <= 4:
-						call_deferred("load_chunk",rare_scene,grid_position,true)	
+						call_deferred("load_chunk",rare_scene,grid_position,true)
 					else:
 						#map = default_scene.instantiate()
 						#load_chunk(default_scene,grid_position,true)
