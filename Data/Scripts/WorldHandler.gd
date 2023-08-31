@@ -1,10 +1,26 @@
+@tool
 extends Node2D
 
 @export var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 @export var chunk_size : float = 32
 
-
-@export var level_data : Level_Data_2D
+@export var level_data : Level_Data_2D :
+	set(value):
+		print_debug("setting level")
+		if level_data != value:
+			#print_debug("level set")
+			level_data = value
+			for old_pos in loaded_chunks.keys():
+				chuck_update(old_pos,false)
+				remove_child(loaded_chunks[old_pos])
+				loaded_chunks[old_pos].queue_free()
+				#print_debug("removing")
+				#print(str(old_pos))
+				#print(loaded_chunks[null_pos])
+				loaded_chunks.erase(old_pos)
+			generate_chunks()
+	get:
+		return level_data
 #TODO: maybe just have one handler for world, and how it load is determin by a resource
 #stating static chunks and if it generate void chunks or not
 #@export var static_chunks : Dictionary = { 
@@ -20,16 +36,25 @@ extends Node2D
 #	}
 var chunk_distance = tile_size*(chunk_size+1)
 var offset = Vector2(-2,-2)
-var loaded_point = Vector2(0,0)
-
+@export var loaded_point = Vector2(0,0):
+	set(value):
+		loaded_point = value
+		generate_chunks()
+	get:
+		return loaded_point
 #preload only work with the direct path, not id
-var default_scene = preload("res://Data/Scenes/TilemapTemplate.tscn")
-var rare_scene = preload("res://Data/Scenes/RareTemplate.tscn")
+#var default_scene = preload("res://Data/Scenes/Maps/TilemapTemplate.tscn")
+#var rare_scene = preload("res://Data/Scenes/Maps/RareTemplate.tscn")
 
 var loaded_chunks = {}
 
 func _ready():
 	generate_chunks()
+
+func change_level(new_level_data, instigator = null, location_offset = Vector2()):
+	#test change via group call
+	print_debug("changing level")
+	level_data = new_level_data
 
 func load_chunks(pos):
 	var current_origin = loaded_point * chunk_distance
@@ -38,7 +63,7 @@ func load_chunks(pos):
 		pos.y >= current_origin.y + chunk_distance ||
 		pos.y <= current_origin.y - chunk_distance ) :
 			loaded_point = (pos/chunk_distance).round()
-			generate_chunks()
+			#generate_chunks()
 
 #func _process(_delta):
 	#pass
@@ -51,41 +76,32 @@ func generate_chunks() :
 	while x <= 3:
 		while y <= 3:
 			var grid_position = Vector2(x,y) + offset + loaded_point
-			if true: #!preloaded_chunks.has(grid_position) : #chunk_distance * (grid_position) != Vector2.ZERO:
-				if !loaded_chunks.has(grid_position):
-					var map
-					if level_data != null:
-						var chunk_ref = level_data.get_chunk(grid_position)
-						if chunk_ref != null:
-							print("loading: " + str(chunk_ref))
-							call_deferred("load_chunk",chunk_ref,grid_position,!chunk_ref is String)
-					#elif static_chunks.has(grid_position) :
-						#var scene_ref = static_chunks[grid_position]
-						#call_deferred("load_chunk",scene_ref,grid_position,false)
-					elif randi() % 100 <= 4:
-						call_deferred("load_chunk",rare_scene,grid_position,true)
-					else:
-						#map = default_scene.instantiate()
-						#load_chunk(default_scene,grid_position,true)
-						call_deferred("load_chunk",default_scene,grid_position,true)
-						#print("init default scene")
-					
-				else:
-					old_chunk_coord.remove_at(old_chunk_coord.find(grid_position))
-			#else:
-				#preloaded_chunks[grid_position].visible = true
+			if !loaded_chunks.has(grid_position):
+				var map
+				if level_data != null:
+					var chunk_ref = level_data.get_chunk(grid_position)
+					if chunk_ref != null:
+						#print("loading: " + str(chunk_ref))
+						call_deferred("load_chunk",chunk_ref,grid_position,!chunk_ref is String)
+			else:
+				old_chunk_coord.remove_at(old_chunk_coord.find(grid_position))
 			y += 1
 		y = 0
 		x += 1
 	for null_pos in old_chunk_coord:
+		chuck_update(null_pos,false)
 		remove_child(loaded_chunks[null_pos])
 		loaded_chunks[null_pos].queue_free()
-		#print("removing")
+		#print_debug("removing")
+		#print(str(null_pos))
 		#print(loaded_chunks[null_pos])
 		loaded_chunks.erase(null_pos)
 
 func load_chunk(ref,location = Vector2(), is_loaded = true) :
 	var map
+	if loaded_chunks.has(location):
+		#print_debug("warning location exist, ignoring loading chunk")
+		return
 	if is_loaded :
 		map = ref.instantiate()
 	else:
@@ -95,7 +111,8 @@ func load_chunk(ref,location = Vector2(), is_loaded = true) :
 	add_child(map)
 	loaded_chunks[location] = map
 	#map.connect("on_chunk_ready", chuck_ready)
-	map.on_chunk_ready.connect(chuck_ready)
+	if map.has_signal("on_chunk_ready"): #tool cause errors here so map may not be fully ready? 
+		map.on_chunk_ready.connect(chuck_update)
 
 func get_current_chunk(location):
 	var chunk_pos = (location/chunk_distance).round()
@@ -107,5 +124,11 @@ func get_current_chunk(location):
 	else:
 		return null
 		
-func chuck_ready(pos):
-	get_tree().call_group("Player_Handlers", "chunk_ready", pos, chunk_size * tile_size)
+func chuck_update(pos,is_ready = true):
+	#need to decide on pos or chunk pos. the signal use pos, but unload use chunk
+	#the issues is where map size is located(currently here) so children do not know about it
+	var map_size = chunk_size * tile_size
+	if is_ready:
+		get_tree().call_group("Player_Handlers", "chunk_update", (pos/map_size).round(), map_size, is_ready)
+	else:
+		get_tree().call_group("Player_Handlers", "chunk_update", pos, map_size, is_ready)

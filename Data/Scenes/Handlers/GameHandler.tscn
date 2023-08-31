@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dvaxx0ke0p27m"]
+[gd_scene load_steps=8 format=3 uid="uid://dvaxx0ke0p27m"]
 
 [ext_resource type="Script" path="res://Data/Scripts/GameHandler.gd" id="1_m1g8b"]
 [ext_resource type="Script" path="res://Data/Scripts/Game_State.gd" id="2_3hwqf"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://cm61gulbfk785" path="res://Data/Scenes/Handlers/PlayerHandler.tscn" id="3_67w6c"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Data/Scenes/Actors/Player.tscn" id="4_yib42"]
 [ext_resource type="PackedScene" uid="uid://b0xxl3pylly7j" path="res://Data/Scenes/Handlers/WorldHandler.tscn" id="5_jaupa"]
-[ext_resource type="PackedScene" uid="uid://wo5h12aqtjea" path="res://Data/Scenes/Handlers/InstanceHandler.tscn" id="7_swko2"]
 
 [sub_resource type="Resource" id="Resource_4kute"]
 script = ExtResource("2_3hwqf")
@@ -26,5 +25,3 @@ game_state = SubResource("Resource_4kute")
 position = Vector2(456, 232)
 
 [node name="WorldHandler" parent="." instance=ExtResource("5_jaupa")]
-
-[node name="InstanceHandler" parent="." instance=ExtResource("7_swko2")]

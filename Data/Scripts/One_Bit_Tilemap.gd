@@ -1,3 +1,4 @@
+@tool
 class_name One_Bit_Tilemap extends TileMap
 signal on_chunk_ready(pos)
 
@@ -99,13 +100,13 @@ func _ready():
 func pick_foliage_tile():
 	
 	var random_roll = randi() % 100
-	if random_roll <= 30:
+	if random_roll <= 30 && grass_tiles.size() > 0:
 		#grass_tiles
 		return grass_tiles[randi() % grass_tiles.size()]
-	elif random_roll <= 60:
+	elif random_roll <= 60 && tree_tiles.size() > 0:
 		#tree_tiles
 		return tree_tiles[randi() % tree_tiles.size()]
-	elif random_roll <= 70:
+	elif random_roll <= 70 && rock_tiles.size() > 0:
 		#rock_tiles
 		return rock_tiles[randi() % rock_tiles.size()]
 	else:

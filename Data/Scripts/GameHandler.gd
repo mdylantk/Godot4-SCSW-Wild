@@ -11,5 +11,3 @@ func _ready():
 	seed(game_state.random_seed)
 	#TODO: learn how to seed properly so same seed will generate same world
 	
-
-

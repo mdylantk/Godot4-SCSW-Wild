@@ -26,14 +26,14 @@ func on_transfer():
 		transfer_state = abs(transfer_state)
 	elif transfer_state == Transfer_State_Enum.To_World:
 		get_tree().call_group("HUD", "loading", true)
-		var active_chunk = Global.get_world_handler().get_current_chunk(pawn.global_position)
-		if active_chunk != null:
-			if active_chunk.is_ready:
-				var world_ref = Global.get_world_handler()
-				if Global.change_parents(pawn, world_ref):
-					print_debug("transfer player to world")
-				else:
-					print_debug("something is null")
+		#var active_chunk = Global.get_world_handler().get_current_chunk(pawn.global_position)
+		#if active_chunk != null:
+			#if active_chunk.is_ready:
+				#var world_ref = Global.get_world_handler()
+				#if Global.change_parents(pawn, world_ref):
+				#	print_debug("transfer player to world")
+				#else:
+				#	print_debug("something is null")
 		pass
 	elif transfer_state == Transfer_State_Enum.To_Instance:
 		#TODO: this logic is not tested and not finish. should
@@ -72,16 +72,20 @@ func _physics_process(_delta) :
 		if transfer_state == Transfer_State_Enum.World || transfer_state == Transfer_State_Enum.To_World:
 			get_tree().call_group("World_Handler", "load_chunks", pawn.global_position)
 
-func chunk_ready(pos,length):
-	print("chunk ready: " + str(pos) + " | size :" + str(length))
-	if transfer_state == Transfer_State_Enum.To_World:
-		if (pawn.global_position/length).round() == (pos/length).round():
-			print(str((pawn.global_position/length).round()))
-			print(str((pawn.global_position/length).round()))
-			transfer_state = Transfer_State_Enum.World
-			print(str(transfer_state))
-			#this might fail if it ready before player is ready
-			#need to connect the hud since the loading screen probably still using the old data
+func chunk_update(pos,length,is_loaded):
+	#print("chunk ready: " + str(is_loaded) + " " + str(pos) + " | size :" + str(length))
+	if is_loaded:
+		if transfer_state == Transfer_State_Enum.To_World:
+			if (pawn.global_position/length).round() == pos : #(pos/length).round():
+				transfer_state = Transfer_State_Enum.World
+				#this might fail if it ready before player is ready
+				#need to connect the hud since the loading screen probably still using the old data
+	else:
+		#this seem to be slow at being called? 
+		#print_debug(str((pawn.global_position/length).round()) + " == " + str(pos))
+		if (pawn.global_position/length).round() == pos : #(pos/length).round():
+			transfer_state = Transfer_State_Enum.To_World
+			
 
 func _input(event) :
 	#NOTE: facing direction is being ref here, and if pawn lacks it, it could be a problem
