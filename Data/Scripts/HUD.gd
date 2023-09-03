@@ -45,7 +45,7 @@ func _process(_delta):
 			$HomePoint.visible = false
 
 func loading(is_loading):
-	await get_tree().create_timer(1).timeout #A delay so things can finish up.
+	#await get_tree().create_timer(1).timeout #A delay so things can finish up. currrenty need to be appled difftrently or not used
 	$LoadingScreen.visible = is_loading
 
 

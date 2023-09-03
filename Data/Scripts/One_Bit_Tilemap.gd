@@ -2,11 +2,18 @@
 class_name One_Bit_Tilemap extends TileMap
 signal on_chunk_ready(pos)
 
+#TODO: make generate logic togglable. also probably add a way to store changes so it can be reset
+#else every time the map is loaded, it generates adn changes in editor are saved
+
+
 @export var bounds : Vector2 = Vector2(32,32) #the bounds which generated content may extends to
 @export var bounds_offset : Vector2 #= Vector2(-16,-16)#since most maps are currently built around 0,0 instead of starting from it
 #offset is used to correct it. ir remove offset, all maps need to be redesign to start from 0,0, not centered around it
 
-@export var empty_tiles : Array[Vector2] #if an array is provided, will skip the generation and use the array instead
+var empty_tiles : Array[Vector2] #if an array is provided, will skip the generation and use the array instead
+
+#@export var generate_foliage_editor : bool = false #it be better to clear or regen the loaded chunks
+@export var allow_foliage_generation : bool = true
 
 var is_ready : bool = false: #a flag to state if the tilemap ready to be used or still running eneration logic
 	#could use a signal here
@@ -54,6 +61,8 @@ var is_ready : bool = false: #a flag to state if the tilemap ready to be used or
 ]
 
 func _process(_delta):
+	#note: this is shutting off process. may need to hold it own state if process is used for other things
+	#or use awaite in a generate chunk func...but still need a flag stating if generation active
 	var count = 16
 	while count > 0:
 		if empty_tiles.is_empty():
@@ -70,17 +79,20 @@ func _process(_delta):
 		count -= 1
 		
 func _ready():
+
+	if !y_sort_enabled:
+		y_sort_enabled = true #note this override it,but currently y sort is wanted and new tilemaps is not including it
+	
+	recaculate_empty_tiles()
+	set_process(true)
+
+func recaculate_empty_tiles(enable_generation: bool = true):
+	empty_tiles.clear()
 	var children_positions = {}
 	for child in get_children():
 		children_positions[(child.global_position/(16)).floor()] = child
-	#print(children_positions)
-	#print("chunk loaded:" + str(self))
-	#randomize()
-	if !y_sort_enabled:
-		y_sort_enabled = true #note this override it,but currently y sort is wanted and new tilemaps is not including it
-	#if !layer[0].y_sort_enabled:
-	#	layer[0].y_sort_enabled = true
-	if empty_tiles.is_empty():
+		
+	if empty_tiles.is_empty() && allow_foliage_generation:
 		visible = false
 		var x = 0
 		var y = 0
@@ -96,9 +108,9 @@ func _ready():
 				y += 1
 			y = 0
 			x += 1
-		set_process(true) #incase it is off. also could use a timer and an await, but this works for now
+		set_process(enable_generation) #incase it is off. also could use a timer and an await, but this works for now
+
 func pick_foliage_tile():
-	
 	var random_roll = randi() % 100
 	if random_roll <= 30 && grass_tiles.size() > 0:
 		#grass_tiles

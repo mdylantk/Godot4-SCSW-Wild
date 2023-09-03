@@ -1,8 +1,6 @@
-[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=6 format=3 uid="uid://dghnl8cd6ev5n"]
+[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=4 format=3 uid="uid://dghnl8cd6ev5n"]
 
-[ext_resource type="PackedScene" uid="uid://ba1djs75axgrn" path="res://Data/Scenes/Maps/TilemapTemplate.tscn" id="2_2q6iv"]
 [ext_resource type="Script" path="res://Data/Scripts/Chunk_Data.gd" id="2_mt8cj"]
-[ext_resource type="PackedScene" uid="uid://bfu88ysypa0qs" path="res://Data/Scenes/Maps/NullZone.tscn" id="3_8x0w8"]
 [ext_resource type="Script" path="res://Data/Scripts/Level_Data_2D.gd" id="12_jrb81"]
 
 [sub_resource type="Resource" id="Resource_mhhvq"]
@@ -14,8 +12,8 @@ random_weight = 1.0
 
 [resource]
 script = ExtResource("12_jrb81")
-default_chunk = ExtResource("2_2q6iv")
-null_chunk = ExtResource("3_8x0w8")
+default_chunk = "res://Data/Scenes/Maps/TilemapTemplate.tscn"
+null_chunk = "res://Data/Scenes/Maps/NullZone.tscn"
 return_null_on_default = false
 level_max_bounds = Vector2(0, 0)
 level_min_bounds = Vector2(0, 0)

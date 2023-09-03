@@ -10,14 +10,12 @@ extends Node2D
 		if level_data != value:
 			#print_debug("level set")
 			level_data = value
-			for old_pos in loaded_chunks.keys():
-				chuck_update(old_pos,false)
-				remove_child(loaded_chunks[old_pos])
-				loaded_chunks[old_pos].queue_free()
-				#print_debug("removing")
-				#print(str(old_pos))
-				#print(loaded_chunks[null_pos])
-				loaded_chunks.erase(old_pos)
+			clear_chunks(loaded_chunks.keys())
+			#for old_pos in loaded_chunks.keys():
+			#	chuck_update(old_pos,false)
+			#	remove_child(loaded_chunks[old_pos])
+			#	loaded_chunks[old_pos].queue_free()
+			#	loaded_chunks.erase(old_pos)
 			generate_chunks()
 	get:
 		return level_data
@@ -88,13 +86,21 @@ func generate_chunks() :
 			y += 1
 		y = 0
 		x += 1
-	for null_pos in old_chunk_coord:
-		chuck_update(null_pos,false)
-		remove_child(loaded_chunks[null_pos])
-		loaded_chunks[null_pos].queue_free()
+	clear_chunks(old_chunk_coord)
+	#for null_pos in old_chunk_coord:
+	#	chuck_update(null_pos,false)
+	#	remove_child(loaded_chunks[null_pos])
+	#	loaded_chunks[null_pos].queue_free()
 		#print_debug("removing")
 		#print(str(null_pos))
 		#print(loaded_chunks[null_pos])
+	#	loaded_chunks.erase(null_pos)
+
+func clear_chunks(old_chunk_coords : Array ):
+	for null_pos in old_chunk_coords:
+		chuck_update(null_pos,false)
+		remove_child(loaded_chunks[null_pos])
+		loaded_chunks[null_pos].queue_free()
 		loaded_chunks.erase(null_pos)
 
 func load_chunk(ref,location = Vector2(), is_loaded = true) :

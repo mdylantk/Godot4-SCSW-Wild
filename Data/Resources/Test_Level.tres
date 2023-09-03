@@ -1,21 +1,10 @@
-[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=23 format=3 uid="uid://f4gufwtv0l5v"]
+[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=13 format=3 uid="uid://f4gufwtv0l5v"]
 
-[ext_resource type="PackedScene" uid="uid://blyxjt47otoln" path="res://Data/Scenes/Maps/Tilemap0.tscn" id="1_2tyu0"]
 [ext_resource type="Script" path="res://Data/Scripts/Level_Data_2D.gd" id="2_m6b6k"]
-[ext_resource type="PackedScene" uid="uid://clicnkneu0ddm" path="res://Data/Scenes/Maps/Pond_0.tscn" id="3_4e3eg"]
-[ext_resource type="PackedScene" uid="uid://bngicde5fixcp" path="res://Data/Scenes/Maps/Pond_1.tscn" id="4_gdwr4"]
-[ext_resource type="PackedScene" uid="uid://cyg3wosoq0787" path="res://Data/Scenes/Maps/Pond_2.tscn" id="5_1y7u4"]
 [ext_resource type="Script" path="res://Data/Scripts/Chunk_Data.gd" id="5_j28pw"]
-[ext_resource type="PackedScene" uid="uid://t7rhh625brgr" path="res://Data/Scenes/Maps/Pond_3.tscn" id="6_qi8ys"]
-[ext_resource type="PackedScene" uid="uid://duqgklvehxux0" path="res://Data/Scenes/Maps/Pond_4.tscn" id="7_qu6vl"]
-[ext_resource type="PackedScene" uid="uid://bbaafkh4f04vx" path="res://Data/Scenes/Maps/Pond_5.tscn" id="8_degol"]
-[ext_resource type="PackedScene" uid="uid://m6q0b4c1q5f6" path="res://Data/Scenes/Maps/RareTemplate.tscn" id="9_c6jaj"]
-[ext_resource type="PackedScene" uid="uid://ba1djs75axgrn" path="res://Data/Scenes/Maps/TilemapTemplate.tscn" id="10_7o5d8"]
-[ext_resource type="PackedScene" uid="uid://bfu88ysypa0qs" path="res://Data/Scenes/Maps/NullZone.tscn" id="11_416jc"]
 
 [sub_resource type="Resource" id="Resource_mhhvq"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("1_2tyu0")
 chunk_scene_path = "res://Data/Scenes/Maps/Tilemap0.tscn"
 is_static_chunk = true
 static_location = Vector2(0, 0)
@@ -23,7 +12,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_erypo"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("3_4e3eg")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_0.tscn"
 is_static_chunk = true
 static_location = Vector2(4, 8)
@@ -31,7 +19,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_rkghm"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("4_gdwr4")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_1.tscn"
 is_static_chunk = true
 static_location = Vector2(7, -2)
@@ -39,7 +26,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_65xq5"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("5_1y7u4")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_2.tscn"
 is_static_chunk = true
 static_location = Vector2(-4, 5)
@@ -47,7 +33,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_i7y01"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("6_qi8ys")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_3.tscn"
 is_static_chunk = true
 static_location = Vector2(-9, -6)
@@ -55,7 +40,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_i605s"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("7_qu6vl")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_4.tscn"
 is_static_chunk = true
 static_location = Vector2(-3, 0)
@@ -63,7 +47,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_3f23o"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("8_degol")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_5.tscn"
 is_static_chunk = true
 static_location = Vector2(0, 11)
@@ -71,7 +54,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_p72d8"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("6_qi8ys")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_3.tscn"
 is_static_chunk = true
 static_location = Vector2(0, -21)
@@ -79,7 +61,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_rsajw"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("4_gdwr4")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_1.tscn"
 is_static_chunk = true
 static_location = Vector2(42, 0)
@@ -87,7 +68,6 @@ random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_7r5lq"]
 script = ExtResource("5_j28pw")
-chunk_scene = ExtResource("9_c6jaj")
 chunk_scene_path = "res://Data/Scenes/Maps/RareTemplate.tscn"
 is_static_chunk = false
 static_location = Vector2(0, 0)
@@ -95,8 +75,8 @@ random_weight = 1.0
 
 [resource]
 script = ExtResource("2_m6b6k")
-default_chunk = ExtResource("10_7o5d8")
-null_chunk = ExtResource("11_416jc")
+default_chunk = "res://Data/Scenes/Maps/TilemapTemplate.tscn"
+null_chunk = "res://Data/Scenes/Maps/NullZone.tscn"
 return_null_on_default = false
 level_max_bounds = Vector2(4, 4)
 level_min_bounds = Vector2(-4, -4)
