@@ -49,10 +49,10 @@ func _ready():
 	#	if Global.global_varibles.has("fish_" + str(starting_location)):
 	#		remove_self()
 
-func on_interact(_target):
+func on_interact(event):
 	var data_source
-	if _target.get_parent() is Player_Handler:
-		data_source = _target.get_parent().player_state.metadata
+	if event.owner is Player_Handler:
+		data_source = event.owner.player_state.metadata
 	else:
 		data_source = Global.global_varibles
 		

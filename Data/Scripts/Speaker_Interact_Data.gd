@@ -6,8 +6,8 @@ class_name Speaker_Interact_Data extends Interactive_Data
 #currently this is not used and if so it be for
 #generic ncp chat untill more is added
 
-func interact(_instigator,_owner,_data = null):
-	if Global.is_client_player(_instigator):
-		Global.get_hud().gui_dialog.start_dialog(_owner, dialog_data)
+func interact(event):
+	if Global.is_client_player(event.instigator):
+		Global.get_hud().gui_dialog.start_dialog(event.owner, dialog_data)
 	
-	super.interact(_instigator,_owner,_data)
+	super.interact(event)

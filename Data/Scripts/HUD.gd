@@ -1,6 +1,11 @@
 @tool
 extends CanvasLayer
 
+#generic signal that state when a gui scene been update...if said update emit it(placeholder mostly)
+#currently no use since most update per process. also children may call their own, but may also call this
+#to let others know the object ref so they could connect if needed
+signal gui_update(element)
+
 @export var hide_hud : bool = false :
 	set(value):
 		if value != hide_hud:
@@ -43,6 +48,7 @@ func _process(_delta):
 			#Vector2(16*32,16*32) is the offset. should be the player orginal spawn or the old man global location
 		else:
 			$HomePoint.visible = false
+		
 
 func loading(is_loading):
 	#await get_tree().create_timer(1).timeout #A delay so things can finish up. currrenty need to be appled difftrently or not used

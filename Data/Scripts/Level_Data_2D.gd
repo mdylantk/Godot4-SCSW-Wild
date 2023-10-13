@@ -16,6 +16,16 @@ class_name Level_Data_2D extends Resource
 @export var level_max_bounds: Vector2
 @export var level_min_bounds: Vector2
 @export var use_level_bounds: bool = false
+
+#Noise should be related to level which basicly world data
+#also should decide how to seed them. could base it on world seed +- an offset
+#or have it fixed and have the seed editable
+@export var tempture_map : Noise
+@export var humidity_map : Noise
+#detail is ment to be for if a feature spawn or it empty space/unchanged. 
+@export var detail_map : Noise
+#variation is for picking the variation of a tile.
+@export var variation_map : Noise
 #note: a way to handle random chunks are still needed. currently usong array[0] inless 10% chance
 #is rolled...then a random array between 0-max is picked
 

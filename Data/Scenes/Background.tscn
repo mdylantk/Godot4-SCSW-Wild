@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://wqfpqmmkbg0n"]
+
+[ext_resource type="Shader" path="res://Data/Assets/Simple_Noise_Shader.gdshader" id="1_4dk0i"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0v6uw"]
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_e7kml"]
+generate_mipmaps = false
+seamless = true
+noise = SubResource("FastNoiseLite_0v6uw")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7qlwo"]
+shader = ExtResource("1_4dk0i")
+shader_parameter/max_range = Vector3(0.09, 0.09, 0.1)
+shader_parameter/min_range = Vector3(0, 0, 0)
+shader_parameter/use_screen_uv = false
+shader_parameter/use_world_uv = false
+shader_parameter/uv_offset = Vector2(0, 0)
+shader_parameter/uv_scale = Vector2(1, 1)
+shader_parameter/noise_img = SubResource("NoiseTexture2D_e7kml")
+
+[node name="Background" type="ColorRect"]
+z_index = -50
+material = SubResource("ShaderMaterial_7qlwo")
+offset_right = 512.0
+offset_bottom = 512.0

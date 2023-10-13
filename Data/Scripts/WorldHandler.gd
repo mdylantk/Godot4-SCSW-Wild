@@ -1,5 +1,17 @@
 @tool
-extends Node2D
+class_name World_Handler extends Node2D
+
+#TODO: add common world event as signals and call them correct so they can be listen to
+#updates that state it pos/souce and if it load/unloaded
+signal chunk_update(tile_map, chunk_position, is_unloaded)
+#signal region_update
+
+static var world_handler : World_Handler
+
+#TODO: maybe have a world state(or meta) to state what persetaint actor are in a region
+#this could be link with a region
+#(also if one tilemap per region works, then could slowly generate all the tiles after
+#main ones are done). 
 
 @export var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 @export var chunk_size : float = 32
@@ -47,6 +59,7 @@ var offset = Vector2(-2,-2)
 var loaded_chunks = {}
 
 func _ready():
+	world_handler = self
 	generate_chunks()
 
 func change_level(new_level_data, instigator = null, location_offset = Vector2()):
@@ -98,6 +111,9 @@ func generate_chunks() :
 
 func clear_chunks(old_chunk_coords : Array ):
 	for null_pos in old_chunk_coords:
+		
+		chunk_update.emit(loaded_chunks[null_pos], null_pos, true) #map may be null
+		
 		chuck_update(null_pos,false)
 		remove_child(loaded_chunks[null_pos])
 		loaded_chunks[null_pos].queue_free()
@@ -119,6 +135,9 @@ func load_chunk(ref,location = Vector2(), is_loaded = true) :
 	#map.connect("on_chunk_ready", chuck_ready)
 	if map.has_signal("on_chunk_ready"): #tool cause errors here so map may not be fully ready? 
 		map.on_chunk_ready.connect(chuck_update)
+		
+	#todo, decide on a better location. this call it when a new map is spawn(since currently each map a chunk)
+	chunk_update.emit(map, location, false)
 
 func get_current_chunk(location):
 	var chunk_pos = (location/chunk_distance).round()
@@ -130,6 +149,7 @@ func get_current_chunk(location):
 	else:
 		return null
 		
+
 func chuck_update(pos,is_ready = true):
 	#need to decide on pos or chunk pos. the signal use pos, but unload use chunk
 	#the issues is where map size is located(currently here) so children do not know about it

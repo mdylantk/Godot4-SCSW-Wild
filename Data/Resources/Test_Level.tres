@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=13 format=3 uid="uid://f4gufwtv0l5v"]
+[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=15 format=3 uid="uid://f4gufwtv0l5v"]
 
 [ext_resource type="Script" path="res://Data/Scripts/Level_Data_2D.gd" id="2_m6b6k"]
 [ext_resource type="Script" path="res://Data/Scripts/Chunk_Data.gd" id="5_j28pw"]
@@ -73,6 +73,16 @@ is_static_chunk = false
 static_location = Vector2(0, 0)
 random_weight = 1.0
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ksnqp"]
+fractal_lacunarity = 20.0
+fractal_gain = 0.9
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bboo5"]
+frequency = 0.05
+fractal_octaves = 2
+fractal_lacunarity = 100.0
+fractal_gain = 1.0
+
 [resource]
 script = ExtResource("2_m6b6k")
 default_chunk = "res://Data/Scenes/Maps/TilemapTemplate.tscn"
@@ -81,4 +91,6 @@ return_null_on_default = false
 level_max_bounds = Vector2(4, 4)
 level_min_bounds = Vector2(-4, -4)
 use_level_bounds = false
+detail_map = SubResource("FastNoiseLite_ksnqp")
+variation_map = SubResource("FastNoiseLite_bboo5")
 chunks = Array[ExtResource("5_j28pw")]([SubResource("Resource_mhhvq"), SubResource("Resource_erypo"), SubResource("Resource_rkghm"), SubResource("Resource_65xq5"), SubResource("Resource_i7y01"), SubResource("Resource_i605s"), SubResource("Resource_3f23o"), SubResource("Resource_p72d8"), SubResource("Resource_rsajw"), SubResource("Resource_7r5lq")])

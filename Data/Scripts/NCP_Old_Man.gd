@@ -11,8 +11,8 @@ func _ready():
 	if player_data.has("visited_"+str(dialog.id)) && dialog.save_visited_flag :
 		dialog.visited = player_data["visited_"+str(dialog.id)]
 		
-func on_interact(_target):
-	if Global.is_client_player(_target):
+func on_interact(event):#_target):
+	if Global.is_client_player(event.instigator):
 		if dialog_data.state != 0:
 			return
 		if dialog_data.visited:

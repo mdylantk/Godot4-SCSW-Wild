@@ -1,5 +1,7 @@
 extends Node2D
 
+#TODO: this most likly not going to be used
+
 #todo: this handles loading, unloading, and culling instances
 #also: could have game handle loading and unloading these handler
 #so the getter just get a ref to what is loaded

@@ -21,3 +21,7 @@ mono_crash.*.json
 .DS_Store
 *~
 *.blend1
+
+# other
+.GDExtension/
+.bin/

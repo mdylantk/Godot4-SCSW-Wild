@@ -5,8 +5,9 @@ class_name Old_Man_Interact_Data extends Interactive_Data
 
 @export var dialog_data : Dialog_Data
 
-func interact(_instigator,_owner,_data = null):
-	if Global.is_client_player(_instigator):
+#todo: the event pass eould have a few ofthis data. also should not store event in a class level var since it ment gc after all tasks are finished
+func interact(event):
+	if Global.is_client_player(event.instigator):
 		if dialog_data.state != 0:
 			return
 		if dialog_data.visited:
@@ -24,5 +25,5 @@ func interact(_instigator,_owner,_data = null):
 		
 		#print("testing the new system")
 		#now can decide when to load dialig as well as get notify when it would have started
-		Global.get_hud().gui_dialog.start_dialog(_owner, dialog_data)
+		Global.get_hud().gui_dialog.start_dialog(event.target, dialog_data)
 	pass

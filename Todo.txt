@@ -45,3 +45,6 @@ For future version:
     -Static worlds for main story or side story content. these are part of the real world and not of the compress plane (of time and space)
     -Regions of theme generation so it not just nature base wilderness. This could become quite abstract.
 	
+	
+Note on .bin:
+	if there is a .bin dir, then that a prototype for making a gdextextention. the extention file was put in there to disable loading it up.

@@ -18,6 +18,7 @@ script = ExtResource("1_m1g8b")
 game_state = SubResource("Resource_4kute")
 
 [node name="HUD" parent="." instance=ExtResource("2_ifea7")]
+hide_hud = true
 
 [node name="PlayerHandler0" parent="." instance=ExtResource("3_67w6c")]
 
