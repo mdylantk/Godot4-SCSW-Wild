@@ -66,6 +66,8 @@ var is_ready : bool = false: #a flag to state if the tilemap ready to be used or
 	Vector2i(0,2),
 	#Vector2i(2,2), #a bit odd of a tile. look like a tree like vine more than grass
 	#Vector2i(1,2)
+	#adding empty to allow more emprty space
+	Vector2i(0,0)
 	
 ]
 @export var tree_tiles : Array[Vector2i] = [
@@ -77,14 +79,18 @@ var is_ready : bool = false: #a flag to state if the tilemap ready to be used or
 	Vector2i(5,1),
 	Vector2i(3,2),
 	Vector2i(4,2),
-	Vector2i(6,2)
+	Vector2i(6,2),
+	
+	Vector2i(0,0)
 ]
 @export var rock_tiles : Array[Vector2i] = [
 	Vector2i(5,2),
 	Vector2i(1,0),
 	Vector2i(2,0),
 	Vector2i(3,0),
-	Vector2i(4,0)
+	Vector2i(4,0),
+	
+	Vector2i(0,0)
 ]
 
 
@@ -179,13 +185,17 @@ func recaculate_empty_tiles(enable_generation: bool = true):
 func pick_foliage_tile(pos):
 	var noise_value = round((random_noise.get_noise_2d(pos.x,pos.y)+1)*5)
 
+	var variation_roll = randf()
 	var random_roll = randi() % 100
 	
 	#this is a test. may need to pass the object or related var to the tile map or
 	#run this logic in wthe world (or host the logic here, but called aboved)
-	if Global.get_world_handler().level_data.detail_map != null:
+	if World_Handler.world_handler.level_data.detail_map != null:
 		#note this is not seeded and my create similar gen. it wanted, but the seed should be modified per save
-		random_roll = (Global.get_world_handler().level_data.detail_map.get_noise_2d(pos.x*5,pos.y*5)+1)*50
+		random_roll = (World_Handler.world_handler.level_data.detail_map.get_noise_2d(pos.x*5,pos.y*5)+1)*50
+	if World_Handler.world_handler.level_data.variation_map != null:
+		#note this is not seeded and my create similar gen. it wanted, but the seed should be modified per save
+		variation_roll = (World_Handler.world_handler.level_data.variation_map.get_noise_2d(pos.x*5,pos.y*5)+1)/2
 	#keeping random roll for vlank tiles. still need a way to have it pos seed base
 	#currently it too random so gen will always be diffrent
 	#NOTE: at the moment randomly picing if there grass, else it use the nose map
@@ -195,24 +205,17 @@ func pick_foliage_tile(pos):
 	#but only if type need to stay the same
 	
 	if grass_tiles.size() > 0 && random_roll >= 50: #60:
-		#grass_tiles
-		return grass_tiles[randi() % grass_tiles.size()]
+		return grass_tiles[round((grass_tiles.size()-1)*variation_roll)]
+		#return grass_tiles[randi() % grass_tiles.size()*variation_roll]
+		
 	elif tree_tiles.size() > 0 && random_roll < 30:
-		return tree_tiles[randi() % tree_tiles.size()]
+		return tree_tiles[round((tree_tiles.size()-1)*variation_roll)]
+		#return tree_tiles[randi() % tree_tiles.size()]
+		
 	elif rock_tiles.size() > 0 && random_roll < 40:
-		return rock_tiles[randi() % rock_tiles.size()]
-	else:
-		return Vector2i(0, 0)
-	#old
-	if grass_tiles.size() > 0 && random_roll >= 60: #60:
-		#grass_tiles
-		return grass_tiles[randi() % grass_tiles.size()]
-	elif noise_value > 5 && rock_tiles.size() > 0 && random_roll < 20: #25:
-		#rock_tiles
-		return rock_tiles[randi() % rock_tiles.size()]
-	elif noise_value <= 5 && tree_tiles.size() > 0 && random_roll < 25: #15:
-		#tree_tiles
-		return tree_tiles[randi() % tree_tiles.size()]
+		return rock_tiles[round((rock_tiles.size()-1)*variation_roll)]
+		#return rock_tiles[randi() % rock_tiles.size()]
+		
 	else:
 		return Vector2i(0, 0)
 		

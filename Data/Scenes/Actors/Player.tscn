@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=7 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" path="res://Data/Scenes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
+[ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Data/Scenes/Inventory.tscn" id="3_m3amk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
 size = Vector2(14, 6)
@@ -40,3 +41,5 @@ editor_draw_drag_margin = true
 position = Vector2(12, 0)
 scale = Vector2(0.25, 0.25)
 texture = SubResource("AtlasTexture_21snw")
+
+[node name="Inventory" parent="." instance=ExtResource("3_m3amk")]

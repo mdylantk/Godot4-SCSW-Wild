@@ -1,50 +1,56 @@
 For the next version a few things need to be improved or added:
   -decopling a few of the nodes
-    -Make a input handler that handler general client input setting and game based state. 
-      This may not be as importaint if Input is more powerful than expected and if so, the input handler would be a placeholder untill n Input depend system is designed 
-    -A player state (probably a resource) that hold dyanamic data about the player(s) aswell as data that would be for save games.
-    -A game state(resource) that hold dynamic data about the state of the whole game. 
-    -A HUD (or GUI Handler) that is used to store and handle the player gui. Could be a control node base.
-    -A game state or upgrade the world handler to be global accessible and allows handling instances levels
-      -note: instances levels may be odd. either the world need to be unloaded or the instance would be someplace that would not be loaded(not a problem in single player)
-    -Have the global keep ref of theses states and handlers as well as help connect signals between them.
-      -Global should only know about the handlers and state. Node ref in Global versions should assign itself to Global on ready.
-        -flow: handler->Global Node->Global<-signal-init->Handler
+	-Make a input handler that handler general client input setting and game based state. 
+	  This may not be as importaint if Input is more powerful than expected and if so, the input handler would be a placeholder untill n Input depend system is designed 
+	-A player state (probably a resource) that hold dyanamic data about the player(s) aswell as data that would be for save games.
+	-A game state(resource) that hold dynamic data about the state of the whole game. 
+	-A HUD (or GUI Handler) that is used to store and handle the player gui. Could be a control node base.
+	-A game state or upgrade the world handler to be global accessible and allows handling instances levels
+	  -note: instances levels may be odd. either the world need to be unloaded or the instance would be someplace that would not be loaded(not a problem in single player)
+	-Have the global keep ref of theses states and handlers as well as help connect signals between them.
+	  -Global should only know about the handlers and state. Node ref in Global versions should assign itself to Global on ready.
+		-flow: handler->Global Node->Global<-signal-init->Handler
 	-NOTE: May be able to ignore a global autoload if the handlers nodes just below the main scene. 
   -Adding a win codition as well as state change base on about of fish caught.
-    -if all the rare fish is caught and the player resturn, a message should appear about all the rare fish are found
-    -The old man should state diffrent intrest in various fish there are in his pond base on the varaition caught.
-      -the var may need to be one or two arrays in gamestate (player state as well if player want a personal detail score) with the key being the fish name and the value is the amount found/return
-        -the player state keep info amount they found and return(or if an inventory system is added, that be used for the return amount)
-        -the game state hold the abount return. 0 if the fish has been found, but not returned(aka discovered). that part may need to be updated when the player return (comparing the arrays)
-          -The array would be dynamic. changing in size to show discovery. A hierarchy design may be needed if a lot of fish are added. 
-            Group(common)->type(carp)->type(carp)subtype or fliping group and type. the current flow would allow group look ups to be faster
-      -the message for turn in should appear one after each other when turning in past more than one checkpoint. These points should be far apaert where it be hard to get more than three in a row
-        -currently there could be one about each type of rare fish and after every 100 fish caught.
+	-if all the rare fish is caught and the player resturn, a message should appear about all the rare fish are found
+	-The old man should state diffrent intrest in various fish there are in his pond base on the varaition caught.
+	  -the var may need to be one or two arrays in gamestate (player state as well if player want a personal detail score) with the key being the fish name and the value is the amount found/return
+		-the player state keep info amount they found and return(or if an inventory system is added, that be used for the return amount)
+		-the game state hold the abount return. 0 if the fish has been found, but not returned(aka discovered). that part may need to be updated when the player return (comparing the arrays)
+		  -The array would be dynamic. changing in size to show discovery. A hierarchy design may be needed if a lot of fish are added. 
+			Group(common)->type(carp)->type(carp)subtype or fliping group and type. the current flow would allow group look ups to be faster
+	  -the message for turn in should appear one after each other when turning in past more than one checkpoint. These points should be far apaert where it be hard to get more than three in a row
+		-currently there could be one about each type of rare fish and after every 100 fish caught.
   -Improving the world gereation and world:
-    -Smoothing the loading as well as adding more varation to the world could be useful but not as nessary
-    -More static locations and improving the current ones could be nice, but also not as importaint yet. Should add atleast two unquie levels for pond 7 and 8 instead of reusing assets
-    -adding instances like building, ruins, and caves could be nice.
+	-Smoothing the loading as well as adding more varation to the world could be useful but not as nessary
+	-More static locations and improving the current ones could be nice, but also not as importaint yet. Should add atleast two unquie levels for pond 7 and 8 instead of reusing assets
+	-adding instances like building, ruins, and caves could be nice.
 
 not needing an offset fot the tilemaps
-    -they are currently design around (0,0), but if design to start at (0,0) and head in positive direction, then the offset should not be needed
-    -also dor debug and designing purpose, probably should have a render square around the vaild area. 
-    -also if move from 0,0 orgin, any increase in size will me a bit more difficult to center static build. Offset var cand be kept to allow for this option
-     but in most cases the sizes should be fix to a gobal constant or a var in it's world handler else generation may break
-    -size in tilemap may be best be set as a chuck size, but for performace it is best to make many static tilemaps instead of one big one
+	-they are currently design around (0,0), but if design to start at (0,0) and head in positive direction, then the offset should not be needed
+	-also dor debug and designing purpose, probably should have a render square around the vaild area. 
+	-also if move from 0,0 orgin, any increase in size will me a bit more difficult to center static build. Offset var cand be kept to allow for this option
+	 but in most cases the sizes should be fix to a gobal constant or a var in it's world handler else generation may break
+	-size in tilemap may be best be set as a chuck size, but for performace it is best to make many static tilemaps instead of one big one
 	-could use a scene that load all them in at once to see how they patch together(bonus if tilemap can be edited in this state or even expanded during editing)
 
 For future version:
   -moving away from a fish hunting game and to a wilderness exploration game
-    -fish system would be a side quest and the catching system may be change to add difficulty. Also fish may become more than something to collect. 
-    -Cat may be optional and a charater selection may be used. THe cat will still be inclueded (as a main uncontralable character mention of referenced), but dialog would need at least two version (Cat and Generic)
-      -this mostly depends if the game do not need that cat specail traits. if the traits are needed, then the main player would need to be that cat at least. 
-    -NCP that can be rescured and make a home near the old man's pond
-    -lore and story about the real worlds and the figure who trying to wrap reality
-      -and forces of darkness hunting the cat after the figure learn of an anomaly that could be a major threat to their plans.
-    -Static worlds for main story or side story content. these are part of the real world and not of the compress plane (of time and space)
-    -Regions of theme generation so it not just nature base wilderness. This could become quite abstract.
+	-fish system would be a side quest and the catching system may be change to add difficulty. Also fish may become more than something to collect. 
+	-Cat may be optional and a charater selection may be used. THe cat will still be inclueded (as a main uncontralable character mention of referenced), but dialog would need at least two version (Cat and Generic)
+	  -this mostly depends if the game do not need that cat specail traits. if the traits are needed, then the main player would need to be that cat at least. 
+	-NCP that can be rescured and make a home near the old man's pond
+	-lore and story about the real worlds and the figure who trying to wrap reality
+	  -and forces of darkness hunting the cat after the figure learn of an anomaly that could be a major threat to their plans.
+	-Static worlds for main story or side story content. these are part of the real world and not of the compress plane (of time and space)
+	-Regions of theme generation so it not just nature base wilderness. This could become quite abstract.
 	
 	
 Note on .bin:
 	if there is a .bin dir, then that a prototype for making a gdextextention. the extention file was put in there to disable loading it up.
+	
+	
+	inventory and score:
+		-inventory should be link to the actor/entity and save into a file with the entity data if persistant
+		on item gain or on fish seen, the score should be updated. this more of a player thing, so player handler can handle it
+		so score would be unquie types found(fix base on max random posiblities) and total catched(inf)

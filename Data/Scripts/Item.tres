@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Item" load_steps=2 format=3 uid="uid://bohae4n1vdmvo"]
+
+[ext_resource type="Script" path="res://Data/Scripts/Item.gd" id="1_08eas"]
+
+[resource]
+script = ExtResource("1_08eas")
+display_name = "Item"
+discription = "This is an item"
+tooltip = "tooltip of item"
+item_entity = ""

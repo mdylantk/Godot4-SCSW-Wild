@@ -132,7 +132,11 @@ func _input(event) :
 							print("event logic start")
 							result["collider"].on_interact(on_interact_event)
 							print("event logic end")
-						
+			print(str(pawn.inventory.add_item(Item.new_item(Item, 33))))
+			print(pawn.inventory.items)
+		if event.is_action("Cancel") && event.is_action_pressed("Cancel"):
+			print(str(pawn.inventory.add_item(Item.new_item(Item, -1))))
+			print(pawn.inventory.items)
 func on_event_end(event):
 	if event != null:
 		print("event ending")

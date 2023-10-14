@@ -19,7 +19,8 @@ class_name Level_Data_2D extends Resource
 
 #Noise should be related to level which basicly world data
 #also should decide how to seed them. could base it on world seed +- an offset
-#or have it fixed and have the seed editable
+#or have it fixed and have the seed editable. if world noise map, could use a save object, just need to
+#seed it game start.
 @export var tempture_map : Noise
 @export var humidity_map : Noise
 #detail is ment to be for if a feature spawn or it empty space/unchanged. 
