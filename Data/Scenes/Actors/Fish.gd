@@ -3,6 +3,8 @@ extends CharacterBody2D
 @export var fish_name = "Fish"
 @export var rare_catch = true
 
+@export var fish_item : Item
+
 #NOTE: should have randomrarefish in random ponds but they should be of caught fishes
 #or a flag/state that state if the void world effect fish type or pick from availbe types
 #just a random of caught fishes could be used
@@ -49,10 +51,10 @@ func _ready():
 	#	if Global.global_varibles.has("fish_" + str(starting_location)):
 	#		remove_self()
 
-func on_interact(event):
+func on_interact(handler, instigator, target, data):
 	var data_source
-	if event.owner is Player_Handler:
-		data_source = event.owner.player_state.metadata
+	if handler is Player_Handler:
+		data_source = handler.player_state.metadata
 	else:
 		data_source = Global.global_varibles
 		
@@ -120,18 +122,36 @@ func on_interact(event):
 	#probably a generic message function. type and data where type is if it a dialog, notify, or score
 	#also can pass an amount incase more than one fish can be caught
 	#Global.message_box.add_notify_message("[center]Caught " + str(fish_name))
+	
+	#test start
+	if instigator != null:
+		#note: the type may be hard to save? butmight be able to ref by string.
+		#also may not need to set the name to the fish name. that can be for the fish log
+		#can just give the type with amount base on size...or can have all fish be unqiue,
+		#but would have to deal with inventory size 
+		#should add fish caught state and name to event and use that to simplfy messages about the event
+		var remaining_amount = instigator.inventory.add_item(Item.new_item(fish_item, 1,{"name":fish_name}))
+		if remaining_amount >= 1:
+			print("can not carry anymore fish")
+	#test end
+	
 	Global.get_hud().gui_notify.add_notify_message("[center]Caught " + str(fish_name))
 	#Global.get_hud().$Notify.add_notify_message("[center]Caught " + str(fish_name))
 	#add the fish to fish caught dict
-	if data_source.has("fish_caught"):
-		if data_source.fish_caught.has(fish_name):
-			data_source.fish_caught[fish_name] += 1
-		else:
-			data_source.fish_caught[fish_name] = 1
+	var count = handler.get_player_meta(fish_name+" caught")
+	if count != null:
+		handler.set_player_meta(fish_name+" caught", count + 1)
 	else:
-		data_source.fish_caught = {fish_name:1}
+		handler.set_player_meta(fish_name+" caught", 1)
+#	if data_source.has("fish_caught"):
+#		if data_source.fish_caught.has(fish_name):
+#			data_source.fish_caught[fish_name] += 1
+#		else:
+#			data_source.fish_caught[fish_name] = 1
+#	else:
+#		data_source.fish_caught = {fish_name:1}
 	
-	print("Caught " + fish_name)
+	#print("Caught " + fish_name)
 	
 	remove_self()
 	

@@ -2,7 +2,7 @@ class_name Level_Transfer extends Interactive_Data
 
 @export var level_data : Level_Data_2D
 
-func interact(event):
+func interact(handler, instigator, target, data):
 	#if _instigator is Player_Handler:
 		#brainstorming passing handler as a ref
 		#but may not be needed here, but where the world transfer takes place
@@ -16,10 +16,10 @@ func interact(event):
 	if level_data != null:
 		#pass
 		print_debug("loading level data")
-		event.instigator.get_tree().call_group("World_Handler", "change_level", level_data,event.instigator)
+		instigator.get_tree().call_group("World_Handler", "change_level", level_data,instigator)
 	else:
 		print_debug("no level data")
 		#_instigator.get_tree().call_group("World_Handler", "change_level", level_data,_instigator)
-	super(event)
+	super(handler, instigator, target, data)
 
 	

@@ -6,6 +6,9 @@ enum Pawn_State {Null = -1, Init = 0, Alive, Dead, Respawn}
 
 #todo: add signal like events
 signal pawn_update(pawn, state : Pawn_State)
+signal interact(handler, instigator, target, data)
+#passing state, but might need to pass handler and player idex if system change that way
+signal player_meta_changed(player_state, property, old_value)
 #signal item_pickup(item)#should this be here? 
 #actors may pick item up, but controllers are the ones that grab items
 #also actors have inventoory that not stored in player state (untill save)
@@ -16,7 +19,9 @@ signal pawn_update(pawn, state : Pawn_State)
 
 
 #note: most logic is set be be single player. multiplayer need to be tested
-#and most of the logic gated/ignored if not the client
+#and most of the logic gated/ignored if not the client/owner
+#Todo: may be able to use one player handler for more than one users depending on the whay godot 
+#handle input. if so, some var may become arrays or moved into playerstate and player state turn into an array
 @export var player_state : Player_State
 
 #todo: have this load a pawn if pawn null. also figure out hoe to get a spawn location from world
@@ -44,6 +49,7 @@ func update_test(pawn, state : Pawn_State):
 func _ready():
 	#this is to test the signal
 	pawn_update.connect(update_test)
+	player_meta_changed.connect(player_meta_changed_test)
 	
 	if player_state == null :
 		player_state = Player_State.new() 
@@ -58,6 +64,7 @@ func _ready():
 			#but a function should be called instead
 	pawn_state = Pawn_State.Alive
 	#on_transfer()
+	pawn.inventory.slot_update.connect(on_item_gain)
 
 func _physics_process(_delta) :
 	#Note: need to locate use_input what setting it (most likly world handler) and instead link it here
@@ -88,7 +95,7 @@ func _input(event) :
 	#but it is in the base pawn movement so it may be fine for now
 	#NOTEL: this came from player.any location or ref to self should be for pawn unless new
 	if pawn != null :
-		if event.is_action("Accept") && event.is_action_pressed("Accept"):		
+		if event.is_action("Accept") && event.is_action_pressed("Accept"):
 			var space_state = get_world_2d().direct_space_state #can get a lot just with the player
 			# use global coordinates, not local to node
 			var query = PhysicsRayQueryParameters2D.create(
@@ -113,31 +120,42 @@ func _input(event) :
 					pass
 				else:
 					if result["collider"].has_method("on_interact"):
-						print("create event")
-						var on_interact_event = Generic_Event.new(self,"Event",pawn, result["collider"],{"result":result})
-						#if is_cancel = true, then it cancel as log as the check is here. 
-						#but probably should pass the event on on_interact and maybe catch it
-						#so it can be modify/process there and pawn can wait for the event to end
-						on_interact_event.event_finished.connect(on_event_end)
-						#NOTE!!! no need to reg events. as long as even_end is called and
-						#the source listen to event_finished, then everything should work
-						#also would neeed to pass event to other things(but a listener for event
-						#would be called). alsoa need to store event in array or var if lifetime
-						#ever neeed to extend a tick
-						print("reg event start")
-						Game_Handler.game_handler.register_event(on_interact_event)
-						print("reg event end")
-						if(!on_interact_event.is_canceled):
-							#result["collider"].on_interact(pawn)
-							print("event logic start")
-							result["collider"].on_interact(on_interact_event)
-							print("event logic end")
-			print(str(pawn.inventory.add_item(Item.new_item(Item, 33))))
-			print(pawn.inventory.items)
-		if event.is_action("Cancel") && event.is_action_pressed("Cancel"):
-			print(str(pawn.inventory.add_item(Item.new_item(Item, -1))))
-			print(pawn.inventory.items)
-func on_event_end(event):
-	if event != null:
-		print("event ending")
-	pass
+						var event_data = {}
+						interact.emit(self, pawn, result["collider"], event_data)
+						#print("reg event end")
+						if(event_data.has("canceled")):
+							print("on_interact was canceled")
+						else:
+							result["collider"].on_interact(self, pawn, result["collider"], event_data)
+			#pawn.inventory.add_item(Item.new_item(Item, 10))
+			#print(pawn.inventory.items)
+		#elif event.is_action("Cancel") && event.is_action_pressed("Cancel"):
+			#pawn.inventory.add_item(Item.new_item(Item, -5))
+			#print(pawn.inventory.items)
+
+func on_item_gain(inventory, slot, old_item):
+	#could leave this and just properly connect/disconnect on pawn change
+	#the could check the new slot data
+	#and if diffrent, run some logic like check if have fish name and of what
+	#issue if the fish name is not added to item, the the fish logic would need to 
+	#interact with the handler(like it kind of doing now) to do the check
+	#NOTE: Big issue is that score is update when unable to store fish
+	#but a check with the return value should fix that
+	print("inv: "+ str(inventory))
+	print("slot: "+ str(slot))
+	print("old: "+ str(old_item))
+	print("new: "+ str(inventory.items[slot]))
+
+func set_player_meta(property, value):
+	var old_value = get_player_meta(property)
+	player_state.metadata[property] = value
+	player_meta_changed.emit(player_state, property, old_value)
+func get_player_meta(property):
+	if (player_state.metadata.has(property)):
+		return player_state.metadata[property]
+	return null
+	
+func player_meta_changed_test(player_state, property, old_value):
+	print("state: "+ str(player_state))
+	print("property: "+ str(property))
+	print("old_value: "+ str(old_value))

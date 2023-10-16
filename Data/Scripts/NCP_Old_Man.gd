@@ -11,12 +11,12 @@ func _ready():
 	if player_data.has("visited_"+str(dialog.id)) && dialog.save_visited_flag :
 		dialog.visited = player_data["visited_"+str(dialog.id)]
 		
-func on_interact(event):#_target):
-	if Global.is_client_player(event.instigator):
+func on_interact(handler, instigator, target, data):#_target):
+	if Global.is_client_player(instigator):
 		if dialog_data.state != 0:
 			return
 		if dialog_data.visited:
-			var player_vars = Global.get_player_handler().player_state.metadata
+			var player_vars = handler.player_state.metadata
 			if player_vars["total_rare_fish_caught"] == 2 :
 				if randi() % 10 > 3:
 					dialog_data.topic = "rare1"

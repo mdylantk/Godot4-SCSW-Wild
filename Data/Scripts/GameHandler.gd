@@ -41,11 +41,11 @@ func on_game_end():
 	#and then either shut down or go to mode_selection
 	pass
 
-func register_event(event : Generic_Event):
+func register_event(event : Event):
 	print("event signal start")
 	event_update.emit(event)
 	print("event signal end")
-func on_event_update(event : Generic_Event):
+func on_event_update(event : Event):
 	print(str(event))
 	if event != null:
 		print("event update")

@@ -11,9 +11,9 @@ class_name Interactive_Data extends Resource
 #that a few ticks or seconds
 #which current this not used for ungoing interaction. it set up a state for dialog
 
-func interact(event : Generic_Event):
-	event.set_property("interactive_data",self)
-	print(str(event.instigator) + "interact with" +str(event.target))
+func interact(handler, instigator, target, data):
+	#event.set_property("interactive_data",self)
+	print(str(instigator) + "interact with" +str(target))
 	pass
 	#_owner will be who owns this. since the owner will be linking it, then it cna pass it self
 	#_data is a placeholder for any extra data for now
