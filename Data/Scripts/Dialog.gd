@@ -5,6 +5,8 @@ var cooldown_timer : float = 0
 var dialog_index = 0
 var dialog_data 
 
+#todo: probably add signals to this or data so that func may not need to be call or var watched
+
 func start_dialog(new_target, new_data) :
 	#targer is needed to know if player get too far form it.
 	#could also be a point, but an object allow more option
@@ -40,6 +42,7 @@ func _process(_delta):
 		set_process(false)
 
 	else:
+		#todo: try to catch these or have them set in the data
 		if (Global.get_player_handler().pawn.global_position - target.global_position).length() > 64 :
 			end_dialog()
 			

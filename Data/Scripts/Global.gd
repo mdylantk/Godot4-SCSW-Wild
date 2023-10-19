@@ -1,20 +1,22 @@
 extends Node
 
+#TODO: Game Autoload will replace this. is_client_player still need a replacement
+
 #will have generic getters in global
 func get_player_handler(index = 0):
-	return get_node("/root/GameHandler/PlayerHandler"+str(index))
+	return get_node("/root/Game/Player_Handler"+str(index))
 	
 func get_game_handler(): 
-	return get_node("/root/GameHandler")
+	return get_node("/root/Game")
 	
 func get_world_handler(): 
-	return get_node("/root/GameHandler/WorldHandler")
+	return get_node("/root/Game/World_Handler")
 
 func get_instance_handler():
-	return get_node("/root/GameHandler/InstanceHandler")
+	return get_node("/root/Game/InstanceHandler")
 	
 func get_hud(): 
-	return get_node("/root/GameHandler/HUD")
+	return get_node("/root/Game/Player_Handler/HUD")
 	
 func get_player_handler_from_pawn(pawn): 
 	var vaild_player_index = true

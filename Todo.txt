@@ -54,3 +54,8 @@ Note on .bin:
 		-inventory should be link to the actor/entity and save into a file with the entity data if persistant
 		on item gain or on fish seen, the score should be updated. this more of a player thing, so player handler can handle it
 		so score would be unquie types found(fix base on max random posiblities) and total catched(inf)
+
+Change in format:
+	may have Game_Handler as a autoload and Main as the default scene
+	Main will handle the main menu outside of game as well as trigger major game events
+	like end, start, and manual save/load

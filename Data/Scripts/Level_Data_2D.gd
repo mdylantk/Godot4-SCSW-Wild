@@ -16,6 +16,7 @@ class_name Level_Data_2D extends Resource
 @export var level_max_bounds: Vector2
 @export var level_min_bounds: Vector2
 @export var use_level_bounds: bool = false
+@export var use_game_seed: bool = true
 
 #Noise should be related to level which basicly world data
 #also should decide how to seed them. could base it on world seed +- an offset
@@ -55,6 +56,28 @@ class_name Level_Data_2D extends Resource
 
 var static_chunks = {}
 var random_chunks = []
+
+func _init():
+	randomize_zero_seed(tempture_map)
+	randomize_zero_seed(humidity_map)
+	randomize_zero_seed(detail_map)
+	randomize_zero_seed(variation_map)
+
+func randomize_zero_seed(noise: Noise):
+	if (noise != null):
+		if noise.seed == 0:
+			noise.seed = randi()
+
+func seed_maps(new_seed : int):
+	if use_game_seed :
+		if (tempture_map != null):
+			tempture_map.seed = new_seed
+		if (humidity_map != null):
+			humidity_map.seed = new_seed
+		if (detail_map != null):
+			detail_map.seed = new_seed
+		if (variation_map != null):
+			variation_map.seed = new_seed
 
 #NOTE: should just have chunks and this will sort it into static and random dict
 #the default can be empty or filled out, but a flag may be needed to overrided return hull on default

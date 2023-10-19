@@ -51,10 +51,12 @@ func _ready():
 	#	if Global.global_varibles.has("fish_" + str(starting_location)):
 	#		remove_self()
 
+#probably could use interact data for this. item pickup. just need a way to update score
+#so maybe am extended one for this case
 func on_interact(handler, instigator, target, data):
 	var data_source
 	if handler is Player_Handler:
-		data_source = handler.player_state.metadata
+		data_source = handler.state.metadata
 	else:
 		data_source = Global.global_varibles
 		
@@ -123,19 +125,14 @@ func on_interact(handler, instigator, target, data):
 	#also can pass an amount incase more than one fish can be caught
 	#Global.message_box.add_notify_message("[center]Caught " + str(fish_name))
 	
-	#test start
 	if instigator != null:
-		#note: the type may be hard to save? butmight be able to ref by string.
-		#also may not need to set the name to the fish name. that can be for the fish log
-		#can just give the type with amount base on size...or can have all fish be unqiue,
-		#but would have to deal with inventory size 
-		#should add fish caught state and name to event and use that to simplfy messages about the event
 		var remaining_amount = instigator.inventory.add_item(Item.new_item(fish_item, 1,{"name":fish_name}))
 		if remaining_amount >= 1:
 			print("can not carry anymore fish")
-	#test end
 	
-	Global.get_hud().gui_notify.add_notify_message("[center]Caught " + str(fish_name))
+	if handler != null: 
+		#TODO: maybe player_hander should have a hud if the client. maybe a hud for each player for splitscreen?
+		handler.get_hud().gui_notify.add_notify_message("[center]Caught " + str(fish_name))
 	#Global.get_hud().$Notify.add_notify_message("[center]Caught " + str(fish_name))
 	#add the fish to fish caught dict
 	var count = handler.get_player_meta(fish_name+" caught")
@@ -155,7 +152,7 @@ func on_interact(handler, instigator, target, data):
 	
 	remove_self()
 	
-	
+
 func remove_self():
 	var self_ref = self
 	get_parent().remove_child(self_ref)

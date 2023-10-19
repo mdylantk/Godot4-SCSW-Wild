@@ -6,17 +6,18 @@ extends CharacterBody2D
 #also need to make sure it runs only on 0 so long messages do not get canceled
 
 func _ready():
-	var player_data = Global.get_player_handler().player_state.metadata #SINCE gui is client side, only need to worry about player 1
-	var dialog = get_meta("Dialog")
-	if player_data.has("visited_"+str(dialog.id)) && dialog.save_visited_flag :
-		dialog.visited = player_data["visited_"+str(dialog.id)]
+	if Game.get_player() != null:
+		var player_data = Game.get_player().state.metadata #SINCE gui is client side, only need to worry about player 1
+		var dialog = get_meta("Dialog")
+		if player_data.has("visited_"+str(dialog.id)) && dialog.save_visited_flag :
+			dialog.visited = player_data["visited_"+str(dialog.id)]
 		
 func on_interact(handler, instigator, target, data):#_target):
 	if Global.is_client_player(instigator):
 		if dialog_data.state != 0:
 			return
 		if dialog_data.visited:
-			var player_vars = handler.player_state.metadata
+			var player_vars = handler.state.metadata
 			if player_vars["total_rare_fish_caught"] == 2 :
 				if randi() % 10 > 3:
 					dialog_data.topic = "rare1"
@@ -30,5 +31,5 @@ func on_interact(handler, instigator, target, data):#_target):
 		
 		#print("testing the new system")
 		#now can decide when to load dialig as well as get notify when it would have started
-		Global.get_hud().gui_dialog.start_dialog(self, dialog_data)
+		handler.get_hud().gui_dialog.start_dialog(self, dialog_data)
 	pass

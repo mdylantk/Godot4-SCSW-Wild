@@ -1,0 +1,14 @@
+Some classes will have a static ref to itself when it is first created. 
+These are single lifetime object that should only have one instance for the life
+of the session. Most of the Handler are session long objects and could be autoloaded
+but the use of a static var that ref itself is works as well.
+
+List of session long objects:
+	Game_Handler
+	(NOTE: below are not nesssary since game handler would know about them
+	so it might be better to autoload game_handler if able to autoload scenes)
+	World_Handler
+	(maybe)Player_Handler (need to test networking and see what is best)
+	HUD
+	(probably all handlers, but currently unsure)
+	

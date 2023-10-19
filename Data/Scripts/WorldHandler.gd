@@ -6,8 +6,6 @@ class_name World_Handler extends Node2D
 signal chunk_update(tile_map, chunk_position, is_unloaded)
 #signal region_update
 
-static var world_handler : World_Handler
-
 #TODO: maybe have a world state(or meta) to state what persetaint actor are in a region
 #this could be link with a region
 #(also if one tilemap per region works, then could slowly generate all the tiles after
@@ -15,6 +13,9 @@ static var world_handler : World_Handler
 
 @export var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 @export var chunk_size : float = 32
+#todo: load/save this value prbably in a world save. most seeds could be handle
+#by the noise settings, but sometime a seed may need to be shared
+@export var world_seed : int = 0
 
 @export var level_data : Level_Data_2D :
 	set(value):
@@ -29,6 +30,7 @@ static var world_handler : World_Handler
 			#	loaded_chunks[old_pos].queue_free()
 			#	loaded_chunks.erase(old_pos)
 			generate_chunks()
+		level_data.seed_maps(world_seed)
 	get:
 		return level_data
 #TODO: maybe just have one handler for world, and how it load is determin by a resource
@@ -59,7 +61,8 @@ var offset = Vector2(-2,-2)
 var loaded_chunks = {}
 
 func _ready():
-	world_handler = self
+	if world_seed == 0:
+		world_seed = randi()
 	generate_chunks()
 
 func change_level(new_level_data, instigator = null, location_offset = Vector2()):

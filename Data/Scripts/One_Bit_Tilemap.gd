@@ -143,10 +143,9 @@ func _ready():
 	#loaded_backround.material.get_shader_parameter("noise_img").get_noise().set_offset(Vector3(position.x/512,position.y/512,0))
 	
 	
-	if Game_Handler.game_handler != null:
+	if Game != null:
 		#maybe the world handler should have these noises and store a ref to it here
 		#or get it from the world
-		random_noise.seed = Game_Handler.game_handler.game_state.random_seed
 		visible = false
 		recaculate_empty_tiles()
 		set_process(true)
@@ -190,12 +189,13 @@ func pick_foliage_tile(pos):
 	
 	#this is a test. may need to pass the object or related var to the tile map or
 	#run this logic in wthe world (or host the logic here, but called aboved)
-	if World_Handler.world_handler.level_data.detail_map != null:
+	if Game.is_node_ready():
+		if Game.get_world().level_data.detail_map != null:
 		#note this is not seeded and my create similar gen. it wanted, but the seed should be modified per save
-		random_roll = (World_Handler.world_handler.level_data.detail_map.get_noise_2d(pos.x*5,pos.y*5)+1)*50
-	if World_Handler.world_handler.level_data.variation_map != null:
+			random_roll = (Game.get_world().level_data.detail_map.get_noise_2d(pos.x*5,pos.y*5)+1)*50
+		if Game.get_world().level_data.variation_map != null:
 		#note this is not seeded and my create similar gen. it wanted, but the seed should be modified per save
-		variation_roll = (World_Handler.world_handler.level_data.variation_map.get_noise_2d(pos.x*5,pos.y*5)+1)/2
+			variation_roll = (Game.get_world().level_data.variation_map.get_noise_2d(pos.x*5,pos.y*5)+1)/2
 	#keeping random roll for vlank tiles. still need a way to have it pos seed base
 	#currently it too random so gen will always be diffrent
 	#NOTE: at the moment randomly picing if there grass, else it use the nose map
@@ -208,13 +208,13 @@ func pick_foliage_tile(pos):
 		return grass_tiles[round((grass_tiles.size()-1)*variation_roll)]
 		#return grass_tiles[randi() % grass_tiles.size()*variation_roll]
 		
-	elif tree_tiles.size() > 0 && random_roll < 30:
-		return tree_tiles[round((tree_tiles.size()-1)*variation_roll)]
-		#return tree_tiles[randi() % tree_tiles.size()]
-		
-	elif rock_tiles.size() > 0 && random_roll < 40:
+	elif rock_tiles.size() > 0 && random_roll < 10:
 		return rock_tiles[round((rock_tiles.size()-1)*variation_roll)]
 		#return rock_tiles[randi() % rock_tiles.size()]
+		
+	elif tree_tiles.size() > 0 && random_roll < 45:
+		return tree_tiles[round((tree_tiles.size()-1)*variation_roll)]
+		#return tree_tiles[randi() % tree_tiles.size()]
 		
 	else:
 		return Vector2i(0, 0)

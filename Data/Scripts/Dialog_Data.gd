@@ -57,7 +57,7 @@ func get_text(index = 0): #index is ignored if default and random. also invald m
 		if is_intro:
 			visited = true
 			if save_visited_flag :
-				Global.get_player_handler().player_state.metadata["visited_"+str(id)] = true
+				Global.get_player_handler().state.metadata["visited_"+str(id)] = true
 	index += 1
 	return text
 	#return null if all fail

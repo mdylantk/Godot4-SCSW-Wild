@@ -3,7 +3,8 @@
 [ext_resource type="Script" path="res://Data/Scripts/WorldHandler.gd" id="1_57p0l"]
 [ext_resource type="Resource" uid="uid://f4gufwtv0l5v" path="res://Data/Resources/Test_Level.tres" id="2_0xnf0"]
 
-[node name="WorldHandler" type="Node2D" groups=["World_Handler"]]
+[node name="World_Handler" type="Node2D" groups=["World_Handler"]]
 y_sort_enabled = true
 script = ExtResource("1_57p0l")
+world_seed = null
 level_data = ExtResource("2_0xnf0")

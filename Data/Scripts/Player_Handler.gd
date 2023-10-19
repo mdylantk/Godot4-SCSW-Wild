@@ -9,12 +9,6 @@ signal pawn_update(pawn, state : Pawn_State)
 signal interact(handler, instigator, target, data)
 #passing state, but might need to pass handler and player idex if system change that way
 signal player_meta_changed(player_state, property, old_value)
-#signal item_pickup(item)#should this be here? 
-#actors may pick item up, but controllers are the ones that grab items
-#also actors have inventoory that not stored in player state (untill save)
-#proabaly a group call to game which player handler can listen to
-#wonder if a event resource could help compact data?...or maybe crate the instance
-#anf game just keep tract of active events
 
 
 
@@ -22,7 +16,7 @@ signal player_meta_changed(player_state, property, old_value)
 #and most of the logic gated/ignored if not the client/owner
 #Todo: may be able to use one player handler for more than one users depending on the whay godot 
 #handle input. if so, some var may become arrays or moved into playerstate and player state turn into an array
-@export var player_state : Player_State
+@export var state : Player_State
 
 #todo: have this load a pawn if pawn null. also figure out hoe to get a spawn location from world
 #and if world or tilemap should hold pawb ref
@@ -41,6 +35,9 @@ var pawn_state: Pawn_State :
 	get:
 		return pawn_state
 
+func get_hud():
+	return $HUD
+
 #this is just to read a signal
 func update_test(pawn, state : Pawn_State):
 	print(str(pawn) + ' ' + str(state))
@@ -51,17 +48,22 @@ func _ready():
 	pawn_update.connect(update_test)
 	player_meta_changed.connect(player_meta_changed_test)
 	
-	if player_state == null :
-		player_state = Player_State.new() 
+	if state == null :
+		state = Player_State.new() 
 		#this also could be where loading state happens if state is created when player 'joins'
 	if pawn == null:
 		pawn_state = Pawn_State.Null
-		if $Player != null:
+		if has_node("Player"):
 			pawn = $Player
 			pawn_state = Pawn_State.Init
 			#set pawn to $player if it exist
 			#good for testing and automatic set up,
 			#but a function should be called instead
+		else:
+			var pawn_ref = load(default_pawn).instantiate()
+			add_child(pawn_ref)
+			pawn_ref.name = "Player" #todo: make child of world main scene for objects
+			pawn = pawn_ref
 	pawn_state = Pawn_State.Alive
 	#on_transfer()
 	pawn.inventory.slot_update.connect(on_item_gain)
@@ -89,6 +91,9 @@ func chunk_update(pos,length,is_loaded):
 			pass
 			
 
+#TODO: maybe use unhandle_Input(unless that for ui). also see if user id is an option
+#Also maybe see if it should emit a signal on vaild actions(kind of like with interact. accept/cancel 
+#may be an option, but might be vauge on it own if nothing happen beside input)
 func _input(event) :
 	#NOTE: facing direction is being ref here, and if pawn lacks it, it could be a problem
 	#may need to make sure all pawns have it or find an indirect way to get a value
@@ -148,11 +153,11 @@ func on_item_gain(inventory, slot, old_item):
 
 func set_player_meta(property, value):
 	var old_value = get_player_meta(property)
-	player_state.metadata[property] = value
-	player_meta_changed.emit(player_state, property, old_value)
+	state.metadata[property] = value
+	player_meta_changed.emit(state, property, old_value)
 func get_player_meta(property):
-	if (player_state.metadata.has(property)):
-		return player_state.metadata[property]
+	if (state.metadata.has(property)):
+		return state.metadata[property]
 	return null
 	
 func player_meta_changed_test(player_state, property, old_value):
