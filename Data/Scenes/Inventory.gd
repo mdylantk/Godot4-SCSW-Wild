@@ -42,7 +42,7 @@ func add_item(item : Dictionary):
 		if !empty_items.is_empty():
 #			print("looping null")
 			for null_slot in empty_items:
-				items[null_slot] = item_type.new_item(item_type, 1, item["meta"])
+				items[null_slot] = item_type.new_item(1, item["meta"])
 				var null_item = items[null_slot]
 #				print("null item : " + str(null_item))
 				remaining_amount -= item_type.get_amount(null_item)
@@ -61,7 +61,7 @@ func add_item(item : Dictionary):
 	#NOTE: after hitting stack size it break and remainer is a negative number. need to see what went wrong
 	if remaining_amount > 0 and items.size() < size:
 		while remaining_amount > 0 and items.size() < size:
-			items.append(item_type.new_item(item_type, 1, item["meta"]))
+			items.append(item_type.new_item(1, item["meta"]))
 			var new_slot = items.size()-1
 			var new_item = items[new_slot]
 #			print("new item : " + str(new_item))

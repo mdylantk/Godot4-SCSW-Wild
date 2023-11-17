@@ -5,11 +5,11 @@ class_name Item extends Resource
 #of owned items
 static var max_stack_size : int = 99 #note, this can not be override in export. need to override the scrip
 
-static func new_item(type = Item, amount = 1, meta = {}): #passing Item as type since it may be fine to use this as the base item type
+func new_item(amount = 1, meta = {}): 
 	var item : Dictionary = {}
-	item["type"] = type #need to have it not null, but need an item type class. also populate the item with type base var
-	#meaning type base var may need to be set after item creation or pass as another dictionary as an item extention
-	#or that item type have a static function for init itself(probably better) that calls this one first
+	item["type"] = self #since the item created is base off a templace, it should have an instance in
+	#the data base. Note: creating a new item resource at runtime is risky and this not design to handle that
+	#since that new dynamic source may be lost on load ore change. item data is for dynamic item info
 	item["amount"] = amount
 	item["meta"] = meta #meta is opional data that could be clear and wont mess up item functionalty
 	#print(type.is_similar_item(item, item))
@@ -25,7 +25,7 @@ static func get_type(item):
 	if item.has("type") :
 		#this may be null or not an Item, so more check should be added
 		return item["type"]
-	return Item
+	return Item #NOTE: change this since it could cause issues
 
 static func get_amount(item:Dictionary):
 	if item.has("amount") :

@@ -126,7 +126,7 @@ func on_interact(handler, instigator, target, data):
 	#Global.message_box.add_notify_message("[center]Caught " + str(fish_name))
 	
 	if instigator != null:
-		var remaining_amount = instigator.inventory.add_item(Item.new_item(fish_item, 1,{"name":fish_name}))
+		var remaining_amount = instigator.inventory.add_item(fish_item.new_item(1,{"name":fish_name}))
 		if remaining_amount >= 1:
 			print("can not carry anymore fish")
 	

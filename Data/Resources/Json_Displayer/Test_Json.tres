@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Json_Viewer" load_steps=2 format=3 uid="uid://dbyc10q8fvifr"]
+
+[ext_resource type="Script" path="res://Data/Resources/Json_Displayer/Json_Viewer.gd" id="1_88q8c"]
+
+[resource]
+script = ExtResource("1_88q8c")
+path = "res://Data/Resources/Json/Lore.json"
+data = "{ \"Strange Cat\": \"A cat whos feature appears to change base on what activites it dose. It appears to have powers beside that trait\" }"

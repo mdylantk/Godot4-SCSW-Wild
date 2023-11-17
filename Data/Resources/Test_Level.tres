@@ -83,6 +83,7 @@ return_null_on_default = false
 level_max_bounds = Vector2(4, 4)
 level_min_bounds = Vector2(-4, -4)
 use_level_bounds = false
+use_game_seed = true
 detail_map = ExtResource("2_nmdeq")
 variation_map = ExtResource("4_75a86")
 chunks = Array[ExtResource("5_j28pw")]([SubResource("Resource_mhhvq"), SubResource("Resource_erypo"), SubResource("Resource_rkghm"), SubResource("Resource_65xq5"), SubResource("Resource_i7y01"), SubResource("Resource_i605s"), SubResource("Resource_3f23o"), SubResource("Resource_p72d8"), SubResource("Resource_rsajw"), SubResource("Resource_7r5lq")])

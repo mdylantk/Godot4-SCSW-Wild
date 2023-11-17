@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Action_Add_Item" load_steps=2 format=3 uid="uid://7l32hsoppnk5"]
+
+[ext_resource type="Script" path="res://Data/Resources/Action_System/Action_Add_Item.gd" id="1_qxru8"]
+
+[resource]
+script = ExtResource("1_qxru8")
+amount = 1
+meta = {}

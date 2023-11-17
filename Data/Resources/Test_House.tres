@@ -18,4 +18,5 @@ return_null_on_default = false
 level_max_bounds = Vector2(0, 0)
 level_min_bounds = Vector2(0, 0)
 use_level_bounds = true
+use_game_seed = true
 chunks = Array[ExtResource("2_mt8cj")]([SubResource("Resource_mhhvq")])
