@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://lcwxmi2k5ic7"
+path="res://.godot/imported/Ambient 5.mp3-3f808d8f0a32e6b58b4b038aa304435e.mp3str"
+
+[deps]
+
+source_file="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 5.mp3"
+dest_files=["res://.godot/imported/Ambient 5.mp3-3f808d8f0a32e6b58b4b038aa304435e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

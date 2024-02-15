@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://b8w46xsxtjw75"
+path="res://.godot/imported/Light Ambience 2.wav-de2aad668f40ca4a7aa685cac6938bf1.sample"
+
+[deps]
+
+source_file="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Light Ambience 2.wav"
+dest_files=["res://.godot/imported/Light Ambience 2.wav-de2aad668f40ca4a7aa685cac6938bf1.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

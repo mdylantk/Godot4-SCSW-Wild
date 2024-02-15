@@ -161,3 +161,17 @@ func chuck_update(pos,is_ready = true):
 		get_tree().call_group("Player_Handlers", "chunk_update", (pos/map_size).round(), map_size, is_ready)
 	else:
 		get_tree().call_group("Player_Handlers", "chunk_update", pos, map_size, is_ready)
+		
+		
+#todo: need to change the logic in the world handler or map so that chunks are updated
+#as a player move and there is non loaded around them. right now it logic hard to read
+#and the new system break for north and west chunks
+func is_chunk_loaded(location,  load = true):
+	var map_size = chunk_size * tile_size
+	var grid_location = (location/map_size).round()
+	if load:
+		load_chunks(location)
+	if loaded_chunks.has(grid_location):
+		return loaded_chunks[grid_location].visible
+	else:
+		return false

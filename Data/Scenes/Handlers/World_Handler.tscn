@@ -1,10 +1,51 @@
-[gd_scene load_steps=3 format=3 uid="uid://b0xxl3pylly7j"]
+[gd_scene load_steps=14 format=3 uid="uid://b0xxl3pylly7j"]
 
 [ext_resource type="Script" path="res://Data/Scripts/WorldHandler.gd" id="1_57p0l"]
 [ext_resource type="Resource" uid="uid://f4gufwtv0l5v" path="res://Data/Resources/Test_Level.tres" id="2_0xnf0"]
+[ext_resource type="AudioStream" uid="uid://8olt30tnh8jk" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 1.wav" id="3_gmjyk"]
+[ext_resource type="AudioStream" uid="uid://cns6ephoonliy" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 2.wav" id="4_sj5ll"]
+[ext_resource type="AudioStream" uid="uid://cceopxnco851u" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 3.wav" id="5_x8xw3"]
+[ext_resource type="AudioStream" uid="uid://dbqympx8jm8s3" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 4.wav" id="6_3rkbh"]
+[ext_resource type="AudioStream" uid="uid://jhs72vwf1rqp" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 5.wav" id="7_afhbs"]
+[ext_resource type="AudioStream" uid="uid://0uorpxo3g7dw" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 6.wav" id="8_bx1it"]
+[ext_resource type="AudioStream" uid="uid://2vpgjmwcrxf3" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 7.wav" id="9_587oc"]
+[ext_resource type="AudioStream" uid="uid://cb4xpiiggd2ux" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 8.wav" id="10_qmuuy"]
+[ext_resource type="AudioStream" uid="uid://d4ejd5sousf4m" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 9.wav" id="11_esj6i"]
+[ext_resource type="AudioStream" uid="uid://dikhqi64irus5" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 10.wav" id="12_qgfqw"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_e4ey0"]
+playback_mode = 1
+streams_count = 10
+stream_0/stream = ExtResource("3_gmjyk")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("4_sj5ll")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("5_x8xw3")
+stream_2/weight = 1.0
+stream_3/stream = ExtResource("6_3rkbh")
+stream_3/weight = 1.0
+stream_4/stream = ExtResource("7_afhbs")
+stream_4/weight = 1.0
+stream_5/stream = ExtResource("8_bx1it")
+stream_5/weight = 1.0
+stream_6/stream = ExtResource("9_587oc")
+stream_6/weight = 1.0
+stream_7/stream = ExtResource("10_qmuuy")
+stream_7/weight = 1.0
+stream_8/stream = ExtResource("11_esj6i")
+stream_8/weight = 1.0
+stream_9/stream = ExtResource("12_qgfqw")
+stream_9/weight = 1.0
 
 [node name="World_Handler" type="Node2D" groups=["World_Handler"]]
 y_sort_enabled = true
 script = ExtResource("1_57p0l")
 world_seed = 1401584422
 level_data = ExtResource("2_0xnf0")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_e4ey0")
+volume_db = -10.0
+autoplay = true
+stream_paused = true
+mix_target = 1

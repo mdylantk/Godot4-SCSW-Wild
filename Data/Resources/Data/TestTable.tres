@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://c7iheijy3vgni"]
+
+[ext_resource type="Script" path="res://Data/Features/Random_Tables/Fish_Table.gd" id="1_3p3m8"]
+[ext_resource type="Script" path="res://Data/Features/Random_Tables/Weighted_Group_Resource.gd" id="2_kyfie"]
+
+[sub_resource type="Resource" id="Resource_4uvbb"]
+script = ExtResource("2_kyfie")
+name = "common"
+weight = 75
+entries = ["Carp", "Koi", "Bass", "Eel", "Barb", "Pike", "Perch", "Salmon", "Guppy", "Walleye", "Trout"]
+
+[sub_resource type="Resource" id="Resource_1ffhe"]
+script = ExtResource("2_kyfie")
+name = "rare"
+weight = 10
+entries = ["Rainbow Trout", "Moon Koi", "Black Bass", "Silver Guppy", "Shadow Pike", "Orange Eel", "Fade Barb", "King Walleye", "Killer Salmon", "Triple Perch", "Apple Carp", "Snake Eel", "Doom Pike"]
+
+[resource]
+script = ExtResource("1_3p3m8")
+max_weight_per_group = 100
+table = Array[ExtResource("2_kyfie")]([SubResource("Resource_4uvbb"), SubResource("Resource_1ffhe")])

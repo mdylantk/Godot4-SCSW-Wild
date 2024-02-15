@@ -15,7 +15,7 @@ func interact(handler, instigator, target, data):
 	#else:
 	if level_data != null:
 		#pass
-		print_debug("loading level data")
+		print_debug("meow loading level data")
 		instigator.get_tree().call_group("World_Handler", "change_level", level_data,instigator)
 	else:
 		print_debug("no level data")

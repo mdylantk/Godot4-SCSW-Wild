@@ -59,3 +59,10 @@ Change in format:
 	may have Game_Handler as a autoload and Main as the default scene
 	Main will handle the main menu outside of game as well as trigger major game events
 	like end, start, and manual save/load
+	
+WHAT IF:
+	the main logic handle the flow and state. this means the parents need to know about the children,
+	but the children can run independent task...except for  dealing with thier children. 
+	this mean the main handler will have a lot of logic base on the game type. would make fitting for
+	the game handler. Also this means some data may be return as dictionary or arrays unless it can 
+	reuseable or importaint enough to be a resource.

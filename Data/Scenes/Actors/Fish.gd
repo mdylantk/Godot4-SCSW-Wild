@@ -50,11 +50,11 @@ func _ready():
 	#if rare_catch:
 	#	if Global.global_varibles.has("fish_" + str(starting_location)):
 	#		remove_self()
-
 #probably could use interact data for this. item pickup. just need a way to update score
 #so maybe am extended one for this case
 func on_interact(handler, instigator, target, data):
 	var data_source
+	data["type"]="item pickup"
 	if handler is Player_Handler:
 		data_source = handler.state.metadata
 	else:
@@ -125,16 +125,73 @@ func on_interact(handler, instigator, target, data):
 	#also can pass an amount incase more than one fish can be caught
 	#Global.message_box.add_notify_message("[center]Caught " + str(fish_name))
 	
-	if instigator != null:
-		var remaining_amount = instigator.inventory.add_item(fish_item.new_item(1,{"name":fish_name}))
-		if remaining_amount >= 1:
-			print("can not carry anymore fish")
+	#region ### New Logic ###
+	#NOTE: the goal of this to have the handler run the
+	#extended logic since these should only know about themselves
+	#and event libraries
+	#data["target"] = instigator
+	#data["source"] = self
+	#data["handler"] = handler
+	#data["item"] = fish_item.new_item(1,{"name":fish_name})
+	#data["status"] = 1
+	#data["run"] = func(data):
+		#TODO: maybe call static functions. data will be optional state
+		#and may not be used. instigator, handler, and data all that is needed
+		#target is optional
+		#NOTE: could also have it return event data and run logic
+		#as it normaly would. then the event will be a runnable
+		#but may need to have a state so it can be acessable. 
+		#so {"type":"event",run":callable} is all that needed. 
+		#maybe even a override bool to try to replace an event already running
+		
+		#pick name for fish and/or raritry
+#		var remaining_amount = Item_Events.acquire_item(
+#			instigator,
+#			fish_item.new_item(1,{"name":fish_name}),
+#			handler
+#		); #add fish
+		#update quest state(wip need a better system)
+		#play sound and other things
+#		data["status"] = 0 #end event
+		#may need to have a hook(signal) to the fish to tell
+		#it that the logic ran. or could just run that logic 
+		#trying it now
+#		self.remove_self()#works
+		#NOTE: could use resource instead of writing this out
+		#and just run the resource logic while
+		#also allow this to be used for unquie cases
 	
-	if handler != null: 
-		#TODO: maybe player_hander should have a hud if the client. maybe a hud for each player for splitscreen?
-		handler.get_hud().gui_notify.add_notify_message("[center]Caught " + str(fish_name))
+	#NOTE! will use the static way. the static functions should 
+	#be enough to isolate logic and dedicated resources could be used
+	#to modualize adn visualize the events if needed
+	var remaining_amount = Item_Events.acquire_item(
+		instigator,
+		fish_item.new_item(1,{"name":fish_name}),
+		handler
+	);
+	#Note: most of this should be set up handler side. 
+	#this should only set up the run logic
+	#and the first part of the logic should run asap
+	#also make sure the logic will set status to 0 at some point
+	#to prevent it running forever(which may lock up a type)
+	#also type should be unquie if expected to stack and live long
+	
+	#endregion
+	#region ### old Logic ###
+#	if instigator != null:
+#		var remaining_amount = instigator.inventory.add_item(fish_item.new_item(1,{"name":fish_name}))
+#		if remaining_amount >= 1:
+#			print("can not carry anymore fish")
+	
+	#if handler != null: 
+		#TODO(new): move this logic either to a static event or handler. these scripts should be simple
+		#TODO(old): maybe player_hander should have a hud if the client. maybe a hud for each player for splitscreen?
+#		handler.get_hud().gui_notify.add_notify_message("[center]Caught " + str(fish_name))
 	#Global.get_hud().$Notify.add_notify_message("[center]Caught " + str(fish_name))
 	#add the fish to fish caught dict
+	
+	#endregion
+	
 	var count = handler.get_player_meta(fish_name+" caught")
 	if count != null:
 		handler.set_player_meta(fish_name+" caught", count + 1)
@@ -149,8 +206,8 @@ func on_interact(handler, instigator, target, data):
 #		data_source.fish_caught = {fish_name:1}
 	
 	#print("Caught " + fish_name)
-	
 	remove_self()
+	#return data
 	
 
 func remove_self():

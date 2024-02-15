@@ -16,6 +16,13 @@ signal gui_update(element)
 			$Notify.visible = !hide_hud
 	get:
 		return hide_hud
+		
+@onready var loading : bool = false :
+	set(value):
+		if($LoadingScreen):
+			$LoadingScreen.visible = value
+	get:
+		return $LoadingScreen.visible
 
 #may not be the best, but exposing these so they can be called directly instead of having to look them up
 #should only be for more static gui types
@@ -29,7 +36,7 @@ signal gui_update(element)
 
 func _process(_delta):
 	if !Engine.is_editor_hint():
-		var player_data = Game.get_player().state
+		var player_data = Game.get_player_handler().state
 		#may need a dict for score in playerstate or a function that can fetch it
 		if player_data.metadata["total_common_fish_caught"] <= 0 and player_data.metadata["total_rare_fish_caught"] <= 0:
 			$Score.update_data()
@@ -37,7 +44,7 @@ func _process(_delta):
 			$Score.update_data({"Common":player_data.metadata["total_common_fish_caught"],"Rare":player_data.metadata["total_rare_fish_caught"]})
 	
 		#this being put here untill a timer or state system can take care of it
-		var player_pawn = Game.get_player().pawn
+		var player_pawn = Game.get_player_handler().pawn
 
 		#testing a way to point back to home
 		#print(get_viewport().get_visible_rect().size)
@@ -51,8 +58,8 @@ func _process(_delta):
 				$HomePoint.visible = false
 		
 
-func loading(is_loading):
+#func loading(is_loading):
 	#await get_tree().create_timer(1).timeout #A delay so things can finish up. currrenty need to be appled difftrently or not used
-	$LoadingScreen.visible = is_loading
+#	$LoadingScreen.visible = is_loading
 
 

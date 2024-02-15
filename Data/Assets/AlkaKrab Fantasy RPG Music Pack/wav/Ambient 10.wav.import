@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dikhqi64irus5"
+path="res://.godot/imported/Ambient 10.wav-4de6f43091aa1a3dae027e374ed2e215.sample"
+
+[deps]
+
+source_file="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/wav/Ambient 10.wav"
+dest_files=["res://.godot/imported/Ambient 10.wav-4de6f43091aa1a3dae027e374ed2e215.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

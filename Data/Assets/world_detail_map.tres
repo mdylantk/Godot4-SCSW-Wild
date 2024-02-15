@@ -1,5 +1,6 @@
 [gd_resource type="FastNoiseLite" format=3 uid="uid://087vceuyr40g"]
 
 [resource]
+seed = 1401584422
 fractal_lacunarity = 20.0
 fractal_gain = 1.0

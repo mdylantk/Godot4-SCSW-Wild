@@ -29,3 +29,6 @@ func move(direction : Vector2):
 		facing_dirction = direction
 		direction *= (1+Input.get_action_strength("Sprint")*sprint_modifier)
 		velocity = direction * speed
+		return true
+	else:
+		return false
