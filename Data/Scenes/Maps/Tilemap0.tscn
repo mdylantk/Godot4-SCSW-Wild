@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dghoogotf0r7u" path="res://Data/Scenes/Actors/Fish.tscn" id="6_8fa2c"]
 [ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Scenes/Actors/Interactive_Body2d.tscn" id="7_15ksr"]
 [ext_resource type="Resource" uid="uid://dghnl8cd6ev5n" path="res://Data/Resources/Test_House.tres" id="8_ahqel"]
-[ext_resource type="Script" path="res://Data/Scripts/Level_Transfer.gd" id="9_0jo2j"]
+[ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="9_0jo2j"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="10_mahl4"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_2mxdg"]

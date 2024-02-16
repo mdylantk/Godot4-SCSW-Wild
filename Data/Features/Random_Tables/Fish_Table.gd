@@ -6,17 +6,21 @@ class_name Fish_Table extends Random_Table_Resource
 
 func _init():
 	if table.is_empty():
-		table.append(Weighted_Group_Resource.new("common",99,
+		table.append(Weighted_Group_Resource.new("common",75,
 		[
 			"Carp",
+			"Guppy",
+			"Perch",
+			"Barb"
+		]
+		))
+		table.append(Weighted_Group_Resource.new("uncommon",90,
+		[
 			"Koi",
 			"Bass",
 			"Eel",
-			"Barb",
 			"Pike",
-			"Perch",
 			"Salmon",
-			"Guppy",
 			"Walleye",
 			"Trout"
 		]

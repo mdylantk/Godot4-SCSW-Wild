@@ -4,6 +4,7 @@ extends CharacterBody2D
 @export var rare_catch = true
 
 @export var fish_item : Item
+@export var Interaction_Data : Interactive_Data = Catch_Fish.new()
 
 #NOTE: should have randomrarefish in random ponds but they should be of caught fishes
 #or a flag/state that state if the void world effect fish type or pick from availbe types
@@ -53,14 +54,27 @@ func _ready():
 #probably could use interact data for this. item pickup. just need a way to update score
 #so maybe am extended one for this case
 func on_interact(handler, instigator, target, data):
+	if Interaction_Data != null:
+		var sucess = Interaction_Data.interact(handler, instigator, target, data)
+		if sucess:
+			remove_self()
+			return
+		else:
+			return
 	var data_source
 	data["type"]="item pickup"
 	if handler is Player_Handler:
-		data_source = handler.state.metadata
+		data_source = handler.state.data
 	else:
 		data_source = Global.global_varibles
-		
-	if starting_location in data_source.unquie_fish_locations:
+	var rare_fish_locations = handler.get_player_meta("unquie_fish_locations")
+	print(rare_fish_locations == null)
+	if rare_fish_locations == null:
+		handler.set_player_meta("unquie_fish_locations",[])
+		print(handler.get_player_meta("unquie_fish_locations"))
+		rare_fish_locations = handler.get_player_meta("unquie_fish_locations")
+	print(rare_fish_locations)
+	if starting_location in rare_fish_locations:
 		#flagging rare off so it treated as common.
 		rare_catch = false
 		#also reset the name
@@ -73,7 +87,10 @@ func on_interact(handler, instigator, target, data):
 		if fish_name == "Fish":
 			var checking_rare_fish = true
 			var rare_fish_name
-			if data_source["total_rare_fish_caught"] >= rare_fish_names.size():
+			var rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
+			if rare_fish_caught == null:
+				rare_fish_caught = []
+			if rare_fish_caught >= rare_fish_names.size():
 				print("all rare fish should be caught now")
 				rare_fish_name = rare_fish_names[randi() % rare_fish_names.size()]
 				pass
@@ -81,9 +98,15 @@ func on_interact(handler, instigator, target, data):
 				while checking_rare_fish:
 					if rare_fish_names.size() > 0:
 						rare_fish_name = rare_fish_names.pop_at(randi() % rare_fish_names.size())
-						if data_source.has("fish_caught"):
-							if data_source.fish_caught.has(rare_fish_name):
-								print("have "+str(rare_fish_name) + ": " + str(data_source.fish_caught[rare_fish_name]))
+						#var rare_fish_count = handler.get_player_meta()
+						var fish_caught = handler.get_player_meta("fish_caught")
+						#if rare_fish_count == null:
+						#	rare_fish_count = 0
+						if fish_caught == null:
+							fish_caught = {}
+						if not fish_caught.is_empty():
+							if fish_caught.has(rare_fish_name):
+								print("have "+str(rare_fish_name))
 								pass#skip
 							else:
 								checking_rare_fish = false
@@ -97,28 +120,34 @@ func on_interact(handler, instigator, target, data):
 						checking_rare_fish = false
 			fish_name = rare_fish_name
 			#Global.rare_fish_count += 1
-		if data_source.has("total_rare_fish_caught"):
-			data_source["total_rare_fish_caught"] += 1
+		var total_rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
+		if total_rare_fish_caught != null:
+			handler.set_player_meta("total_rare_fish_caught", total_rare_fish_caught + 1)
 		else:
-			data_source["total_rare_fish_caught"] = 1
+			handler.set_player_meta("total_rare_fish_caught", 1)
 		#if the fish have the generic name "fish", get a random one from a list. this should grab froma rare table
 			pass
-		data_source.unquie_fish_locations.append(starting_location)
+		rare_fish_locations.append(starting_location)
 	#Global.global_varibles["fish_" + str(starting_location)] = fish_name
 	else:
 		if fish_name == "Fish":
 			fish_name = common_fish_names[randi() % common_fish_names.size()]
 			#if the fish have the generic name "fish", get a random one from a list
 			pass
-		if data_source.has("fish_" + str(fish_name)):
-			data_source["fish_" + str(fish_name)] += 1
-		else:
-			data_source["fish_" + str(fish_name)] = 1
+#		if data_source.has("fish_" + str(fish_name)):
+#			data_source["fish_" + str(fish_name)] += 1
+#		else:
+#			data_source["fish_" + str(fish_name)] = 1
 		#Global.common_fish_count += 1
-		if data_source.has("total_common_fish_caught"):
-			data_source["total_common_fish_caught"] += 1
+		var total_fish_caught = handler.get_player_meta("total_common_fish_caught")
+		if total_fish_caught != null:
+			handler.set_player_meta("total_common_fish_caught", total_fish_caught + 1)
 		else:
-			data_source["total_common_fish_caught"] = 1
+			handler.set_player_meta("total_common_fish_caught", 1)
+		#if data_source.has("total_common_fish_caught"):
+		#	data_source["total_common_fish_caught"] += 1
+		#else:
+		#	data_source["total_common_fish_caught"] = 1
 	#Global.message_box.set_message(fish_name)
 	#should have the HUD handles this
 	#probably a generic message function. type and data where type is if it a dialog, notify, or score

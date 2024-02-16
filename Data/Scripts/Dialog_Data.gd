@@ -23,6 +23,13 @@ class_name Dialog_Data extends Resource
 
 #PROBABLY should make get text only get text and add a function to forward text abd return if it reach the end
 
+#this allow the data to not need to access outside sources without being assigned
+#this logic may(if it run server side) or may not(if only client runs it) need to change for multiplayer
+#may need to be an array to allow multi target conversation
+var current_handler = null
+var current_target = null
+
+
 func get_text(index = 0): #index is ignored if default and random. also invald may be treated as 0 or return null
 	var text_source = null
 	var is_intro = false
@@ -56,8 +63,10 @@ func get_text(index = 0): #index is ignored if default and random. also invald m
 		index = 0 #reset index if index greater than amount
 		if is_intro:
 			visited = true
-			if save_visited_flag :
-				Global.get_player_handler().state.metadata["visited_"+str(id)] = true
+			if save_visited_flag and current_handler != null:
+				#need to store the handler here
+				current_handler.set_player_meta("visited_"+str(id), true)
+				#Global.get_player_handler().state.metadata["visited_"+str(id)] = true
 	index += 1
 	return text
 	#return null if all fail

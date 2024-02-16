@@ -11,3 +11,6 @@ static func make_event_data(type="event", id = "0"):
 			print_debug("nothing to run") 
 			data["status"] = 0
 	}
+	
+static func change_level(level, handler):
+	handler.get_tree().call_group("World_Handler", "change_level", level,handler)

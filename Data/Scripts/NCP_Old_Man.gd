@@ -15,20 +15,26 @@ func _ready():
 		
 func on_interact(handler, instigator, target, data):#_target):
 	#if true:#Global.is_client_player(instigator):
-	var player_vars = handler.state.metadata
+	#var player_vars = handler.state.metadata
+	var player_visited = handler.get_player_meta("visited_"+str(dialog_data.id))
+	if player_visited == null: player_visited = false
+	if player_visited && dialog_data.save_visited_flag :
+		dialog_data.visited = player_visited
 	
-	if player_vars.has("visited_"+str(dialog_data.id)) && dialog_data.save_visited_flag :
-		dialog_data.visited = player_vars["visited_"+str(dialog_data.id)]
+	#note, this a placeholder, it may need a check or additinal logic
+	dialog_data.current_handler = handler
 	
 	if dialog_data.state != 0:
 		return
 	if dialog_data.visited:
-		if player_vars["total_rare_fish_caught"] == 2 :
+		var rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
+		if rare_fish_caught == null : rare_fish_caught = 0
+		if rare_fish_caught == 2 :
 			if randi() % 10 > 3:
 				dialog_data.topic = "rare1"
 			else:
 				dialog_data.topic = ""
-		elif player_vars["total_rare_fish_caught"] > 2:
+		elif rare_fish_caught > 2:
 			if randi() % 10 > 3:
 				dialog_data.topic = "rare2"
 			else:

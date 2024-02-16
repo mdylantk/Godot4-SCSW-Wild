@@ -6,7 +6,7 @@ class_name Item_Events extends Object
 #function calls should be used instead of directly setting values
 #so functions wont be pure. they will only lack a state
 
-static func acquire_item(target,item,handler = null):
+static func acquire_item(target,item,handler = null,prefix = "Acquired"):
 	#NOTE: for the fish logic. it will pick first then run the add item logic
 	#this handler gaining an item.
 	#target gains any items in data 
@@ -20,7 +20,7 @@ static func acquire_item(target,item,handler = null):
 		print("can not carry anymore fish")
 	if handler != null:
 		handler.get_hud().gui_notify.add_notify_message(
-			"[center]Caught " + str(item["meta"]["name"])
+			"[center]"+prefix +" "+ str(item["meta"]["name"])
 			)
 		#print_debug(target.inventory.items)
 	return remaining_amount
