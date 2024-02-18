@@ -8,6 +8,9 @@ class_name Catch_Fish extends Interactive_Data
 #or templates that have fish that uses diffrent tables
 #or have a catch rare action (or intergade it in this)
 #pick_from_table()
+#NOTE and TODO: should just get the state and call fetch and store
+#so that only a get_state(): is needed for any handler type
+#or just directly acess it. handler can listen to it for changes
 func interact(handler, instigator, target, data):
 	#random_table.fail_weight = 10
 	print(random_table.fail_weight)
@@ -24,17 +27,24 @@ func interact(handler, instigator, target, data):
 		#TODO: need a way to log caught fish. this just statisitic like
 		#number caught, biggest and smallest size caught, and such
 		if picked_name["rarity"] < 3:
-			var total_fish_caught = handler.get_player_meta("total_common_fish_caught")
+			var total_fish_caught = handler.state.fetch("total_common_fish_caught")
 			if total_fish_caught != null:
-				handler.set_player_meta("total_common_fish_caught", total_fish_caught + 1)
+				handler.state.store("total_common_fish_caught", total_fish_caught + 1)
 			else:
-				handler.set_player_meta("total_common_fish_caught", 1)
+				handler.state.store("total_common_fish_caught", 1)
 		else:
-			var total_rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
+			var total_rare_fish_caught = handler.state.fetch("total_rare_fish_caught")
 			if total_rare_fish_caught != null:
-				handler.set_player_meta("total_rare_fish_caught", total_rare_fish_caught + 1)
+				handler.state.store("total_rare_fish_caught", total_rare_fish_caught + 1)
 			else:
-				handler.set_player_meta("total_rare_fish_caught", 1)
+				handler.state.store("total_rare_fish_caught", 1)
+		
+		#protype fishlog
+		#Note: the proper system would use a log resource of fish resource
+		#with an entrie resource
+		log_fish(handler, fish_name, picked_name["rarity"], {"count":1})
+		#print("fish log debug")
+		#print_debug(handler.state.data)
 		return true
 	return false
 		
@@ -47,3 +57,13 @@ func interact(handler, instigator, target, data):
 	#then need to notify to perform an action on the fish in the world
 	#like removing it, but returning a true or false value should be enough
 	#so the fish can remove it self
+func log_fish(handler, name, rarity, new_fish_data):
+	var fish_data = handler.state.fetch(name, "fish_log_"+str(rarity))
+	if fish_data == null:
+		handler.state.store(name,new_fish_data, "fish_log_"+str(rarity))
+		return
+	if new_fish_data.has("count"):
+		if fish_data.has("count"):
+			fish_data["count"] += new_fish_data["count"]
+		else:
+			fish_data["count"] = new_fish_data["count"]

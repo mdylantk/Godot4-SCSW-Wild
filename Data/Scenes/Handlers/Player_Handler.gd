@@ -37,9 +37,14 @@ var pawn_state: Pawn_State :
 	get:
 		return pawn_state
 
+#NOTE: hud is not a var, but works?
+#maybe because the logic is not being run before this is ready
+#may or may need to set it to use a var or use the function
+#var i heard is faster than a fuction. just need an on_ready
 func get_hud():
 	return $HUD
-
+#BUT this class needs a hud var to acess hud
+@onready var hud = $HUD
 
 
 func _ready():
@@ -65,7 +70,9 @@ func _ready():
 	pawn_state = Pawn_State.Alive
 	#on_transfer()
 	pawn.inventory.slot_update.connect(on_item_gain)
-	
+	hud.player_state = state
+	#NOTE and TODO: need a func for when pawn change to update this
+	hud.player_pawn = pawn
 	event_process() #NOTE: this will run untill stopped(need logic) it is a subroutine
 
 func _physics_process(_delta) :

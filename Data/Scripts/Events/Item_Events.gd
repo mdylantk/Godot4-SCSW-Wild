@@ -17,10 +17,18 @@ static func acquire_item(target,item,handler = null,prefix = "Acquired"):
 	var remaining_amount = target.inventory.add_item(item)#.duplicate(true))
 		#need to make sure the memory is not clear or lost for item
 	if remaining_amount >= 1:
-		print("can not carry anymore fish")
-	if handler != null:
-		handler.get_hud().gui_notify.add_notify_message(
-			"[center]"+prefix +" "+ str(item["meta"]["name"])
+		print_debug("can not carry anymore fish")
+		General_Events.send_notifcation(
+			handler, 
+			prefix +" "+ str(item["meta"]["name"]) + " but unable to carry anymore."
 			)
+	elif handler != null:
+		General_Events.send_notifcation(
+			handler, 
+			prefix +" "+ str(item["meta"]["name"])
+			)
+		#handler.get_hud().gui_notify.add_notify_message(
+		#	"[center]"+prefix +" "+ str(item["meta"]["name"])
+		#	)
 		#print_debug(target.inventory.items)
 	return remaining_amount

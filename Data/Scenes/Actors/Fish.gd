@@ -58,92 +58,92 @@ func on_interact(handler, instigator, target, data):
 		var sucess = Interaction_Data.interact(handler, instigator, target, data)
 		if sucess:
 			remove_self()
-			return
+			return data
 		else:
-			return
-	var data_source
-	data["type"]="item pickup"
-	if handler is Player_Handler:
-		data_source = handler.state.data
-	else:
-		data_source = Global.global_varibles
-	var rare_fish_locations = handler.get_player_meta("unquie_fish_locations")
-	print(rare_fish_locations == null)
-	if rare_fish_locations == null:
-		handler.set_player_meta("unquie_fish_locations",[])
-		print(handler.get_player_meta("unquie_fish_locations"))
-		rare_fish_locations = handler.get_player_meta("unquie_fish_locations")
-	print(rare_fish_locations)
-	if starting_location in rare_fish_locations:
+			return data
+#	var data_source
+#	data["type"]="item pickup"
+#	if handler is Player_Handler:
+#		data_source = handler.state.data
+#	else:
+#		data_source = Global.global_varibles
+#	var rare_fish_locations = handler.get_player_meta("unquie_fish_locations")
+#	print(rare_fish_locations == null)
+#	if rare_fish_locations == null:
+#		handler.set_player_meta("unquie_fish_locations",[])
+#		print(handler.get_player_meta("unquie_fish_locations"))
+#		rare_fish_locations = handler.get_player_meta("unquie_fish_locations")
+#	print(rare_fish_locations)
+#	if starting_location in rare_fish_locations:
 		#flagging rare off so it treated as common.
-		rare_catch = false
+#		rare_catch = false
 		#also reset the name
 		#but probably should have a flag to state if it a rare name
 		#which in this case it would be or it would not be tagged as rared
-		fish_name == "Fish"
-	if rare_catch:
+#		fish_name == "Fish"
+#	if rare_catch:
 		#changes name back to fish for special rares so tehy turn into normal fish
 		#else:
-		if fish_name == "Fish":
-			var checking_rare_fish = true
-			var rare_fish_name
-			var rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
-			if rare_fish_caught == null:
-				rare_fish_caught = []
-			if rare_fish_caught >= rare_fish_names.size():
-				print("all rare fish should be caught now")
-				rare_fish_name = rare_fish_names[randi() % rare_fish_names.size()]
-				pass
-			else:
-				while checking_rare_fish:
-					if rare_fish_names.size() > 0:
-						rare_fish_name = rare_fish_names.pop_at(randi() % rare_fish_names.size())
+#		if fish_name == "Fish":
+#			var checking_rare_fish = true
+#			var rare_fish_name
+#			var rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
+#			if rare_fish_caught == null:
+#				rare_fish_caught = []
+#			if rare_fish_caught >= rare_fish_names.size():
+#				print("all rare fish should be caught now")
+#				rare_fish_name = rare_fish_names[randi() % rare_fish_names.size()]
+#				pass
+#			else:
+#				while checking_rare_fish:
+#					if rare_fish_names.size() > 0:
+#						rare_fish_name = rare_fish_names.pop_at(randi() % rare_fish_names.size())
 						#var rare_fish_count = handler.get_player_meta()
-						var fish_caught = handler.get_player_meta("fish_caught")
+#						var fish_caught = handler.get_player_meta("fish_caught")
 						#if rare_fish_count == null:
 						#	rare_fish_count = 0
-						if fish_caught == null:
-							fish_caught = {}
-						if not fish_caught.is_empty():
-							if fish_caught.has(rare_fish_name):
-								print("have "+str(rare_fish_name))
-								pass#skip
-							else:
-								checking_rare_fish = false
-								pass#no fish
-						else:
-							checking_rare_fish = false
-							pass#no data
-					else:
+#						if fish_caught == null:
+#							fish_caught = {}
+#						if not fish_caught.is_empty():
+#							if fish_caught.has(rare_fish_name):
+#								print("have "+str(rare_fish_name))
+#								pass#skip
+#							else:
+#								checking_rare_fish = false
+#								pass#no fish
+#						else:
+#							checking_rare_fish = false
+#							pass#no data
+#					else:
 						#may need to do an additanal check if all rares are caught and just repeat without the while
-						rare_fish_name = "Silly Piranha" 
-						checking_rare_fish = false
-			fish_name = rare_fish_name
+#						rare_fish_name = "Silly Piranha" 
+#						checking_rare_fish = false
+#			fish_name = rare_fish_name
 			#Global.rare_fish_count += 1
-		var total_rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
-		if total_rare_fish_caught != null:
-			handler.set_player_meta("total_rare_fish_caught", total_rare_fish_caught + 1)
-		else:
-			handler.set_player_meta("total_rare_fish_caught", 1)
+##		var total_rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
+#		if total_rare_fish_caught != null:
+#			handler.set_player_meta("total_rare_fish_caught", total_rare_fish_caught + 1)
+#		else:
+#			handler.set_player_meta("total_rare_fish_caught", 1)
 		#if the fish have the generic name "fish", get a random one from a list. this should grab froma rare table
-			pass
-		rare_fish_locations.append(starting_location)
+#			pass
+#		rare_fish_locations.append(starting_location)
 	#Global.global_varibles["fish_" + str(starting_location)] = fish_name
-	else:
-		if fish_name == "Fish":
-			fish_name = common_fish_names[randi() % common_fish_names.size()]
-			#if the fish have the generic name "fish", get a random one from a list
-			pass
+#	else:
+#		if fish_name == "Fish":
+#			fish_name = common_fish_names[randi() % common_fish_names.size()]
+#			#if the fish have the generic name "fish", get a random one from a list
+#			pass
 #		if data_source.has("fish_" + str(fish_name)):
 #			data_source["fish_" + str(fish_name)] += 1
 #		else:
 #			data_source["fish_" + str(fish_name)] = 1
 		#Global.common_fish_count += 1
-		var total_fish_caught = handler.get_player_meta("total_common_fish_caught")
-		if total_fish_caught != null:
-			handler.set_player_meta("total_common_fish_caught", total_fish_caught + 1)
-		else:
-			handler.set_player_meta("total_common_fish_caught", 1)
+#		var total_fish_caught = handler.get_player_meta("total_common_fish_caught")
+#		if total_fish_caught != null:
+#			handler.set_player_meta("total_common_fish_caught", total_fish_caught + 1)
+#		else:
+#			handler.set_player_meta("total_common_fish_caught", 1)
 		#if data_source.has("total_common_fish_caught"):
 		#	data_source["total_common_fish_caught"] += 1
 		#else:
@@ -193,11 +193,11 @@ func on_interact(handler, instigator, target, data):
 	#NOTE! will use the static way. the static functions should 
 	#be enough to isolate logic and dedicated resources could be used
 	#to modualize adn visualize the events if needed
-	var remaining_amount = Item_Events.acquire_item(
-		instigator,
-		fish_item.new_item(1,{"name":fish_name}),
-		handler
-	);
+#	var remaining_amount = Item_Events.acquire_item(
+#		instigator,
+#		fish_item.new_item(1,{"name":fish_name}),
+#		handler
+#	);
 	#Note: most of this should be set up handler side. 
 	#this should only set up the run logic
 	#and the first part of the logic should run asap
@@ -221,11 +221,11 @@ func on_interact(handler, instigator, target, data):
 	
 	#endregion
 	
-	var count = handler.get_player_meta(fish_name+" caught")
-	if count != null:
-		handler.set_player_meta(fish_name+" caught", count + 1)
-	else:
-		handler.set_player_meta(fish_name+" caught", 1)
+#	var count = handler.get_player_meta(fish_name+" caught")
+#	if count != null:
+#		handler.set_player_meta(fish_name+" caught", count + 1)
+#	else:
+#		handler.set_player_meta(fish_name+" caught", 1)
 #	if data_source.has("fish_caught"):
 #		if data_source.fish_caught.has(fish_name):
 #			data_source.fish_caught[fish_name] += 1
@@ -235,7 +235,7 @@ func on_interact(handler, instigator, target, data):
 #		data_source.fish_caught = {fish_name:1}
 	
 	#print("Caught " + fish_name)
-	remove_self()
+#	remove_self()
 	#return data
 	
 

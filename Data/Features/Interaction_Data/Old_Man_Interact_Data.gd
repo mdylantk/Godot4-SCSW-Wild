@@ -10,13 +10,14 @@ func interact(handler, instigator, target, data):
 	if dialog_data.state != 0:
 		return
 	if dialog_data.visited:
-		var player_vars = handler.state.metadata
-		if player_vars["total_rare_fish_caught"] == 2 :
+		#var player_vars = handler.state.metadata
+		var total_rare_fish_caught = handler.state.fetch("total_rare_fish_caught")
+		if total_rare_fish_caught == 2 :
 			if randi() % 10 > 3:
 				dialog_data.topic = "rare1"
 			else:
 				dialog_data.topic = ""
-		elif player_vars["total_rare_fish_caught"] > 2:
+		elif total_rare_fish_caught > 2:
 			if randi() % 10 > 3:
 				dialog_data.topic = "rare2"
 			else:
@@ -24,5 +25,8 @@ func interact(handler, instigator, target, data):
 		
 		#print("testing the new system")
 		#now can decide when to load dialig as well as get notify when it would have started
-	handler.get_hud().gui_dialog.start_dialog(target, dialog_data)
+	#below probably should be a static function in an event libaray since
+	#the path go through so many nodes(well two, but still)
+	#handler.get_hud().gui_dialog.start_dialog(target, dialog_data)
+	General_Events.start_dialog(handler, target, dialog_data)
 	pass

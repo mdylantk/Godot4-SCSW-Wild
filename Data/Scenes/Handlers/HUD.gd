@@ -30,36 +30,41 @@ signal gui_update(element)
 @onready var gui_score = $Score
 @onready var gui_dialog = $Dialog
 
-
+var player_state : State_Resource
+var player_pawn 
 #func _ready():
 	#pass
 
 func _process(_delta):
 	if !Engine.is_editor_hint():
-		var player_data = Game.get_player_handler()
+		#TODO: have the player handler set a state for this to use
+		#so this would need a state to use for player and any other needed states
+		if player_state != null:
 		#may need a dict for score in playerstate or a function that can fetch it
-		var fish_count = player_data.get_player_meta("total_common_fish_caught")
-		var rare_fish_count = player_data.get_player_meta("total_rare_fish_caught")
-		if fish_count == null and rare_fish_count == null:
-			$Score.update_data()
-		elif fish_count > 0 or rare_fish_count > 0:
-			if fish_count == null: fish_count = 0
-			if rare_fish_count == null: rare_fish_count = 0
-			$Score.update_data({"Common":fish_count,"Rare":rare_fish_count})
+			var fish_count = player_state.fetch("total_common_fish_caught")
+			var rare_fish_count = player_state.fetch("total_rare_fish_caught")
+			if fish_count == null and rare_fish_count == null:
+				$Score.update_data()
+			elif fish_count > 0 or rare_fish_count > 0:
+				if fish_count == null: fish_count = 0
+				if rare_fish_count == null: rare_fish_count = 0
+				$Score.update_data({"Common":fish_count,"Rare":rare_fish_count})
 	
 		#this being put here untill a timer or state system can take care of it
-		var player_pawn = Game.get_player_handler().pawn
+		#var player_pawn = Game.get_player_handler().pawn
+		if player_pawn != null:
+
 
 		#testing a way to point back to home
 		#print(get_viewport().get_visible_rect().size)
-		var current_size = get_viewport().get_visible_rect().size
-		if player_pawn != null:
-			if player_pawn.global_position.length() > current_size.length() :
-				$HomePoint.visible = true
-				$HomePoint/TextureRect.position = (-(player_pawn.global_position - Vector2(16*32,16*32))).clamp(Vector2.ZERO, (current_size -Vector2(16,16)))
+			var current_size = get_viewport().get_visible_rect().size
+			if player_pawn != null:
+				if player_pawn.global_position.length() > current_size.length() :
+					$HomePoint.visible = true
+					$HomePoint/TextureRect.position = (-(player_pawn.global_position - Vector2(16*32,16*32))).clamp(Vector2.ZERO, (current_size -Vector2(16,16)))
 				#Vector2(16*32,16*32) is the offset. should be the player orginal spawn or the old man global location
-			else:
-				$HomePoint.visible = false
+				else:
+					$HomePoint.visible = false
 		
 
 #func loading(is_loading):
