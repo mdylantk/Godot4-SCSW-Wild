@@ -5,6 +5,7 @@ class_name Json_Viewer extends Resource
 #todo: build system that uses json by loading it when game is ready
 #and have check to make sure feilds are accessable
 
+#NOTE: user:// could be used instead of res://  for cases like save games or user data
 @export_file("*.json") var path = "res://Data/Resources/Json/Lore.json":
 	set(value):
 		path = value

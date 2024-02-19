@@ -1,23 +1,23 @@
 [gd_scene load_steps=7 format=3 uid="uid://ctvmde4ov5w2x"]
 
-[ext_resource type="Script" path="res://Data/Scripts/Dialog.gd" id="1_up48a"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_wav0b"]
-[ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Data/Assets/Main_Theme.tres" id="3_mlfjr"]
+[ext_resource type="Script" path="res://Data/Scenes/GUI/Dialog.gd" id="1_le745"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_xduuh"]
+[ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Data/Assets/Main_Theme.tres" id="3_fehv7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ilfco"]
-atlas = ExtResource("2_wav0b")
+atlas = ExtResource("2_xduuh")
 region = Rect2(799, 136, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fakkd"]
-atlas = ExtResource("2_wav0b")
+atlas = ExtResource("2_xduuh")
 region = Rect2(816, 255, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jkry8"]
-atlas = ExtResource("2_wav0b")
+atlas = ExtResource("2_xduuh")
 region = Rect2(442, 170, 16, 16)
 
 [node name="Dialog" type="CanvasLayer"]
-script = ExtResource("1_up48a")
+script = ExtResource("1_le745")
 
 [node name="NinePatchRect2" type="NinePatchRect" parent="."]
 anchors_preset = 12
@@ -62,7 +62,7 @@ offset_top = -48.0
 offset_right = 152.0
 offset_bottom = -28.0
 grow_vertical = 0
-theme = ExtResource("3_mlfjr")
+theme = ExtResource("3_fehv7")
 bbcode_enabled = true
 text = "[center]Name"
 fit_content = true
@@ -79,7 +79,7 @@ offset_right = -48.0
 offset_bottom = -48.0
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("3_mlfjr")
+theme = ExtResource("3_fehv7")
 bbcode_enabled = true
 text = "Text"
 

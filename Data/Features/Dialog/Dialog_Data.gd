@@ -27,7 +27,7 @@ class_name Dialog_Data extends Resource
 #this logic may(if it run server side) or may not(if only client runs it) need to change for multiplayer
 #may need to be an array to allow multi target conversation
 var current_handler = null
-var current_target = null
+var current_speaker = null
 
 
 func get_text(index = 0): #index is ignored if default and random. also invald may be treated as 0 or return null

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://df500lm7ih60h"]
 
-[ext_resource type="Script" path="res://Data/Scripts/FishNotify.gd" id="1_ylxog"]
+[ext_resource type="Script" path="res://Data/Scenes/GUI/FishNotify.gd" id="1_ylxog"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_sabk1"]
 [ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Data/Assets/Main_Theme.tres" id="3_shrd2"]
 

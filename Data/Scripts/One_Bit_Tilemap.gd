@@ -40,7 +40,7 @@ var empty_tiles : Array[Vector2] #if an array is provided, will skip the generat
 @export var allow_foliage_generation : bool = true
 
 @export var random_noise : FastNoiseLite
-@export_file("*.tscn") var background = "res://Data/Scenes/Background.tscn"
+@export_file("*.tscn") var background = "uid://wqfpqmmkbg0n"
 
 var is_ready : bool = false: #a flag to state if the tilemap ready to be used or still running eneration logic
 	#could use a signal here

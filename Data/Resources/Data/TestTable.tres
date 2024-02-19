@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://c7iheijy3vgni"]
+[gd_resource type="Resource" script_class="Fish_Table" load_steps=5 format=3 uid="uid://c7iheijy3vgni"]
 
 [ext_resource type="Script" path="res://Data/Features/Random_Tables/Fish_Table.gd" id="1_3p3m8"]
 [ext_resource type="Script" path="res://Data/Features/Random_Tables/Weighted_Group_Resource.gd" id="2_kyfie"]
@@ -17,5 +17,6 @@ entries = ["Rainbow Trout", "Moon Koi", "Black Bass", "Silver Guppy", "Shadow Pi
 
 [resource]
 script = ExtResource("1_3p3m8")
-max_weight_per_group = 100
+max_weight_per_roll = 100
+fail_weight = 0
 table = Array[ExtResource("2_kyfie")]([SubResource("Resource_4uvbb"), SubResource("Resource_1ffhe")])

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Dialog_Data" load_steps=4 format=3 uid="uid://eceb7uvicyqu"]
 
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_msvln"]
-[ext_resource type="Script" path="res://Data/Scripts/Dialog_Data.gd" id="2_qx0v4"]
+[ext_resource type="Script" path="res://Data/Features/Dialog/Dialog_Data.gd" id="2_qx0v4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dfh2d"]
 atlas = ExtResource("1_msvln")

@@ -23,6 +23,7 @@ func on_interact(handler, instigator, target, data):#_target):
 	
 	#note, this a placeholder, it may need a check or additinal logic
 	dialog_data.current_handler = handler
+	dialog_data.current_speaker = target
 	
 	if dialog_data.state != 0:
 		return

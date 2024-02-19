@@ -1,9 +1,12 @@
 extends CanvasLayer
 
+#TODO: target and such is stored in the dialog data. 
+#may need to verify the speaker is speaking to the correct player in the future
+#so may need to pass the pawn or handler who owns this
 var target = null
 var cooldown_timer : float = 0
 var dialog_index = 0
-var dialog_data 
+var dialog_data : Dialog_Data
 
 #todo: probably add signals to this or data so that func may not need to be call or var watched
 
@@ -28,6 +31,8 @@ func start_dialog(new_target, new_data) :
 func end_dialog():
 	visible = false
 	target = null
+	#Todo: decide if dialog should clear it state of target and handler.
+	#clearing speaker is optional since usally speaker is the owner of the dialog data
 	if dialog_data != null :
 		dialog_data.state = 0
 	dialog_data = null
@@ -36,15 +41,30 @@ func end_dialog():
 
 func _process(_delta):
 	#may need to have this on a timer that can be pasued
-	if target == null :
-		if visible :
-			visible = false
-		set_process(false)
+	
+	if dialog_data == null:
+		#NOTE: this is a fail safe and was not needed. just here incase the system changes
+		end_dialog() 
+		return
+		
+	#Note: there may be a case where there is no speaker. this case the logic
+	#should allow dialog to continue, but need to freeze player or have a timer
+	if dialog_data.current_speaker == null or dialog_data.current_handler == null:
+		end_dialog() 
+		#return
+		#if visible :
+		#	visible = false
+		#set_process(false)
 
 	else:
 		#todo: try to catch these or have them set in the data
-		if (Global.get_player_handler().pawn.global_position - target.global_position).length() > 64 :
+			#NOTE: leaving the area while talking will break this.
+			#so added the check for player. may need a function when acessing pawn to compress this issue
+			#ideally in a static function or in the player handler(this is ideal since it is acessable)
+			#but target can not be null either. so a check is needed either way unless this is remotly reset
+		if (dialog_data.current_handler.pawn.global_position - dialog_data.current_speaker.global_position).length() > 64 :
 			end_dialog()
+			#return
 			
 		if Input.is_action_just_pressed("Accept") :
 			update_text()
