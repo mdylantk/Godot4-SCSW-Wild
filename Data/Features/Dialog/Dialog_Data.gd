@@ -1,7 +1,26 @@
 class_name Dialog_Data extends Resource
-#need to think of signals
+
+#NOTE and TODO: new system is signal base, but the question is should this be unquie for 
+#each ncp that talks or should it be on the player and additial logic added to it
+#the issue is malking sure the connection is properly reseted on all parties
+#it may be easier to load the dialog in her and have it player owned with the state
+#refreshing with each end or vaild start. also means the dialog interaction can
+#keep track of the init visited bool and logic source
+#NOTE:
+#New system should be own by the player handler and connected to the gui. 
+#inbtreaction data can hold other data as well as dialog sources and logic
+signal start
+signal end
+
+#when the logic is added, this will let listerners there a change in the text
+signal text_update
 #but for the gui
 
+#TODO: should link static dialog resources or files to this
+#and use this as the dialog state
+#NOTE: the dialog resource should return an array. this would
+#allow it to have additinal functionality. also allow it to pull
+#from external sources if needed.
 
 @export var id : String = "generic_dialog"
 @export var name : String = "generic_name"
@@ -26,9 +45,38 @@ class_name Dialog_Data extends Resource
 #this allow the data to not need to access outside sources without being assigned
 #this logic may(if it run server side) or may not(if only client runs it) need to change for multiplayer
 #may need to be an array to allow multi target conversation
-var current_handler = null
-var current_speaker = null
 
+#the gui source is found in the handler. or it can be the handler of the target if there is one
+var current_handler = null
+#the object this dialog belong to
+var current_speaker = null
+#usally the pawn of the handler. the one the speaker is talking too 
+var current_target = null
+#may use this to confirm a connection, else 
+var current_display = null
+
+func start_dialog(speaker, target, handler):
+	if state == 0:
+		current_handler = handler
+		current_speaker = speaker
+		current_target = target
+		state = 1
+		start.emit()
+		return true
+	#should return false if failed
+	return false
+	
+func end_dialog():
+	current_handler = null
+	current_speaker = null
+	current_target = null
+	state = 0
+	end.emit()
+
+#TODO: the new system will have the index stored and reset here
+#basicly this will hold the dialog info. This also means this need a way to
+#forward or backwards the text. pretty much a function that increase or decrease
+#the index value. 
 
 func get_text(index = 0): #index is ignored if default and random. also invald may be treated as 0 or return null
 	var text_source = null

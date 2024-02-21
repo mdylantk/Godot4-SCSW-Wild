@@ -1,6 +1,6 @@
 class_name General_Events extends Object
 
-#a way to quickly generate event data
+#a way to quickly generate event data. may not be needed anymore
 #TODO: expand on this to include types
 static func make_event_data(type="event", id = "0"):
 	return {
@@ -22,13 +22,18 @@ static func make_event_data(type="event", id = "0"):
 #though it could be solve with signals, these system would end up handling much more 
 #if they handle all the possible signals. this ment to break up the logic into smaller files
 #and have them handle in a static way.
-
+static func get_game_handler():
+	#this is a place holder. if Game is not auto load, other logic would be needed
+	#so this is here to provide that or allow a controlled area so chaning autoload
+	#wont break things all over the place (just need to update this)
+	return Game
 	
 static func change_level(level, handler):
 	handler.get_tree().call_group("World_Handler", "change_level", level,handler)
 	
 static func start_dialog(handler, speaker, dialog_data):
-	handler.hud.gui_dialog.start_dialog(speaker, dialog_data)
+	handler.hud.gui_dialog.open_dialog(dialog_data)
+	#handler.hud.gui_dialog.start_dialog(speaker, dialog_data)
 	#handler.get_hud().gui_dialog.start_dialog(speaker, dialog_data)
 
 static func send_notifcation(handler, message : String):

@@ -1,3 +1,3 @@
-class_name Game_State extends State_Resource
+class_name Game_State extends Savable_State
 
 @export var random_seed : int = 0

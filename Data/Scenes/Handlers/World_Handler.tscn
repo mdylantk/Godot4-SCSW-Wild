@@ -46,6 +46,7 @@ level_data = ExtResource("2_0xnf0")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_e4ey0")
+volume_db = -25.752
 pitch_scale = 0.75
 autoplay = true
 mix_target = 1

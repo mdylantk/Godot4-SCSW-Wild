@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dvaxx0ke0p27m"]
+[gd_scene load_steps=5 format=3 uid="uid://dvaxx0ke0p27m"]
 
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/Game_State.gd" id="2_bcmum"]
+[ext_resource type="Script" path="res://Data/Scenes/Handlers/AI_Handler.gd" id="3_8kfs5"]
 
 [sub_resource type="Resource" id="Resource_vn004"]
 script = ExtResource("2_bcmum")
@@ -12,3 +13,6 @@ data = {}
 y_sort_enabled = true
 script = ExtResource("1_gpdo0")
 state = SubResource("Resource_vn004")
+
+[node name="AI_Handler" type="Node2D" parent="."]
+script = ExtResource("3_8kfs5")

@@ -1,4 +1,4 @@
-class_name Player_State extends State_Resource
+class_name Player_State extends Savable_State
 
 #func _init():
 	#metadata = {

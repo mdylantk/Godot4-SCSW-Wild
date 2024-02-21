@@ -2,6 +2,7 @@ class_name Catch_Fish extends Interactive_Data
 
 @export var random_table: Random_Table_Resource = Fish_Table.new()
 @export var fish_item_source : Item = preload("res://Data/Resources/Fish_Item.tres")
+
 #TODO: add a way to handle limited rares
 #mostly to perserve the old system
 #worst case the world handler can load static
@@ -11,7 +12,7 @@ class_name Catch_Fish extends Interactive_Data
 #NOTE and TODO: should just get the state and call fetch and store
 #so that only a get_state(): is needed for any handler type
 #or just directly acess it. handler can listen to it for changes
-func interact(handler, instigator, target, data):
+func interact(handler, instigator, interactee, data):
 	#random_table.fail_weight = 10
 	print(random_table.fail_weight)
 	var picked_name = {}

@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @export var dialog_data : Dialog_Data
+@export var Interaction_Data : Interactive_Data = Old_Man_Interact_Data.new()
 
 #NOTE: it seem the catching of fish mess up into. need to make sure that intro flag is check properly(goingh to try to add it)
 #also need to make sure it runs only on 0 so long messages do not get canceled
@@ -12,10 +13,13 @@ func _ready():
 	#	if player_data.has("visited_"+str(dialog.id)) && dialog.save_visited_flag :
 	#		dialog.visited = player_data["visited_"+str(dialog.id)]
 	pass
-		
+
 func on_interact(handler, instigator, target, data):#_target):
 	#if true:#Global.is_client_player(instigator):
 	#var player_vars = handler.state.metadata
+	if Interaction_Data != null:
+		Interaction_Data.interact(handler, instigator, self, data)
+		return
 	var player_visited = handler.get_player_meta("visited_"+str(dialog_data.id))
 	if player_visited == null: player_visited = false
 	if player_visited && dialog_data.save_visited_flag :

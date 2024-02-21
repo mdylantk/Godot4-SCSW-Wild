@@ -30,7 +30,7 @@ signal gui_update(element)
 @onready var gui_score = $Score
 @onready var gui_dialog = $Dialog
 
-var player_state : State_Resource
+var player_state : Savable_State
 var player_pawn 
 #func _ready():
 	#pass

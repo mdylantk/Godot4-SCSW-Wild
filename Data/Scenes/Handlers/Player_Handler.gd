@@ -10,7 +10,7 @@ signal pawn_update(handler)
 
 signal interact(handler, instigator, target, data)
 #passing state, but might need to pass handler and player idex if system change that way
-signal player_meta_changed(player_state, property, old_value)
+#signal player_meta_changed(player_state, property, old_value)
 
 
 
@@ -49,7 +49,8 @@ func get_hud():
 
 func _ready():
 	#this is to test the signal
-	player_meta_changed.connect(player_meta_changed_test)
+	#player_meta_changed.connect(player_meta_changed_test)
+	pass
 	
 	if state == null :
 		state = Player_State.new() 
@@ -78,6 +79,7 @@ func _ready():
 func _physics_process(_delta) :
 	#Note: need to locate use_input what setting it (most likly world handler) and instead link it here
 	if pawn != null:
+		pawn.sprint_strength = Input.get_action_strength("Sprint")
 		var input_dir = Vector2(Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")).normalized()
 		pawn.move(input_dir)
 	
@@ -123,7 +125,7 @@ func _input(event) :
 			var query = PhysicsRayQueryParameters2D.create(
 				pawn.global_position, 
 				pawn.global_position+(pawn.facing_dirction*24),
-				0b10000000_00000000_00000000_00000001, #last is 1, first is 32
+				0b10000000_00000000_00000000_00000011, #last is 1, first is 32
 				[pawn])
 			#0b10000000_00000000_00000000_00001101
 			#query.exclude = [local_player]
@@ -203,7 +205,9 @@ func _input(event) :
 #							if not active_events.has(event_id):
 #								active_events[event_id] = event_data
 							#active_events.append(event_data)
-				#var test = Fish_Table.new()
+				#var test = Dialog_Script_Resource.new()
+				#test.default_script = "this is a test \n meow mew"
+				#print(test.get_dialog_text())
 				#var test2 = Catch_Fish.new()
 				#test.fail_weight = 10
 				#test2.random_table = test
@@ -282,19 +286,25 @@ func on_item_gain(inventory, slot, old_item):
 	print("old: "+ str(old_item))
 	print("new: "+ str(inventory.items[slot]))
 
+#may not use this in the long run. may just directly use state and listen
+#to the state signal if needed
 func set_player_meta(property, value):
 	var old_value = state.fetch(property)
 	state.store(property,value)
 	#var old_value = get_player_meta(property)
 	#state.metadata[property] = value
-	player_meta_changed.emit(state, property, old_value)
+	#player_meta_changed.emit(state, property, old_value)
 func get_player_meta(property):
+	#DEPRECATED use state functions
+	push_warning("deprecated code called")
 	return state.fetch(property)
 	#if (state.metadata.has(property)):
 	#	return state.metadata[property]
 	return null
 	
 func player_meta_changed_test(player_state, property, old_value):
+	#DEPRECATED use state functions
+	push_warning("deprecated code called")
 	print("state: "+ str(player_state))
 	print("property: "+ str(property))
 	print("old_value: "+ str(old_value))

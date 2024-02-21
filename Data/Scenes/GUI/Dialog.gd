@@ -27,8 +27,32 @@ func start_dialog(new_target, new_data) :
 			dialog_data.state = 1 #need a way to let owner od dialog know it is cycling through text. this is one possbility
 			#update_text() process seem to run after this, may need to use signal and timers instead of processes
 			set_process(true)
+			
+func open_dialog(new_data:Dialog_Data) :
+	dialog_data = new_data
+	if dialog_data != null :
+		$Name.text = "[center]"+dialog_data.name
+		$Icon.texture = dialog_data.icon
+		#dialog_data.state = 1 #need a way to let owner od dialog know it is cycling through text. this is one possbility
+		#update_text() process seem to run after this, may need to use signal and timers instead of processes
+		set_process(true)
+		dialog_data.end.connect(close_dialog)
+
+func close_dialog():
+	visible = false
+	set_process(false)
+	dialog_index = 0
+	dialog_data.end.disconnect(close_dialog)
+	dialog_data = null
 
 func end_dialog():
+	if dialog_data != null:
+		dialog_data.end_dialog()
+		#if dialog_data.state == 0:
+			#NOTE: end_dialog is not being called from dialog_data.
+			#close_dialog()
+			#pass
+	return
 	visible = false
 	target = null
 	#Todo: decide if dialog should clear it state of target and handler.

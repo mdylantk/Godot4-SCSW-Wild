@@ -16,10 +16,9 @@ atlas = ExtResource("2_ps8hu")
 region = Rect2(442, 187, 16, 16)
 
 [node name="Player" type="CharacterBody2D"]
-collision_layer = 17
-collision_mask = 17
+collision_layer = 21
+collision_mask = 21
 script = ExtResource("1_07gio")
-use_input = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

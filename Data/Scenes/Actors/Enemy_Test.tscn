@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://bruyakjvb8wwp"]
+
+[ext_resource type="Script" path="res://Data/Scripts/Enemy_Test.gd" id="1_sxhnx"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_1i0dm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uhyft"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o64lb"]
+atlas = ExtResource("2_1i0dm")
+region = Rect2(442, 136, 16, 16)
+
+[node name="EnemyTest" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_sxhnx")
+speed = 16.0
+sprint_modifier = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_uhyft")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
+y_sort_enabled = true
+texture = SubResource("AtlasTexture_o64lb")

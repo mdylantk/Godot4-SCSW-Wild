@@ -15,6 +15,23 @@ The system design so far will compose of:
 		fix features to the data. 
 		This still wip. 
 		
+	-Isolated modual actions and properties:
+		-nodes like enities will use a resource to state what it is or what it can do
+		as long as it have the logic to connect the two correctly (aka interaction() 
+		that would call interaction_data.interaction()). also these modual logic is not
+		nessarry if the node do not need acess to objects outside of itself and only ever
+		need the hard coded logic in itself.
+		-These actions should not do any logic to the owner. It can provide data for the owner,
+		 but the owner needs to acess it. If it interact with anything, it should used pass data to 
+		 interact with exteral systems. It can call higher system like handler and static functions logic
+		 if there no better way to abstract that call.
+		-The base action should be base on a role and provide the minunim abount of methoods and properties
+		to allow it to function fully. Worst case, a child of an extended base could be used. 
+		-Also there will not be one base action. there will be many of diffrent themes. 
+		-They are ment to reduce use of nodes to build unquie enities or level by using a pre-made node tree base
+		and these modual to refine it as needed. also allow actions such as interaction not be tied directly to
+		a premade node base but any node that carry the correct function and provided data/logic. 
+		
 system base layout so far:
 	(optional Main which swicthes games modes and host the init main menu):
 		-this would come before the rest.
@@ -26,7 +43,7 @@ system base layout so far:
 		(any other system will be under game except network which will need to 
 		be a sibling or higher up if the game logic ever need to be modual)
 		
-NOTE: Game logic is not meant to be switch out in this game. Why the extra layer 
+NOTE: Game_Handler logic is not meant to be switch out in this game. Why the extra layer 
 is consider optional.
 
 TODO:
@@ -44,6 +61,8 @@ TODO:
 			NOTE inventory should stay a dictonary. Most metadata or states should
 			be a dictonary of mostly simple data and path to static objects. 
 		Improve the old man speech. His is mostly a quick placeholder
+		-Try to add static typing to everything. base parents over children
+		for more abstract path as needed.
 		
 Note:
 	The game is a prototype for bigger project. The main goal now is to make the

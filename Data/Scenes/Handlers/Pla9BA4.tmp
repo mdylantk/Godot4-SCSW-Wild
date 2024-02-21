@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdpv2nuo5qsqg"]
+
+[ext_resource type="Script" path="res://Data/Scenes/Handlers/Player_Handler.gd" id="1_d3v36"]
+[ext_resource type="PackedScene" uid="uid://cc1hxktnb4a1k" path="res://Data/Scenes/Handlers/HUD.tscn" id="2_237ym"]
+
+[node name="Player_Handler" type="Node2D" groups=["Player_Handlers"]]
+y_sort_enabled = true
+script = ExtResource("1_d3v36")
+
+[node name="HUD" parent="." instance=ExtResource("2_237ym")]
