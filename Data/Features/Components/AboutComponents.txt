@@ -1,0 +1,4 @@
+These are resource that contain swapable state and logic for nodes. 
+They are ment to be lighter than node and share similar functionality.
+Interaction_Data is also an example. This will hold any components base that
+lack a dedicated folder.

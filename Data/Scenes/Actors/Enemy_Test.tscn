@@ -13,8 +13,6 @@ region = Rect2(442, 136, 16, 16)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_sxhnx")
-speed = 16.0
-sprint_modifier = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_uhyft")

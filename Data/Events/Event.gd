@@ -1,12 +1,5 @@
 class_name Event extends Resource
-#this class hold data related to an event as well as shared getter/setters and fuctions
-
-#TODO: will not listen since this may become a static class
-#event will be signals that pass data. this data would have a cancel option and should
-#be a pass by ref type. after listeners are call, it will preform task unless canceled
-#parameters in signales can be overriden if stat have it as a key.
-#event instead will trigger signal a train recated to that object and listerners
-#can react with, or if vaild data is pass, cancel or change the outcome
+#NOTE: this is no longer in use. may need to be removed
 signal event_finished(event)
 
 #function to call to check data. better to use if caller did not pass the data

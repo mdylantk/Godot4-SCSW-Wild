@@ -79,7 +79,7 @@ func _ready():
 func _physics_process(_delta) :
 	#Note: need to locate use_input what setting it (most likly world handler) and instead link it here
 	if pawn != null:
-		pawn.sprint_strength = Input.get_action_strength("Sprint")
+		pawn.movement_component.sprint_strength = Input.get_action_strength("Sprint")
 		var input_dir = Vector2(Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")).normalized()
 		pawn.move(input_dir)
 	
@@ -124,7 +124,7 @@ func _input(event) :
 			# use global coordinates, not local to node
 			var query = PhysicsRayQueryParameters2D.create(
 				pawn.global_position, 
-				pawn.global_position+(pawn.facing_dirction*24),
+				pawn.global_position+(pawn.movement_component.facing_dirction*24),
 				0b10000000_00000000_00000000_00000011, #last is 1, first is 32
 				[pawn])
 			#0b10000000_00000000_00000000_00001101

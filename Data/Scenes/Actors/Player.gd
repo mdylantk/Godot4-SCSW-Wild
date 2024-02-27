@@ -5,4 +5,4 @@ extends CharacterMovement
 
 func _process(_delta):
 	#update the spite to indicate hit direction
-	$Direction.position = facing_dirction*12
+	$Direction.position = movement_component.facing_dirction*12
