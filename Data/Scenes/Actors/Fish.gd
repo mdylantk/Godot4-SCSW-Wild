@@ -4,7 +4,7 @@ extends CharacterBody2D
 @export var rare_catch = true
 
 @export var fish_item : Item
-@export var Interaction_Data : Interactive_Data = Catch_Fish.new()
+@export var interaction_data : Interactive_Data = Catch_Fish.new()
 
 #NOTE: should have randomrarefish in random ponds but they should be of caught fishes
 #or a flag/state that state if the void world effect fish type or pick from availbe types
@@ -54,8 +54,8 @@ func _ready():
 #probably could use interact data for this. item pickup. just need a way to update score
 #so maybe am extended one for this case
 func on_interact(handler, instigator, target, data):
-	if Interaction_Data != null:
-		var sucess = Interaction_Data.interact(handler, instigator, target, data)
+	if interaction_data != null:
+		var sucess = interaction_data.interact(handler, instigator, target, data)
 		if sucess:
 			remove_self()
 			return data

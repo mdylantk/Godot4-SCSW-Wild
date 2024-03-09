@@ -131,6 +131,12 @@ func _input(event) :
 			#query.exclude = [local_player]
 			var result = space_state.intersect_ray(query)
 			if "collider" in result:
+			#	Game_Utility.get_action(result["collider"],"on_interact").call(
+			#			self, pawn, result["collider"], {}
+			#			)
+			#	return #returning here to have it check tile for debug reason
+			#	#ideally the source 'result["collider"]' would need to be coverted
+			#	#to be used with tiles perhaps. or the logic can be push to Game_Utility
 				if result["collider"] is TileMap :
 					#below test for tilemap data. keeping for now so it be easier to
 					#set up a tile base interaction system like search/forage/look/chop
@@ -143,68 +149,32 @@ func _input(event) :
 					#))
 					pass
 				else:
-					if result["collider"].has_method("on_interact"):
-						#call intreact on handler side to allow supers to check things
-						#also allow for repucation of the data if needed.
-						#currently it will check for the canceled tag that can be added
-						#so the logic can be canceled remotly.
-						#the event data pass is the state which can live longer than
-						#this segment if that logic is added. if so, such data need to be 
-						#removed when it is finished to prevent memory bloat.
-						var event_data = {
-							#NOTE: type is being used as an id. only one type can be queued at a time
-							#so if they can be stacked, type need to be changed to type + id
-							#by the source or additinal logic that check to see which can be stacked
-							#a key of id may be used instead depending if type need a diffrent use
-							"type": "interact", 
-							#target and instigator are subject to change or removal
-							#they are here for debuging and show that such keys may exsist
-							#"target":result["collider"], #Note: the target is best set from the collider
-							#instigator is the handler orignally responcable of triggering the eveny
-							#but it only importaint when not being directly handled by the handler
-							#such as the first pass off
-							"instigator":pawn,
-							"handler":self,#handler is the handler. instigator is the one who started it
-							#the type of event. if change before the adding to active events
-							#then the id will change. 
-							"status": 1, #0 is finished or init. -1(or less) is cancled, and 1+ is running 
-							#the valuse meaning beside this will depend on the the run function\
-							#it be up to the other entitty to change this value if it need to run over time
-							#or is cancled
-							"run": func(data): return Player_Handler.default_event_action(data)
-						}
-						#Note: may jsut need to emit with no check? or no signal logic here
-						#there may be little reason to notify game handler and
-						#could open up dedicated signal for such cases
-						interact.emit(self, pawn, result["collider"], event_data)
-						#print("reg event end")
-						if(event_data.has("canceled")):
-							#new system will have a similar option. the state(aka event_data) will hold the 
-							#varibles like is_canceled and the state can last as long as needed. 
-							#the new system will try not to depend on resources for events but
-							#dictionaries with the support of static or pure function
-							print("on_interact was canceled")
-						else:
-							#in the future, this logic should check event data for event type
-							#so that one time and extended events can be handled
-							#TODO remove target since target should know it is them
-							#except if talking to the handler, then the target could be stored in data
-							event_data = result["collider"].on_interact(self, pawn, result["collider"], {})
-							if event_data != null:
-								handle_event(event_data)
-							#may need to check the event data if cancled or finish incase it
-							#is ran once and we get the results
-#							var event_id = event_data["type"]+":"+str(result["collider"])
-#							if event_data["type"] == "dialog":
-								#standard interaction may turn into another action
-								#these may be limied one per handler
-								#NOTE: if used with dialog, will need a way to
-								#have dialog handle input since dialog will take
-								#up the screen and disable other dialog attemps untill finished
-#								event_id = "dialog"
-#							if not active_events.has(event_id):
-#								active_events[event_id] = event_data
-							#active_events.append(event_data)
+					Game_Utility.get_action(result["collider"],"on_interact").call(
+						self, pawn, result["collider"], {}
+						)
+					return #this is returning to break below actions. debugging temp solution
+					#if result["collider"].has_method("on_interact"):
+						#TODO: event data pass may be empty unless extra data is needed
+						#NOTE: most of the event data and logic will be scraped.
+						#the data should be stored at this scope untill the logic finish
+						#so the data could be probed if needed
+					#	var event_data = {
+						#	"type": "interact", 
+						#	"instigator":pawn,
+						#	"handler":self,#handler is the handler. instigator is the one who started it
+						#	"status": 1, #0 is finished or init. -1(or less) is cancled, and 1+ is running 
+						#	"run": func(data): return Player_Handler.default_event_action(data)
+					#	}
+					#	interact.emit(self, pawn, result["collider"], event_data)
+					#	if(event_data.has("canceled")):
+					#		print("on_interact was canceled")
+					#	else:
+					#		print("meowing")
+					#		result["collider"].on_interact(self, pawn, result["collider"], {})
+							#below push the logic to the old event loop
+							#event_data = result["collider"].on_interact(self, pawn, result["collider"], {})
+							#if event_data != null:
+							#	handle_event(event_data)
 				#var test = Dialog_Script_Resource.new()
 				#test.default_script = "this is a test \n meow mew"
 				#print(test.get_dialog_text())

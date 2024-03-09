@@ -1,4 +1,4 @@
-extends CharacterMovement
+extends Character2D
 
 @onready var inventory = $Inventory
 

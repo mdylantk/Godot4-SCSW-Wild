@@ -11,14 +11,14 @@ func _ready():
 	add_child(pawn_ref)
 	#pawn_ref.name = "Enemy" #todo: make child of world main scene for objects
 	active_pawns = pawn_ref
-	pawn_ref.hit.connect(on_pawn_hit)
+	pawn_ref.attacked.connect(on_pawn_hit)
 	
-func on_pawn_hit(pawn):
-	if pawn.visible:
-		pawn.visible = false
+func on_pawn_hit(attacker, target, data):
+	if target.visible:
+		target.visible = false
 		set_process(false)
 		await get_tree().create_timer(5.0).timeout
-		pawn.visible = true
+		target.visible = true
 		set_process(true)
 
 
@@ -27,18 +27,20 @@ func _process(delta):
 		var target = Game.get_player_handler().pawn
 		if target.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
 			var test_vector : Vector2 = target.global_position - active_pawns.global_position
+			active_pawns.visible = true 
 			test_vector = test_vector * delta
 			active_pawns.move(test_vector.normalized())
 		
 		#poor way to have enemy catch up to player after being hit
 			if (active_pawns.global_position - target.global_position).length() > 320:
-				active_pawns.sprint_strength = 8
+				active_pawns.movement_component.sprint_strength = 8
 			else:
-				active_pawns.sprint_strength  = 0
+				active_pawns.movement_component.sprint_strength  = 0
 		else:
 			#when ever a pawn is not visable, it should enter a sleep state
 			#or in this case visablity is used as a way to put it to sleep
 			active_pawns.visible = false
+			pass
 			
 		#NOTE:could have it location change if target too far as well as add an
 		#interaction event where it will teleport when hit

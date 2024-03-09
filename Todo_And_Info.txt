@@ -76,3 +76,15 @@ Note:
 	is a abstracted space of timespace compression. greatly extended after a madman almost sucedded
 	in starting a chain reaction of the compression. now the link to it is more common allowing the
 	cat to travel to static world of diffrent time and universes if it stumble upon one).
+	
+	
+ISSUES:
+	of writing this, the loading screen may bug out when far from spawn.
+	it may be because a chunk is not loaded, yet the player is not close enough
+	for it to be loaded. this issue is caused because they system a test and
+	need to be fix when the world logic is clean up. 
+	In short, only the chunk the player is in should trigger the loading screen
+	if it unloaded. any visable chunks should not unless the system can properly
+	have them loaded and make null chunks pass true for fix maps.
+	(I belive it is checking one chunk atm, but it is offset in a what that 
+	distance case the bug to be more noticable)

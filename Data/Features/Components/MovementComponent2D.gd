@@ -2,7 +2,7 @@ class_name Movement_Component_2D extends Resource
 #this hold share functionality between moving an object
 #as well as common varibles. It will not move the object
 #but provide the caculation needed to move as desired
-@export var base_speed : float = 32
+@export var base_speed : float = 64
 @export var facing_dirction : Vector2 = Vector2.RIGHT
 @export var sprint_modifier : float = 1
 
