@@ -1,4 +1,4 @@
-@tool
+#@tool
 class_name World_Handler extends Node2D
 
 #TODO: add common world event as signals and call them correct so they can be listen to
@@ -54,6 +54,27 @@ var offset = Vector2(-2,-2)
 		generate_chunks()
 	get:
 		return loaded_point
+		
+#NOTE: it also may be better to only have one loader and just load the map around them
+#if other player are added, this could be a bit of an issue by adding teathering
+#but also allow the map size to be predictable. 
+#NOTE: to add a loader system, the old system would need to caculate more than one
+#boundry which may be a bit to caculate and test(add/subtract squares). in short a
+#array of coords would need to be caculated when processing loaders. then these
+#are used as the points to load the chunks. also would need to unload chunks
+#though a region system would simplify it to just unload a region of it too far
+#from ant of the loaders. meaning the first array of locations are chunks that need to be loaded
+#the the region and adj regions should slowly load
+#var loaders : Array[Node2D] #using node2d instead of node since this use 2d coords
+	#NOTE: this is to add a way to load chucks around an object. ideally to allow
+	#path finding. usally it for the player, but could be used for importaint nearby
+	#ai at the cost of loading more
+	#TODO: make use of loaders and try to have this run on tick or update itself
+	#when chunks are not loaded. could add regions as well and use an array
+	#for chunks and the region could be an dict since only a few region should
+	#be loaded
+	
+	
 #preload only work with the direct path, not id
 #var default_scene = preload("res://Data/Scenes/Maps/TilemapTemplate.tscn")
 #var rare_scene = preload("res://Data/Scenes/Maps/RareTemplate.tscn")
@@ -81,6 +102,7 @@ func load_chunks(pos):
 
 #func _process(_delta):
 	#pass
+
 
 func generate_chunks() :
 	#var chunk_distance = tile_size*(chunk_size+1)
@@ -157,18 +179,20 @@ func chuck_update(pos,is_ready = true):
 	#need to decide on pos or chunk pos. the signal use pos, but unload use chunk
 	#the issues is where map size is located(currently here) so children do not know about it
 	var map_size = chunk_size * tile_size
-	if is_ready:
-		get_tree().call_group("Player_Handlers", "chunk_update", (pos/map_size).round(), map_size, is_ready)
-	else:
-		get_tree().call_group("Player_Handlers", "chunk_update", pos, map_size, is_ready)
+	#TODO: see if this function still can be useful. maybe to notify loader objects
+	#if is_ready:
+	#	get_tree().call_group("Player_Handlers", "chunk_update", (pos/map_size).round(), map_size, is_ready)
+	#else:
+	#	get_tree().call_group("Player_Handlers", "chunk_update", pos, map_size, is_ready)
 		
 		
 #todo: need to change the logic in the world handler or map so that chunks are updated
 #as a player move and there is non loaded around them. right now it logic hard to read
 #and the new system break for north and west chunks
 func is_chunk_loaded(location,  load = true):
-	var map_size = chunk_size * tile_size
-	var grid_location = (location/map_size).round()
+	#map size not needed since there a var that better above(chunk_distance).
+	#var map_size = chunk_size * tile_size
+	var grid_location = (location/chunk_distance).round()
 	if load:
 		load_chunks(location)
 	if loaded_chunks.has(grid_location):

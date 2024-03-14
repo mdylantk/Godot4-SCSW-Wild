@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b0xxl3pylly7j"]
+[gd_scene load_steps=14 format=3 uid="uid://b0xxl3pylly7j"]
 
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/World_Handler.gd" id="1_57p0l"]
 [ext_resource type="Resource" uid="uid://f4gufwtv0l5v" path="res://Data/Resources/Test_Level.tres" id="2_0xnf0"]
@@ -12,9 +12,6 @@
 [ext_resource type="AudioStream" uid="uid://k24j3aokcmwp" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 8.mp3" id="10_vjxi8"]
 [ext_resource type="AudioStream" uid="uid://bcm7ee14ix88r" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 9.mp3" id="11_crr7e"]
 [ext_resource type="AudioStream" uid="uid://0kyoc42y1pj5" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 10.mp3" id="12_pmo23"]
-[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="13_iuqg1"]
-[ext_resource type="Script" path="res://Data/Scenes/NewTestMap.gd" id="13_wf7vw"]
-[ext_resource type="Script" path="res://Data/Scripts/Region_Data.gd" id="14_m40kg"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_e4ey0"]
 playback_mode = 1
@@ -41,10 +38,6 @@ stream_8/weight = 1.0
 stream_9/stream = ExtResource("12_pmo23")
 stream_9/weight = 1.0
 
-[sub_resource type="Resource" id="Resource_xwf30"]
-script = ExtResource("14_m40kg")
-region_data = []
-
 [node name="World_Handler" type="Node2D" groups=["World_Handler"]]
 y_sort_enabled = true
 script = ExtResource("1_57p0l")
@@ -57,9 +50,3 @@ volume_db = -25.752
 pitch_scale = 0.75
 autoplay = true
 mix_target = 1
-
-[node name="NewTestMap" type="TileMap" parent="."]
-tile_set = ExtResource("13_iuqg1")
-format = 2
-script = ExtResource("13_wf7vw")
-test_Region = SubResource("Resource_xwf30")

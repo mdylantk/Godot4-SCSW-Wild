@@ -16,56 +16,56 @@ random_weight = 1.0
 script = ExtResource("5_j28pw")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_0.tscn"
 is_static_chunk = true
-static_location = Vector2(4, 8)
+static_location = Vector2(5, 0)
 random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_rkghm"]
 script = ExtResource("5_j28pw")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_1.tscn"
 is_static_chunk = true
-static_location = Vector2(7, -2)
+static_location = Vector2(0, 7)
 random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_65xq5"]
 script = ExtResource("5_j28pw")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_2.tscn"
 is_static_chunk = true
-static_location = Vector2(-4, 5)
+static_location = Vector2(7, 4)
 random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_i7y01"]
 script = ExtResource("5_j28pw")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_3.tscn"
 is_static_chunk = true
-static_location = Vector2(-9, -6)
+static_location = Vector2(3, 4)
 random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_i605s"]
 script = ExtResource("5_j28pw")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_4.tscn"
 is_static_chunk = true
-static_location = Vector2(-3, 0)
+static_location = Vector2(-4, 0)
 random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_3f23o"]
 script = ExtResource("5_j28pw")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_5.tscn"
 is_static_chunk = true
-static_location = Vector2(0, 11)
+static_location = Vector2(0, -2)
 random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_p72d8"]
 script = ExtResource("5_j28pw")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_3.tscn"
 is_static_chunk = true
-static_location = Vector2(0, -21)
+static_location = Vector2(-5, -3)
 random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_rsajw"]
 script = ExtResource("5_j28pw")
 chunk_scene_path = "res://Data/Scenes/Maps/Pond_1.tscn"
 is_static_chunk = true
-static_location = Vector2(42, 0)
+static_location = Vector2(7, -10)
 random_weight = 1.0
 
 [sub_resource type="Resource" id="Resource_7r5lq"]

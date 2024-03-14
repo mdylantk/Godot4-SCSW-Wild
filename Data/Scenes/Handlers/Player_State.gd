@@ -8,7 +8,7 @@ class_name Player_State extends Savable_State
 	#	"unquie_fish_locations":[], #world and local fish spawn
 	#} #placeholer that can store dynamic vars
 
-var pawn
+var pawn #NOTE: this should be the pawn class or a savable data struct for rebuilding the pawn
 var world_position : Vector2 #this should be set when traveling or saving. global_position should be used
 #for the actual position
 var instance = null #the instance the player is in. mostly for loading reasons. 

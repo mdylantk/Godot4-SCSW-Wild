@@ -48,7 +48,9 @@ func load_player_handler(index : int = 0):
 		var player = load(default_player_handler).instantiate()
 		player.name = "Player_Handler"+str(index)
 		add_child(player)
-		player.pawn_update.connect(on_pawn_update)
+		#TODO may be best to pass the pawn to the world handler
+		#so the world can check the pos instead of a redundent tick link
+		player.world = get_world_handler()
 		return player
 
 #a way to get play index without storing it in a var
@@ -60,16 +62,7 @@ func get_player_handler_index(player):
 #	load_world()
 #	load_player()
 
-#note on player interaction for new system:
-#player handler should have signal just incase additional logic is needed
-#player probably should try to run an interact call after a vaild check with
-#the object it is interacting with (currently should be doing that)
-#start an interactive state of which either the handler or pawn can handler. handler should be the fall back logic
-#interaction should return a dict or list of data needed for the interaction so the player handler can handle it
-#authorty is chack via the server side of these nodes
-#in short the player handler would handler logic cases for interaction and the pawns will provide the vaild data
-#this logic can be provided by static function libaray and the pawn may have overrides or callables
-	
+
 func _ready():
 	load_world_handler()
 	load_player_handler()
@@ -105,43 +98,4 @@ func on_game_end():
 	#and then either shut down or go to mode_selection
 	pass
 
-#decide to use this and have a timer for reacurring events or just use static signals
-#func register_event(event : Event):
-#	print("event signal start")
-#	event_update.emit(event)
-#	print("event signal end")
-#func on_event_update(event : Event):
-#	print(str(event))
-#	if event != null:
-#		print("event update")
-#		event.end_event()
 
-func _process(_delta) :
-	#check if chunk is loaded(which also will load it if not
-	#should be move to a pawn location change signal or something
-	#that do not run per frame. also need a multi client soultion
-	#var pawn_location = get_player_handler().pawn.global_position
-	#if not is_world_loading(pawn_location):
-	pass
-		#print(pawn_location)
-		#print(false)
-func on_pawn_update(handler):
-	#currently tell the work the player location
-	#as well as check if the chunk/area is loaded or not
-	var is_loading = is_world_loading(handler.pawn.global_position,true)
-	handler.get_hud().loading = is_loading
-	#if is_loading:
-		#print_debug("loading chunk")
-	#print(pawn.global_position)
-###GAME Active STATES###
-
-#this not used yet
-#what needs to be done is to tell players if the world at their location is loaded
-#ideally when they move or they send a signal asking for an update.
-#current sytem use groups as well as load chunk
-#so would also need to request that the world load that chunk if it not already
-func is_world_loading(location, load = true):
-	#invert the bool to match the naming
-	return not get_world_handler().is_chunk_loaded(location, load)
-	#return false
-	

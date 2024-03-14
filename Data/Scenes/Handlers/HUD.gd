@@ -43,7 +43,9 @@ func _process(_delta):
 		#may need a dict for score in playerstate or a function that can fetch it
 			var fish_count = player_state.fetch("total_common_fish_caught")
 			var rare_fish_count = player_state.fetch("total_rare_fish_caught")
-			if fish_count == null and rare_fish_count == null:
+			if fish_count == null: fish_count = 0
+			if rare_fish_count == null: rare_fish_count = 0
+			if fish_count == 0 and rare_fish_count == 0:
 				$Score.update_data()
 			elif fish_count > 0 or rare_fish_count > 0:
 				if fish_count == null: fish_count = 0

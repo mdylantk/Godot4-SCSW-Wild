@@ -1,4 +1,4 @@
-@tool
+#@tool
 class_name Level_Data_2D extends Resource
 #contains ref to tilemaps, how to handle null ref, and level related data
 

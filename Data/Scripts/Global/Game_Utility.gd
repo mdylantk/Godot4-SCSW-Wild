@@ -15,15 +15,13 @@ static func get_action(source, action_id : String):
 	#NOTE: this should return a callable
 	if source.has_method(action_id):
 		return source[action_id]
-		#return func(data): return source[action_id].call(data)
-		#event["run"].call(event) 
-	#need a metadata check. also need to check if 
-	#the source[id] will return a varible.
-	#probably should return a callable to run
-	#TODO: return a callable to run.
-	#this will solve the null issue and create a weak
-	#interface at the cost of the overhead of a runnable
-	#and a static function call
-
-	return func(handler, instigator, interactee, data): 
-		pass #note may need to return some data?
+	#NOTE: action_id should be on_[action] in hope to reduce
+	#chances of that id being used
+	elif source.has_meta(action_id):
+		var action_data = source.get_meta(action_id)
+		#NOTE: if it not the correct type, the game would break.
+		#could add aditional checks if nessary
+		return action_data[action_id]
+	else:
+		return func(handler=null, instigator=null, interactee=null, data={}): 
+			pass #note may need to return some data?

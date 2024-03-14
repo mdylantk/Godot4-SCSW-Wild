@@ -2,16 +2,15 @@ class_name Player_Handler extends Node2D
 
 #states the pawn may be in. used mostly in the pawn update signal to let listers know why it was called
 #it may or may not be used depending on the pawn lifespand and if the state can be grab from the pawn
-enum Pawn_State {Null = -1, Init = 0, Alive, Dead, Respawn}
+#enum Pawn_State {Null = -1, Init = 0, Alive, Dead, Respawn}
 
 
 #sent when there is a change in pawn movement
-signal pawn_update(handler)
+#signal pawn_update(handler)
 
 signal interact(handler, instigator, target, data)
 #passing state, but might need to pass handler and player idex if system change that way
 #signal player_meta_changed(player_state, property, old_value)
-
 
 
 #note: most logic is set be be single player. multiplayer need to be tested
@@ -27,15 +26,21 @@ signal interact(handler, instigator, target, data)
 var pawn #pawn may be move around, so a direct ref will be used to track it
 var uid = 0 #may or may not be needed if there a built in way to get a user id\
 
+#this is the world ref so the handler can run without casting up
+#when working with its sibling. NOTE: level changes may cause bugs
+#so need a way to make sure actions are not queued at level transfer
+#(like try not to use async with world since it may change level next tick) 
+var world : World_Handler #this should be set and updated by the game. 
+
 #
+#TODO: pawn state probably will not be used
 #this may not be useful, but here as a way to change state and update
 #the state do not need to be known, just when something happen, the signal need to emit
-var pawn_state: Pawn_State :
-	set(value):
-		pawn_state = value
-		pawn_update.emit(pawn, pawn_state)
-	get:
-		return pawn_state
+#var pawn_state: Pawn_State :
+#	set(value):
+#		pawn_state = value
+#	get:
+#		return pawn_state
 
 #NOTE: hud is not a var, but works?
 #maybe because the logic is not being run before this is ready
@@ -56,10 +61,10 @@ func _ready():
 		state = Player_State.new() 
 		#this also could be where loading state happens if state is created when player 'joins'
 	if pawn == null:
-		pawn_state = Pawn_State.Null
+		#pawn_state = Pawn_State.Null
 		if has_node("Player"):
 			pawn = $Player
-			pawn_state = Pawn_State.Init
+			#pawn_state = Pawn_State.Init
 			#set pawn to $player if it exist
 			#good for testing and automatic set up,
 			#but a function should be called instead
@@ -68,7 +73,7 @@ func _ready():
 			add_child(pawn_ref)
 			pawn_ref.name = "Player" #todo: make child of world main scene for objects
 			pawn = pawn_ref
-	pawn_state = Pawn_State.Alive
+	#pawn_state = Pawn_State.Alive
 	#on_transfer()
 	pawn.inventory.slot_update.connect(on_item_gain)
 	hud.player_state = state
@@ -83,17 +88,18 @@ func _physics_process(_delta) :
 		var input_dir = Vector2(Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")).normalized()
 		pawn.move(input_dir)
 	
+		###Check if pawn chunk is loaded
+		get_hud().loading = not world.is_chunk_loaded(pawn.global_position, true)
 	#running this often untill there a way to grab client player
 	#and run the loading gui logic for just client 
-	on_pawn_update()#should be called often enough to check world state
+	
+	#on_pawn_update()#should be called often enough to check world state
 		
 		#probably should do the old way and register pawn as a loader
 		#currently updating in the game_handler. old logic with gui loading still being used
 		#until game_handler tell player to update it 
 		#get_tree().call_group("World_Handler", "load_chunks", pawn.global_position)
 
-func on_pawn_update():
-	pawn_update.emit(self)
 
 func chunk_update(pos,length,is_loaded):
 	#print("chunk ready: " + str(is_loaded) + " " + str(pos) + " | size :" + str(length))
