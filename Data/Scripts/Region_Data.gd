@@ -94,4 +94,19 @@ func get_tile(region_coords):
 	if region_data[chunk_id].size() == 0:
 		return null
 	return region_data[chunk_id][tile_id]
+	
+func call_on_all_tiles(callable: Callable):
+	var region_size = int(region_size*region_size)
+	var chunk_size = int(chunk_size*chunk_size)
+	for chunk_id in range(region_size):
+		for tile_id in range(chunk_size):
+			var region_coords=get_region_coords(tile_id,chunk_id)
+			callable.call(region_coords)
+			
+func call_on_all_chunks(callable: Callable, chunk_id : int = 0):
+	var chunk_size = int(chunk_size*chunk_size)
+	for tile_id in range(chunk_size):
+		#TODO: should verify if id are in range, but not too importaint
+		var region_coords=get_region_coords(tile_id,chunk_id)
+		callable.call(region_coords)
 

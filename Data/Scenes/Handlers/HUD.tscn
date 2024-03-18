@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cc1hxktnb4a1k"]
+[gd_scene load_steps=10 format=3 uid="uid://cc1hxktnb4a1k"]
 
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/HUD.gd" id="1_6ahfw"]
 [ext_resource type="PackedScene" uid="uid://ctvmde4ov5w2x" path="res://Data/Scenes/GUI/Dialog.tscn" id="2_26pa4"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://df500lm7ih60h" path="res://Data/Scenes/GUI/Notify.tscn" id="4_hvq5p"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="5_inin8"]
 [ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Data/Assets/Main_Theme.tres" id="6_nyfgs"]
+[ext_resource type="PackedScene" uid="uid://brre7crunbrjj" path="res://Data/Features/Minigame_Pounce_Fishing/Fishing_Pond_Map.tscn" id="7_tbvwt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trfd7"]
 atlas = ExtResource("5_inin8")
@@ -80,3 +81,7 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("AtlasTexture_wsma3")
+
+[node name="FishingPondMap" parent="." instance=ExtResource("7_tbvwt")]
+visible = false
+test = false

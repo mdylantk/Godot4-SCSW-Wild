@@ -62,6 +62,10 @@ func get_player_handler_index(player):
 #	load_world()
 #	load_player()
 
+func print_copyright():
+	#TODO include this in game and test Engine.get_license_info when built
+	print(Engine.get_license_info)
+	print(Engine.get_license_text())
 
 func _ready():
 	load_world_handler()
