@@ -1,28 +1,42 @@
-[gd_scene load_steps=14 format=3 uid="uid://blyxjt47otoln"]
+[gd_scene load_steps=18 format=3 uid="uid://blyxjt47otoln"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_btpqx"]
 [ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_tpc71"]
 [ext_resource type="PackedScene" uid="uid://dlylyvjyir5df" path="res://Data/Scenes/Actors/NCP.tscn" id="3_6ofi5"]
-[ext_resource type="Script" path="res://Data/Scripts/NCP_Old_Man.gd" id="4_ao5u5"]
 [ext_resource type="Resource" uid="uid://eceb7uvicyqu" path="res://Data/Resources/Old_Man_Dialog.tres" id="5_0l7jn"]
 [ext_resource type="PackedScene" uid="uid://dghoogotf0r7u" path="res://Data/Scenes/Actors/Fish.tscn" id="6_8fa2c"]
+[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Scenes/Components/Interact_Component.tscn" id="6_madpy"]
 [ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Scenes/Actors/Interactive_Body2d.tscn" id="7_15ksr"]
+[ext_resource type="Script" path="res://Data/Features/Interaction_Data/Old_Man_Interact_Data.gd" id="7_pnnfl"]
 [ext_resource type="Resource" uid="uid://dghnl8cd6ev5n" path="res://Data/Resources/Test_House.tres" id="8_ahqel"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="9_0jo2j"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="10_mahl4"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_2mxdg"]
 
-[sub_resource type="Resource" id="Resource_hc8dh"]
-script = ExtResource("9_0jo2j")
-level_data = ExtResource("8_ahqel")
+[sub_resource type="Resource" id="Resource_uafm0"]
+resource_local_to_scene = true
+script = ExtResource("7_pnnfl")
+dialog_data = ExtResource("5_0l7jn")
+update_rate = 0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rw47r"]
+size = Vector2(16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qphu2"]
 atlas = ExtResource("10_mahl4")
 region = Rect2(17, 357, 16, 16)
 
+[sub_resource type="Resource" id="Resource_fgv7m"]
+resource_local_to_scene = true
+script = ExtResource("9_0jo2j")
+level_data = ExtResource("8_ahqel")
+update_rate = 0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m2me0"]
+size = Vector2(16, 16)
+
 [node name="TileMap" type="TileMap"]
-visible = false
 y_sort_enabled = true
 texture_filter = 1
 tile_set = ExtResource("1_btpqx")
@@ -38,34 +52,37 @@ rock_tiles = Array[Vector2i]([Vector2i(5, 2), Vector2i(1, 0), Vector2i(2, 0), Ve
 
 [node name="NCP" parent="." instance=ExtResource("3_6ofi5")]
 position = Vector2(376, 184)
-script = ExtResource("4_ao5u5")
-dialog_data = ExtResource("5_0l7jn")
 metadata/Dialog = ExtResource("5_0l7jn")
+
+[node name="Interact_Component" parent="NCP" instance=ExtResource("6_madpy")]
+interactive_data = SubResource("Resource_uafm0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NCP/Interact_Component"]
+shape = SubResource("RectangleShape2D_rw47r")
 
 [node name="Fish" parent="." instance=ExtResource("6_8fa2c")]
 position = Vector2(272, 400)
-fish_name = "Common Carp"
-rare_catch = false
 
 [node name="Fish2" parent="." instance=ExtResource("6_8fa2c")]
 position = Vector2(48, 224)
-fish_name = "Gray Carp"
-rare_catch = false
 
 [node name="Fish3" parent="." instance=ExtResource("6_8fa2c")]
 position = Vector2(240, 96)
-fish_name = "Dull Carp"
-rare_catch = false
 
 [node name="Fish4" parent="." instance=ExtResource("6_8fa2c")]
 position = Vector2(88, 344)
-fish_name = "Big Boring Brown Carp"
 
 [node name="Old_Man_House" parent="." instance=ExtResource("7_15ksr")]
 position = Vector2(376, 152)
-interact_data = SubResource("Resource_hc8dh")
 
 [node name="Sprite2D" parent="Old_Man_House" index="1"]
 texture = SubResource("AtlasTexture_qphu2")
 
+[node name="Interact_Component" parent="Old_Man_House" instance=ExtResource("6_madpy")]
+interactive_data = SubResource("Resource_fgv7m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Old_Man_House/Interact_Component"]
+shape = SubResource("RectangleShape2D_m2me0")
+
+[editable path="NCP"]
 [editable path="Old_Man_House"]

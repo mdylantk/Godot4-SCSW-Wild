@@ -1,14 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dghoogotf0r7u"]
+[gd_scene load_steps=10 format=3 uid="uid://dghoogotf0r7u"]
 
 [ext_resource type="Script" path="res://Data/Scenes/Actors/Fish.gd" id="1_d58g8"]
 [ext_resource type="Resource" uid="uid://nrh8trhov6yk" path="res://Data/Resources/Fish_Item.tres" id="2_8kk7n"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_xhkgq"]
+[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Scenes/Components/Interact_Component.tscn" id="5_2a1kj"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Catch_Fish.gd" id="7_ssnj1"]
-
-[sub_resource type="Resource" id="Resource_8hqh7"]
-resource_local_to_scene = true
-script = ExtResource("7_ssnj1")
-fish_item_source = ExtResource("2_8kk7n")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_34u5r"]
 size = Vector2(16, 16)
@@ -17,12 +13,19 @@ size = Vector2(16, 16)
 atlas = ExtResource("2_xhkgq")
 region = Rect2(595, 187, 16, 16)
 
+[sub_resource type="Resource" id="Resource_sfpj6"]
+resource_local_to_scene = true
+script = ExtResource("7_ssnj1")
+fish_item_source = ExtResource("2_8kk7n")
+update_rate = 0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0stte"]
+size = Vector2(16, 16)
+
 [node name="Fish" type="CharacterBody2D"]
-collision_layer = 2
+collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_d58g8")
-fish_item = ExtResource("2_8kk7n")
-interaction_data = SubResource("Resource_8hqh7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_34u5r")
@@ -30,3 +33,11 @@ shape = SubResource("RectangleShape2D_34u5r")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
 texture = SubResource("AtlasTexture_84wnk")
+
+[node name="Interact_Component" parent="." instance=ExtResource("5_2a1kj")]
+interactive_data = SubResource("Resource_sfpj6")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Interact_Component"]
+shape = SubResource("RectangleShape2D_0stte")
+
+[connection signal="finished" from="Interact_Component" to="." method="_on_interact_component_finished"]

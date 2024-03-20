@@ -131,8 +131,10 @@ func _input(event) :
 			var query = PhysicsRayQueryParameters2D.create(
 				pawn.global_position, 
 				pawn.global_position+(pawn.movement_component.facing_dirction*24),
-				0b10000000_00000000_00000000_00000011, #last is 1, first is 32
+				0b10000000_00000000_00000000_00000010, #last is 1, first is 32
 				[pawn])
+			#NOTE: collsion mask may override each other. so if there two interact on one object for tracing
+			#then only the first will trigger
 			#0b10000000_00000000_00000000_00001101
 			#query.exclude = [local_player]
 			var result = space_state.intersect_ray(query)

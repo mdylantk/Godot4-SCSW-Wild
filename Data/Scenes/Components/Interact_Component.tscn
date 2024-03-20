@@ -1,34 +1,40 @@
 [gd_scene load_steps=2 format=3 uid="uid://bnt60muvh63sj"]
 
 [sub_resource type="GDScript" id="GDScript_fjqi6"]
-script/source = "class_name Interact_Component extends StaticBody2D
-
-signal started(handler, interactor, data)
-signal finished(canceled:bool, data:Dictionary)
+script/source = "@tool
+class_name Interact_Component extends StaticBody2D
+signal started(data:Interactive_Data)
+signal updated(data:Interactive_Data)
+signal finished(canceled:bool, data:Interactive_Data)
 
 #NOTE:THIS might work, just move the state here and leave data as logic and 
 #static state.
 
 @export var interactive_data : Interactive_Data:
 	set(value):
-		if interactive_data != null and interactive_data != value:
+		if value != null and interactive_data != value:
+			interactive_data = value
 			interactive_data.finished.connect(on_finished)
-		interactive_data = value
+			interactive_data.updated.connect(on_update)
+		else:
+			interactive_data = value
 
-func _ready():
-	if interactive_data != null and !interactive_data.finished.is_connected(on_finished):
-		interactive_data.finished.connect(on_finished)
-	pass
+#func _ready():
+	#if interactive_data != null and !interactive_data.finished.is_connected(on_finished):
+	#	interactive_data.finished.connect(on_finished)
+#	pass
 
-func on_finished(canceled:bool, data:Dictionary):
-	print(get_parent())
+func on_update(data):
+	updated.emit(data)
+func on_finished(canceled:bool,data):
 	finished.emit(canceled, data)
 	
-#NOTE: target should be the owner or no interactee should be needed
+#NOTE: interactee will be self. interact data can have an override or use
+#interactee.owner if it wants more data
 func on_interact(handler, interactor, interactee = self, data = {}):
 	if interactive_data != null:
 		interactive_data.interact(handler, interactor, interactee, data)
-		started.emit(handler, interactor, data)
+		started.emit(interactive_data)
 "
 
 [node name="Interact_Component" type="StaticBody2D"]

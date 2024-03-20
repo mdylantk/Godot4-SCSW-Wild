@@ -4,13 +4,18 @@ class_name Catch_Fish extends Interactive_Data
 @export var fish_item_source : Item = preload("res://Data/Resources/Fish_Item.tres")
 
 var fish_game
-var fisher
-var fisher_handler
+#var fisher
+#var fisher_handler
 
-func interact(handler, instigator, interactee, data):
+
+func _run():
+	_start()
+
+#func interact(handler, instigator, interactee, data):
+func _start():
 	#random_table.fail_weight = 10
-	fisher = instigator
-	fisher_handler = handler
+	#fisher = instigator
+	#fisher_handler = handler
 	#TEST
 	#note: only one fish game per action...but only one should exist if not
 	#dynamicly added
@@ -53,29 +58,30 @@ func pick_fish():
 
 func add_fish(fish_data:Dictionary):
 	if !fish_data.is_empty():
-		print(fish_data["type"])
-		var fish_name =fish_data["type"]["pick"]
+		print_debug(fish_data["type"])
+		data["fish_data"] = fish_data
+		var fish_name = fish_data["type"]["pick"]
 		var fish_item = fish_item_source.new_item(1,{"name":fish_name})
-		var remaning_amount = Item_Events.acquire_item(fisher,fish_item,fisher_handler,"Caught")
+		var remaning_amount = Item_Events.acquire_item(instigator,fish_item,handler,"Caught")
 		#TODO: need a way to log caught fish. this just statisitic like
 		#number caught, biggest and smallest size caught, and such
 		if fish_data["type"]["rarity"] < 3:
-			var total_fish_caught = fisher_handler.state.fetch("total_common_fish_caught")
+			var total_fish_caught = handler.state.fetch("total_common_fish_caught")
 			if total_fish_caught != null:
-				fisher_handler.state.store("total_common_fish_caught", total_fish_caught + 1)
+				handler.state.store("total_common_fish_caught", total_fish_caught + 1)
 			else:
-				fisher_handler.state.store("total_common_fish_caught", 1)
+				handler.state.store("total_common_fish_caught", 1)
 		else:
-			var total_rare_fish_caught = fisher_handler.state.fetch("total_rare_fish_caught")
+			var total_rare_fish_caught = handler.state.fetch("total_rare_fish_caught")
 			if total_rare_fish_caught != null:
-				fisher_handler.state.store("total_rare_fish_caught", total_rare_fish_caught + 1)
+				handler.state.store("total_rare_fish_caught", total_rare_fish_caught + 1)
 			else:
-				fisher_handler.state.store("total_rare_fish_caught", 1)
+				handler.state.store("total_rare_fish_caught", 1)
 		
 		#protype fishlog
 		#Note: the proper system would use a log resource of fish resource
 		#with an entrie resource
-		log_fish(fisher_handler, fish_name, fish_data["type"]["rarity"], {"count":1})
+		log_fish(handler, fish_name, fish_data["type"]["rarity"], {"count":1})
 		#print("fish log debug")
 		#print_debug(handler.state.data)
 
@@ -92,23 +98,23 @@ func log_fish(handler, name, rarity, new_fish_data):
 			
 func on_catch(fish_data:Dictionary):
 	add_fish(fish_data)
-	end_game(false, fish_data)
+	end_game(false)#, fish_data)
 
 
 func on_miss(vaild:bool = false):
 	if vaild == true:
-		General_Events.send_notifcation(fisher_handler, "Failed to catch a fish")
+		General_Events.send_notifcation(handler, "Failed to catch a fish.")
 		end_game()
 
 func on_cancel():
 	end_game(true)
 
-func end_game(cancel : bool = false, data:Dictionary = {}):
+func end_game(cancel : bool = false):#, fish_data:Dictionary = {}):
 	fish_game.end()
 	fish_game.catched.disconnect(on_catch)
 	fish_game.missed.disconnect(on_miss)
 	fish_game.canceled.disconnect(on_cancel)
 	fish_game = null
-	fisher = null
-	fisher_handler = null
-	finished.emit(cancel, data)
+	#fisher = null
+	#fisher_handler = null
+	end_interact(cancel)

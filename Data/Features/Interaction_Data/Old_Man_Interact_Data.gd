@@ -35,4 +35,3 @@ func interact(handler, instigator, interactee, data):
 	#will open the dialog window.#TODO: maybe it is best to call it
 	#due to interaction being more of a connector? 
 	General_Events.start_dialog(handler, interactee, dialog_data)
-	pass
