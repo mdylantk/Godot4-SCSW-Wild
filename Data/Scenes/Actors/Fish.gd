@@ -6,240 +6,51 @@ extends CharacterBody2D
 @export var fish_item : Item
 @export var interaction_data : Interactive_Data = Catch_Fish.new()
 
-#NOTE: should have randomrarefish in random ponds but they should be of caught fishes
-#or a flag/state that state if the void world effect fish type or pick from availbe types
-#just a random of caught fishes could be used
-#but it would be any fishm not just rare so the chance could be higher
-#but may need to seprate rare and common to simplfy score stuff maybe
-#or have a rare counter that tally up first catch (provbably better at the cost of a little extra memory)
-#may need that for common fish+
-
-
-@export var rare_fish_names = [
-	"Rainbow Trout",
-	"Moon Koi",
-	"Black Bass",
-	"Silver Guppy",
-	"Shadow Pike",
-	"Orange Eel",
-	"Fade Barb",
-	"King Walleye",
-	"Killer Salmon",
-	"Triple Perch",
-	"Apple Carp",
-	"Snake Eel", 
-	"Doom Pike"
-]
-@export var common_fish_names = [
-	"Carp",
-	"Koi",
-	"Bass",
-	"Eel",
-	"Barb",
-	"Pike",
-	"Perch",
-	"Salmon",
-	"Guppy",
-	"Walleye",
-	"Trout"
-]
-
+#@export var rare_fish_names = [
+#	"Rainbow Trout",
+#	"Moon Koi",
+#	"Black Bass",
+#	"Silver Guppy",
+#	"Shadow Pike",
+#	"Orange Eel",
+#	"Fade Barb",
+#	"King Walleye",
+#	"Killer Salmon",
+#	"Triple Perch",
+#	"Apple Carp",
+#	"Snake Eel", 
+#	"Doom Pike"
+#]
+#@export var common_fish_names = [
+#	"Carp",
+#	"Koi",
+#	"Bass",
+#	"Eel",
+#	"Barb",
+#	"Pike",
+#	"Perch",
+#	"Salmon",
+#	"Guppy",
+#	"Walleye",
+#	"Trout"
+#]
 var starting_location
 
 func _ready():
 	starting_location = global_position
-	#if rare_catch:
-	#	if Global.global_varibles.has("fish_" + str(starting_location)):
-	#		remove_self()
-#probably could use interact data for this. item pickup. just need a way to update score
-#so maybe am extended one for this case
+	interaction_data.finished.connect(on_interact_end)
+
 func on_interact(handler, instigator, target, data):
 	if interaction_data != null:
-		var sucess = interaction_data.interact(handler, instigator, target, data)
-		if sucess:
-			remove_self()
-			return data
-		else:
-			return data
-#	var data_source
-#	data["type"]="item pickup"
-#	if handler is Player_Handler:
-#		data_source = handler.state.data
-#	else:
-#		data_source = Global.global_varibles
-#	var rare_fish_locations = handler.get_player_meta("unquie_fish_locations")
-#	print(rare_fish_locations == null)
-#	if rare_fish_locations == null:
-#		handler.set_player_meta("unquie_fish_locations",[])
-#		print(handler.get_player_meta("unquie_fish_locations"))
-#		rare_fish_locations = handler.get_player_meta("unquie_fish_locations")
-#	print(rare_fish_locations)
-#	if starting_location in rare_fish_locations:
-		#flagging rare off so it treated as common.
-#		rare_catch = false
-		#also reset the name
-		#but probably should have a flag to state if it a rare name
-		#which in this case it would be or it would not be tagged as rared
-#		fish_name == "Fish"
-#	if rare_catch:
-		#changes name back to fish for special rares so tehy turn into normal fish
-		#else:
-#		if fish_name == "Fish":
-#			var checking_rare_fish = true
-#			var rare_fish_name
-#			var rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
-#			if rare_fish_caught == null:
-#				rare_fish_caught = []
-#			if rare_fish_caught >= rare_fish_names.size():
-#				print("all rare fish should be caught now")
-#				rare_fish_name = rare_fish_names[randi() % rare_fish_names.size()]
-#				pass
-#			else:
-#				while checking_rare_fish:
-#					if rare_fish_names.size() > 0:
-#						rare_fish_name = rare_fish_names.pop_at(randi() % rare_fish_names.size())
-						#var rare_fish_count = handler.get_player_meta()
-#						var fish_caught = handler.get_player_meta("fish_caught")
-						#if rare_fish_count == null:
-						#	rare_fish_count = 0
-#						if fish_caught == null:
-#							fish_caught = {}
-#						if not fish_caught.is_empty():
-#							if fish_caught.has(rare_fish_name):
-#								print("have "+str(rare_fish_name))
-#								pass#skip
-#							else:
-#								checking_rare_fish = false
-#								pass#no fish
-#						else:
-#							checking_rare_fish = false
-#							pass#no data
-#					else:
-						#may need to do an additanal check if all rares are caught and just repeat without the while
-#						rare_fish_name = "Silly Piranha" 
-#						checking_rare_fish = false
-#			fish_name = rare_fish_name
-			#Global.rare_fish_count += 1
-##		var total_rare_fish_caught = handler.get_player_meta("total_rare_fish_caught")
-#		if total_rare_fish_caught != null:
-#			handler.set_player_meta("total_rare_fish_caught", total_rare_fish_caught + 1)
-#		else:
-#			handler.set_player_meta("total_rare_fish_caught", 1)
-		#if the fish have the generic name "fish", get a random one from a list. this should grab froma rare table
-#			pass
-#		rare_fish_locations.append(starting_location)
-	#Global.global_varibles["fish_" + str(starting_location)] = fish_name
-#	else:
-#		if fish_name == "Fish":
-#			fish_name = common_fish_names[randi() % common_fish_names.size()]
-#			#if the fish have the generic name "fish", get a random one from a list
-#			pass
-#		if data_source.has("fish_" + str(fish_name)):
-#			data_source["fish_" + str(fish_name)] += 1
-#		else:
-#			data_source["fish_" + str(fish_name)] = 1
-		#Global.common_fish_count += 1
-#		var total_fish_caught = handler.get_player_meta("total_common_fish_caught")
-#		if total_fish_caught != null:
-#			handler.set_player_meta("total_common_fish_caught", total_fish_caught + 1)
-#		else:
-#			handler.set_player_meta("total_common_fish_caught", 1)
-		#if data_source.has("total_common_fish_caught"):
-		#	data_source["total_common_fish_caught"] += 1
-		#else:
-		#	data_source["total_common_fish_caught"] = 1
-	#Global.message_box.set_message(fish_name)
-	#should have the HUD handles this
-	#probably a generic message function. type and data where type is if it a dialog, notify, or score
-	#also can pass an amount incase more than one fish can be caught
-	#Global.message_box.add_notify_message("[center]Caught " + str(fish_name))
-	
-	#region ### New Logic ###
-	#NOTE: the goal of this to have the handler run the
-	#extended logic since these should only know about themselves
-	#and event libraries
-	#data["target"] = instigator
-	#data["source"] = self
-	#data["handler"] = handler
-	#data["item"] = fish_item.new_item(1,{"name":fish_name})
-	#data["status"] = 1
-	#data["run"] = func(data):
-		#TODO: maybe call static functions. data will be optional state
-		#and may not be used. instigator, handler, and data all that is needed
-		#target is optional
-		#NOTE: could also have it return event data and run logic
-		#as it normaly would. then the event will be a runnable
-		#but may need to have a state so it can be acessable. 
-		#so {"type":"event",run":callable} is all that needed. 
-		#maybe even a override bool to try to replace an event already running
-		
-		#pick name for fish and/or raritry
-#		var remaining_amount = Item_Events.acquire_item(
-#			instigator,
-#			fish_item.new_item(1,{"name":fish_name}),
-#			handler
-#		); #add fish
-		#update quest state(wip need a better system)
-		#play sound and other things
-#		data["status"] = 0 #end event
-		#may need to have a hook(signal) to the fish to tell
-		#it that the logic ran. or could just run that logic 
-		#trying it now
-#		self.remove_self()#works
-		#NOTE: could use resource instead of writing this out
-		#and just run the resource logic while
-		#also allow this to be used for unquie cases
-	
-	#NOTE! will use the static way. the static functions should 
-	#be enough to isolate logic and dedicated resources could be used
-	#to modualize adn visualize the events if needed
-#	var remaining_amount = Item_Events.acquire_item(
-#		instigator,
-#		fish_item.new_item(1,{"name":fish_name}),
-#		handler
-#	);
-	#Note: most of this should be set up handler side. 
-	#this should only set up the run logic
-	#and the first part of the logic should run asap
-	#also make sure the logic will set status to 0 at some point
-	#to prevent it running forever(which may lock up a type)
-	#also type should be unquie if expected to stack and live long
-	
-	#endregion
-	#region ### old Logic ###
-#	if instigator != null:
-#		var remaining_amount = instigator.inventory.add_item(fish_item.new_item(1,{"name":fish_name}))
-#		if remaining_amount >= 1:
-#			print("can not carry anymore fish")
-	
-	#if handler != null: 
-		#TODO(new): move this logic either to a static event or handler. these scripts should be simple
-		#TODO(old): maybe player_hander should have a hud if the client. maybe a hud for each player for splitscreen?
-#		handler.get_hud().gui_notify.add_notify_message("[center]Caught " + str(fish_name))
-	#Global.get_hud().$Notify.add_notify_message("[center]Caught " + str(fish_name))
-	#add the fish to fish caught dict
-	
-	#endregion
-	
-#	var count = handler.get_player_meta(fish_name+" caught")
-#	if count != null:
-#		handler.set_player_meta(fish_name+" caught", count + 1)
-#	else:
-#		handler.set_player_meta(fish_name+" caught", 1)
-#	if data_source.has("fish_caught"):
-#		if data_source.fish_caught.has(fish_name):
-#			data_source.fish_caught[fish_name] += 1
-#		else:
-#			data_source.fish_caught[fish_name] = 1
-#	else:
-#		data_source.fish_caught = {fish_name:1}
-	
-	#print("Caught " + fish_name)
-#	remove_self()
-	#return data
-	
+		interaction_data.interact(handler, instigator, self, data)
+		return data
+			
+func on_interact_end(canceled:bool, data:Dictionary):
+	if !canceled:
+		remove_self()
 
 func remove_self():
+	#TODO: Need a way without ref to parent
 	var self_ref = self
 	get_parent().remove_child(self_ref)
 	self_ref.queue_free()

@@ -1,61 +1,58 @@
-extends TileMap
-#this may be self contained. just need configs for the icons
-#such as fresh/saltwater icon, specail icon, target and player
-#objects will be tiles with data. meaning a fish is a point known
-#and it moves base on if there water next to it. moving is being cleared
-#and set elsewhere. 
+class_name Fishing_Pond_Map extends TileMap
+signal catched(fish_data:Dictionary)
+signal missed(vaild:bool) #return true if catch was in water, else false
+signal canceled()
 
-#TODO: probably should use a dictionary for the fish and have the properties there
-#and in here have two functions to generate the data for rare and common fish
-#it be a bit of a bloat, but will allow randomlized fish if done correctly
-#also help compress some logic by requiring only one list
 
-#NOTE: maybe should use fish nodes. a little more costly, but they can move on their
-#own or at least can be modified to look diffrent. 
-#NOTE: maybe not yet since there wont be as much variation for the prototype
-
-#NOTE: could set this by the one that sets it up to have diffrent icons
-#but currently this is just to make fishing more engaging without being too complex
 @export var water_atlas_coords : Vector2i
 @export var default_fish_atlas_coords : Vector2i
 @export var rare_fish_atlas_coords : Vector2i
 @export var fish_update_rate : float = 0.1
 @export var default_fish_move_rate : float = 0.1
+#TODO: should there be a min and max fish rate by default?
 #@export var rare_fish_move_chance : float = 0.3
 @export var player_atlas_coords : Vector2i
 @export var player_coords : Vector2i
-#Note: the cursor may be best off as a gui object so it can be link with progress
-#bar
-#@export var cursor_atlas_coords : Vector2i
-#@export var cursor_coords : Vector2i
 
-@export var test : bool
+@export var fishing_distance : float = 6
 
 @onready var cursor = %Cursor
-#tilemap should be empty except ground, but could look up tiles if nessary
 
-#active fish could be populated by a function by caller to allow various 
-#scenes.
-#NOTE: the array is of positions.
-#NOTE: wraping around an object or static type would be more useful
-#but current the prototype needs to be short and simple 
-var running : bool = false
+var running : bool = false :
+	set(value):
+		running = value
+		if running:
+			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+			set_layer_enabled(0,true)
+			visible = true
+		elif active_fish.is_empty():
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			set_layer_enabled(0,false)
+			visible = false
 var active_fish : Array[Dictionary]
-#var active_fish : Array[Vector2i]
-#var active_rare_fish : Array[Vector2i]
-#TODO: need something to show charge up. could be a gui
 
 
-#helper functions. 
-#pasue is simply falsing the running and stoping imput(or processes)
-#could make a pause bool that have setters that triggers this
 func pause():
 	running = false
 
-#resume just need to re-enable update(handle lots of the needed check)
-#qas well as open up the input and maybe prosses paths that pause may close
 func resume():
 	fish_update()
+
+#NOTE: Start() may be redundent? but also easier to understand
+#TODO: look to see how to make start and resume to be diffrent
+#func start():
+#	fish_update()
+	
+func end():
+	clear_fish()
+	mouse_state = 0
+
+func cancel():
+	canceled.emit()
+	end()
+
+func get_water_coords() -> Array[Vector2i]:
+	return get_used_cells_by_id(0, -1, water_atlas_coords)
 
 func fish_update():
 	if running : return #this should only one once
@@ -68,9 +65,6 @@ func fish_update():
 		for fish_id in range(active_fish.size()):
 			var fish = active_fish[fish_id]
 			move_fish(fish)
-	#TODO: see if there a way to assign timer to a var so checks can be made
-	#to prevent more than one of this running
-	#NOTE: maybe add a flag and toggle it off when conditions are correct
 		await get_tree().create_timer(fish_update_rate).timeout
 
 func move_fish(fish_data:Dictionary):
@@ -90,29 +84,7 @@ func move_fish(fish_data:Dictionary):
 				return
 				
 		
-#func move_fish(fish:Vector2i, atlas_coords: Vector2i, move_chance : float = 1):
-#	if move_chance >= randf():
-#		var nearby_tiles = get_surrounding_cells(fish)
-#		nearby_tiles.shuffle()
-		#pluck the array untill a vaild tile is found.
-		#currently there may no exit/enter conditions. that
-		#can be used for the more advance system
-#		while !nearby_tiles.is_empty():
-			
-#			var picked_coord = nearby_tiles.pop_back()
-#			var picked_tile = get_cell_atlas_coords(0, picked_coord)
-#			if picked_tile == water_atlas_coords:
-#				set_cell(1,picked_coord, 0, atlas_coords)
-#				set_cell(1,fish,-1)
-#				return picked_coord
-#	return null
-
-#NOTE: these are placeholder functions. they will work untill the system is redone
-#TODO: could merge the create fis data and add fish.
-#func add_fish(fish_data:Dictionary):
-#func add_fish(coords:Vector2i, atlas_coords:Vector2i = default_fish_atlas_coords,
-#	move_rate:float = default_fish_move_rate, type = "fish", layer:int = 1
-#	):
+#NOTE: could use a resource, but dictionary quicker for the protype
 func add_fish(coords:Vector2i, atlas_coords:Vector2i = default_fish_atlas_coords,
 	layer:int = 1, data:Dictionary = {}
 	):
@@ -129,50 +101,20 @@ func add_fish(coords:Vector2i, atlas_coords:Vector2i = default_fish_atlas_coords
 		
 	active_fish.append(fish_data)
 	set_cell(fish_data["layer"],fish_data["coords"], 0, fish_data["atlas_coords"])
-#func add_fish(coords:Vector2i,atlas_coords:Vector2i, list:Array[Vector2i]):
-#	list.append(coords)
-#	set_cell(1,coords, 0, atlas_coords)
 
-#func remove_fish(fish_id:int, list:Array[Vector2i]):
-#	if list.size() > fish_id:
-#		var fish_coords = list[fish_id]
-#		list.pop_at(fish_id)
-		#NOTE: more than one fish can share a coord
-		#so this is improper, but all that means is the 
-		#other fish is under the water(hidden) untill it moves
-#		set_cell(1,fish_coords,-1)
+func clear_fish():
+	for fish in active_fish:
+		var coords = fish["coords"]
+		var layer = fish["layer"]
+		set_cell(layer,coords,-1)
+	active_fish.clear()
+	running = false
 
-# Called when the node enters the scene tree for the first time.
-#func _ready():
-#	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	
-	if active_fish.is_empty() and test:
-		#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-		
-		add_fish(Vector2i(24,24),rare_fish_atlas_coords,2,
-		{"move_rate":randf_range(.5,1),"type":"rare fish"})
-		add_fish(Vector2i(24,24))
-		add_fish(Vector2i(24,24))
-		add_fish(Vector2i(24,24))
-		add_fish(Vector2i(24,24))
-		add_fish(Vector2i(24,24))
-
-		fish_update()
-		await get_tree().create_timer(10).timeout
+	if active_fish.is_empty():
 		pause()
-		print("Pause")
-		await get_tree().create_timer(5).timeout
-		print("Resume")
-		resume()
-	else:
-		#poor way of disabling collsion. need a state switch
-		if is_layer_enabled(0):
-			set_layer_enabled(0,false)
-	
+		
 	if running:
 		if mouse_state == 2:
 			if cursor.value < 80: #cursor.max_value:
@@ -184,31 +126,68 @@ func _process(delta):
 			mouse_state = 2
 		elif mouse_state == 3:
 			mouse_state = 0
+			
+func catch_fish(coords:Vector2i):
 
+	var vaild_coords :Array[Vector2i] = [Vector2i(1,0),Vector2i(1,1), Vector2i(0,1), Vector2i(-1,1),
+		Vector2i(-1,0),Vector2i(-1,-1), Vector2i(0,-1), Vector2i(1,-1)
+	]
+	var caught_fish_layer:int = -1
+	var caught_fish_coords:Vector2i = Vector2i(-1,-1)
+	vaild_coords.shuffle()
+	vaild_coords.push_front(Vector2i(0,0))
+	#print(vaild_coords)
+	for index in range(vaild_coords.size()):
+		#print(index)
+		var picked_coords = coords + vaild_coords[index]
+		var picked_tile = get_cell_atlas_coords(0, picked_coords)
+		if picked_tile == water_atlas_coords:
+			for layer in get_layers_count():
+				if layer > 0:
+					var fish = get_cell_atlas_coords(layer, picked_coords)
+				#TODO: could look for fish and check it. then if fish cought
+				#loop the active fish untill vaild fish is found
+					if fish != Vector2i(-1,-1):
+						var catch_chance : float = (cursor.value + 20) - (10*index)
+						var roll = randf_range(0,100)
+						if catch_chance <= 0:
+							missed.emit(true)
+							return
+						elif roll <= catch_chance:
+							caught_fish_coords = picked_coords
+							caught_fish_layer = layer
+							for picked_fish in active_fish:
+								if (picked_fish["coords"] == caught_fish_coords and
+									picked_fish["layer"] == caught_fish_layer
+								):
+									picked_fish["catch_roll"] = roll
+									picked_fish["catch_chance"] = catch_chance
+									catched.emit(picked_fish)
+									return
+		elif vaild_coords[index] == Vector2i(0,0):
+			print_debug("was not in water")
+			missed.emit(false)
+			return
+	missed.emit(true)
 var mouse_state: int = 0
-#not press(0), just pressed(1), pressed(2), just released(3)
-#TODO: may need a time for fill rate instead of using processes
-#ALSO should have the cursor bound within a region.this zone is base on a 
-#point bottem center(the cat) and the cat can(or will be move) left or right
-#up to a certain point.
-#on mouse press should triger catch logic which should return data for the fish
-#caught(if any) via a signal
-func _input(event):
+
+func _input(event:InputEvent):
 	if running:
-	# Mouse in viewport coordinates.
-		if event is InputEventMouseButton:
+		if event.is_action("Cancel"):
+			cancel()
+		elif event is InputEventMouseButton:
 			if event.is_pressed():
 				mouse_state = 1
-			elif event.is_released():
+			elif event.is_released() and mouse_state > 0:
 				mouse_state = 3
-				print("catch chance at " + str(cursor.value + 20) + "%")
-		
+				catch_fish(local_to_map(cursor.position))
 				cursor.value = 0#cursor.min_value
-			#print("Mouse Click/Unclick at: ", event.position)
 		elif event is InputEventMouseMotion:
-			cursor.position = event.position
-		#print("Mouse Motion at: ", event.position)
-
-
-
-
+			var cursor_coord: Vector2 = event.position
+			var local_player_coords = map_to_local(player_coords)
+			var vector_from_player: Vector2 = cursor_coord - local_player_coords
+			var max_length = fishing_distance*16
+			
+			if vector_from_player.length() > max_length:
+				cursor_coord = local_player_coords + (vector_from_player.normalized()*max_length)
+			cursor.position = cursor_coord
