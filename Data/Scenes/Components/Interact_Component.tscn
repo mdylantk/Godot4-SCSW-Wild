@@ -1,8 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://bnt60muvh63sj"]
 
 [sub_resource type="GDScript" id="GDScript_fjqi6"]
-script/source = "@tool
-class_name Interact_Component extends StaticBody2D
+script/source = "class_name Interact_Component extends Node#StaticBody2D
+#Note: will be a Node. children can then be allowed to connect to other node functions
+#like area2D overlap stuff
 signal started(data:Interactive_Data)
 signal updated(data:Interactive_Data)
 signal finished(canceled:bool, data:Interactive_Data)
@@ -24,6 +25,9 @@ signal finished(canceled:bool, data:Interactive_Data)
 	#	interactive_data.finished.connect(on_finished)
 #	pass
 
+#TODO: on_start, and on_update should be link directly to the interactions data
+#and the owner who need to know. if linked here, then it is to let the owner know 
+#there been a change
 func on_update(data):
 	updated.emit(data)
 func on_finished(canceled:bool,data):
@@ -33,11 +37,12 @@ func on_finished(canceled:bool,data):
 #interactee.owner if it wants more data
 func on_interact(handler, interactor, interactee = self, data = {}):
 	if interactive_data != null:
-		interactive_data.interact(handler, interactor, interactee, data)
-		started.emit(interactive_data)
+		if interactive_data.interact(handler, interactor, interactee, data):
+			started.emit(interactive_data)
+			return interactive_data
 "
 
 [node name="Interact_Component" type="StaticBody2D"]
-collision_layer = 2
+collision_layer = 8
 collision_mask = 0
 script = SubResource("GDScript_fjqi6")

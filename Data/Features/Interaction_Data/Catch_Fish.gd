@@ -20,7 +20,7 @@ func _start():
 	#note: only one fish game per action...but only one should exist if not
 	#dynamicly added
 	if fish_game == null:
-		fish_game = handler.hud.fishing_game
+		fish_game = Game.hud.fishing_game
 		#fish_game.add_fish(Vector2i(24,24),fish_game.rare_fish_atlas_coords,2,
 		#	{"move_rate":randf_range(.5,1),"type":"rare fish"}
 		#)
@@ -62,7 +62,7 @@ func add_fish(fish_data:Dictionary):
 		data["fish_data"] = fish_data
 		var fish_name = fish_data["type"]["pick"]
 		var fish_item = fish_item_source.new_item(1,{"name":fish_name})
-		var remaning_amount = Item_Events.acquire_item(instigator,fish_item,handler,"Caught")
+		var remaning_amount = Item_Events.acquire_item(interactor,fish_item,handler,"Caught")
 		#TODO: need a way to log caught fish. this just statisitic like
 		#number caught, biggest and smallest size caught, and such
 		if fish_data["type"]["rarity"] < 3:

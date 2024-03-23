@@ -29,12 +29,15 @@ static func get_game_handler():
 	return Game
 	
 static func change_level(level, handler):
-	handler.get_tree().call_group("World_Handler", "change_level", level,handler)
+	#handler.get_tree().call_group("World_Handler", "change_level", level,handler)
+	#var world = Game.world as World_Handler
+	Game.world.change_level(level,handler)
 	
 static func start_dialog(handler, speaker, dialog_data):
-	handler.hud.gui_dialog.open_dialog(dialog_data)
+	Game.hud.gui_dialog.open_dialog(dialog_data)
 	#handler.hud.gui_dialog.start_dialog(speaker, dialog_data)
 	#handler.get_hud().gui_dialog.start_dialog(speaker, dialog_data)
 
 static func send_notifcation(handler, message : String):
-	handler.hud.gui_notify.add_notify_message("[center]"+message)
+	Game.hud.gui_notify.add_notify_message("[center]"+message)
+	#handler.hud.gui_notify.add_notify_message("[center]"+message)

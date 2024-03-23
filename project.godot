@@ -94,10 +94,10 @@ Sprint={
 
 [layer_names]
 
-2d_physics/layer_1="Terrain"
-2d_physics/layer_2="Tracing"
-2d_physics/layer_3="Actor"
-2d_physics/layer_4="Projectiles"
+2d_physics/layer_1="Physical"
+2d_physics/layer_2="Visable"
+2d_physics/layer_3="Hittable"
+2d_physics/layer_4="Interactable"
 2d_physics/layer_5="Shallow-Water"
 2d_physics/layer_6="Deep-Water"
 2d_physics/layer_7="Dense-Forest"

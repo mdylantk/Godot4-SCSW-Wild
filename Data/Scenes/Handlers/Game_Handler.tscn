@@ -1,10 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://dvaxx0ke0p27m"]
+[gd_scene load_steps=7 format=3 uid="uid://dvaxx0ke0p27m"]
 
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/Game_State.gd" id="2_bcmum"]
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/AI_Handler.gd" id="3_8kfs5"]
+[ext_resource type="PackedScene" uid="uid://cc1hxktnb4a1k" path="res://Data/Scenes/Handlers/HUD.tscn" id="3_fqxm8"]
+[ext_resource type="Script" path="res://Data/Scripts/Game/Input_Handler.gd" id="4_sv0uv"]
 
 [sub_resource type="Resource" id="Resource_vn004"]
+resource_local_to_scene = true
 script = ExtResource("2_bcmum")
 random_seed = 1150104489
 data = {}
@@ -13,6 +16,13 @@ data = {}
 y_sort_enabled = true
 script = ExtResource("1_gpdo0")
 state = SubResource("Resource_vn004")
+
+[node name="HUD" parent="." instance=ExtResource("3_fqxm8")]
+unique_name_in_owner = true
+
+[node name="Input_Handler" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_sv0uv")
 
 [node name="AI_Handler" type="Node2D" parent="."]
 script = ExtResource("3_8kfs5")

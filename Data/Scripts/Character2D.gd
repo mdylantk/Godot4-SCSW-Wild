@@ -21,6 +21,8 @@ signal interacted(handler, instigator, interactee, data)
 #may be better so similar nodes could be reused or changed
 @onready var sprite = $Sprite2D
 
+
+
 func on_interaction(handler, instigator, interactee, data):
 	if interaction_component != null:
 		interaction_component.interact(handler, instigator, interactee, data)

@@ -13,11 +13,10 @@ size = Vector2(16, 16)
 atlas = ExtResource("2_xhkgq")
 region = Rect2(595, 187, 16, 16)
 
-[sub_resource type="Resource" id="Resource_sfpj6"]
+[sub_resource type="Resource" id="Resource_07q50"]
 resource_local_to_scene = true
 script = ExtResource("7_ssnj1")
 fish_item_source = ExtResource("2_8kk7n")
-update_rate = 0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0stte"]
 size = Vector2(16, 16)
@@ -35,7 +34,7 @@ texture_filter = 1
 texture = SubResource("AtlasTexture_84wnk")
 
 [node name="Interact_Component" parent="." instance=ExtResource("5_2a1kj")]
-interactive_data = SubResource("Resource_sfpj6")
+interactive_data = SubResource("Resource_07q50")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Interact_Component"]
 shape = SubResource("RectangleShape2D_0stte")

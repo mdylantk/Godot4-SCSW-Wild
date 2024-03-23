@@ -14,8 +14,9 @@ signal event_update(event)
 #also handle start scene is an option if this do not need to be autoload
 #once ready, game logic start. most of it will listen to the other handler
 #but may need a game loop or something similar.
-
-
+@onready var hud : Node = %HUD
+@onready var input : Node = %Input_Handler
+@onready var world : Node 
 #may use propagate_call or nothing since this control all so there little need
 #to connect to these
 #signal game_start() 
@@ -28,8 +29,8 @@ func get_player_handler(index : int = 0):
 	#todo: add logic for other player handlers
 
 func get_world_handler():
-	if has_node("World_Handler"):
-		return $World_Handler
+	if world != null:
+		return world
 	else:
 		return load_world_handler()
 
@@ -38,8 +39,7 @@ func get_seed() -> int :
 
 func load_world_handler():
 	if !has_node("World_Handler"):
-		var world = load(default_world_handler).instantiate()
-		world.name = "World_Handler"
+		world = load(default_world_handler).instantiate()
 		add_child(world)
 		return world
 		
@@ -50,7 +50,13 @@ func load_player_handler(index : int = 0):
 		add_child(player)
 		#TODO may be best to pass the pawn to the world handler
 		#so the world can check the pos instead of a redundent tick link
-		player.world = get_world_handler()
+		#player.world = get_world_handler()
+		if index == 0: #TODO: need to make sure the correct client get link to hud
+		#else hud input will be all mess up. will limit to the host controller atm
+			#TODO: maybe design it so the hud know the player, but the player do not
+			#would require Game.HUD to call gui events like notify
+			hud.player_handler = player
+			input.player_handler = player
 		return player
 
 #a way to get play index without storing it in a var

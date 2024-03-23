@@ -14,7 +14,7 @@
 atlas = ExtResource("6_6bm1f")
 region = Rect2(136, 170, 16, 16)
 
-[sub_resource type="Resource" id="Resource_ukus4"]
+[sub_resource type="Resource" id="Resource_4onwi"]
 resource_local_to_scene = true
 script = ExtResource("5_yn1wo")
 level_data = ExtResource("4_m356f")
@@ -45,7 +45,7 @@ position = Vector2(376, 152)
 texture = SubResource("AtlasTexture_2oobe")
 
 [node name="Interact_Component" parent="Sprite_Object" instance=ExtResource("7_6a252")]
-interactive_data = SubResource("Resource_ukus4")
+interactive_data = SubResource("Resource_4onwi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite_Object/Interact_Component"]
 shape = SubResource("RectangleShape2D_yq7oe")

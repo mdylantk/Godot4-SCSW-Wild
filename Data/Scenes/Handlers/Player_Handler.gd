@@ -8,7 +8,7 @@ class_name Player_Handler extends Node2D
 #sent when there is a change in pawn movement
 #signal pawn_update(handler)
 
-signal interact(handler, instigator, target, data)
+#signal interact(handler, instigator, target, data)
 #passing state, but might need to pass handler and player idex if system change that way
 #signal player_meta_changed(player_state, property, old_value)
 
@@ -23,39 +23,19 @@ signal interact(handler, instigator, target, data)
 #and if world or tilemap should hold pawb ref
 @export_file("*.tscn") var default_pawn = "res://Data/Scenes/Actors/Player.tscn"
 
+
+		
+
 var pawn #pawn may be move around, so a direct ref will be used to track it
 var uid = 0 #may or may not be needed if there a built in way to get a user id\
 
-#this is the world ref so the handler can run without casting up
-#when working with its sibling. NOTE: level changes may cause bugs
-#so need a way to make sure actions are not queued at level transfer
-#(like try not to use async with world since it may change level next tick) 
-var world : World_Handler #this should be set and updated by the game. 
-
-#
-#TODO: pawn state probably will not be used
-#this may not be useful, but here as a way to change state and update
-#the state do not need to be known, just when something happen, the signal need to emit
-#var pawn_state: Pawn_State :
-#	set(value):
-#		pawn_state = value
-#	get:
-#		return pawn_state
-
-#NOTE: hud is not a var, but works?
-#maybe because the logic is not being run before this is ready
-#may or may need to set it to use a var or use the function
-#var i heard is faster than a fuction. just need an on_ready
-func get_hud():
-	return $HUD
-#BUT this class needs a hud var to acess hud
-@onready var hud = $HUD
+#catch the movement since the pawn moves every frame. 
+var movement_input: Vector2
 
 
 func _ready():
 	#this is to test the signal
 	#player_meta_changed.connect(player_meta_changed_test)
-	pass
 	
 	if state == null :
 		state = Player_State.new() 
@@ -76,20 +56,25 @@ func _ready():
 	#pawn_state = Pawn_State.Alive
 	#on_transfer()
 	pawn.inventory.slot_update.connect(on_item_gain)
-	hud.player_state = state
+	#hud.player_state = state
 	#NOTE and TODO: need a func for when pawn change to update this
-	hud.player_pawn = pawn
+	#hud.player_pawn = pawn
 	event_process() #NOTE: this will run untill stopped(need logic) it is a subroutine
+
+
 
 func _physics_process(_delta) :
 	#Note: need to locate use_input what setting it (most likly world handler) and instead link it here
+	#NOTE: world should exist if pawn exist #TODO: make world(or game) handle spawningog eneities
 	if pawn != null:
-		pawn.movement_component.sprint_strength = Input.get_action_strength("Sprint")
-		var input_dir = Vector2(Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")).normalized()
-		pawn.move(input_dir)
+		pawn.move(movement_input)
+		#pawn.movement_component.sprint_strength = Input.get_action_strength("Sprint")
+		#var input_dir = Vector2(Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")).normalized()
+		#pawn.move(input_dir)
 	
 		###Check if pawn chunk is loaded
-		get_hud().loading = not world.is_chunk_loaded(pawn.global_position, true)
+		#NOTE: temp fix. it work,but need to make sure it cleaner and works when networking is tested
+		Game.hud.loading = not Game.world.is_chunk_loaded(pawn.global_position, true)
 	#running this often untill there a way to grab client player
 	#and run the loading gui logic for just client 
 	
@@ -119,19 +104,28 @@ func chunk_update(pos,length,is_loaded):
 #TODO: maybe use unhandle_Input(unless that for ui). also see if user id is an option
 #Also maybe see if it should emit a signal on vaild actions(kind of like with interact. accept/cancel 
 #may be an option, but might be vauge on it own if nothing happen beside input)
-func _input(event) :
+
+func input_update(event:InputEvent):
+	#movement for the pawn(return is pawn is null
+	if pawn != null :
+		movement_input = Vector2(
+			Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
+			).normalized()
+
+		if event.is_action("Sprint"):
+			pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
 	#NOTE: facing direction is being ref here, and if pawn lacks it, it could be a problem
 	#may need to make sure all pawns have it or find an indirect way to get a value
 	#but it is in the base pawn movement so it may be fine for now
 	#NOTEL: this came from player.any location or ref to self should be for pawn unless new
-	if pawn != null :
+	#if pawn != null :
 		if event.is_action("Accept") && event.is_action_pressed("Accept"):
 			var space_state = get_world_2d().direct_space_state #can get a lot just with the player
 			# use global coordinates, not local to node
 			var query = PhysicsRayQueryParameters2D.create(
 				pawn.global_position, 
 				pawn.global_position+(pawn.movement_component.facing_dirction*24),
-				0b10000000_00000000_00000000_00000010, #last is 1, first is 32
+				0b10000000_00000000_00000000_00001000, #last is 1, first is 32
 				[pawn])
 			#NOTE: collsion mask may override each other. so if there two interact on one object for tracing
 			#then only the first will trigger
@@ -157,7 +151,12 @@ func _input(event) :
 					#))
 					pass
 				else:
-					Game_Utility.get_action(result["collider"],"on_interact").call(
+					#TODO: this may allow of change easly
+					#but it is too abstract and may be better to agree all interaction
+					#will be handled by the interaction_component. and thus there will be
+					# a type that can be check, not a methood
+					var return_action = Game_Utility.get_action(
+						result["collider"],"on_interact").call(
 						self, pawn, result["collider"], {}
 						)
 					return #this is returning to break below actions. debugging temp solution

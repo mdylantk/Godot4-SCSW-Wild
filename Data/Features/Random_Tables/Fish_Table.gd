@@ -1,4 +1,4 @@
-@tool
+#@tool
 class_name Fish_Table extends Random_Table_Resource
 #this is a test. Rare fish should be location base or distance base
 #so another system would need to pick between two table. the rare one

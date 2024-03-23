@@ -10,7 +10,7 @@ atlas = ExtResource("2_1i0dm")
 region = Rect2(442, 136, 16, 16)
 
 [node name="EnemyTest" type="CharacterBody2D"]
-collision_layer = 2
+collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_sxhnx")
 
