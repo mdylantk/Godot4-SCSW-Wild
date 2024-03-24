@@ -13,6 +13,6 @@ class_name Speaker_Interact_Data extends Interactive_Data
 func interact(handler, instigator, interactee, data):
 	if handler != null:
 		#handler.get_hud().gui_dialog.start_dialog(handler, dialog_data)
-		General_Events.start_dialog(handler, handler, dialog_data)
+		Game.start_dialog(dialog_data)
 	
 	super.interact(handler, instigator, interactee, data)

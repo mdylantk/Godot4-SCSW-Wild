@@ -103,7 +103,7 @@ func on_catch(fish_data:Dictionary):
 
 func on_miss(vaild:bool = false):
 	if vaild == true:
-		General_Events.send_notifcation(handler, "Failed to catch a fish.")
+		Game.send_notifcation("Failed to catch a fish.")
 		end_game()
 
 func on_cancel():

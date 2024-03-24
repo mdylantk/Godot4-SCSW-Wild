@@ -68,6 +68,22 @@ func get_player_handler_index(player):
 #	load_world()
 #	load_player()
 
+### General game events ###
+func change_level(level, handler):
+	world.change_level(level,handler)
+	
+func start_dialog(dialog_data):
+	hud.gui_dialog.open_dialog(dialog_data)
+
+func send_notifcation(message : String):
+	hud.gui_notify.add_notify_message("[center]"+message)
+
+func allow_input(use_input:bool = true):
+	input.enable_input = use_input
+### end of General game events ###
+
+
+
 func print_copyright():
 	#TODO include this in game and test Engine.get_license_info when built
 	print(Engine.get_license_info)

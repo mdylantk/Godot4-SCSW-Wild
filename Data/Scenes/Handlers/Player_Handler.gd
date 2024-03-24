@@ -1,30 +1,10 @@
 class_name Player_Handler extends Node2D
 
-#states the pawn may be in. used mostly in the pawn update signal to let listers know why it was called
-#it may or may not be used depending on the pawn lifespand and if the state can be grab from the pawn
-#enum Pawn_State {Null = -1, Init = 0, Alive, Dead, Respawn}
 
 
-#sent when there is a change in pawn movement
-#signal pawn_update(handler)
-
-#signal interact(handler, instigator, target, data)
-#passing state, but might need to pass handler and player idex if system change that way
-#signal player_meta_changed(player_state, property, old_value)
-
-
-#note: most logic is set be be single player. multiplayer need to be tested
-#and most of the logic gated/ignored if not the client/owner
-#Todo: may be able to use one player handler for more than one users depending on the whay godot 
-#handle input. if so, some var may become arrays or moved into playerstate and player state turn into an array
 @export var state : Player_State
 
-#todo: have this load a pawn if pawn null. also figure out hoe to get a spawn location from world
-#and if world or tilemap should hold pawb ref
 @export_file("*.tscn") var default_pawn = "res://Data/Scenes/Actors/Player.tscn"
-
-
-		
 
 var pawn #pawn may be move around, so a direct ref will be used to track it
 var uid = 0 #may or may not be needed if there a built in way to get a user id\
@@ -151,14 +131,19 @@ func input_update(event:InputEvent):
 					#))
 					pass
 				else:
+					var interaction_source := result["collider"] as Interactive_Component
+					if interaction_source != null:
+						var interaction = interaction_source.interact(
+							self,pawn,interaction_source,{})
 					#TODO: this may allow of change easly
 					#but it is too abstract and may be better to agree all interaction
 					#will be handled by the interaction_component. and thus there will be
 					# a type that can be check, not a methood
-					var return_action = Game_Utility.get_action(
-						result["collider"],"on_interact").call(
-						self, pawn, result["collider"], {}
-						)
+					
+					#var return_action = Game_Utility.get_action(
+					#	result["collider"],"on_interact").call(
+					#	self, pawn, result["collider"], {}
+					#	)
 					return #this is returning to break below actions. debugging temp solution
 					#if result["collider"].has_method("on_interact"):
 						#TODO: event data pass may be empty unless extra data is needed

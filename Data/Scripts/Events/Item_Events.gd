@@ -18,13 +18,11 @@ static func acquire_item(target,item,handler = null,prefix = "Acquired"):
 		#need to make sure the memory is not clear or lost for item
 	if remaining_amount >= 1:
 		print_debug("can not carry anymore fish")
-		General_Events.send_notifcation(
-			handler, 
+		Game.send_notifcation( 
 			prefix +" "+ str(item["meta"]["name"]) + " but unable to carry anymore."
 			)
 	elif handler != null:
-		General_Events.send_notifcation(
-			handler, 
+		Game.send_notifcation( 
 			prefix +" "+ str(item["meta"]["name"])
 			)
 		#handler.get_hud().gui_notify.add_notify_message(

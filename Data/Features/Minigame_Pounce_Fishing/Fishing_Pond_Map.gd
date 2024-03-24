@@ -22,21 +22,29 @@ var running : bool = false :
 	set(value):
 		running = value
 		if running:
+			Game.allow_input(false)
 			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 			set_layer_enabled(0,true)
 			visible = true
-		elif active_fish.is_empty():
+		else:#if active_fish.is_empty():
+			Game.allow_input(true)
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			set_layer_enabled(0,false)
 			visible = false
 var active_fish : Array[Dictionary]
 
 
+#NOTE: mouse_state = -1 is to prevent input untill a fresh press
+
 func pause():
 	running = false
 
 func resume():
 	fish_update()
+	mouse_state = -1
+	#below is a failsafe incase input breaks
+	#though the logic to handle it may be faulty if input bugs out
+	
 
 #NOTE: Start() may be redundent? but also easier to understand
 #TODO: look to see how to make start and resume to be diffrent
@@ -45,7 +53,7 @@ func resume():
 	
 func end():
 	clear_fish()
-	mouse_state = 0
+	mouse_state = -1
 
 func cancel():
 	canceled.emit()
@@ -114,7 +122,7 @@ func _process(delta):
 	
 	if active_fish.is_empty():
 		pause()
-		
+
 	if running:
 		if mouse_state == 2:
 			if cursor.value < 80: #cursor.max_value:
@@ -175,13 +183,18 @@ func _input(event:InputEvent):
 	if running:
 		if event.is_action("Cancel"):
 			cancel()
-		elif event is InputEventMouseButton:
-			if event.is_pressed():
+		elif event.is_action("Accept"):# is InputEventMouseButton:
+			#TODO: need to have release reset input on new/resume game
+			#but also need to make sure release is not needed to use input
+			#also rename mouse_state to input or catch_state 
+			if event.is_pressed() and mouse_state == 0:
 				mouse_state = 1
-			elif event.is_released() and mouse_state > 0:
+			elif event.is_released() and mouse_state == 2:
 				mouse_state = 3
 				catch_fish(local_to_map(cursor.position))
 				cursor.value = 0#cursor.min_value
+			elif event.is_released() and mouse_state < 0:
+				mouse_state = 0
 		elif event is InputEventMouseMotion:
 			var cursor_coord: Vector2 = event.position
 			var local_player_coords = map_to_local(player_coords)

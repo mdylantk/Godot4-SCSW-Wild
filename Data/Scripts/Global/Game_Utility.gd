@@ -12,6 +12,7 @@ class_name Game_Utility extends Object
 #a null check may be needed if a null action dose not exists
 #shouls it should return a null type if no vail;d action exists
 static func get_action(source, action_id : String):
+	print_debug("(1)TODO: this should not be called. will be remove soon")
 	#NOTE: this should return a callable
 	if source.has_method(action_id):
 		return source[action_id]

@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dlylyvjyir5df" path="res://Data/Scenes/Actors/NCP.tscn" id="3_6ofi5"]
 [ext_resource type="Resource" uid="uid://eceb7uvicyqu" path="res://Data/Resources/Old_Man_Dialog.tres" id="5_0l7jn"]
 [ext_resource type="PackedScene" uid="uid://dghoogotf0r7u" path="res://Data/Scenes/Actors/Fish.tscn" id="6_8fa2c"]
-[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Scenes/Components/Interact_Component.tscn" id="6_madpy"]
+[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Scenes/Components/Interactive_Component.tscn" id="6_madpy"]
 [ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Scenes/Actors/Interactive_Body2d.tscn" id="7_15ksr"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Old_Man_Interact_Data.gd" id="7_pnnfl"]
 [ext_resource type="Resource" uid="uid://dghnl8cd6ev5n" path="res://Data/Resources/Test_House.tres" id="8_ahqel"]

@@ -57,6 +57,12 @@ static func get_chunk_coords(chunk_id:int=0):
 		floor(chunk_id/region_size)
 		)
 	return chunk_location 
+	
+#will generate tile data in an array for a single array
+#static func make_tile_data(atlas_id:int, atlas_coords:Vector2i)->Array:
+#	return(
+#		[atlas_id,atlas_coords]
+#	)
 
 func _init():
 	pass
@@ -103,7 +109,7 @@ func call_on_all_tiles(callable: Callable):
 			var region_coords=get_region_coords(tile_id,chunk_id)
 			callable.call(region_coords)
 			
-func call_on_all_chunks(callable: Callable, chunk_id : int = 0):
+func call_on_all_tiles_in_chunk(callable: Callable, chunk_id : int = 0):
 	var chunk_size = int(chunk_size*chunk_size)
 	for tile_id in range(chunk_size):
 		#TODO: should verify if id are in range, but not too importaint

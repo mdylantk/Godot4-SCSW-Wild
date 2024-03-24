@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnt60muvh63sj"]
+
+[ext_resource type="Script" path="res://Data/Scenes/Components/Interactive_Component.gd" id="1_d6mf4"]
+
+[node name="Interact_Component" type="StaticBody2D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_d6mf4")

@@ -6,7 +6,7 @@
 [ext_resource type="Resource" uid="uid://f4gufwtv0l5v" path="res://Data/Resources/Test_Level.tres" id="4_m356f"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="5_yn1wo"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="6_6bm1f"]
-[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Scenes/Components/Interact_Component.tscn" id="7_6a252"]
+[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Scenes/Components/Interactive_Component.tscn" id="7_6a252"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_buy32"]
 
