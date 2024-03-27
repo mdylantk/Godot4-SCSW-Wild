@@ -1,6 +1,6 @@
 class_name Level_Transfer extends Interactive_Data
 
-@export var level_data : Level_Data_2D
+@export var level_data : Level_Data
 
 func interact(handler, instigator, interactee, data):
 	print_debug("MEOW")

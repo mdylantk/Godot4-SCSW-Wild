@@ -57,4 +57,6 @@ script = ExtResource("13_1fnd3")
 [node name="NewTestMap" parent="." instance=ExtResource("14_0o30l")]
 position = Vector2(26, 20.5)
 
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
+[connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
 [connection signal="finished" from="AudioStreamPlayer" to="AudioStreamPlayer" method="_on_finished"]

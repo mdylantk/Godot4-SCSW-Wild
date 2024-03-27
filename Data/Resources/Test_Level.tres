@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=15 format=3 uid="uid://f4gufwtv0l5v"]
+[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=16 format=3 uid="uid://f4gufwtv0l5v"]
 
 [ext_resource type="Script" path="res://Data/Scripts/Level_Data_2D.gd" id="2_m6b6k"]
 [ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Data/Assets/world_detail_map.tres" id="2_nmdeq"]
 [ext_resource type="FastNoiseLite" uid="uid://cp0b4i2m77i8m" path="res://Data/Assets/world_variation_map.tres" id="4_75a86"]
+[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="4_fpsdb"]
 [ext_resource type="Script" path="res://Data/Scripts/Chunk_Data.gd" id="5_j28pw"]
 
 [sub_resource type="Resource" id="Resource_mhhvq"]
@@ -87,3 +88,7 @@ use_game_seed = true
 detail_map = ExtResource("2_nmdeq")
 variation_map = ExtResource("4_75a86")
 chunks = Array[ExtResource("5_j28pw")]([SubResource("Resource_mhhvq"), SubResource("Resource_erypo"), SubResource("Resource_rkghm"), SubResource("Resource_65xq5"), SubResource("Resource_i7y01"), SubResource("Resource_i605s"), SubResource("Resource_3f23o"), SubResource("Resource_p72d8"), SubResource("Resource_rsajw"), SubResource("Resource_7r5lq")])
+tile_set = ExtResource("4_fpsdb")
+grass_tiles = Array[Vector2i]([Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0), Vector2i(0, 2), Vector2i(0, 0)])
+tree_tiles = Array[Vector2i]([Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1), Vector2i(3, 2), Vector2i(4, 2), Vector2i(6, 2), Vector2i(0, 0)])
+rock_tiles = Array[Vector2i]([Vector2i(5, 2), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0), Vector2i(0, 0)])

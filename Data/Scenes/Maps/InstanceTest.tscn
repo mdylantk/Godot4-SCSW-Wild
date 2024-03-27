@@ -1,24 +1,20 @@
-[gd_scene load_steps=12 format=3 uid="uid://hepasgr3svoi"]
+[gd_scene load_steps=10 format=3 uid="uid://hepasgr3svoi"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_2euby"]
-[ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_uouwk"]
 [ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Scenes/Actors/Interactive_Body2d.tscn" id="3_t1j1n"]
 [ext_resource type="Resource" uid="uid://f4gufwtv0l5v" path="res://Data/Resources/Test_Level.tres" id="4_m356f"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="5_yn1wo"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="6_6bm1f"]
 [ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Scenes/Components/Interactive_Component.tscn" id="7_6a252"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_buy32"]
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_2oobe"]
 atlas = ExtResource("6_6bm1f")
 region = Rect2(136, 170, 16, 16)
 
-[sub_resource type="Resource" id="Resource_4onwi"]
+[sub_resource type="Resource" id="Resource_lmv53"]
 resource_local_to_scene = true
 script = ExtResource("5_yn1wo")
 level_data = ExtResource("4_m356f")
-update_rate = 0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yq7oe"]
 size = Vector2(16, 16)
@@ -31,12 +27,6 @@ format = 2
 layer_0/name = "Ground"
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(0, 1507328, 0, 1, 1507328, 0, 2, 1507328, 0, 3, 1507328, 0, 4, 1507328, 0, 5, 1507328, 0, 6, 1507328, 0, 7, 1507328, 0, 8, 1507328, 0, 9, 1507328, 0, 10, 1507328, 0, 11, 1507328, 0, 12, 1507328, 0, 13, 1507328, 0, 14, 1507328, 0, 15, 1507328, 0, 16, 1507328, 0, 17, 1507328, 0, 18, 1507328, 0, 19, 1507328, 0, 20, 1507328, 0, 21, 1507328, 0, 22, 1507328, 0, 23, 1507328, 0, 24, 1507328, 0, 25, 1507328, 0, 26, 1507328, 0, 27, 1507328, 0, 28, 1507328, 0, 29, 1507328, 0, 30, 1507328, 0, 31, 1507328, 0, 32, 1507328, 0, 65536, 1507328, 0, 131072, 1507328, 0, 196608, 1507328, 0, 262144, 1507328, 0, 327680, 1507328, 0, 393216, 1507328, 0, 458752, 1507328, 0, 524288, 1507328, 0, 589824, 1507328, 0, 655360, 1507328, 0, 720896, 1507328, 0, 786432, 1507328, 0, 851968, 1507328, 0, 917504, 1507328, 0, 983040, 1507328, 0, 1048576, 1507328, 0, 1114112, 1507328, 0, 1179648, 1507328, 0, 1245184, 1507328, 0, 1310720, 1507328, 0, 1376256, 1507328, 0, 1441792, 1507328, 0, 1507328, 1507328, 0, 1572864, 1507328, 0, 1638400, 1507328, 0, 1703936, 1507328, 0, 1769472, 1507328, 0, 1835008, 1507328, 0, 1900544, 1507328, 0, 1966080, 1507328, 0, 2031616, 1507328, 0, 2097152, 1507328, 0, 2097153, 1507328, 0, 2097154, 1507328, 0, 2097155, 1507328, 0, 2097156, 1507328, 0, 2097157, 1507328, 0, 2097158, 1507328, 0, 2097159, 1507328, 0, 2097160, 1507328, 0, 2097161, 1507328, 0, 2097162, 1507328, 0, 2097163, 1507328, 0, 2097164, 1507328, 0, 2097165, 1507328, 0, 2097166, 1507328, 0, 2097167, 1507328, 0, 2097168, 1507328, 0, 2097169, 1507328, 0, 2097170, 1507328, 0, 2097171, 1507328, 0, 2097172, 1507328, 0, 2097173, 1507328, 0, 2097174, 1507328, 0, 2097175, 1507328, 0, 2097176, 1507328, 0, 2097177, 1507328, 0, 2097178, 1507328, 0, 2097179, 1507328, 0, 2097180, 1507328, 0, 2097181, 1507328, 0, 2097182, 1507328, 0, 2097183, 1507328, 0, 2097184, 1507328, 0, 65568, 1507328, 0, 131104, 1507328, 0, 196640, 1507328, 0, 262176, 1507328, 0, 327712, 1507328, 0, 393248, 1507328, 0, 458784, 1507328, 0, 524320, 1507328, 0, 589856, 1507328, 0, 655392, 1507328, 0, 720928, 1507328, 0, 786464, 1507328, 0, 852000, 1507328, 0, 917536, 1507328, 0, 983072, 1507328, 0, 1048608, 1507328, 0, 1114144, 1507328, 0, 1179680, 1507328, 0, 1245216, 1507328, 0, 1310752, 1507328, 0, 1376288, 1507328, 0, 1441824, 1507328, 0, 1507360, 1507328, 0, 1572896, 1507328, 0, 1638432, 1507328, 0, 1703968, 1507328, 0, 1769504, 1507328, 0, 1835040, 1507328, 0, 1900576, 1507328, 0, 1966112, 1507328, 0, 2031648, 1507328, 0, 786460, 1179648, 18, 720924, 1179648, 17, 655388, 1179648, 17, 589852, 1179648, 17, 524316, 1179648, 17, 458780, 1179648, 17, 393244, 1179648, 17, 327708, 1179648, 17, 262172, 1179648, 16, 786459, 1114112, 18, 262171, 1114112, 16, 262170, 1114112, 16, 262169, 1114112, 16, 786456, 1114112, 18, 786455, 1114112, 18, 262167, 1114112, 16, 786454, 1114112, 18, 262166, 1114112, 16, 262165, 1114112, 16, 786452, 1114112, 18, 786451, 1114112, 18, 262163, 1114112, 16, 786450, 1048576, 18, 655378, 1048576, 17, 524306, 1048576, 17, 262162, 1048576, 16, 786458, 1114112, 18, 262168, 1114112, 16, 786453, 1114112, 18, 720914, 1048576, 17, 589842, 1048576, 17, 393234, 1048576, 17, 327698, 1048576, 17, 786457, 1114112, 18, 262164, 1114112, 16, 458770, 1048576, 17)
-script = ExtResource("2_uouwk")
-allow_foliage_generation = false
-random_noise = SubResource("FastNoiseLite_buy32")
-grass_tiles = Array[Vector2i]([Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0), Vector2i(0, 2)])
-tree_tiles = Array[Vector2i]([Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), Vector2i(4, 1), Vector2i(5, 1), Vector2i(3, 2), Vector2i(4, 2), Vector2i(6, 2)])
-rock_tiles = Array[Vector2i]([Vector2i(5, 2), Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0), Vector2i(4, 0)])
 
 [node name="Sprite_Object" parent="." instance=ExtResource("3_t1j1n")]
 position = Vector2(376, 152)
@@ -45,7 +35,7 @@ position = Vector2(376, 152)
 texture = SubResource("AtlasTexture_2oobe")
 
 [node name="Interact_Component" parent="Sprite_Object" instance=ExtResource("7_6a252")]
-interactive_data = SubResource("Resource_4onwi")
+interactive_data = SubResource("Resource_lmv53")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite_Object/Interact_Component"]
 shape = SubResource("RectangleShape2D_yq7oe")

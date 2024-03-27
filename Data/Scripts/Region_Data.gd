@@ -30,7 +30,7 @@ class_name Region_Data extends Resource
 #const region_size : Vector2 = Vector2(8,8)
 #const chunk_size : Vector2 = Vector2(16,16) 
 const region_size : int = 8
-const chunk_size : int  = 16
+const chunk_size : int  = 8
 
 #TODO: below should be using region coord to fetch a tile or chunk, not world
 #so chunks would be grabing a big tile, and a tile is a small tile in that chunk

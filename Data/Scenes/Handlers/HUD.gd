@@ -74,6 +74,12 @@ func _process(_delta):
 				#Vector2(16*32,16*32) is the offset. should be the player orginal spawn or the old man global location
 			else:
 				%HomePoint.visible = false
+			##NOTE AND TODO: decide if there a better way than calling game here to get
+			#world. could hold a world parameter the game can set.
+			#or could have the game handle loading flag in regards to world and system
+			#but then there need signals or direct calls to set that and world loading
+			#not as simple
+			loading = not Game.world.is_chunk_loaded(player_pawn.global_position, true)
 		
 
 #func loading(is_loading):

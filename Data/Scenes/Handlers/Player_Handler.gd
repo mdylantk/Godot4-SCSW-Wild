@@ -22,17 +22,24 @@ func _ready():
 		#this also could be where loading state happens if state is created when player 'joins'
 	if pawn == null:
 		#pawn_state = Pawn_State.Null
-		if has_node("Player"):
-			pawn = $Player
+		#if has_node("Player"):
+		#	pawn = $Player
 			#pawn_state = Pawn_State.Init
 			#set pawn to $player if it exist
 			#good for testing and automatic set up,
 			#but a function should be called instead
-		else:
-			var pawn_ref = load(default_pawn).instantiate()
-			add_child(pawn_ref)
-			pawn_ref.name = "Player" #todo: make child of world main scene for objects
-			pawn = pawn_ref
+		#else:
+		var pawn_ref = load(default_pawn).instantiate()
+		pawn_ref.add_to_group("player_controlled")
+		Game.world.add_child(pawn_ref)
+		#pawn_ref.name = "Player" #todo: make child of world main scene for objects
+		pawn = pawn_ref
+	#TODO: need a func to possess and unpossesed pawns so the data
+	#is correct.
+	#players group is a group that holds all player pawns. used
+	#for checking if a character is player own for cases where
+	#actions are trigger only for players, but do not need a player_handler to work
+	
 	#pawn_state = Pawn_State.Alive
 	#on_transfer()
 	pawn.inventory.slot_update.connect(on_item_gain)
@@ -54,7 +61,7 @@ func _physics_process(_delta) :
 	
 		###Check if pawn chunk is loaded
 		#NOTE: temp fix. it work,but need to make sure it cleaner and works when networking is tested
-		Game.hud.loading = not Game.world.is_chunk_loaded(pawn.global_position, true)
+		#Game.hud.loading = not Game.world.is_chunk_loaded(pawn.global_position, true)
 	#running this often untill there a way to grab client player
 	#and run the loading gui logic for just client 
 	

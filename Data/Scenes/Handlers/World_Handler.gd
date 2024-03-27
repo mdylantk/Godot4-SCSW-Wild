@@ -17,22 +17,52 @@ signal chunk_update(tile_map, chunk_position, is_unloaded)
 #by the noise settings, but sometime a seed may need to be shared
 @export var world_seed : int = 0
 
-@export var level_data : Level_Data_2D :
+@export var level_data : Level_Data :
 	set(value):
 		print_debug("setting level")
 		if level_data != value:
+			if value != null:
+				value.level_created.connect(on_level_created)
+				value.level_removed.connect(on_level_removed)
+				value.load_level()
+				#if (level_data as Level_Data_2D) != null:
+				#	value.loaded_point = loaded_point
+				
+			if level_data != null:
+				level_data.unload_level()
+				level_data.level_created.disconnect(on_level_created)
+				level_data.level_removed.disconnect(on_level_removed)
+				
+			
 			#print_debug("level set")
 			level_data = value
-			clear_chunks(loaded_chunks.keys())
+#			clear_chunks(loaded_chunks.keys())
 			#for old_pos in loaded_chunks.keys():
 			#	chuck_update(old_pos,false)
 			#	remove_child(loaded_chunks[old_pos])
 			#	loaded_chunks[old_pos].queue_free()
 			#	loaded_chunks.erase(old_pos)
-			generate_chunks()
-		level_data.seed_maps(world_seed)
+#			generate_chunks()
+#		level_data.seed_maps(world_seed)
 	get:
 		return level_data
+		
+func on_level_created(level:Node):
+	#print_debug(level)
+	add_child(level)
+	#call_deferred("add_child",level)
+	pass
+func on_level_removed(level:Node):
+	if level != self and level.get_parent() != null:
+		remove_child(level)
+	elif(level.get_parent() == null):
+		print_debug("level parent is null")
+	else:
+		print_debug("someone trying to detached world handler from itself")
+	#print_debug(level)
+	#call_deferred("remove_child",level)
+	#remove_child(level)
+	pass
 #TODO: maybe just have one handler for world, and how it load is determin by a resource
 #stating static chunks and if it generate void chunks or not
 #@export var static_chunks : Dictionary = { 
@@ -51,7 +81,10 @@ var offset = Vector2(-2,-2)
 @export var loaded_point = Vector2(0,0):
 	set(value):
 		loaded_point = value
-		generate_chunks()
+#		level_data.loaded_point = value
+		#TODO: connect all the logic to level_data branch
+		#or basicly disable most logic here and trigger it in level_data_2D
+##		generate_chunks()
 	get:
 		return loaded_point
 		
@@ -84,118 +117,74 @@ var loaded_chunks = {}
 func _ready():
 	if world_seed == 0:
 		world_seed = randi()
-	generate_chunks()
+	if level_data != null:
+		#level_data.level_created.connect(on_level_created)
+		#level_data.level_removed.connect(on_level_removed)
+		level_data.load_level()
+		level_data.loaded_point = loaded_point
+	#generate_chunks()
 
 func change_level(new_level_data, instigator = null, location_offset = Vector2()):
 	#test change via group call
 	print_debug("changing level")
 	level_data = new_level_data
 
-func load_chunks(pos):
-	var current_origin = loaded_point * chunk_distance
-	if (pos.x >= current_origin.x + chunk_distance ||
-		pos.x <= current_origin.x - chunk_distance ||
-		pos.y >= current_origin.y + chunk_distance ||
-		pos.y <= current_origin.y - chunk_distance ) :
-			loaded_point = (pos/chunk_distance).round()
-			#generate_chunks()
 
-#func _process(_delta):
-	#pass
-
-
-func generate_chunks() :
-	#var chunk_distance = tile_size*(chunk_size+1)
-	var old_chunk_coord = loaded_chunks.keys()
-	var x = 0
-	var y = 0
-	while x <= 3:
-		while y <= 3:
-			var grid_position = Vector2(x,y) + offset + loaded_point
-			if !loaded_chunks.has(grid_position):
-				var map
-				if level_data != null:
-					var chunk_ref = level_data.get_chunk(grid_position)
-					if chunk_ref != null:
-						#print("loading: " + str(chunk_ref))
-						call_deferred("load_chunk",chunk_ref,grid_position,!chunk_ref is String)
-			else:
-				old_chunk_coord.remove_at(old_chunk_coord.find(grid_position))
-			y += 1
-		y = 0
-		x += 1
-	clear_chunks(old_chunk_coord)
-	#for null_pos in old_chunk_coord:
-	#	chuck_update(null_pos,false)
-	#	remove_child(loaded_chunks[null_pos])
-	#	loaded_chunks[null_pos].queue_free()
-		#print_debug("removing")
-		#print(str(null_pos))
-		#print(loaded_chunks[null_pos])
-	#	loaded_chunks.erase(null_pos)
-
-func clear_chunks(old_chunk_coords : Array ):
-	for null_pos in old_chunk_coords:
-		
-		chunk_update.emit(loaded_chunks[null_pos], null_pos, true) #map may be null
-		
-		chuck_update(null_pos,false)
-		remove_child(loaded_chunks[null_pos])
-		loaded_chunks[null_pos].queue_free()
-		loaded_chunks.erase(null_pos)
-
-func load_chunk(ref,location = Vector2(), is_loaded = true) :
-	var map
-	if loaded_chunks.has(location):
-		#print_debug("warning location exist, ignoring loading chunk")
-		return
-	if is_loaded :
-		map = ref.instantiate()
-	else:
-		var loaded_ref = load(ref)
-		map = loaded_ref.instantiate()
-	map.transform[2] = chunk_distance * location
-	add_child(map)
-	loaded_chunks[location] = map
-	#map.connect("on_chunk_ready", chuck_ready)
-	if map.has_signal("on_chunk_ready"): #tool cause errors here so map may not be fully ready? 
-		map.on_chunk_ready.connect(chuck_update)
-		
-	#todo, decide on a better location. this call it when a new map is spawn(since currently each map a chunk)
-	chunk_update.emit(map, location, false)
-
-func get_current_chunk(location):
-	var chunk_pos = (location/chunk_distance).round()
-	#print(chunk_pos)
-	if loaded_chunks.has(chunk_pos):
-		return loaded_chunks[chunk_pos]
-	#elif preloaded_chunks.has(chunk_pos):
-	#	return preloaded_chunks[chunk_pos]
-	else:
-		return null
-		
-
-func chuck_update(pos,is_ready = true):
-	#need to decide on pos or chunk pos. the signal use pos, but unload use chunk
-	#the issues is where map size is located(currently here) so children do not know about it
-	var map_size = chunk_size * tile_size
-	#TODO: see if this function still can be useful. maybe to notify loader objects
-	#if is_ready:
-	#	get_tree().call_group("Player_Handlers", "chunk_update", (pos/map_size).round(), map_size, is_ready)
-	#else:
-	#	get_tree().call_group("Player_Handlers", "chunk_update", pos, map_size, is_ready)
-		
-		
-#todo: need to change the logic in the world handler or map so that chunks are updated
-#as a player move and there is non loaded around them. right now it logic hard to read
-#and the new system break for north and west chunks
 func is_chunk_loaded(location,  load = true):
 	#map size not needed since there a var that better above(chunk_distance).
 	#var map_size = chunk_size * tile_size
-	var grid_location = (location/chunk_distance).round()
-	if load:
-		load_chunks(location)
-	if loaded_chunks.has(grid_location):
-		return loaded_chunks[grid_location].visible
-	else:
-		return false
+#	if level_data != null:
+#		return level_data.is_chunk_loaded(location,  false)
+	return true
+	pass
+#	var grid_location = (location/chunk_distance).round()
+#	if load:
+#		load_chunks(location)
+#	if loaded_chunks.has(grid_location):
+#		return loaded_chunks[grid_location].visible
+#	else:
+#		return false
+
+
+#TODO: should let the world watch out for players
+#then send that info to the level_data to decided on how it should be used
+var player_pawns :Array[Node] = []
+
+#NOTE: could process one at a time or use the array when dealing with
+#a timer
+#TODO: player can signal to game to spawn pawn and remove. 
+#then game can tell world to spawn pawn. world then spawn it base on logic
+#in it self and the level_data. may need a default spawn position
+#NOTE: could have the spawning also pass a location, but setting the pawn should do that
+#so maybe just pass a bool stating if spawning postion is set or need to be set(meaning
+#to state if the world should adjust pawn position)
+#NOTE: could have a branch for pawn spawn only and then the world have a spawn
+#player that will do that logic. could make func branches of owning and unowning pawns
+#that just swaps the pawn in and put of the regeristry, but setting a player group is easier
+#the unposseded can be a group call
+func _process(delta):
+	if level_data == null:
+		return
+	for pawn in player_pawns:
+		if pawn == null:
+			player_pawns.erase(pawn)
+		elif pawn.is_in_group("player_controlled"):
+			
+			level_data.process_players(pawn)
+			#TODO add some function to level data
+			pass
+		else:
+			player_pawns.erase(pawn)
+
+func _on_child_entered_tree(node):
+	#print_debug(node)
+	if node.is_in_group("player_controlled"): #and !player_pawns.has(node):
+		print_debug(node)
+		player_pawns.append(node)
+		print_debug(player_pawns)
+
+
+func _on_child_exiting_tree(node):
+	#print_debug(node)
+	if player_pawns.has(node):
+		player_pawns.erase(node)

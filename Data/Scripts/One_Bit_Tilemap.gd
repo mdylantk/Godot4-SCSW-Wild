@@ -39,10 +39,14 @@ var empty_tiles : Array[Vector2] #if an array is provided, will skip the generat
 #@export var generate_foliage_editor : bool = false #it be better to clear or regen the loaded chunks
 @export var allow_foliage_generation : bool = true
 
+@export var detail_map: FastNoiseLite
+@export var variation_map : FastNoiseLite
 @export var random_noise : FastNoiseLite
 @export_file("*.tscn") var background = "uid://wqfpqmmkbg0n"
 
-
+#tile_size should be a const someplace or maybe the timeset can get a min size
+var tile_size : float = 16
+@onready var region_test = Region_Data.new()
 
 var is_ready : bool = false: #a flag to state if the tilemap ready to be used or still running eneration logic
 	#could use a signal here
@@ -50,14 +54,22 @@ var is_ready : bool = false: #a flag to state if the tilemap ready to be used or
 		if is_ready != value:
 			is_ready = value
 			if is_ready:
-				visible = true
+				#NOTE: seems there a process spike when ready. maybe visabilty
+				#truth is the level_data is in rewrite so maybe something there
+				#also need to check random tile to make sure it not slow
+				#as well as see if tile data a possible issue
+				#visible = true
 				on_chunk_ready.emit(global_position)
 				#may need to include tile size. then world times that by map size
 				#but these values should be a const someplace since change them in certain cases(like world) would bread the grid
 			else:
-				visible = false
+				#visible = false
+				pass
 	get:
 		return is_ready
+		
+func delayed_visiblity():
+	visible = true
 
 #this is a test system. thi data should be held in a resource so diffrent generation can be used
 #@export var ground_tiles : Array[Vector2] #current no tile will be used. 
@@ -70,7 +82,6 @@ var is_ready : bool = false: #a flag to state if the tilemap ready to be used or
 	#Vector2i(1,2)
 	#adding empty to allow more emprty space
 	Vector2i(0,0)
-	
 ]
 @export var tree_tiles : Array[Vector2i] = [
 	Vector2i(0,1),
@@ -82,7 +93,6 @@ var is_ready : bool = false: #a flag to state if the tilemap ready to be used or
 	Vector2i(3,2),
 	Vector2i(4,2),
 	Vector2i(6,2),
-	
 	Vector2i(0,0)
 ]
 @export var rock_tiles : Array[Vector2i] = [
@@ -91,28 +101,86 @@ var is_ready : bool = false: #a flag to state if the tilemap ready to be used or
 	Vector2i(2,0),
 	Vector2i(3,0),
 	Vector2i(4,0),
-	
 	Vector2i(0,0)
 ]
 
-
-func _process(_delta):
-	#note: this is shutting off process. may need to hold it own state if process is used for other things
-	#or use awaite in a generate chunk func...but still need a flag stating if generation active
-	var count = 16
-	while count > 0:
-		if empty_tiles.is_empty():
-			set_process(false) #turn it off, but may need to be removed if other logic is added here
-			#visible = true
-			count = 0
-			is_ready = true
-			break
+var chunk_size = 33
+var tile_id = 0
+var chunk_id = 0
+var height_value := func(position:Vector2): return 0
+func new_gen():
+	#print_debug("map size" + str(Region_Data.chunk_size * Region_Data.region_size))
+	var water_cells = []
+	while !is_ready:
+		#print(str(chunk_id) + "<=" + str(Region_Data.chunk_size * Region_Data.chunk_size))
+		if chunk_id < Region_Data.region_size * Region_Data.region_size:
+			region_test.call_on_all_tiles_in_chunk(
+				func(region_coords):
+					if get_cell_tile_data(0,region_coords) == null:
+						var tile_location : Vector2 = (region_coords as Vector2) + bounds_offset
+						var random_tile = pick_foliage_tile(tile_location +global_position)
+						if random_tile != Vector2i.ZERO:
+							if random_tile == Vector2i(8,5):
+								water_cells.append(region_coords)
+							else:
+								set_cell(0,region_coords,0,random_tile)
+			,chunk_id)
+			chunk_id += 1
+			await get_tree().create_timer(.1).timeout
 		else:
-			var tile_location = empty_tiles.pop_back() + bounds_offset
-			var random_tile = pick_foliage_tile(tile_location+global_position)
-			if random_tile != Vector2i.ZERO:
-				set_cell(0,tile_location,0,random_tile)
-		count -= 1
+			is_ready = true
+			set_cells_terrain_connect(0,water_cells,1,0)
+			check_water_tiles(water_cells)
+			water_cells = []
+			return
+			
+func check_water_tiles(cells):
+	if get_layers_count() < 2:
+		add_layer(1)
+	var water_boarder_tiles = [Vector2i(1,1),Vector2i(2,0),Vector2i(3,1),Vector2i(2,2)]
+	for tile in cells:
+		if get_cell_atlas_coords(0,tile) != Vector2i(2,1) or get_cell_source_id(0,tile) != 1:
+			continue
+		var boarder_tile = get_surrounding_cells(tile)
+		for other_tile in boarder_tile:
+			if get_cell_source_id(0,other_tile) == 1:
+				if water_boarder_tiles.has(get_cell_atlas_coords(0,other_tile)):
+					if variation_map.get_noise_2d(tile.x*16, tile.y*16) > 0.25:
+						set_cell(1,tile,0,Vector2i(5,2))
+						
+			
+#func old():
+#	if true:
+#		for i in range(Region_Data.chunk_size*Region_Data.chunk_size):
+#	for tile_id in range(chunk_size):
+#		#TODO: should verify if id are in range, but not too importaint
+#			if tile_id == chunk_size*chunk_size:
+#				is_ready = true
+#				#tile_id += 1
+#				return
+#			var coords=get_coords(tile_id)
+#			if get_cell_tile_data(0,coords) == null:
+#				var tile_location : Vector2 = (coords as Vector2) + bounds_offset
+#				var random_tile = pick_foliage_tile(tile_location*16 +global_position)
+#				if random_tile != Vector2i.ZERO:
+#					set_cell(0,coords,0,random_tile)
+#					
+#			tile_id += 1
+#		await get_tree().create_timer(1).timeout
+	#visible = true
+	#on_chunk_ready.emit(global_position)
+	#set_process(false)
+	
+	#todo: timer base loop untill all chunks are generated
+	pass
+func get_coords(tile_id:int = 0):
+	var tile_location:Vector2i = Vector2i(
+		tile_id%int(chunk_size),
+		floor(tile_id/chunk_size)
+		)
+	#print_debug(str(tile_id)+"of "+str(chunk_size))
+	return tile_location
+
 		
 func _ready():
 	if !y_sort_enabled:
@@ -123,39 +191,16 @@ func _ready():
 		#a global/world set of noise would be used for making regions
 		random_noise = FastNoiseLite.new()
 		
-	#if material != null:
-		#material.set_shader_param("noise_img",random_noise)
-		#material.get_shader_parameter("noise_img").get_noise().set_offset (Vector3(global_position.x,global_position.y,0))
-	#	pass
-	#else:
-	#	pass
 	if (background != null):
 		var loaded_ref = load(background)
 		var loaded_backround = loaded_ref.instantiate()
 		add_child(loaded_backround)
-		loaded_backround.size = bounds*(16.5)
-	#var new_noise = FastNoiseLite.new()
-	#new_noise.set_offset(Vector3(position.x/512,position.y/512,0))
-	#loaded_backround.material.get_shader_parameter("noise_img").set_noise(new_noise)
-	#loaded_backround.material.set_shader_parameter("uv_offset",global_position/(32*16))
-	#loaded_backround.material.set_shader_parameter("uv_scale",Vector2(1,1)*(1/(32*16)))
-	#issue. there a slight jump. the value seems to be a grid go 512-528+
-	#may modify valuse sample from noise map as a reginal color, but would be squared unless there a 
-	#way for tile to get their correct loc
-	#loaded_backround.material.get_shader_parameter("noise_img").get_noise().set_offset(Vector3(position.x/512,position.y/512,0))
+		#loaded_backround.size = bounds*(16.5)
+		loaded_backround.size = Vector2(chunk_size,chunk_size)*tile_size
 	
-	
-	if Game != null:
-		#maybe the world handler should have these noises and store a ref to it here
-		#or get it from the world
-		visible = false
-		recaculate_empty_tiles()
-		set_process(true)
-		
-	else:
-		recaculate_empty_tiles()
-		set_process(false)
-		visible = true
+	#visible = false
+	new_gen()
+	return
 
 func recaculate_empty_tiles(enable_generation: bool = true):
 	empty_tiles.clear()
@@ -185,28 +230,16 @@ func recaculate_empty_tiles(enable_generation: bool = true):
 
 func pick_foliage_tile(pos):
 	var noise_value = round((random_noise.get_noise_2d(pos.x,pos.y)+1)*5)
-
+	var water_value = round(random_noise.get_noise_2d(pos.x,pos.y))
 	var variation_roll = randf()
 	var random_roll = randi() % 100
+	if detail_map != null and variation_map != null:
+		random_roll = (detail_map.get_noise_2d(pos.x*5,pos.y*5)+1)*50
+		variation_roll = (variation_map.get_noise_2d(pos.x*5,pos.y*5)+1)/2
 	
-	#this is a test. may need to pass the object or related var to the tile map or
-	#run this logic in wthe world (or host the logic here, but called aboved)
-	if Game.is_node_ready():
-		if Game.get_world_handler().level_data.detail_map != null:
-		#note this is not seeded and my create similar gen. it wanted, but the seed should be modified per save
-			random_roll = (Game.get_world_handler().level_data.detail_map.get_noise_2d(pos.x*5,pos.y*5)+1)*50
-		if Game.get_world_handler().level_data.variation_map != null:
-		#note this is not seeded and my create similar gen. it wanted, but the seed should be modified per save
-			variation_roll = (Game.get_world_handler().level_data.variation_map.get_noise_2d(pos.x*5,pos.y*5)+1)/2
-	#keeping random roll for vlank tiles. still need a way to have it pos seed base
-	#currently it too random so gen will always be diffrent
-	#NOTE: at the moment randomly picing if there grass, else it use the nose map
-	#to decide if it rocky or forest
-	
-	#NOTE: varation noise map may be useful instead of randomly pyulling from list. 
-	#but only if type need to stay the same
-	
-	if grass_tiles.size() > 0 && random_roll >= 50: #60:
+	if water_value < 0:
+		return Vector2i(8,5)
+	elif grass_tiles.size() > 0 && random_roll >= 50: #60:
 		return grass_tiles[round((grass_tiles.size()-1)*variation_roll)]
 		#return grass_tiles[randi() % grass_tiles.size()*variation_roll]
 		
