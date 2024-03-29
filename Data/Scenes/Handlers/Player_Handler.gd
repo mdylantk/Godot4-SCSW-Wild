@@ -119,6 +119,8 @@ func input_update(event:InputEvent):
 			#0b10000000_00000000_00000000_00001101
 			#query.exclude = [local_player]
 			var result = space_state.intersect_ray(query)
+			
+			
 			if "collider" in result:
 			#	Game_Utility.get_action(result["collider"],"on_interact").call(
 			#			self, pawn, result["collider"], {}

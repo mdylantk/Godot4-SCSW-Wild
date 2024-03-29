@@ -21,6 +21,10 @@ signal gui_update(element)
 	set(value):
 		if(%LoadingScreen):
 			%LoadingScreen.visible = value
+		Game.input.enable_input = !value
+		###NOTE!!! below works. above do not disable input
+		#Game.input.set_process_input(!value)
+		loading = value
 	get:
 		return %LoadingScreen.visible
 
@@ -81,10 +85,10 @@ func _process(_delta):
 			#not as simple
 			#NOTE: by checking four corner point, boader loading cases could be solved
 			loading = not (
-				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(64,64)) and
-				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(-64,64)) and
-				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(64,-64)) and
-				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(-64,-64))
+				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(320,320)) and
+				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(-320,320)) and
+				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(320,-320)) and
+				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(-320,-320))
 				)
 		
 

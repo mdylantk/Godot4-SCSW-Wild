@@ -117,10 +117,10 @@ var loaded_chunks = {}
 func _ready():
 	if world_seed == 0:
 		world_seed = randi()
-	if level_data != null:
+	#if level_data != null:
 		#level_data.level_created.connect(on_level_created)
 		#level_data.level_removed.connect(on_level_removed)
-		level_data.load_level()
+	#	level_data.load_level()
 		#level_data.loaded_point = loaded_point
 	#generate_chunks()
 

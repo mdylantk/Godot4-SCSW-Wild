@@ -17,6 +17,7 @@ class_name Level_Data_2D extends Level_Data
 #also should decide how to seed them. could base it on world seed +- an offset
 #or have it fixed and have the seed editable. if world noise map, could use a save object, just need to
 #seed it game start.
+@export var generators : Array[Generator_Data]
 @export var tempture_map : Noise
 @export var humidity_map : Noise
 #detail is ment to be for if a feature spawn or it empty space/unchanged. 
@@ -131,10 +132,11 @@ func load_static_tilemap(static_map:Node,coords:Vector2i):
 func clear_tilemaps(tilemap_dictionary:Dictionary):
 	for coords in tilemap_dictionary.keys():
 		var tilemap = tilemap_dictionary[coords]
-		level_removed.emit(tilemap)
-		tilemap .queue_free()
-		if static_tilemaps.has(coords):
-			static_tilemaps.erase(coords)
+		if tilemap != null :
+			level_removed.emit(tilemap)
+			tilemap.queue_free()
+		else:
+			print_debug("WARNING: tilemap is null")
 		tilemap_dictionary.erase(coords)
 	
 
@@ -180,6 +182,7 @@ func dose_tilemap_exist(coords:Vector2i)-> bool:
 func handle_tilemaps():
 	#the timer is a placeholder. defer may be enough, so the update rate is all that may need to be handle
 	#await Game.get_tree().create_timer(1.0).timeout
+	print("mew")
 	for coords in active_regions:
 		if loose_tilemaps.has(coords):
 			#print_debug("flagging importaint" + str(coords) )
@@ -198,7 +201,22 @@ func handle_tilemaps():
 				var new_tilemap = create_tilemap()
 				init_tilemap(new_tilemap,level_coords_to_world(coords))
 				processing_tilemaps[coords] = new_tilemap
-				generate_tilemap(new_tilemap, coords)
+				
+				#generate_tilemap(new_tilemap, coords)
+				#print("Meoow " + str(coords))
+				generators[0].generate(new_tilemap)
+
+func on_generator_end(generator:Generator_Data, scene:Node):
+	var tilemap = (scene as TileMap)
+	if tilemap != null:
+		var coords = world_to_level_coords(tilemap.global_position)
+		if processing_tilemaps.has(coords):
+			loaded_tilemaps[coords] = tilemap
+			processing_tilemaps.erase(coords)
+	else:
+		print_debug("WARNING: processing_tilemaps may have a null pointer")
+		print("but also if that the case, this object may be null " + str(self))
+	#generator.scene_finished.disconnect(on_generator_end)
 
 	for loaded_coords in loaded_tilemaps.keys():
 		var loaded_map = loaded_tilemaps[loaded_coords]
@@ -212,9 +230,11 @@ func handle_tilemaps():
 		#remove
 		if loose_tilemaps.size()>max_loose_maps:
 			#print_debug("removing" + str(loose_coords) )
-			level_removed.emit(loose_map)
-			if loose_map != null:
+			if loose_map != null :
+				level_removed.emit(loose_map)
 				loose_map.queue_free()
+			else:
+				print_debug("WARNING: tilemap is null")
 			if static_tilemaps.has(loose_coords):
 				static_tilemaps.erase(loose_coords)
 			loose_tilemaps.erase(loose_coords)
@@ -262,18 +282,23 @@ func level_coords_to_world(coords: Vector2i) -> Vector2 :
 	#return null
 	
 func load_level():
-	pass
+	if !generators[0].scene_finished.is_connected(on_generator_end):
+		generators[0].scene_finished.connect(on_generator_end)
 
 func unload_level():
 	clear_tilemaps(loaded_tilemaps)
 	clear_tilemaps(processing_tilemaps)
 	clear_tilemaps(loose_tilemaps)
+	clear_tilemaps(static_tilemaps)
+	
+	deferring_handle_tilemaps = false
+	active_regions = []
 	#clear_chunks(loaded_chunks.keys())
 	pass
 
 func process_players(pawn:Node):
 	if pawn as Node2D:
-		var grid_location = world_to_level_coords(pawn.global_position) as Vector2
+		var grid_location = world_to_level_coords(pawn.global_position)
 		#loaded_point = grid_location
 		caculate_active_regions(pawn.global_position)
 

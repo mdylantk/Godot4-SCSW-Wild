@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=17 format=3 uid="uid://f4gufwtv0l5v"]
+[gd_resource type="Resource" script_class="Level_Data_2D" load_steps=19 format=3 uid="uid://f4gufwtv0l5v"]
 
 [ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Data/Resources/Noise_Maps/World_Detail_Map.tres" id="2_7ifdy"]
 [ext_resource type="Script" path="res://Data/Scripts/Level_Data_2D.gd" id="2_m6b6k"]
+[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Foilage_Generator.gd" id="3_nx7fw"]
 [ext_resource type="FastNoiseLite" uid="uid://te65swlvsp53" path="res://Data/Resources/Noise_Maps/World_Height_Map.tres" id="3_tlf2u"]
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="4_fpsdb"]
 [ext_resource type="Script" path="res://Data/Scripts/Chunk_Data.gd" id="5_j28pw"]
@@ -77,6 +78,16 @@ is_static_chunk = false
 static_location = Vector2(0, 0)
 random_weight = 1.0
 
+[sub_resource type="Resource" id="Resource_jkbqg"]
+script = ExtResource("3_nx7fw")
+region_size = null
+chunk_size = null
+detail_map = ExtResource("2_7ifdy")
+variation_map = ExtResource("6_pbowx")
+grass_tiles = null
+tree_tiles = null
+rock_tiles = null
+
 [resource]
 script = ExtResource("2_m6b6k")
 default_chunk = "res://Data/Scenes/Maps/TilemapTemplate.tscn"
@@ -86,6 +97,7 @@ level_max_bounds = Vector2(4, 4)
 level_min_bounds = Vector2(-4, -4)
 use_level_bounds = false
 use_game_seed = true
+generators = Array[Resource("res://Data/Features/World_Levels_Data/Generator_Data.gd")]([SubResource("Resource_jkbqg")])
 detail_map = ExtResource("2_7ifdy")
 variation_map = ExtResource("6_pbowx")
 height_map = ExtResource("3_tlf2u")

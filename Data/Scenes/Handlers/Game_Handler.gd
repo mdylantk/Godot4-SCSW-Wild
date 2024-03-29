@@ -71,6 +71,7 @@ func get_player_handler_index(player):
 ### General game events ###
 func change_level(level, handler):
 	world.change_level(level,handler)
+	hud.loading = true
 	
 func start_dialog(dialog_data):
 	hud.gui_dialog.open_dialog(dialog_data)
