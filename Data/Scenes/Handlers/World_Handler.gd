@@ -121,7 +121,7 @@ func _ready():
 		#level_data.level_created.connect(on_level_created)
 		#level_data.level_removed.connect(on_level_removed)
 		level_data.load_level()
-		level_data.loaded_point = loaded_point
+		#level_data.loaded_point = loaded_point
 	#generate_chunks()
 
 func change_level(new_level_data, instigator = null, location_offset = Vector2()):
@@ -130,20 +130,13 @@ func change_level(new_level_data, instigator = null, location_offset = Vector2()
 	level_data = new_level_data
 
 
-func is_chunk_loaded(location,  load = true):
+func is_chunk_loaded(location):
 	#map size not needed since there a var that better above(chunk_distance).
 	#var map_size = chunk_size * tile_size
-#	if level_data != null:
-#		return level_data.is_chunk_loaded(location,  false)
+	if level_data != null:
+		return level_data.is_level_loaded(location)
 	return true
-	pass
-#	var grid_location = (location/chunk_distance).round()
-#	if load:
-#		load_chunks(location)
-#	if loaded_chunks.has(grid_location):
-#		return loaded_chunks[grid_location].visible
-#	else:
-#		return false
+
 
 
 #TODO: should let the world watch out for players

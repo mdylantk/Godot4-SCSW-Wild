@@ -79,7 +79,13 @@ func _process(_delta):
 			#or could have the game handle loading flag in regards to world and system
 			#but then there need signals or direct calls to set that and world loading
 			#not as simple
-			loading = not Game.world.is_chunk_loaded(player_pawn.global_position, true)
+			#NOTE: by checking four corner point, boader loading cases could be solved
+			loading = not (
+				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(64,64)) and
+				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(-64,64)) and
+				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(64,-64)) and
+				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(-64,-64))
+				)
 		
 
 #func loading(is_loading):

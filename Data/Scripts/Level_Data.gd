@@ -33,7 +33,9 @@ func world_position_change(new_position:Vector2, old_position:Vector2) -> bool :
 #func player_position_update(position:Vector2, player:Player_Handler):
 #	pass
 	
-
+func is_level_loaded(location:Vector2)->bool:
+	return true
+	
 
 #the main functions to start and end the level_data
 func load_level():
@@ -69,5 +71,3 @@ func process_players(pawn:Node):
 #in the world handler
 #NOTE level scene may handle itself but should only in cases where it do not need
 #to know about other regions(or have a soild signal system for that) 
-func process_scene_instance(scene:Node,position:Vector2):
-	pass

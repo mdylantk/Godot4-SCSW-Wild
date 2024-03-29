@@ -137,8 +137,9 @@ func _process(delta):
 			
 func catch_fish(coords:Vector2i):
 
-	var vaild_coords :Array[Vector2i] = [Vector2i(1,0),Vector2i(1,1), Vector2i(0,1), Vector2i(-1,1),
-		Vector2i(-1,0),Vector2i(-1,-1), Vector2i(0,-1), Vector2i(1,-1)
+	var vaild_coords :Array[Vector2i] = [Vector2i(1,0),Vector2i(1,1),
+	Vector2i(0,1), Vector2i(-1,1), Vector2i(-1,0),Vector2i(-1,-1), 
+	Vector2i(0,-1), Vector2i(1,-1)
 	]
 	var caught_fish_layer:int = -1
 	var caught_fish_coords:Vector2i = Vector2i(-1,-1)
@@ -156,7 +157,7 @@ func catch_fish(coords:Vector2i):
 				#TODO: could look for fish and check it. then if fish cought
 				#loop the active fish untill vaild fish is found
 					if fish != Vector2i(-1,-1):
-						var catch_chance : float = (cursor.value + 20) - (10*index)
+						var catch_chance : float = (cursor.value + 20) - (5*index)
 						var roll = randf_range(0,100)
 						if catch_chance <= 0:
 							missed.emit(true)

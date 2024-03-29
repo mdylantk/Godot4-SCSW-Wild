@@ -2,5 +2,7 @@
 
 [resource]
 seed = 1401584422
-fractal_lacunarity = 20.0
+frequency = 1.0
+fractal_octaves = 2
+fractal_lacunarity = 4.375
 fractal_gain = 1.0
