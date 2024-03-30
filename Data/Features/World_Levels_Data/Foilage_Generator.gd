@@ -69,8 +69,9 @@ func generate_tilemap(
 						tile_picker(tilemap,Vector2i(region_x,region_y),
 						Vector2i(chunk_x,chunk_y), data, use_data)
 			else:
-				return
-			await Game.get_tree().create_timer(0.05).timeout
+				return 
+			await Game.get_tree().process_frame
+			#await Game.get_tree().create_timer(0.05).timeout
 #NOTE: the one thar calls this needs to know when it is ready
 #	loaded_tilemaps[coords] = tilemap
 #	processing_tilemaps.erase(coords)

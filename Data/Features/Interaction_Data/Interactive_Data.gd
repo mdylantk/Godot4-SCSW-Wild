@@ -12,10 +12,29 @@ signal finished(canceled : bool,data:Interactive_Data)
 #data that may display on interact. the children will have most of the 
 #unquie data and such.
 
-var handler 
-var interactor 
-var interactee 
-var data : Dictionary
+#NOTE emit_changed just incase if these values are changed, a listerner can be notified
+#if nessary. any of these four could break some logic since these are not normally meant
+#to change untill finished.
+var handler:
+	set(new_value):
+		if handler != new_value:
+			handler = new_value
+			emit_changed()
+var interactor:
+	set(new_value):
+		if interactor != new_value:
+			interactor = new_value
+			emit_changed()
+var interactee:
+	set(new_value):
+		if interactee != new_value:
+			interactee = new_value
+			emit_changed()
+var data : Dictionary:
+	set(new_value):
+		if data != new_value:
+			data = new_value
+			emit_changed()
 
 var _is_active : bool 
 

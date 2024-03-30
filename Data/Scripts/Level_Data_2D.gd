@@ -162,7 +162,7 @@ func generate_tilemap(tilemap:TileMap, coords:Vector2i):
 							chunk_x + region_x * Region_Data.chunk_size,
 							chunk_y + region_y * Region_Data.chunk_size
 						))
-			await Game.get_tree().create_timer(0.05).timeout
+			await Game.get_tree().process_frame
 	loaded_tilemaps[coords] = tilemap
 	processing_tilemaps.erase(coords)
 
@@ -179,10 +179,21 @@ func dose_tilemap_exist(coords:Vector2i)-> bool:
 	)
 	
 
+func on_generator_end(generator:Generator_Data, scene:Node):
+	var tilemap = (scene as TileMap)
+	if tilemap != null:
+		var coords = world_to_level_coords(tilemap.global_position)
+		if processing_tilemaps.has(coords):
+			loaded_tilemaps[coords] = tilemap
+			processing_tilemaps.erase(coords)
+	else:
+		print_debug("WARNING: processing_tilemaps may have a null pointer")
+		print("but also if that the case, this object may be null " + str(self))
+	#generator.scene_finished.disconnect(on_generator_end)
+
 func handle_tilemaps():
 	#the timer is a placeholder. defer may be enough, so the update rate is all that may need to be handle
 	#await Game.get_tree().create_timer(1.0).timeout
-	print("mew")
 	for coords in active_regions:
 		if loose_tilemaps.has(coords):
 			#print_debug("flagging importaint" + str(coords) )
@@ -205,18 +216,6 @@ func handle_tilemaps():
 				#generate_tilemap(new_tilemap, coords)
 				#print("Meoow " + str(coords))
 				generators[0].generate(new_tilemap)
-
-func on_generator_end(generator:Generator_Data, scene:Node):
-	var tilemap = (scene as TileMap)
-	if tilemap != null:
-		var coords = world_to_level_coords(tilemap.global_position)
-		if processing_tilemaps.has(coords):
-			loaded_tilemaps[coords] = tilemap
-			processing_tilemaps.erase(coords)
-	else:
-		print_debug("WARNING: processing_tilemaps may have a null pointer")
-		print("but also if that the case, this object may be null " + str(self))
-	#generator.scene_finished.disconnect(on_generator_end)
 
 	for loaded_coords in loaded_tilemaps.keys():
 		var loaded_map = loaded_tilemaps[loaded_coords]
