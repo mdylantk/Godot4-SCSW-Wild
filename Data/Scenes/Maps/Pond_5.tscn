@@ -14,11 +14,9 @@ script = ExtResource("2_ilhcn")
 
 [node name="Fish2" parent="." instance=ExtResource("3_1phqo")]
 position = Vector2(384, 232)
-rare_catch = false
 
 [node name="Fish5" parent="." instance=ExtResource("3_1phqo")]
 position = Vector2(256, 304)
-rare_catch = false
 
 [node name="Fish" parent="." instance=ExtResource("3_1phqo")]
 position = Vector2(256, 208)

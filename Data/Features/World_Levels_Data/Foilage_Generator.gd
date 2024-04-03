@@ -1,7 +1,7 @@
 class_name Foilage_Generator extends Generator_Data
 
-@export var region_size : int = Region_Data.region_size
-@export var chunk_size : int = Region_Data.chunk_size
+@export var region_size : int = 8
+@export var chunk_size : int = 8
 
 @export var detail_map : Noise = FastNoiseLite.new()
 @export var variation_map : Noise = FastNoiseLite.new()
@@ -53,10 +53,14 @@ func tile_picker(
 			data.append([])
 		if coords.y >= data[coords.x].size():
 			data.append([])
-		data[coords.x][coords.y] = tile
+		if data[coords.x][coords.y] == null:
+			data[coords.x][coords.y] = tile
+		else:
+			print_debug("tile not null, passing")
 
 	else:
-		tilemap.set_cell(0,coords,0,tile)
+		if tilemap.get_cell_tile_data(0,coords) == null:
+			tilemap.set_cell(0,coords,0,tile)
 
 func generate_tilemap(
 		tilemap:TileMap, data:Array = [], use_data:bool = false

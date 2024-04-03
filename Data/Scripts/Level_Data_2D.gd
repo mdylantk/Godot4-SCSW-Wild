@@ -1,16 +1,7 @@
 class_name Level_Data_2D extends Level_Data
 
-@export_file("*.tscn") var default_chunk : String = "res://Data/Scenes/Maps/TilemapTemplate.tscn"
-#@export var null_chunk : PackedScene
-@export_file("*.tscn") var null_chunk : String = "res://Data/Scenes/Maps/NullZone.tscn"
-@export var return_null_on_default: bool = false 
+@export var level_id := "world"
 
-
-#may use this instead of return_null_on_default
-#will generate default or random tiles up to bounds unless ignored. 
-@export var level_max_bounds: Vector2
-@export var level_min_bounds: Vector2
-@export var use_level_bounds: bool = false
 @export var use_game_seed: bool = true
 
 #Noise should be related to level which basicly world data
@@ -40,19 +31,26 @@ class_name Level_Data_2D extends Level_Data
 	#Vector2(0,-21):"uid://t7rhh625brgr",
 	#Vector2(42,0):"uid://clicnkneu0ddm"
 	#}
-	
+
+
 @export var chunks : Array[Chunk_Data] :
 	set(value):
 		chunks = value
-		#sort_chunks()
-	get:
-		return chunks
+		update_static_regions()
 
 #TODO add a region size/bound option to allow generation upto a certain size
 
-var static_chunks = {}
-var random_chunks = []
+var static_chunks := {}
+var random_chunks := []
 
+func update_static_regions():
+	static_chunks = {}
+	random_chunks = []
+	for chunk:Chunk_Data in chunks:
+		if chunk.is_static_chunk:
+			static_chunks[chunk.static_location] = chunk.chunk_scene_path
+		else:
+			random_chunks.append(chunk.chunk_scene_path)
 
 @export var tile_set : TileSet = preload("res://Data/Assets/low_Bit_Tileset.tres")
 
@@ -76,7 +74,8 @@ var processing : bool = false
 #a array of catch positions. any tilemap not equal any will be move to loosed
 var active_regions : Array[Vector2i]
 
-var deferring_handle_tilemaps := false
+
+var _deferring_handle_tilemaps := false
 
 var near_by_coords :Array[Vector2i] =[
 		Vector2(-1,-1),Vector2(-1,0), Vector2(-1, 1),
@@ -94,6 +93,11 @@ var near_by_coords :Array[Vector2i] =[
 
 #TODO: So far added a way to handle and load tilemap to replace the old system
 #just need to move the generation logic over here
+
+func get_level_property(name:String) -> Variant:
+	if name == "level_id":
+		return level_id
+	return null
 
 ###ONE BIT TILEMAP GENERATION CODE PEICES
 func pick_foliage_tile(pos):
@@ -141,10 +145,12 @@ func clear_tilemaps(tilemap_dictionary:Dictionary):
 	
 
 func get_static_map(location:Vector2)->Node:
-	for chunk in chunks:
-		if chunk.is_static_chunk:
-			if chunk.static_location == location:
-				return load(chunk.chunk_scene_path).instantiate()
+	var coords := world_to_level_coords(location) as Vector2
+	#TODO: may need to convert the static chunks as vector2i instead of vector2
+	if static_chunks.has(coords):
+		print(location)
+		return load(static_chunks[coords]).instantiate()
+	#TODO: need to see if a random static chunk is picked
 	return null
 
 func tile_picker(tilemap:TileMap,coords:Vector2i):
@@ -240,7 +246,7 @@ func handle_tilemaps():
 			if loose_tilemaps.size()<=max_loose_maps:
 				break
 	active_regions.clear()
-	deferring_handle_tilemaps = false
+	_deferring_handle_tilemaps = false
 
 func caculate_active_regions(position:Vector2):
 	var loader_coords = world_to_level_coords(position)
@@ -248,9 +254,9 @@ func caculate_active_regions(position:Vector2):
 		var grid_position = loader_coords + coord
 		if !active_regions.has(grid_position):
 			active_regions.append(grid_position)
-		if !deferring_handle_tilemaps:
+		if !_deferring_handle_tilemaps:
 			call_deferred("handle_tilemaps")
-			deferring_handle_tilemaps = true
+			_deferring_handle_tilemaps = true
 
 
 func create_tilemap():
@@ -290,7 +296,7 @@ func unload_level():
 	clear_tilemaps(loose_tilemaps)
 	clear_tilemaps(static_tilemaps)
 	
-	deferring_handle_tilemaps = false
+	_deferring_handle_tilemaps = false
 	active_regions = []
 	#clear_chunks(loaded_chunks.keys())
 	pass

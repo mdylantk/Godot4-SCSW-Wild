@@ -3,45 +3,31 @@ class_name Game_Handler extends Node2D
 @export var state : Game_State 
 #todo, try to have this autoload instead of static ref. maybe use a auroload scrip only to get this ref
 #static var game : Game_Handler #todo change to game
-@export_file("*.tscn") var default_world_handler : \
-	String = "res://Data/Scenes/Handlers/World_Handler.tscn"
 @export_file("*.tscn") var default_player_handler : \
 	String = "res://Data/Scenes/Handlers/Player_Handler.tscn"
-
+	
+#note: this might not have signals, but instead link all the handler signals
+#here or something similar
 signal event_update(event)
 
-#TODO: make this handle all game logic. whengame start to when game ends.
-#also handle start scene is an option if this do not need to be autoload
-#once ready, game logic start. most of it will listen to the other handler
-#but may need a game loop or something similar.
+##Core Handlers
 @onready var hud : Node = %HUD
 @onready var input : Node = %Input_Handler
-@onready var world : Node 
-#may use propagate_call or nothing since this control all so there little need
-#to connect to these
-#signal game_start() 
-#signal game_end()
+@onready var world : Node = %World_Handler
+@onready var server : Node = %Server_Handler
+
+
+
 func get_player_handler(index : int = 0):
+	#todo, if index -1, maybe get the owning player?
+	#NOTE: player_handler could also be a resource if nessary, but a node may be easier
 	if has_node("Player_Handler"+str(index)):
 		return get_node("Player_Handler"+str(index))
 	else:
 		return null
-	#todo: add logic for other player handlers
-
-func get_world_handler():
-	if world != null:
-		return world
-	else:
-		return load_world_handler()
-
+ 
 func get_seed() -> int :
 	return state.random_seed
-
-func load_world_handler():
-	if !has_node("World_Handler"):
-		world = load(default_world_handler).instantiate()
-		add_child(world)
-		return world
 		
 func load_player_handler(index : int = 0):
 	if !has_node("Player_Handler"+str(index)):
@@ -72,17 +58,18 @@ func get_player_handler_index(player):
 func change_level(level, handler):
 	world.change_level(level,handler)
 	hud.loading = true
-	
+
+#client side for the most part. just need to have events trigger in it rep if nessary
 func start_dialog(dialog_data):
 	hud.gui_dialog.open_dialog(dialog_data)
 
+#client side, but server should be able to send messages
 func send_notifcation(message : String):
 	hud.gui_notify.add_notify_message("[center]"+message)
 
+#client side, but what call it may or may not need rep
 func allow_input(use_input:bool = true):
 	input.enable_input = use_input
-### end of General game events ###
-
 
 
 func print_copyright():
@@ -91,7 +78,6 @@ func print_copyright():
 	print(Engine.get_license_text())
 
 func _ready():
-	load_world_handler()
 	load_player_handler()
 #	event_update.connect(on_event_update)
 	
@@ -104,23 +90,21 @@ func _ready():
 		randomize()
 		state.random_seed = randi()
 	seed(state.random_seed)
-	get_world_handler().level_data.seed_maps(get_seed())
+	world.level_data.seed_maps(get_seed())
+	
+	start_game.rpc()
 	#TODO: learn how to seed properly so same seed will generate same world
 
-#todo: add func for states for loading up a game so things comunicate better
-#akso decide if game handle could change or a game mode object will be used
-func on_mode_selection():
-	#when the game starts or ends, this would call the logic for setting up
-	#the main menu and unloading everything else if there was a game loaded
+
+@rpc("any_peer","call_local")
+func start_game():
+	#the idea is there at least a main menu in the future
+	#start game would init the world. before that there may be game
+	#config or waiting for players
+	#for testing, player may start game as a host but can join someone elses
+	#game. just need a way to end the host status 
 	pass
-func on_game_start():
-	#load player
-	#prep the spawn map(bare min gen)
-	#spawn pawn in spawn map
-	#finish spawn map gen and any
-	#give control to player and show screen
-	pass
-func on_game_end():
+func end_game():
 	#basicly just make sure every system calls an unload
 	#and then either shut down or go to mode_selection
 	pass

@@ -1,10 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://dvaxx0ke0p27m"]
+[gd_scene load_steps=9 format=3 uid="uid://dvaxx0ke0p27m"]
 
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/Game_State.gd" id="2_bcmum"]
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/AI_Handler.gd" id="3_8kfs5"]
 [ext_resource type="PackedScene" uid="uid://cc1hxktnb4a1k" path="res://Data/Scenes/Handlers/HUD.tscn" id="3_fqxm8"]
 [ext_resource type="Script" path="res://Data/Scripts/Game/Input_Handler.gd" id="4_sv0uv"]
+[ext_resource type="PackedScene" uid="uid://b0xxl3pylly7j" path="res://Data/Scenes/Handlers/World_Handler.tscn" id="6_icgy6"]
+[ext_resource type="Script" path="res://Data/Scenes/Handlers/Server_Handler.gd" id="7_clhfr"]
 
 [sub_resource type="Resource" id="Resource_vn004"]
 resource_local_to_scene = true
@@ -24,5 +26,12 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 script = ExtResource("4_sv0uv")
 
+[node name="World_Handler" parent="." instance=ExtResource("6_icgy6")]
+unique_name_in_owner = true
+
 [node name="AI_Handler" type="Node2D" parent="."]
 script = ExtResource("3_8kfs5")
+
+[node name="Server_Handler" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("7_clhfr")

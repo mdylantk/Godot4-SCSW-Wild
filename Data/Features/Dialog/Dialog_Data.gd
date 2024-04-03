@@ -62,6 +62,9 @@ func start_dialog(speaker, target, handler):
 		current_target = target
 		state = 1
 		start.emit()
+		#poor way to update, but this system still need to be reworked
+		if current_handler.state.fetch("visited_"+str(id)) != null:
+			visited = current_handler.state.fetch("visited_"+str(id))
 		return true
 	#should return false if failed
 	return false
@@ -113,7 +116,8 @@ func get_text(index = 0): #index is ignored if default and random. also invald m
 			visited = true
 			if save_visited_flag and current_handler != null:
 				#need to store the handler here
-				current_handler.set_player_meta("visited_"+str(id), true)
+				current_handler.state.store("visited_"+str(id),true)
+				#current_handler.set_player_meta("visited_"+str(id), true)
 				#Global.get_player_handler().state.metadata["visited_"+str(id)] = true
 	index += 1
 	return text

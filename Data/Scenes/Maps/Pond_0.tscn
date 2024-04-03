@@ -17,8 +17,6 @@ position = Vector2(120, 296)
 
 [node name="Fish2" parent="." instance=ExtResource("3_bt76n")]
 position = Vector2(368, 208)
-rare_catch = false
 
 [node name="Fish3" parent="." instance=ExtResource("3_bt76n")]
 position = Vector2(192, 48)
-rare_catch = false

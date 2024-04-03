@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b0xxl3pylly7j"]
+[gd_scene load_steps=15 format=3 uid="uid://b0xxl3pylly7j"]
 
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/World_Handler.gd" id="1_57p0l"]
 [ext_resource type="Resource" uid="uid://f4gufwtv0l5v" path="res://Data/Resources/Test_Level.tres" id="2_0xnf0"]
@@ -13,7 +13,6 @@
 [ext_resource type="AudioStream" uid="uid://bcm7ee14ix88r" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 9.mp3" id="11_crr7e"]
 [ext_resource type="AudioStream" uid="uid://0kyoc42y1pj5" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 10.mp3" id="12_pmo23"]
 [ext_resource type="Script" path="res://Data/Scenes/Handlers/RepeatAudioStreamPlayer.gd" id="13_1fnd3"]
-[ext_resource type="PackedScene" uid="uid://j2bupahyhori" path="res://Data/Scenes/NewTestMap.tscn" id="14_0o30l"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_e4ey0"]
 playback_mode = 1
@@ -53,9 +52,6 @@ pitch_scale = 0.75
 autoplay = true
 mix_target = 1
 script = ExtResource("13_1fnd3")
-
-[node name="NewTestMap" parent="." instance=ExtResource("14_0o30l")]
-position = Vector2(26, 20.5)
 
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
 [connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]

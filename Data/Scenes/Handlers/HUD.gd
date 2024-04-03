@@ -30,11 +30,15 @@ signal gui_update(element)
 
 #may not be the best, but exposing these so they can be called directly instead of having to look them up
 #should only be for more static gui types
-@onready var gui_notify = %Notify
-@onready var gui_score = %Score
-@onready var gui_dialog = %Dialog
+@onready var gui_notify := %Notify
+@onready var gui_score := %Score
+@onready var gui_dialog := %Dialog
 
-@onready var fishing_game = %FishingPondMap
+@onready var fishing_game := %FishingPondMap
+
+@onready var debug : Label = %Debug
+@export var enable_debug : bool = true
+
 
 var player_handler : Player_Handler
 
@@ -44,6 +48,9 @@ var player_handler : Player_Handler
 	#pass
 
 func _process(_delta):
+	var camera_global_position : Vector2
+	if get_viewport().get_camera_2d() != null:
+		camera_global_position = get_viewport().get_camera_2d().global_position
 	if !Engine.is_editor_hint():
 		if player_handler == null :
 			return
@@ -84,14 +91,17 @@ func _process(_delta):
 			#but then there need signals or direct calls to set that and world loading
 			#not as simple
 			#NOTE: by checking four corner point, boader loading cases could be solved
+			
 			loading = not (
-				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(320,320)) and
-				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(-320,320)) and
-				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(320,-320)) and
-				Game.world.is_chunk_loaded(player_pawn.global_position + Vector2(-320,-320))
+				Game.world.is_chunk_loaded(camera_global_position + Vector2(320,320)) and
+				Game.world.is_chunk_loaded(camera_global_position + Vector2(-320,320)) and
+				Game.world.is_chunk_loaded(camera_global_position + Vector2(320,-320)) and
+				Game.world.is_chunk_loaded(camera_global_position + Vector2(-320,-320))
 				)
+		if enable_debug:
+			debug.text = str(camera_global_position)
+			#debug.get_canvas_transform().affine_inverse() * debug.get_screen_position()
 		
-
 #func loading(is_loading):
 	#await get_tree().create_timer(1).timeout #A delay so things can finish up. currrenty need to be appled difftrently or not used
 #	$LoadingScreen.visible = is_loading

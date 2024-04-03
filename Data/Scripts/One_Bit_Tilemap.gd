@@ -39,11 +39,12 @@ var empty_tiles : Array[Vector2] #if an array is provided, will skip the generat
 #@export var generate_foliage_editor : bool = false #it be better to clear or regen the loaded chunks
 @export var allow_foliage_generation : bool = true
 
-@export var detail_map: FastNoiseLite
-@export var variation_map : FastNoiseLite
-@export var random_noise : FastNoiseLite
+@export var detail_map: FastNoiseLite = FastNoiseLite.new()
+@export var variation_map : FastNoiseLite = FastNoiseLite.new()
+@export var random_noise : FastNoiseLite = FastNoiseLite.new()
 @export_file("*.tscn") var background = "uid://wqfpqmmkbg0n"
 
+@export var foilage_generator : Generator_Data = load("uid://c7267jk27323m")#Foilage_Generator.new()
 #tile_size should be a const someplace or maybe the timeset can get a min size
 var tile_size : float = 16
 @onready var region_test = Region_Data.new()
@@ -191,15 +192,18 @@ func _ready():
 		#a global/world set of noise would be used for making regions
 		random_noise = FastNoiseLite.new()
 		
-	if (background != null):
-		var loaded_ref = load(background)
-		var loaded_backround = loaded_ref.instantiate()
-		add_child(loaded_backround)
+#	if (background != null):
+#		var loaded_ref = load(background)
+#		var loaded_backround = loaded_ref.instantiate()
+#		add_child(loaded_backround)
 		#loaded_backround.size = bounds*(16.5)
-		loaded_backround.size = Vector2(chunk_size,chunk_size)*tile_size
+#		loaded_backround.size = Vector2(chunk_size,chunk_size)*tile_size
 	
 	#visible = false
-	new_gen()
+	
+	foilage_generator.generate(self)
+	
+	#new_gen()
 	return
 
 func recaculate_empty_tiles(enable_generation: bool = true):
