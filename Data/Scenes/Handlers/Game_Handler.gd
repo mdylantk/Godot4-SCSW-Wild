@@ -90,7 +90,17 @@ func _ready():
 		randomize()
 		state.random_seed = randi()
 	seed(state.random_seed)
-	world.level_data.seed_maps(get_seed())
+	#world.level_data.seed_maps(get_seed())
+	#TODO: have a handler for semi static resource
+	#and update the seeds from a save state
+	#TODO: the world probably should handle this
+	#or a resource manager
+	var detail_map = load("uid://087vceuyr40g")
+	var height_map = load("uid://te65swlvsp53")
+	var variation_map = load("uid://cp0b4i2m77i8m")
+	detail_map.seed = state.random_seed
+	height_map.seed = state.random_seed
+	variation_map.seed = state.random_seed
 	
 	start_game.rpc()
 	#TODO: learn how to seed properly so same seed will generate same world

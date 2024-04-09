@@ -20,4 +20,3 @@ func unload_level():
 	level_removed.emit(loaded_scene)
 	loaded_scene.call_deferred("queue_free")
 	#loaded_scene = null
-	

@@ -4,34 +4,7 @@ class_name Level_Data_2D extends Level_Data
 
 @export var use_game_seed: bool = true
 
-#Noise should be related to level which basicly world data
-#also should decide how to seed them. could base it on world seed +- an offset
-#or have it fixed and have the seed editable. if world noise map, could use a save object, just need to
-#seed it game start.
 @export var generators : Array[Generator_Data]
-@export var tempture_map : Noise
-@export var humidity_map : Noise
-#detail is ment to be for if a feature spawn or it empty space/unchanged. 
-@export var detail_map : Noise
-#variation is for picking the variation of a tile.
-@export var variation_map : Noise
-@export var height_map : Noise = FastNoiseLite.new()
-#note: a way to handle random chunks are still needed. currently usong array[0] inless 10% chance
-#is rolled...then a random array between 0-max is picked
-
-#should be ref by id and loaded in via regions else if small then just need an object to get the data from
-#@export var old_static_chunks : Dictionary = { 
-	#Vector2(0,0):"uid://blyxjt47otoln", 
-	#Vector2(4,8):"uid://clicnkneu0ddm",
-	#Vector2(7,-2):"uid://bngicde5fixcp",
-	#Vector2(-4,5):"uid://cyg3wosoq0787",
-	#Vector2(-9,-6):"uid://t7rhh625brgr",
-	#Vector2(-3,0):"uid://duqgklvehxux0",
-	#Vector2(0,11):"uid://bbaafkh4f04vx",
-	#Vector2(0,-21):"uid://t7rhh625brgr",
-	#Vector2(42,0):"uid://clicnkneu0ddm"
-	#}
-
 
 @export var chunks : Array[Chunk_Data] :
 	set(value):
@@ -55,9 +28,9 @@ func update_static_regions():
 @export var tile_set : TileSet = preload("res://Data/Assets/low_Bit_Tileset.tres")
 
 var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
-var chunk_size : float = Region_Data.chunk_size
-var region_size : float = Region_Data.chunk_size*Region_Data.region_size
-var chunk_distance : float = tile_size*(region_size)
+var chunk_size : float = 8
+var region_size : float = 8
+var chunk_distance : float = tile_size*chunk_size*region_size
 
 #currently loaded maps
 var loaded_tilemaps := {}
@@ -99,38 +72,19 @@ func get_level_property(name:String) -> Variant:
 		return level_id
 	return null
 
-###ONE BIT TILEMAP GENERATION CODE PEICES
-func pick_foliage_tile(pos):
-	var noise_value = round((height_map.get_noise_2d(pos.x,pos.y)+1)*5)
-	var water_value = round(height_map.get_noise_2d(pos.x,pos.y))
-	var variation_roll = randf()
-	var random_roll = randi() % 100
-	if detail_map != null and variation_map != null:
-		#NOTE: detail_map is the statement if there an object or not as well as pick the upper type
-		random_roll = (detail_map.get_noise_2d(pos.x*5,pos.y*5)+1)*50
-		#NOTE: variation_map is to decide what to pick form an array
-		variation_roll = (variation_map.get_noise_2d(pos.x*5,pos.y*5)+1)/2
-	
-	if water_value < 0:
-		return Vector2i(8,5)
-	elif grass_tiles.size() > 0 && random_roll >= 50: #60:
-		return grass_tiles[round((grass_tiles.size()-1)*variation_roll)]
-	elif rock_tiles.size() > 0 && random_roll < 10:
-		return rock_tiles[round((rock_tiles.size()-1)*variation_roll)]
-	elif tree_tiles.size() > 0 && random_roll < 45:
-		return tree_tiles[round((tree_tiles.size()-1)*variation_roll)]
-	else:
-		return Vector2i(0, 0)
-
-##ONE BIT TILEMAP CODE END
 
 ##temp fixes
 func load_static_tilemap(static_map:Node,coords:Vector2i):
 	static_tilemaps[coords] = static_map
-	level_created.emit(static_map)
 	static_map.transform[2] = level_coords_to_world(coords)
+	var processing_map = static_map as One_Bit_Tilemap
+	level_created.emit(static_map)
 	await Game.get_tree().create_timer(1).timeout
 	loaded_tilemaps[coords] = static_map
+	#loaded_tilemaps[coords] = static_map
+	#TODO add a way to check to see if tilemap is loaded
+	#could force add the foilage generator to it
+	#and ignore other generators
 ##temp fixes end
 
 func clear_tilemaps(tilemap_dictionary:Dictionary):
@@ -153,29 +107,15 @@ func get_static_map(location:Vector2)->Node:
 	#TODO: need to see if a random static chunk is picked
 	return null
 
-func tile_picker(tilemap:TileMap,coords:Vector2i):
-	var tile = pick_foliage_tile(coords)
-	#tilemap.call_deferred("set_cell",0,coords,0,tile)
-	tilemap.set_cell(0,coords,0,tile)
-
-func generate_tilemap(tilemap:TileMap, coords:Vector2i):
-	for region_x in range(Region_Data.region_size):
-		for region_y in range(Region_Data.region_size):
-			if self != null and tilemap != null:
-				for chunk_x in range(Region_Data.chunk_size):
-					for chunk_y in range(Region_Data.chunk_size):
-						tile_picker(tilemap,Vector2i(
-							chunk_x + region_x * Region_Data.chunk_size,
-							chunk_y + region_y * Region_Data.chunk_size
-						))
-			await Game.get_tree().process_frame
-	loaded_tilemaps[coords] = tilemap
-	processing_tilemaps.erase(coords)
-
 func is_tilemap_ready(coords:Vector2i) -> bool:
 	if processing_tilemaps.has(coords):
 		return false
 	else:
+		if static_tilemaps.has(coords):
+			#NOTE: this is to allow static map to handle themselves
+			var tilemap : Node = loaded_tilemaps[coords]
+			if tilemap.has_meta("is_ready"):
+				return tilemap.get_meta("is_ready", false)
 		#if return false, tilemap dose not exist
 		return dose_tilemap_exist(coords)
 
@@ -282,10 +222,6 @@ func level_coords_to_world(coords: Vector2i) -> Vector2 :
 	return coords * chunk_distance
 	#return Vector2i(coords.x, coords.y)
 
-#func get_level_scene(position:Vector2):
-#	return get_chunk(position)
-	#return null
-	
 func load_level():
 	if !generators[0].scene_finished.is_connected(on_generator_end):
 		generators[0].scene_finished.connect(on_generator_end)
@@ -307,44 +243,10 @@ func process_players(pawn:Node):
 		#loaded_point = grid_location
 		caculate_active_regions(pawn.global_position)
 
-
-
 ###WORLD Handler old logic###
-
-var world_seed : int = 0
-
 
 func is_level_loaded(location:Vector2)->bool:
 	var coords = world_to_level_coords(location)
 	return loaded_tilemaps.has(coords)
 	#return loaded_tilemaps.has(coords) or loose_tilemaps.has(coords)
 	
-	
-###world old logic END###
-
-
-
-
-
-func _init():
-	randomize_zero_seed(tempture_map)
-	randomize_zero_seed(humidity_map)
-	randomize_zero_seed(detail_map)
-	randomize_zero_seed(variation_map)
-
-func randomize_zero_seed(noise: Noise):
-	if (noise != null):
-		if noise.seed == 0:
-			noise.seed = randi()
-
-func seed_maps(new_seed : int):
-	if use_game_seed :
-		if (tempture_map != null):
-			tempture_map.seed = new_seed
-		if (humidity_map != null):
-			humidity_map.seed = new_seed
-		if (detail_map != null):
-			detail_map.seed = new_seed
-		if (variation_map != null):
-			variation_map.seed = new_seed
-
