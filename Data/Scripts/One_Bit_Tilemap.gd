@@ -2,6 +2,12 @@
 class_name One_Bit_Tilemap extends TileMap
 signal on_chunk_ready(pos)
 
+
+#TODO: do not depend on this much. use a node for foliage generation or use level_data
+#to do the generation. since the static levels are a scene, this may be best
+#OR make an extended tilemap that format the layers base on global config? so adding and 
+#removing wont be a problem.
+
 @export var foilage_generator : Generator_Data = load("uid://c7267jk27323m")#Foilage_Generator.new()
 
 func _ready():

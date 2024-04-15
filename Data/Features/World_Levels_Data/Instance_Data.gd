@@ -1,6 +1,6 @@
 class_name Instance_Data extends Level_Data
 
-@export_file("*.tscn") var instance_scene : String = "res://Data/Scenes/Maps/InstanceTest.tscn"
+@export_file("*.tscn") var instance_scene : String = "res://Data/Nodes/Maps/InstanceTest.tscn"
 
 var loaded_scene : Node
 var ref

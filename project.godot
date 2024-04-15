@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="Strange Cat Strange Wilderness"
-run/main_scene="res://Data/Scenes/Main.tscn"
+run/main_scene="res://Data/Nodes/Main.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Game="*res://Data/Scenes/Handlers/Game_Handler.tscn"
+Game="*res://Data/Nodes/Handlers/Game_Handler.tscn"
 
 [display]
 

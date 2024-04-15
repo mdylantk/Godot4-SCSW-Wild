@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Data/Scripts/Chunk_Data.gd" id="2_mt8cj"]
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="3_xeok1"]
-[ext_resource type="Script" path="res://Data/Scripts/Level_Data_2D.gd" id="12_jrb81"]
+[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/World_Data.gd" id="12_jrb81"]
 
 [sub_resource type="Resource" id="Resource_mhhvq"]
 script = ExtResource("2_mt8cj")
