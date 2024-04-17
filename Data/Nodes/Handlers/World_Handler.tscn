@@ -1,18 +1,41 @@
-[gd_scene load_steps=15 format=3 uid="uid://b0xxl3pylly7j"]
+[gd_scene load_steps=27 format=3 uid="uid://b0xxl3pylly7j"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/World_Handler.gd" id="1_57p0l"]
-[ext_resource type="Resource" uid="uid://f4gufwtv0l5v" path="res://Data/Resources/Test_Level.tres" id="2_0xnf0"]
+[ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Data/Resources/World_Foilage_Generator.tres" id="2_0ev21"]
+[ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Data/Resources/Noise_Maps/World_Detail_Map.tres" id="3_1oflu"]
 [ext_resource type="AudioStream" uid="uid://ga3pqt51dux3" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 1.mp3" id="3_upca4"]
 [ext_resource type="AudioStream" uid="uid://b6eeayby7fq4p" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 2.mp3" id="4_r6wfp"]
+[ext_resource type="PackedScene" uid="uid://clicnkneu0ddm" path="res://Data/Nodes/Maps/Pond_0.tscn" id="4_sws4f"]
+[ext_resource type="PackedScene" uid="uid://bngicde5fixcp" path="res://Data/Nodes/Maps/Pond_1.tscn" id="5_05llh"]
 [ext_resource type="AudioStream" uid="uid://k0jhnr8trpgr" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 3.mp3" id="5_rkk7v"]
+[ext_resource type="PackedScene" uid="uid://cyg3wosoq0787" path="res://Data/Nodes/Maps/Pond_2.tscn" id="6_j5kn5"]
 [ext_resource type="AudioStream" uid="uid://dok1au208bs1j" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 4.mp3" id="6_kgx67"]
+[ext_resource type="PackedScene" uid="uid://t7rhh625brgr" path="res://Data/Nodes/Maps/Pond_3.tscn" id="7_c6m2f"]
 [ext_resource type="AudioStream" uid="uid://lcwxmi2k5ic7" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 5.mp3" id="7_dofiv"]
 [ext_resource type="AudioStream" uid="uid://dmgjw0wuov2qr" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 6.mp3" id="8_317sp"]
+[ext_resource type="PackedScene" uid="uid://duqgklvehxux0" path="res://Data/Nodes/Maps/Pond_4.tscn" id="8_tw7nv"]
 [ext_resource type="AudioStream" uid="uid://kdb5nhomh7s6" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 7.mp3" id="9_7f8sb"]
+[ext_resource type="PackedScene" uid="uid://bbaafkh4f04vx" path="res://Data/Nodes/Maps/Pond_5.tscn" id="9_pf86h"]
 [ext_resource type="AudioStream" uid="uid://k24j3aokcmwp" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 8.mp3" id="10_vjxi8"]
+[ext_resource type="PackedScene" uid="uid://m6q0b4c1q5f6" path="res://Data/Nodes/Maps/RareTemplate.tscn" id="10_x3uiq"]
 [ext_resource type="AudioStream" uid="uid://bcm7ee14ix88r" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 9.mp3" id="11_crr7e"]
+[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/World_Data.gd" id="11_xq2xk"]
+[ext_resource type="PackedScene" uid="uid://blyxjt47otoln" path="res://Data/Nodes/Maps/Tilemap0.tscn" id="12_pgjdx"]
 [ext_resource type="AudioStream" uid="uid://0kyoc42y1pj5" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 10.mp3" id="12_pmo23"]
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/RepeatAudioStreamPlayer.gd" id="13_1fnd3"]
+[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="13_dd4qs"]
+
+[sub_resource type="Resource" id="Resource_d214b"]
+script = ExtResource("11_xq2xk")
+level_id = "world"
+use_game_seed = true
+generators = Array[Resource("res://Data/Features/World_Levels_Data/Generator_Data.gd")]([ExtResource("2_0ev21")])
+static_chunks = {
+Vector2(0, 0): ExtResource("12_pgjdx")
+}
+random_chunks = Array[PackedScene]([ExtResource("4_sws4f"), ExtResource("5_05llh"), ExtResource("6_j5kn5"), ExtResource("7_c6m2f"), ExtResource("8_tw7nv"), ExtResource("9_pf86h"), ExtResource("10_x3uiq")])
+random_chunk_noise_map = ExtResource("3_1oflu")
+tile_set = ExtResource("13_dd4qs")
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_e4ey0"]
 playback_mode = 1
@@ -43,7 +66,7 @@ stream_9/weight = 1.0
 y_sort_enabled = true
 script = ExtResource("1_57p0l")
 world_seed = 1401584422
-level_data = ExtResource("2_0xnf0")
+level_data = SubResource("Resource_d214b")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_e4ey0")

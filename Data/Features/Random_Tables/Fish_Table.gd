@@ -14,7 +14,7 @@ func _init():
 			"Barb"
 		]
 		))
-		table.append(Weighted_Group_Resource.new("uncommon",90,
+		table.append(Weighted_Group_Resource.new("uncommon",75,
 		[
 			"Koi",
 			"Bass",

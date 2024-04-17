@@ -1,31 +1,47 @@
 class_name World_Data extends Level_Data
 
+##An identifier for use when saving data like last position.
 @export var level_id := "world"
 
 @export var use_game_seed: bool = true
 
+#TODO: make it so it will use all the generator instead of [0]
+#this would require data passs/return instead of setting directly
+##Tile generator to run on nonstatic tilemaps.
 @export var generators : Array[Generator_Data]
 
-@export var chunks : Array[Chunk_Data] :
-	set(value):
-		chunks = value
-		update_static_regions()
+#TODO: rename static maps to World_name(x,y) or region_name(x,y) and store them
+#in a folder representing the world. or map(x,y) works too. only issue is that
+#the coords means nothing. they are just for organiztion reason. also if using region_name
+#the cords will represent the chunk pos within the region, not world. still only useful
+#for orgaition. wouild be nice to load in regions, but that will over complex the system
+#better to have a tooling system where regions can be edited and the maps in the region
+#get exported to the world_Data. there local position down scale to grib pos off set by
+#the region position located in the map world.
 
 #TODO add a region size/bound option to allow generation upto a certain size
 
-var static_chunks := {}
-var random_chunks := []
+##Scenes to load at region positions. 
+##Entries should be Vector2:Object where Object should be a PackedScene
+@export var static_chunks : Dictionary
+
+##Scenes that will spawn randomly in the world.
+@export var random_chunks : Array[PackedScene]
+
+##A noise to represent where the scenes will spawn.
+##Noise should have decent range of grays and should be noisy else they will spawn in clusters.
+@export var random_chunk_noise_map : FastNoiseLite = FastNoiseLite.new()
+
+##The Tileset to use for nonstatic tilemaps
+@export var tile_set : TileSet = preload("res://Data/Assets/low_Bit_Tileset.tres")
 
 func update_static_regions():
-	static_chunks = {}
-	random_chunks = []
-	for chunk:Chunk_Data in chunks:
-		if chunk.is_static_chunk:
-			static_chunks[chunk.static_location] = chunk.chunk_scene_path
-		else:
-			random_chunks.append(chunk.chunk_scene_path)
+	for key in static_chunks:
+		if typeof(key) != TYPE_VECTOR2 or !(static_chunks[key] is PackedScene):
+			print_debug("Warning, static_chunks should be Vector2:PackScene")
+	return
 
-@export var tile_set : TileSet = preload("res://Data/Assets/low_Bit_Tileset.tres")
+
 
 var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 var chunk_size : float = 8
@@ -56,13 +72,13 @@ var near_by_coords :Array[Vector2i] =[
 		Vector2(1,1),Vector2(0,1), Vector2(1,0)
 	]
 	
-@export var grass_tiles : Array[Vector2i] = [Vector2i(5,0),Vector2i(6,0),
-	Vector2i(7,0),Vector2i(0,2),Vector2i(0,0)]
-@export var tree_tiles : Array[Vector2i] = [Vector2i(0,1),Vector2i(1,1),
-	Vector2i(2,1),Vector2i(3,1),Vector2i(4,1),Vector2i(5,1),Vector2i(3,2),
-	Vector2i(4,2),Vector2i(6,2),Vector2i(0,0)]
-@export var rock_tiles : Array[Vector2i] = [Vector2i(5,2),Vector2i(1,0),
-	Vector2i(2,0),Vector2i(3,0),Vector2i(4,0),Vector2i(0,0)]
+#@export var grass_tiles : Array[Vector2i] = [Vector2i(5,0),Vector2i(6,0),
+#	Vector2i(7,0),Vector2i(0,2),Vector2i(0,0)]
+#@export var tree_tiles : Array[Vector2i] = [Vector2i(0,1),Vector2i(1,1),
+#	Vector2i(2,1),Vector2i(3,1),Vector2i(4,1),Vector2i(5,1),Vector2i(3,2),
+#	Vector2i(4,2),Vector2i(6,2),Vector2i(0,0)]
+#@export var rock_tiles : Array[Vector2i] = [Vector2i(5,2),Vector2i(1,0),
+#	Vector2i(2,0),Vector2i(3,0),Vector2i(4,0),Vector2i(0,0)]
 
 #TODO: So far added a way to handle and load tilemap to replace the old system
 #just need to move the generation logic over here
@@ -73,7 +89,7 @@ func get_level_property(name:String) -> Variant:
 	return null
 
 
-##temp fixes
+#temp fixes
 func load_static_tilemap(static_map:Node,coords:Vector2i):
 	static_tilemaps[coords] = static_map
 	static_map.transform[2] = level_coords_to_world(coords)
@@ -85,7 +101,7 @@ func load_static_tilemap(static_map:Node,coords:Vector2i):
 	#TODO add a way to check to see if tilemap is loaded
 	#could force add the foilage generator to it
 	#and ignore other generators
-##temp fixes end
+#temp fixes end
 
 func clear_tilemaps(tilemap_dictionary:Dictionary):
 	for coords in tilemap_dictionary.keys():
@@ -102,8 +118,21 @@ func get_static_map(location:Vector2)->Node:
 	var coords := world_to_level_coords(location) as Vector2
 	#TODO: may need to convert the static chunks as vector2i instead of vector2
 	if static_chunks.has(coords):
-		print(location)
-		return load(static_chunks[coords]).instantiate()
+		return static_chunks[coords].instantiate()
+	elif random_chunks.size() > 0:
+		#currently a 40% chance? to spawn an instance
+		#but the chance really depends on the noise map contrast. need lots of 
+		#various grays. random noise too, not blobs
+		var noise_value = random_chunk_noise_map.get_noise_2d(coords.x,coords.y)
+		noise_value += 1
+		noise_value *= random_chunks.size()/2
+		var min =floor(noise_value)
+		var max =ceil(noise_value)
+		var portion = noise_value - min
+		if portion <= 0.2:
+			return random_chunks[min].instantiate()
+		elif portion >= 0.8:
+			return random_chunks[max].instantiate()
 	#TODO: need to see if a random static chunk is picked
 	return null
 
@@ -243,7 +272,7 @@ func process_players(pawn:Node):
 		#loaded_point = grid_location
 		caculate_active_regions(pawn.global_position)
 
-###WORLD Handler old logic###
+#WORLD Handler old logic
 
 func is_level_loaded(location:Vector2)->bool:
 	var coords = world_to_level_coords(location)

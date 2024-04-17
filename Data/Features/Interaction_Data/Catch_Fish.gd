@@ -36,8 +36,10 @@ func _start():
 			if type["pick"] == "":
 				break
 			if type["rarity"] >= 3: 
-				layer = 2
+				layer = 3
 				move_rate = randf_range(.5,1)
+			else:
+				layer = type["rarity"]
 			fish_game.add_fish(picked_coords, fish_game.default_fish_atlas_coords, layer,
 				{"move_rate":move_rate,"type":type}
 			)

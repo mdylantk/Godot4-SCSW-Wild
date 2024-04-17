@@ -1,20 +1,42 @@
-[gd_scene load_steps=10 format=3 uid="uid://hepasgr3svoi"]
+[gd_scene load_steps=21 format=3 uid="uid://hepasgr3svoi"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_2euby"]
 [ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Nodes/Actors/Interactive_Body2d.tscn" id="3_t1j1n"]
-[ext_resource type="Resource" uid="uid://f4gufwtv0l5v" path="res://Data/Resources/Test_Level.tres" id="4_m356f"]
+[ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Data/Resources/World_Foilage_Generator.tres" id="5_hdokn"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="5_yn1wo"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="6_6bm1f"]
+[ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Data/Resources/Noise_Maps/World_Detail_Map.tres" id="6_7fylv"]
 [ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Nodes/Components/Interactive_Component.tscn" id="7_6a252"]
+[ext_resource type="PackedScene" uid="uid://clicnkneu0ddm" path="res://Data/Nodes/Maps/Pond_0.tscn" id="7_j0vpa"]
+[ext_resource type="PackedScene" uid="uid://bngicde5fixcp" path="res://Data/Nodes/Maps/Pond_1.tscn" id="8_y1mhm"]
+[ext_resource type="PackedScene" uid="uid://cyg3wosoq0787" path="res://Data/Nodes/Maps/Pond_2.tscn" id="9_h0b1x"]
+[ext_resource type="PackedScene" uid="uid://t7rhh625brgr" path="res://Data/Nodes/Maps/Pond_3.tscn" id="10_skecx"]
+[ext_resource type="PackedScene" uid="uid://duqgklvehxux0" path="res://Data/Nodes/Maps/Pond_4.tscn" id="11_fhupt"]
+[ext_resource type="PackedScene" uid="uid://bbaafkh4f04vx" path="res://Data/Nodes/Maps/Pond_5.tscn" id="12_vyti7"]
+[ext_resource type="PackedScene" uid="uid://m6q0b4c1q5f6" path="res://Data/Nodes/Maps/RareTemplate.tscn" id="13_fkggh"]
+[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/World_Data.gd" id="14_u5xtl"]
+[ext_resource type="PackedScene" uid="uid://blyxjt47otoln" path="res://Data/Nodes/Maps/Tilemap0.tscn" id="15_xqf2h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2oobe"]
 atlas = ExtResource("6_6bm1f")
 region = Rect2(136, 170, 16, 16)
 
-[sub_resource type="Resource" id="Resource_u0u6k"]
+[sub_resource type="Resource" id="Resource_d214b"]
+script = ExtResource("14_u5xtl")
+level_id = "world"
+use_game_seed = true
+generators = Array[Resource("res://Data/Features/World_Levels_Data/Generator_Data.gd")]([ExtResource("5_hdokn")])
+static_chunks = {
+Vector2(0, 0): ExtResource("15_xqf2h")
+}
+random_chunks = Array[PackedScene]([ExtResource("7_j0vpa"), ExtResource("8_y1mhm"), ExtResource("9_h0b1x"), ExtResource("10_skecx"), ExtResource("11_fhupt"), ExtResource("12_vyti7"), ExtResource("13_fkggh")])
+random_chunk_noise_map = ExtResource("6_7fylv")
+tile_set = ExtResource("1_2euby")
+
+[sub_resource type="Resource" id="Resource_o5l3s"]
 resource_local_to_scene = true
 script = ExtResource("5_yn1wo")
-level_data = ExtResource("4_m356f")
+level_data = SubResource("Resource_d214b")
 spawn_location = Vector2(0, 0)
 store_entry_point = false
 entry_point_id = "world"
@@ -38,7 +60,7 @@ position = Vector2(376, 152)
 texture = SubResource("AtlasTexture_2oobe")
 
 [node name="Interact_Component" parent="Sprite_Object" instance=ExtResource("7_6a252")]
-interactive_data = SubResource("Resource_u0u6k")
+interactive_data = SubResource("Resource_o5l3s")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite_Object/Interact_Component"]
 shape = SubResource("RectangleShape2D_yq7oe")
