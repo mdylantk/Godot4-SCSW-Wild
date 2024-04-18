@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://bbaafkh4f04vx" path="res://Data/Nodes/Maps/Pond_5.tscn" id="12_vyti7"]
 [ext_resource type="PackedScene" uid="uid://m6q0b4c1q5f6" path="res://Data/Nodes/Maps/RareTemplate.tscn" id="13_fkggh"]
 [ext_resource type="Script" path="res://Data/Features/World_Levels_Data/World_Data.gd" id="14_u5xtl"]
-[ext_resource type="PackedScene" uid="uid://blyxjt47otoln" path="res://Data/Nodes/Maps/Tilemap0.tscn" id="15_xqf2h"]
+[ext_resource type="PackedScene" uid="uid://blyxjt47otoln" path="res://Data/Nodes/Maps/Wilderness_World/Spawn_x0_y0.tscn" id="15_xqf2h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2oobe"]
 atlas = ExtResource("6_6bm1f")
@@ -33,7 +33,7 @@ random_chunks = Array[PackedScene]([ExtResource("7_j0vpa"), ExtResource("8_y1mhm
 random_chunk_noise_map = ExtResource("6_7fylv")
 tile_set = ExtResource("1_2euby")
 
-[sub_resource type="Resource" id="Resource_o5l3s"]
+[sub_resource type="Resource" id="Resource_3dxxr"]
 resource_local_to_scene = true
 script = ExtResource("5_yn1wo")
 level_data = SubResource("Resource_d214b")
@@ -60,7 +60,7 @@ position = Vector2(376, 152)
 texture = SubResource("AtlasTexture_2oobe")
 
 [node name="Interact_Component" parent="Sprite_Object" instance=ExtResource("7_6a252")]
-interactive_data = SubResource("Resource_o5l3s")
+interactive_data = SubResource("Resource_3dxxr")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite_Object/Interact_Component"]
 shape = SubResource("RectangleShape2D_yq7oe")

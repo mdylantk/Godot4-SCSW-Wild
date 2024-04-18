@@ -45,6 +45,8 @@ func load_player_handler(index : int = 0):
 			#would require Game.HUD to call gui events like notify
 			hud.player_handler = player
 			input.player_handler = player
+			player.state.data_changed.connect(hud.on_player_state_change)
+			hud.handler_setup(player)
 		return player
 
 #a way to get play index without storing it in a var

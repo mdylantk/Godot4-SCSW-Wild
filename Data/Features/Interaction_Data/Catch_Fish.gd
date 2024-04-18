@@ -67,18 +67,25 @@ func add_fish(fish_data:Dictionary):
 		var remaning_amount = Item_Events.acquire_item(interactor,fish_item,handler,"Caught")
 		#TODO: need a way to log caught fish. this just statisitic like
 		#number caught, biggest and smallest size caught, and such
+		
 		if fish_data["type"]["rarity"] < 3:
-			var total_fish_caught = handler.state.fetch("total_common_fish_caught")
-			if total_fish_caught != null:
-				handler.state.store("total_common_fish_caught", total_fish_caught + 1)
-			else:
-				handler.state.store("total_common_fish_caught", 1)
+			#var total_fish_caught = handler.state.fetch("total_common_fish_caught")
+			var total_fish_caught = Savedata_Helper.fetch_player_score(handler,"common_fish_caught")
+			
+			#if total_fish_caught != null:
+			#	handler.state.store("total_common_fish_caught", total_fish_caught + 1)
+			#else:
+			#	handler.state.store("total_common_fish_caught", 1)
+			Savedata_Helper.store_player_score(handler, total_fish_caught + 1, "common_fish_caught")
+			
 		else:
-			var total_rare_fish_caught = handler.state.fetch("total_rare_fish_caught")
-			if total_rare_fish_caught != null:
-				handler.state.store("total_rare_fish_caught", total_rare_fish_caught + 1)
-			else:
-				handler.state.store("total_rare_fish_caught", 1)
+			#var total_rare_fish_caught = handler.state.fetch("total_rare_fish_caught")
+			var total_rare_fish_caught = Savedata_Helper.fetch_player_score(handler,"rare_fish_caught")
+			#if total_rare_fish_caught != null:
+			#	handler.state.store("total_rare_fish_caught", total_rare_fish_caught + 1)
+			#else:
+			#	handler.state.store("total_rare_fish_caught", 1)
+			Savedata_Helper.store_player_score(handler, total_rare_fish_caught + 1, "rare_fish_caught")
 		
 		#protype fishlog
 		#Note: the proper system would use a log resource of fish resource
@@ -88,6 +95,8 @@ func add_fish(fish_data:Dictionary):
 		#print_debug(handler.state.data)
 
 func log_fish(handler, name, rarity, new_fish_data):
+	#TODO: change or remove this. this is a prototype log.
+	#should add a statistics system
 	var fish_data = handler.state.fetch(name, "fish_log_"+str(rarity))
 	if fish_data == null:
 		handler.state.store(name,new_fish_data, "fish_log_"+str(rarity))

@@ -142,9 +142,10 @@ func is_tilemap_ready(coords:Vector2i) -> bool:
 	else:
 		if static_tilemaps.has(coords):
 			#NOTE: this is to allow static map to handle themselves
-			var tilemap : Node = loaded_tilemaps[coords]
-			if tilemap.has_meta("is_ready"):
-				return tilemap.get_meta("is_ready", false)
+			var tilemap : Node = static_tilemaps[coords]
+			return Metadata_Helper.get_is_ready(tilemap)
+			#if tilemap.has_meta("is_ready"):
+			#	return tilemap.get_meta("is_ready", false)
 		#if return false, tilemap dose not exist
 		return dose_tilemap_exist(coords)
 
@@ -276,6 +277,7 @@ func process_players(pawn:Node):
 
 func is_level_loaded(location:Vector2)->bool:
 	var coords = world_to_level_coords(location)
-	return loaded_tilemaps.has(coords)
+	return is_tilemap_ready(coords)
+	#return loaded_tilemaps.has(coords)
 	#return loaded_tilemaps.has(coords) or loose_tilemaps.has(coords)
 	

@@ -47,6 +47,30 @@ var player_handler : Player_Handler
 #func _ready():
 	#pass
 
+func handler_setup(handler):
+	var common_fish_count = Savedata_Helper.fetch_player_score(handler,"common_fish_caught")
+	var rare_fish_count = Savedata_Helper.fetch_player_score(handler,"rare_fish_caught")
+	if common_fish_count > 0:
+		%Score.score_data["Common"] = common_fish_count
+	if rare_fish_count > 0:
+		%Score.score_data["Rare"] = rare_fish_count
+	%Score.update_data()
+
+func on_player_state_change(source, id, old_value, new_value, group):
+	if old_value == new_value:
+		#NOTE: need a way to know of changes if state is loaded or have
+		#predetermin values. could grab from player
+		return
+	if group == "scores":
+		if id == "common_fish_caught":
+			if new_value > 0:
+				%Score.score_data["Common"] = new_value
+				%Score.update_data()
+		elif id == "rare_fish_caught":
+			if new_value > 0:
+				%Score.score_data["Rare"] = new_value
+				%Score.update_data()
+
 func _process(_delta):
 	var camera_global_position : Vector2
 	if get_viewport().get_camera_2d() != null:
@@ -60,16 +84,22 @@ func _process(_delta):
 		if player_handler.state != null:
 			var player_state = player_handler.state
 		#may need a dict for score in playerstate or a function that can fetch it
-			var fish_count = player_state.fetch("total_common_fish_caught")
-			var rare_fish_count = player_state.fetch("total_rare_fish_caught")
-			if fish_count == null: fish_count = 0
-			if rare_fish_count == null: rare_fish_count = 0
-			if fish_count == 0 and rare_fish_count == 0:
-				%Score.update_data()
-			elif fish_count > 0 or rare_fish_count > 0:
+			#var fish_count = player_state.fetch("total_common_fish_caught")
+			#var rare_fish_count = player_state.fetch("total_rare_fish_caught")
+			#TODO: need to have this use player handler or have the player handler
+			#notify this of score changes. could listen for the id or all and then
+			#filter it by type then id kind of like a getter/setter.
+			if false:#old system switch
+				var fish_count = player_state.fetch("common_fish_caught","scores")
+				var rare_fish_count = player_state.fetch("rare_fish_caught","scores")
 				if fish_count == null: fish_count = 0
 				if rare_fish_count == null: rare_fish_count = 0
-				%Score.update_data({"Common":fish_count,"Rare":rare_fish_count})
+				if fish_count == 0 and rare_fish_count == 0:
+					%Score.update_data()
+				elif fish_count > 0 or rare_fish_count > 0:
+					if fish_count == null: fish_count = 0
+					if rare_fish_count == null: rare_fish_count = 0
+					%Score.update_data({"Common":fish_count,"Rare":rare_fish_count})
 	
 		#this being put here untill a timer or state system can take care of it
 		#var player_pawn = Game.get_player_handler().pawn
