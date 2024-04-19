@@ -26,19 +26,30 @@ patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="ScoreText" type="RichTextLabel" parent="."]
-offset_left = 64.0
-offset_top = 16.0
-offset_right = 248.0
-offset_bottom = 56.0
-theme = ExtResource("3_vjhty")
-bbcode_enabled = true
-text = "[center]Common : 0
-Rare: 0"
-
 [node name="TextureRect" type="TextureRect" parent="."]
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 56.0
 offset_bottom = 56.0
 texture = SubResource("AtlasTexture_5p3lt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 64.0
+offset_top = 16.0
+offset_right = 251.0
+offset_bottom = 58.0
+theme_override_constants/separation = 0
+
+[node name="Score_0" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_vjhty")
+text = "Common : 0"
+horizontal_alignment = 1
+
+[node name="Score_1" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_vjhty")
+text = "Rare : 0"
+horizontal_alignment = 1

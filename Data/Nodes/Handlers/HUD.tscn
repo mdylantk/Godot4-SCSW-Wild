@@ -17,6 +17,7 @@ atlas = ExtResource("5_inin8")
 region = Rect2(697, 272, 16, 16)
 
 [node name="HUD" type="CanvasLayer" groups=["HUD"]]
+process_mode = 3
 script = ExtResource("1_6ahfw")
 
 [node name="Dialog" parent="." instance=ExtResource("2_26pa4")]
@@ -34,6 +35,7 @@ visible = false
 [node name="LoadingScreen" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 layer = 10
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="LoadingScreen"]
 anchors_preset = 15
@@ -44,10 +46,15 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="NinePatchRect" type="NinePatchRect" parent="LoadingScreen"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 792.0
-offset_bottom = 592.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = SubResource("AtlasTexture_trfd7")
 patch_margin_left = 8
 patch_margin_top = 8
@@ -89,8 +96,95 @@ texture = SubResource("AtlasTexture_wsma3")
 
 [node name="FishingPondMap" parent="." instance=ExtResource("7_tbvwt")]
 unique_name_in_owner = true
+process_mode = 1
 
 [node name="Debug" type="Label" parent="."]
 unique_name_in_owner = true
-offset_right = 203.0
-offset_bottom = 87.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -153.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 88.0
+grow_horizontal = 0
+
+[node name="Main_Menu" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+layer = 11
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="Main_Menu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Main_Menu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_trfd7")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main_Menu"]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -128.0
+offset_top = 177.0
+offset_right = 128.0
+offset_bottom = -180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Main_Menu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("6_nyfgs")
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[center]Menu"
+fit_content = true
+
+[node name="HSeparator" type="HSeparator" parent="Main_Menu/VBoxContainer"]
+layout_mode = 2
+
+[node name="New_Game" type="Button" parent="Main_Menu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("6_nyfgs")
+text = "New Game"
+
+[node name="Options" type="Button" parent="Main_Menu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("6_nyfgs")
+text = "Options
+"
+
+[node name="Credits" type="Button" parent="Main_Menu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("6_nyfgs")
+text = "Credits
+"
+
+[node name="Exit" type="Button" parent="Main_Menu/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("6_nyfgs")
+text = "Exit
+"
+
+[connection signal="pressed" from="Main_Menu/VBoxContainer/New_Game" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="Main_Menu/VBoxContainer/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Main_Menu/VBoxContainer/Credits" to="." method="_on_credits_pressed"]
+[connection signal="pressed" from="Main_Menu/VBoxContainer/Exit" to="." method="_on_exit_pressed"]

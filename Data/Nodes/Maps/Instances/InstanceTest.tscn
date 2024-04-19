@@ -1,42 +1,20 @@
-[gd_scene load_steps=21 format=3 uid="uid://hepasgr3svoi"]
+[gd_scene load_steps=10 format=3 uid="uid://hepasgr3svoi"]
 
-[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_2euby"]
-[ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Nodes/Actors/Interactive_Body2d.tscn" id="3_t1j1n"]
-[ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Data/Resources/World_Foilage_Generator.tres" id="5_hdokn"]
-[ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="5_yn1wo"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="6_6bm1f"]
-[ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Data/Resources/Noise_Maps/World_Detail_Map.tres" id="6_7fylv"]
-[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Nodes/Components/Interactive_Component.tscn" id="7_6a252"]
-[ext_resource type="PackedScene" uid="uid://clicnkneu0ddm" path="res://Data/Nodes/Maps/Pond_0.tscn" id="7_j0vpa"]
-[ext_resource type="PackedScene" uid="uid://bngicde5fixcp" path="res://Data/Nodes/Maps/Pond_1.tscn" id="8_y1mhm"]
-[ext_resource type="PackedScene" uid="uid://cyg3wosoq0787" path="res://Data/Nodes/Maps/Pond_2.tscn" id="9_h0b1x"]
-[ext_resource type="PackedScene" uid="uid://t7rhh625brgr" path="res://Data/Nodes/Maps/Pond_3.tscn" id="10_skecx"]
-[ext_resource type="PackedScene" uid="uid://duqgklvehxux0" path="res://Data/Nodes/Maps/Pond_4.tscn" id="11_fhupt"]
-[ext_resource type="PackedScene" uid="uid://bbaafkh4f04vx" path="res://Data/Nodes/Maps/Pond_5.tscn" id="12_vyti7"]
-[ext_resource type="PackedScene" uid="uid://m6q0b4c1q5f6" path="res://Data/Nodes/Maps/RareTemplate.tscn" id="13_fkggh"]
-[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/World_Data.gd" id="14_u5xtl"]
-[ext_resource type="PackedScene" uid="uid://blyxjt47otoln" path="res://Data/Nodes/Maps/Wilderness_World/Spawn_x0_y0.tscn" id="15_xqf2h"]
+[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_o5yrt"]
+[ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Nodes/Actors/Interactive_Body2d.tscn" id="2_7ptmx"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="3_d86mu"]
+[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Nodes/Components/Interactive_Component.tscn" id="4_364tp"]
+[ext_resource type="Resource" uid="uid://cvna13cf6rc1p" path="res://Data/Resources/Wilderness_World_Data.tres" id="5_n2pmq"]
+[ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="16_4dler"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2oobe"]
-atlas = ExtResource("6_6bm1f")
+atlas = ExtResource("3_d86mu")
 region = Rect2(136, 170, 16, 16)
 
-[sub_resource type="Resource" id="Resource_d214b"]
-script = ExtResource("14_u5xtl")
-level_id = "world"
-use_game_seed = true
-generators = Array[Resource("res://Data/Features/World_Levels_Data/Generator_Data.gd")]([ExtResource("5_hdokn")])
-static_chunks = {
-Vector2(0, 0): ExtResource("15_xqf2h")
-}
-random_chunks = Array[PackedScene]([ExtResource("7_j0vpa"), ExtResource("8_y1mhm"), ExtResource("9_h0b1x"), ExtResource("10_skecx"), ExtResource("11_fhupt"), ExtResource("12_vyti7"), ExtResource("13_fkggh")])
-random_chunk_noise_map = ExtResource("6_7fylv")
-tile_set = ExtResource("1_2euby")
-
-[sub_resource type="Resource" id="Resource_3dxxr"]
+[sub_resource type="Resource" id="Resource_w0yrq"]
 resource_local_to_scene = true
-script = ExtResource("5_yn1wo")
-level_data = SubResource("Resource_d214b")
+script = ExtResource("16_4dler")
+level_data = ExtResource("5_n2pmq")
 spawn_location = Vector2(0, 0)
 store_entry_point = false
 entry_point_id = "world"
@@ -47,20 +25,20 @@ size = Vector2(16, 16)
 [node name="TileMap" type="TileMap"]
 y_sort_enabled = true
 texture_filter = 1
-tile_set = ExtResource("1_2euby")
+tile_set = ExtResource("1_o5yrt")
 format = 2
 layer_0/name = "Ground"
 layer_0/y_sort_enabled = true
 layer_0/tile_data = PackedInt32Array(0, 1507328, 0, 1, 1507328, 0, 2, 1507328, 0, 3, 1507328, 0, 4, 1507328, 0, 5, 1507328, 0, 6, 1507328, 0, 7, 1507328, 0, 8, 1507328, 0, 9, 1507328, 0, 10, 1507328, 0, 11, 1507328, 0, 12, 1507328, 0, 13, 1507328, 0, 14, 1507328, 0, 15, 1507328, 0, 16, 1507328, 0, 17, 1507328, 0, 18, 1507328, 0, 19, 1507328, 0, 20, 1507328, 0, 21, 1507328, 0, 22, 1507328, 0, 23, 1507328, 0, 24, 1507328, 0, 25, 1507328, 0, 26, 1507328, 0, 27, 1507328, 0, 28, 1507328, 0, 29, 1507328, 0, 30, 1507328, 0, 31, 1507328, 0, 32, 1507328, 0, 65536, 1507328, 0, 131072, 1507328, 0, 196608, 1507328, 0, 262144, 1507328, 0, 327680, 1507328, 0, 393216, 1507328, 0, 458752, 1507328, 0, 524288, 1507328, 0, 589824, 1507328, 0, 655360, 1507328, 0, 720896, 1507328, 0, 786432, 1507328, 0, 851968, 1507328, 0, 917504, 1507328, 0, 983040, 1507328, 0, 1048576, 1507328, 0, 1114112, 1507328, 0, 1179648, 1507328, 0, 1245184, 1507328, 0, 1310720, 1507328, 0, 1376256, 1507328, 0, 1441792, 1507328, 0, 1507328, 1507328, 0, 1572864, 1507328, 0, 1638400, 1507328, 0, 1703936, 1507328, 0, 1769472, 1507328, 0, 1835008, 1507328, 0, 1900544, 1507328, 0, 1966080, 1507328, 0, 2031616, 1507328, 0, 2097152, 1507328, 0, 2097153, 1507328, 0, 2097154, 1507328, 0, 2097155, 1507328, 0, 2097156, 1507328, 0, 2097157, 1507328, 0, 2097158, 1507328, 0, 2097159, 1507328, 0, 2097160, 1507328, 0, 2097161, 1507328, 0, 2097162, 1507328, 0, 2097163, 1507328, 0, 2097164, 1507328, 0, 2097165, 1507328, 0, 2097166, 1507328, 0, 2097167, 1507328, 0, 2097168, 1507328, 0, 2097169, 1507328, 0, 2097170, 1507328, 0, 2097171, 1507328, 0, 2097172, 1507328, 0, 2097173, 1507328, 0, 2097174, 1507328, 0, 2097175, 1507328, 0, 2097176, 1507328, 0, 2097177, 1507328, 0, 2097178, 1507328, 0, 2097179, 1507328, 0, 2097180, 1507328, 0, 2097181, 1507328, 0, 2097182, 1507328, 0, 2097183, 1507328, 0, 2097184, 1507328, 0, 65568, 1507328, 0, 131104, 1507328, 0, 196640, 1507328, 0, 262176, 1507328, 0, 327712, 1507328, 0, 393248, 1507328, 0, 458784, 1507328, 0, 524320, 1507328, 0, 589856, 1507328, 0, 655392, 1507328, 0, 720928, 1507328, 0, 786464, 1507328, 0, 852000, 1507328, 0, 917536, 1507328, 0, 983072, 1507328, 0, 1048608, 1507328, 0, 1114144, 1507328, 0, 1179680, 1507328, 0, 1245216, 1507328, 0, 1310752, 1507328, 0, 1376288, 1507328, 0, 1441824, 1507328, 0, 1507360, 1507328, 0, 1572896, 1507328, 0, 1638432, 1507328, 0, 1703968, 1507328, 0, 1769504, 1507328, 0, 1835040, 1507328, 0, 1900576, 1507328, 0, 1966112, 1507328, 0, 2031648, 1507328, 0, 786460, 1179648, 18, 720924, 1179648, 17, 655388, 1179648, 17, 589852, 1179648, 17, 524316, 1179648, 17, 458780, 1179648, 17, 393244, 1179648, 17, 327708, 1179648, 17, 262172, 1179648, 16, 786459, 1114112, 18, 262171, 1114112, 16, 262170, 1114112, 16, 262169, 1114112, 16, 786456, 1114112, 18, 786455, 1114112, 18, 262167, 1114112, 16, 786454, 1114112, 18, 262166, 1114112, 16, 262165, 1114112, 16, 786452, 1114112, 18, 786451, 1114112, 18, 262163, 1114112, 16, 786450, 1048576, 18, 655378, 1048576, 17, 524306, 1048576, 17, 262162, 1048576, 16, 786458, 1114112, 18, 262168, 1114112, 16, 786453, 1114112, 18, 720914, 1048576, 17, 589842, 1048576, 17, 393234, 1048576, 17, 327698, 1048576, 17, 786457, 1114112, 18, 262164, 1114112, 16, 458770, 1048576, 17)
 
-[node name="Sprite_Object" parent="." instance=ExtResource("3_t1j1n")]
+[node name="Sprite_Object" parent="." instance=ExtResource("2_7ptmx")]
 position = Vector2(376, 152)
 
 [node name="Sprite2D" parent="Sprite_Object" index="1"]
 texture = SubResource("AtlasTexture_2oobe")
 
-[node name="Interact_Component" parent="Sprite_Object" instance=ExtResource("7_6a252")]
-interactive_data = SubResource("Resource_3dxxr")
+[node name="Interact_Component" parent="Sprite_Object" instance=ExtResource("4_364tp")]
+interactive_data = SubResource("Resource_w0yrq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite_Object/Interact_Component"]
 shape = SubResource("RectangleShape2D_yq7oe")

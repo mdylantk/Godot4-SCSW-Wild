@@ -118,6 +118,7 @@ func start_game():
 	#for testing, player may start game as a host but can join someone elses
 	#game. just need a way to end the host status 
 	pass
+
 func end_game():
 	#basicly just make sure every system calls an unload
 	#and then either shut down or go to mode_selection

@@ -1,19 +1,15 @@
 extends CanvasLayer
 
-@onready var score_text = $ScoreText
 
-var score_data : Dictionary = {}
+@export var text_template := "{id}: {score}"
 
-#TODO: have this use a func that takes an id and value.
-func update_data(data :Dictionary = {}) :
-	if !data.is_empty(): score_data = data #NOTE: this is temp to test new approch
-	if score_data.is_empty():
-		visible = false
-		#hide
-	else:
-		var new_text = "[center]"
-		for score_name in score_data:
-			new_text += str(score_name) + ": " + str(score_data[score_name]) +"\n"
-		score_text.text = new_text
-		visible = true
-		#change and make visible
+func set_common_score(value:int) -> void:
+	%Score_0.visible = value != 0
+	set_score(%Score_0,"Common",value)
+func set_rare_score(value:int) -> void:
+	%Score_1.visible = value != 0
+	set_score(%Score_1,"Rare",value)
+
+func set_score(label:Label, id:String, score:int):
+	label.text = text_template.format({"id": id, "score": score})
+	visible = (%Score_0.visible || %Score_1.visible)

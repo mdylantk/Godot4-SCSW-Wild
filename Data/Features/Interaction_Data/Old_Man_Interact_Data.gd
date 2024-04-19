@@ -6,12 +6,12 @@ class_name Old_Man_Interact_Data extends Interactive_Data
 @export var dialog_data : Dialog_Data = load("uid://eceb7uvicyqu")
 
 #todo: the event pass eould have a few ofthis data. also should not store event in a class level var since it ment gc after all tasks are finished
-func interact(handler, instigator, interactee, data):
+func interact(new_handler, new_instigator, new_interactee, new_data):
 	if dialog_data.state != 0:
 		return
 	if dialog_data.visited:
 		#var player_vars = handler.state.metadata
-		var total_rare_fish_caught = handler.state.fetch("total_rare_fish_caught")
+		var total_rare_fish_caught = new_handler.state.fetch("total_rare_fish_caught")
 		if total_rare_fish_caught == null : total_rare_fish_caught = 0
 		if total_rare_fish_caught == 2 :
 			if randi() % 10 > 3:
@@ -31,7 +31,7 @@ func interact(handler, instigator, interactee, data):
 	#handler.get_hud().gui_dialog.start_dialog(target, dialog_data)
 	
 	#will start the dialog logic
-	dialog_data.start_dialog(interactee,instigator,handler)
+	dialog_data.start_dialog(new_interactee,new_instigator,new_handler)
 	#will open the dialog window.#TODO: maybe it is best to call it
 	#due to interaction being more of a connector? 
 	Game.start_dialog(dialog_data)

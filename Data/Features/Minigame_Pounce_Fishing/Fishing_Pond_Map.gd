@@ -33,6 +33,10 @@ var running : bool = false :
 			visible = false
 var active_fish : Array[Dictionary]
 
+#NOTE:this may need a rename? mouse_state is action state(of the cursor)
+var mouse_state: int = 0
+#NOTE: this mean to ignore mouse movement
+var mouse_mode: bool = true
 
 #NOTE: mouse_state = -1 is to prevent input untill a fresh press
 
@@ -70,10 +74,14 @@ func fish_update():
 			running = false
 			print("ending fish update")
 			return #breaks the cycle, but running need to be set false first
+		#NOTE, the pause check is why a timer handler may be useful. it can pause 
+		#timers. also there may or may not be a timer singleton. if so, that may be use
+		#instead of making one.
 		for fish_id in range(active_fish.size()):
 			var fish = active_fish[fish_id]
 			move_fish(fish)
-		await get_tree().create_timer(fish_update_rate).timeout
+		await Timers.sleep(fish_update_rate)
+		#await get_tree().create_timer(fish_update_rate).timeout
 
 func move_fish(fish_data:Dictionary):
 	if fish_data["move_rate"] >= randf():
@@ -123,8 +131,26 @@ func _process(delta):
 	if active_fish.is_empty():
 		pause()
 
+	#NOTE: if mouse is release when pause, the state get mess up
+	#either have this not pause, but disable input...or find a way to fix the state
+	#like maybe see if pause have a setter type of listerner
 	if running:
-		if mouse_state == 2:
+		
+		var movement_input = Vector2(
+			Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
+			).normalized()
+		if movement_input != Vector2.ZERO && cursor != null:
+			update_cursor_position(cursor.position + movement_input*2)
+		#TODO: mouse states should be delay a tick, not check often
+		#then safty check can run here or on a slower tick
+		#mouse state 2 the only one that need logic run overtime
+		if !Input.is_action_pressed("Accept") && mouse_state > 0 && mouse_state < 3:
+			#if accept not press when mouse_state is not 0, then that means
+			#the state is invaild. Might mess with just release
+			mouse_state = 0
+			cursor.value = 0
+		
+		elif mouse_state == 2:
 			if cursor.value < 80: #cursor.max_value:
 			#unable to use float for value so may need to stor value as float
 			#and add when >= than 1. also could add a timer
@@ -178,7 +204,7 @@ func catch_fish(coords:Vector2i):
 			missed.emit(false)
 			return
 	missed.emit(true)
-var mouse_state: int = 0
+
 
 func _input(event:InputEvent):
 	if running:
@@ -188,6 +214,7 @@ func _input(event:InputEvent):
 			#TODO: need to have release reset input on new/resume game
 			#but also need to make sure release is not needed to use input
 			#also rename mouse_state to input or catch_state 
+			#TODO: may add this to the _process except on relase
 			if event.is_pressed() and mouse_state == 0:
 				mouse_state = 1
 			elif event.is_released() and mouse_state == 2:
@@ -196,12 +223,22 @@ func _input(event:InputEvent):
 				cursor.value = 0#cursor.min_value
 			elif event.is_released() and mouse_state < 0:
 				mouse_state = 0
-		elif event is InputEventMouseMotion:
+		elif event is InputEventMouseMotion && mouse_mode:
 			var cursor_coord: Vector2 = event.position
-			var local_player_coords = map_to_local(player_coords)
-			var vector_from_player: Vector2 = cursor_coord - local_player_coords
-			var max_length = fishing_distance*16
+			update_cursor_position(cursor_coord)
+			#var local_player_coords = map_to_local(player_coords)
+			#var vector_from_player: Vector2 = cursor_coord - local_player_coords
+			#var max_length = fishing_distance*16
 			
-			if vector_from_player.length() > max_length:
-				cursor_coord = local_player_coords + (vector_from_player.normalized()*max_length)
-			cursor.position = cursor_coord
+			#if vector_from_player.length() > max_length:
+			#	cursor_coord = local_player_coords + (vector_from_player.normalized()*max_length)
+			#cursor.position = cursor_coord
+
+func update_cursor_position(new_position : Vector2):
+	var local_player_coords = map_to_local(player_coords)
+	var vector_from_player: Vector2 = new_position - local_player_coords
+	var max_length = fishing_distance*16
+			
+	if vector_from_player.length() > max_length:
+		new_position = local_player_coords + (vector_from_player.normalized()*max_length)
+	cursor.position = new_position

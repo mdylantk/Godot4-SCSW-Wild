@@ -22,11 +22,12 @@ class_name World_Data extends Level_Data
 #TODO add a region size/bound option to allow generation upto a certain size
 
 ##Scenes to load at region positions. 
-##Entries should be Vector2:Object where Object should be a PackedScene
+##Entries should be Vector2:String where String should be a scene uid or path
 @export var static_chunks : Dictionary
 
-##Scenes that will spawn randomly in the world.
-@export var random_chunks : Array[PackedScene]
+##Scenes that will spawn randomly in the world. Should be scene uid or path.
+@export var random_chunks : Array[String]
+#@export_file("*.tscn") var instance_scene : String = "uid://hepasgr3svoi"
 
 ##A noise to represent where the scenes will spawn.
 ##Noise should have decent range of grays and should be noisy else they will spawn in clusters.
@@ -118,21 +119,24 @@ func get_static_map(location:Vector2)->Node:
 	var coords := world_to_level_coords(location) as Vector2
 	#TODO: may need to convert the static chunks as vector2i instead of vector2
 	if static_chunks.has(coords):
-		return static_chunks[coords].instantiate()
+		if static_chunks[coords] != null:
+			return load(static_chunks[coords]).instantiate()
+		else:
+			print(static_chunks[coords])
 	elif random_chunks.size() > 0:
 		#currently a 40% chance? to spawn an instance
 		#but the chance really depends on the noise map contrast. need lots of 
 		#various grays. random noise too, not blobs
 		var noise_value = random_chunk_noise_map.get_noise_2d(coords.x,coords.y)
 		noise_value += 1
-		noise_value *= random_chunks.size()/2
-		var min =floor(noise_value)
-		var max =ceil(noise_value)
-		var portion = noise_value - min
+		noise_value *= float(random_chunks.size())/2
+		var min_index = floor(noise_value)
+		var max_index = ceil(noise_value)
+		var portion = noise_value - min_index
 		if portion <= 0.2:
-			return random_chunks[min].instantiate()
+			return load(random_chunks[min_index]).instantiate()
 		elif portion >= 0.8:
-			return random_chunks[max].instantiate()
+			return load(random_chunks[max_index]).instantiate()
 	#TODO: need to see if a random static chunk is picked
 	return null
 

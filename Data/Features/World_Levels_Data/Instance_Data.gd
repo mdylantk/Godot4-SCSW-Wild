@@ -1,16 +1,15 @@
+@tool
 class_name Instance_Data extends Level_Data
 
-@export_file("*.tscn") var instance_scene : String = "res://Data/Nodes/Maps/InstanceTest.tscn"
+#NOTE: Packed scenes are not abstract. will cause a circular dep, so need to load from string
+@export_file("*.tscn") var instance_scene : String = "uid://hepasgr3svoi"
 
 var loaded_scene : Node
-var ref
 
 func load_level():
 	if loaded_scene == null:
-		#NOTE: there may be a way to get a preloaded one?
-		if ref == null:
-			ref = load(instance_scene)
-		loaded_scene = ref.instantiate()
+		var scene = load(instance_scene)
+		loaded_scene = scene.instantiate()
 		level_created.emit(loaded_scene)
 	else:
 		print_debug("I still have a scene.")

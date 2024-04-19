@@ -63,7 +63,7 @@ func is_chunk_loaded(location):
 var player_pawns :Array[Node] = []
 
 
-func _process(delta):
+func _process(_delta):
 	if level_data == null:
 		return
 	for pawn in player_pawns:

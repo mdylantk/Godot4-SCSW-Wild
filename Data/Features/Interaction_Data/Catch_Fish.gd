@@ -94,12 +94,13 @@ func add_fish(fish_data:Dictionary):
 		#print("fish log debug")
 		#print_debug(handler.state.data)
 
-func log_fish(handler, name, rarity, new_fish_data):
+#NOTE: new_handler is not needed since it should be set as handler
+func log_fish(new_handler, name, rarity, new_fish_data):
 	#TODO: change or remove this. this is a prototype log.
 	#should add a statistics system
-	var fish_data = handler.state.fetch(name, "fish_log_"+str(rarity))
+	var fish_data = new_handler.state.fetch(name, "fish_log_"+str(rarity))
 	if fish_data == null:
-		handler.state.store(name,new_fish_data, "fish_log_"+str(rarity))
+		new_handler.state.store(name,new_fish_data, "fish_log_"+str(rarity))
 		return
 	if new_fish_data.has("count"):
 		if fish_data.has("count"):

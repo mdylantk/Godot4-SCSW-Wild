@@ -33,10 +33,16 @@ func handle_messages() :
 		var message_extension = ""
 		if amount > 1:
 			message_extension = " (x" + str(amount) + ")"
-		$NotifyText.text = str(message) + message_extension
-		#$NotifyText.text = "[center]Caught a " + str(fish_name)
+		%NotifyText.text = str(message) + message_extension
+		#NOTE: below can help fit the messge to a max size, but may need text size
+		#to fine tune it.
+		%NotifyBox.size.y = (min(%NotifyText.get_line_count(),3)*12)+24
 		visible = true
 		notify_list.erase(message)
+		if %NotifyText.get_line_count() > 2:
+			for line in range(%NotifyText.get_line_count()):
+				%NotifyText.scroll_to_line(line)
+				await get_tree().create_timer(display_time).timeout
 		await get_tree().create_timer(display_time).timeout
 		handle_messages()
 	else:

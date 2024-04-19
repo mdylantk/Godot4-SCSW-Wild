@@ -50,11 +50,8 @@ var player_handler : Player_Handler
 func handler_setup(handler):
 	var common_fish_count = Savedata_Helper.fetch_player_score(handler,"common_fish_caught")
 	var rare_fish_count = Savedata_Helper.fetch_player_score(handler,"rare_fish_caught")
-	if common_fish_count > 0:
-		%Score.score_data["Common"] = common_fish_count
-	if rare_fish_count > 0:
-		%Score.score_data["Rare"] = rare_fish_count
-	%Score.update_data()
+	%Score.set_common_score(common_fish_count)
+	%Score.set_rare_score(rare_fish_count)
 
 func on_player_state_change(source, id, old_value, new_value, group):
 	if old_value == new_value:
@@ -63,13 +60,9 @@ func on_player_state_change(source, id, old_value, new_value, group):
 		return
 	if group == "scores":
 		if id == "common_fish_caught":
-			if new_value > 0:
-				%Score.score_data["Common"] = new_value
-				%Score.update_data()
+			%Score.set_common_score(new_value)
 		elif id == "rare_fish_caught":
-			if new_value > 0:
-				%Score.score_data["Rare"] = new_value
-				%Score.update_data()
+			%Score.set_rare_score(new_value)
 
 func _process(_delta):
 	var camera_global_position : Vector2
@@ -83,23 +76,6 @@ func _process(_delta):
 		#if player_state != null:
 		if player_handler.state != null:
 			var player_state = player_handler.state
-		#may need a dict for score in playerstate or a function that can fetch it
-			#var fish_count = player_state.fetch("total_common_fish_caught")
-			#var rare_fish_count = player_state.fetch("total_rare_fish_caught")
-			#TODO: need to have this use player handler or have the player handler
-			#notify this of score changes. could listen for the id or all and then
-			#filter it by type then id kind of like a getter/setter.
-			if false:#old system switch
-				var fish_count = player_state.fetch("common_fish_caught","scores")
-				var rare_fish_count = player_state.fetch("rare_fish_caught","scores")
-				if fish_count == null: fish_count = 0
-				if rare_fish_count == null: rare_fish_count = 0
-				if fish_count == 0 and rare_fish_count == 0:
-					%Score.update_data()
-				elif fish_count > 0 or rare_fish_count > 0:
-					if fish_count == null: fish_count = 0
-					if rare_fish_count == null: rare_fish_count = 0
-					%Score.update_data({"Common":fish_count,"Rare":rare_fish_count})
 	
 		#this being put here untill a timer or state system can take care of it
 		#var player_pawn = Game.get_player_handler().pawn
@@ -136,4 +112,38 @@ func _process(_delta):
 	#await get_tree().create_timer(1).timeout #A delay so things can finish up. currrenty need to be appled difftrently or not used
 #	$LoadingScreen.visible = is_loading
 
+#NOTE: Main Menu Logic
 
+
+
+func _on_new_game_pressed() -> void:
+	print_debug("new game pressed")
+
+
+func _on_options_pressed() -> void:
+	print_debug("options pressed")
+
+
+func _on_credits_pressed() -> void:
+	print_debug("credits pressed")
+
+
+func _on_exit_pressed() -> void:
+	print_debug("exit pressed")
+	get_tree().quit()
+
+func _input(event: InputEvent) -> void:
+	
+
+	if event.is_action_pressed("Start"):
+		var menu : Node = %Main_Menu
+		if menu.visible:
+			menu.visible = false
+			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+			get_tree().paused = false
+			
+		else:
+			menu.visible = true
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			get_tree().paused = true
+	

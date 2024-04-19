@@ -11,20 +11,20 @@ class_name Level_Transfer extends Interactive_Data
 #a bit odd
 @export var entry_point_id: String = "world"
 
-func interact(handler, instigator, interactee, data):
+func interact(new_handler, new_instigator, new_interactee, new_data):
 	if level_data != null:
 		#NOTE: spawn location may not need to be pass if this will handle that logic
 		#also the level day may not need to store the id. could use this perhaps?
-		General_Events.change_level(level_data, handler, instigator, spawn_location) 
+		General_Events.change_level(level_data, new_handler, new_instigator, spawn_location) 
 		if store_entry_point:
-			var old_location : Vector2 = instigator.global_position
-			Savedata_Helper.store_player_position(handler,old_location,entry_point_id)
+			var old_location : Vector2 = new_instigator.global_position
+			Savedata_Helper.store_player_position(new_handler,old_location,entry_point_id)
 #			handler.state.store(entry_point_id,old_location,"positions")
 		var level_id = level_data.get_level_property("level_id")
 		if level_id != null:
 			#NOTE: assuming the handler have a state. AI handler might not? (but could and probably should)
-			var new_location = Savedata_Helper.fetch_player_position(handler,level_id)
-			instigator.global_position = new_location #NOTE: need a way to check if it vaild
+			var new_location = Savedata_Helper.fetch_player_position(new_handler,level_id)
+			new_instigator.global_position = new_location #NOTE: need a way to check if it vaild
 #			if handler.state != null and instigator != null:
 #				if handler.state.fetch(level_id, "positions") != null:
 #					var new_location = handler.state.fetch(level_id, "positions") + spawn_location
@@ -32,6 +32,6 @@ func interact(handler, instigator, interactee, data):
 		
 	else:
 		print_debug("no level data")
-	super(handler, instigator, interactee, data)
+	super(new_handler, new_instigator, new_interactee, new_data)
 
 	

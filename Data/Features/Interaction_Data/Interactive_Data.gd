@@ -49,14 +49,15 @@ var _update_rate : int
 
 #the main trigger. children should override the functions with _
 #and only override this if they want to completly override the logic
-func interact(_handler, _interactor, _interactee, _data):
+#TODO: have most children not override this, but _run() instead. 
+func interact(new_handler, new_interactor, new_interactee, new_data):
 	if _is_active:
 		print_debug("interaction is already active")
 		return false
-	handler = _handler
-	interactor = _interactor
-	interactee = _interactee
-	data = _data
+	handler = new_handler
+	interactor = new_interactor
+	interactee = new_interactee
+	data = new_data
 	_is_active = true
 	_run()
 	return true
@@ -78,6 +79,8 @@ func _run():
 	started.emit(self)
 	print_debug(str(interactor) + " interact with " +str(interactee) + " from(handler) " +  str(handler))
 	while _update_rate and _is_active:
+		#NOTE: this class ment to be generic. it should not have these function
+		#but it can be useful. So base godot logic should only be here (or just declartion)
 		await interactee.get_tree().create_timer(_update_rate).timeout
 		_update()
 		updated.emit(self)
