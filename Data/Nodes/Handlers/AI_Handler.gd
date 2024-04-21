@@ -23,7 +23,9 @@ func on_pawn_hit(attacker, target, data):
 
 
 func _process(delta):
-	if active_pawns != null:
+	#TODO need the world_handler to frezze(pause) it children when no level_data
+	#or when loading new areas
+	if active_pawns != null && Game.get_player_handler() != null:
 		var target = Game.get_player_handler().pawn
 		if target.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
 			var test_vector : Vector2 = target.global_position - active_pawns.global_position

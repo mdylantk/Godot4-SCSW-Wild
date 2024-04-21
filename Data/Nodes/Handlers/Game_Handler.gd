@@ -18,8 +18,6 @@ signal event_update(event)
 @onready var world : Node = %World_Handler
 @onready var server : Node = %Server_Handler
 
-
-
 func get_player_handler(index : int = 0):
 	#todo, if index -1, maybe get the owning player?
 	#NOTE: player_handler could also be a resource if nessary, but a node may be easier
@@ -82,7 +80,7 @@ func print_copyright():
 	print(Engine.get_license_text())
 
 func _ready():
-	load_player_handler()
+	
 #	event_update.connect(on_event_update)
 	
 	#print_debug(get_player_handler_index(get_player_handler()))
@@ -106,12 +104,14 @@ func _ready():
 	height_map.seed = state.random_seed
 	variation_map.seed = state.random_seed
 	
-	start_game.rpc()
+	#start_game.rpc()
 	#TODO: learn how to seed properly so same seed will generate same world
 
 
 @rpc("any_peer","call_local")
 func start_game():
+	load_player_handler()
+	world.level_data = load("uid://cvna13cf6rc1p")
 	#the idea is there at least a main menu in the future
 	#start game would init the world. before that there may be game
 	#config or waiting for players

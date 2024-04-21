@@ -34,7 +34,7 @@ visible = false
 
 [node name="LoadingScreen" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
-layer = 10
+layer = 9
 visible = false
 
 [node name="ColorRect" type="ColorRect" parent="LoadingScreen"]
@@ -80,6 +80,7 @@ text = "[center]Loading"
 
 [node name="HomePoint" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
+visible = false
 
 [node name="TextureRect" type="TextureRect" parent="HomePoint"]
 anchors_preset = 8
@@ -97,6 +98,7 @@ texture = SubResource("AtlasTexture_wsma3")
 [node name="FishingPondMap" parent="." instance=ExtResource("7_tbvwt")]
 unique_name_in_owner = true
 process_mode = 1
+visible = false
 
 [node name="Debug" type="Label" parent="."]
 unique_name_in_owner = true
@@ -111,8 +113,7 @@ grow_horizontal = 0
 
 [node name="Main_Menu" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
-layer = 11
-visible = false
+layer = 10
 
 [node name="ColorRect" type="ColorRect" parent="Main_Menu"]
 anchors_preset = 15
@@ -138,7 +139,7 @@ patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Main_Menu"]
+[node name="MenuVBoxContainer" type="VBoxContainer" parent="Main_Menu"]
 anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
@@ -150,7 +151,7 @@ offset_bottom = -180.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Main_Menu/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Main_Menu/MenuVBoxContainer"]
 layout_mode = 2
 theme = ExtResource("6_nyfgs")
 theme_override_font_sizes/normal_font_size = 24
@@ -158,33 +159,150 @@ bbcode_enabled = true
 text = "[center]Menu"
 fit_content = true
 
-[node name="HSeparator" type="HSeparator" parent="Main_Menu/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Main_Menu/MenuVBoxContainer"]
 layout_mode = 2
 
-[node name="New_Game" type="Button" parent="Main_Menu/VBoxContainer"]
+[node name="Resume_Button" type="Button" parent="Main_Menu/MenuVBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme = ExtResource("6_nyfgs")
+text = "Resume"
+
+[node name="New_Game_Button" type="Button" parent="Main_Menu/MenuVBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("6_nyfgs")
 text = "New Game"
 
-[node name="Options" type="Button" parent="Main_Menu/VBoxContainer"]
+[node name="Options_Button" type="Button" parent="Main_Menu/MenuVBoxContainer"]
 layout_mode = 2
 theme = ExtResource("6_nyfgs")
 text = "Options
 "
 
-[node name="Credits" type="Button" parent="Main_Menu/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("6_nyfgs")
-text = "Credits
-"
-
-[node name="Exit" type="Button" parent="Main_Menu/VBoxContainer"]
+[node name="Exit_Button" type="Button" parent="Main_Menu/MenuVBoxContainer"]
 layout_mode = 2
 theme = ExtResource("6_nyfgs")
 text = "Exit
 "
 
-[connection signal="pressed" from="Main_Menu/VBoxContainer/New_Game" to="." method="_on_new_game_pressed"]
-[connection signal="pressed" from="Main_Menu/VBoxContainer/Options" to="." method="_on_options_pressed"]
-[connection signal="pressed" from="Main_Menu/VBoxContainer/Credits" to="." method="_on_credits_pressed"]
-[connection signal="pressed" from="Main_Menu/VBoxContainer/Exit" to="." method="_on_exit_pressed"]
+[node name="Credits_Button" type="Button" parent="Main_Menu"]
+offset_left = 652.0
+offset_top = 557.0
+offset_right = 787.0
+offset_bottom = 585.0
+theme = ExtResource("6_nyfgs")
+text = "Legal Info
+"
+
+[node name="Credits_Menu" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+layer = 11
+visible = false
+
+[node name="ColorRect2" type="ColorRect" parent="Credits_Menu"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Credits_Text" type="RichTextLabel" parent="Credits_Menu"]
+unique_name_in_owner = true
+clip_contents = false
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -385.0
+offset_top = 13.0
+offset_right = 379.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect2" type="NinePatchRect" parent="Credits_Menu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_trfd7")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="Options_Menu" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+layer = 11
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="Options_Menu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Options_Menu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_trfd7")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="GridContainer" type="GridContainer" parent="Options_Menu"]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -245.0
+offset_top = 48.0
+offset_right = 245.0
+offset_bottom = -55.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+
+[node name="Label" type="Label" parent="Options_Menu/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Music Volume"
+
+[node name="VSeparator" type="VSeparator" parent="Options_Menu/GridContainer"]
+layout_mode = 2
+
+[node name="Music_Volume_Slider" type="HSlider" parent="Options_Menu/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[connection signal="pressed" from="Main_Menu/MenuVBoxContainer/Resume_Button" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="Main_Menu/MenuVBoxContainer/New_Game_Button" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="Main_Menu/MenuVBoxContainer/Options_Button" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Main_Menu/MenuVBoxContainer/Exit_Button" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="Main_Menu/Credits_Button" to="." method="_on_credits_pressed"]
+[connection signal="value_changed" from="Options_Menu/GridContainer/Music_Volume_Slider" to="." method="_on_music_volume_slider_value_changed"]

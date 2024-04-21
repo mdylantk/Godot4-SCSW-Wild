@@ -1,7 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://b0xxl3pylly7j"]
+[gd_scene load_steps=14 format=3 uid="uid://b0xxl3pylly7j"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/World_Handler.gd" id="1_57p0l"]
-[ext_resource type="Resource" uid="uid://cvna13cf6rc1p" path="res://Data/Resources/Wilderness_World_Data.tres" id="2_1pdiy"]
 [ext_resource type="AudioStream" uid="uid://ga3pqt51dux3" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 1.mp3" id="3_upca4"]
 [ext_resource type="AudioStream" uid="uid://b6eeayby7fq4p" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 2.mp3" id="4_r6wfp"]
 [ext_resource type="AudioStream" uid="uid://k0jhnr8trpgr" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 3.mp3" id="5_rkk7v"]
@@ -43,11 +42,11 @@ stream_9/weight = 1.0
 y_sort_enabled = true
 script = ExtResource("1_57p0l")
 world_seed = 1401584422
-level_data = ExtResource("2_1pdiy")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
 stream = SubResource("AudioStreamRandomizer_e4ey0")
-volume_db = -25.752
+volume_db = -20.654
 pitch_scale = 0.75
 autoplay = true
 mix_target = 1

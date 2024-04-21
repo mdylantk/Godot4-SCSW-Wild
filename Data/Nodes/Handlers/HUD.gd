@@ -1,4 +1,3 @@
-@tool
 class_name HUD extends CanvasLayer
 
 #generic signal that state when a gui scene been update...if said update emit it(placeholder mostly)
@@ -64,6 +63,11 @@ func on_player_state_change(source, id, old_value, new_value, group):
 		elif id == "rare_fish_caught":
 			%Score.set_rare_score(new_value)
 
+func _ready() -> void:
+	get_tree().paused = true
+	%Main_Menu.visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
 func _process(_delta):
 	var camera_global_position : Vector2
 	if get_viewport().get_camera_2d() != null:
@@ -115,17 +119,41 @@ func _process(_delta):
 #NOTE: Main Menu Logic
 
 
+func _on_resume_pressed() -> void:
+	%Main_Menu.visible = false
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	get_tree().paused = false
+	print_debug("resume pressed")
 
 func _on_new_game_pressed() -> void:
+	Game.start_game()
 	print_debug("new game pressed")
-
+	%Resume_Button.visible = true
+	%LoadingScreen.visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	get_tree().paused = false
+	#NOTE! hiding new game untill a restart system is added
+	%Main_Menu.visible = false
+	%New_Game_Button.visible = false
+	%HomePoint.visible = true
 
 func _on_options_pressed() -> void:
 	print_debug("options pressed")
-
+	var volume = db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master")))
+	%Music_Volume_Slider.value = volume
+	%Options_Menu.visible = true
 
 func _on_credits_pressed() -> void:
 	print_debug("credits pressed")
+	%Credits_Menu.visible = true
+	#NEED a better way to see if it populated. this just to make sure it woring
+	if %Credits_Text.get_line_count() <= 1:
+		var others_license = Engine.get_license_info.call()
+		%Credits_Text.add_text("\n"+"Godot:\n\n")
+		%Credits_Text.add_text(str(Engine.get_license_text()))
+		for id in others_license.keys():
+			%Credits_Text.add_text("\n\n"+str(id)+":\n\n")
+			%Credits_Text.add_text(str(others_license[id]))
 
 
 func _on_exit_pressed() -> void:
@@ -137,7 +165,14 @@ func _input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("Start"):
 		var menu : Node = %Main_Menu
-		if menu.visible:
+		if %Credits_Menu.visible:
+			%Credits_Menu.visible = false
+		elif %Options_Menu.visible:
+			%Options_Menu.visible = false
+		#NOTE: why dose this work? shouldn't Resume_Button.visible = false
+		#to state game is not running? I mean a var should be made somewhere
+		#that state the running state of the game.
+		elif menu.visible && %Resume_Button.visible:
 			menu.visible = false
 			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 			get_tree().paused = false
@@ -146,4 +181,26 @@ func _input(event: InputEvent) -> void:
 			menu.visible = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			get_tree().paused = true
-	
+	elif event.is_action_pressed("Cancel"):
+		#NOTE: it may be best not to have cancel resume game
+		#or exit menu that have interaction
+		#TODO: design the input flow so that this is called after
+		#the other menu so menus can consume the input if used.
+		#could also try having buttons use the UI_Input and this 
+		#use the one that get called after (_input?) or the later ones
+		#depending on the depth of the input map. may beable use the focus option to narrow
+		#things down
+		if %Credits_Menu.visible:
+			%Credits_Menu.visible = false
+		elif %Options_Menu.visible:
+			%Options_Menu.visible = false
+func _on_music_volume_slider_value_changed(value: float) -> void:
+	#var music_player : AudioStreamPlayer = Game.world.get_node("AudioStreamPlayer")
+	#var new_volume = 1*log(20/100)
+	#music_player.\
+	#log(x) / log(10)
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value))
+
+	#linear_to_db()
+	pass # Replace with function body.
+
