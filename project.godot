@@ -17,8 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Hud="*res://Data/Nodes/Handlers/HUD_Handler.tscn"
 Game="*res://Data/Nodes/Handlers/Game_Handler.tscn"
-Timers="*res://Data/Nodes/Handlers/Timer_Handler.gd"
+Resources="*res://Data/Nodes/Handlers/Resource_Handler.tscn"
 
 [display]
 

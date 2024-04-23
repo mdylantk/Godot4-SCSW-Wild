@@ -34,4 +34,4 @@ func interact(new_handler, new_instigator, new_interactee, new_data):
 	dialog_data.start_dialog(new_interactee,new_instigator,new_handler)
 	#will open the dialog window.#TODO: maybe it is best to call it
 	#due to interaction being more of a connector? 
-	Game.start_dialog(dialog_data)
+	General_Events.start_dialog(dialog_data)

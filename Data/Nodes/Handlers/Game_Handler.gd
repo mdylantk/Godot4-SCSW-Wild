@@ -11,9 +11,10 @@ class_name Game_Handler extends Node2D
 #note: this might not have signals, but instead link all the handler signals
 #here or something similar
 signal event_update(event)
+signal player_created(handler:Node, index : int)
 
 ##Core Handlers
-@onready var hud : Node = %HUD
+#@onready var hud = Hud #NOTE:TODO Hud should call Game and listen to Game. Game should run without knowing abut HUD
 @onready var input : Node = %Input_Handler
 @onready var world : Node = %World_Handler
 @onready var server : Node = %Server_Handler
@@ -41,10 +42,11 @@ func load_player_handler(index : int = 0):
 		#else hud input will be all mess up. will limit to the host controller atm
 			#TODO: maybe design it so the hud know the player, but the player do not
 			#would require Game.HUD to call gui events like notify
-			hud.player_handler = player
+			#hud.player_handler = player
 			input.player_handler = player
-			player.state.data_changed.connect(hud.on_player_state_change)
-			hud.handler_setup(player)
+			#player.state.data_changed.connect(hud.on_player_state_change)
+			#hud.handler_setup(player)
+		player_created.emit(player,index)
 		return player
 
 #a way to get play index without storing it in a var
@@ -59,15 +61,15 @@ func get_player_handler_index(player):
 ### General game events ###
 func change_level(level, handler):
 	world.change_level(level,handler)
-	hud.loading = true
+	#hud.loading = true
 
 #client side for the most part. just need to have events trigger in it rep if nessary
-func start_dialog(dialog_data):
-	hud.gui_dialog.open_dialog(dialog_data)
+#func start_dialog(dialog_data):
+#	hud.gui_dialog.open_dialog(dialog_data)
 
 #client side, but server should be able to send messages
-func send_notifcation(message : String):
-	hud.gui_notify.add_notify_message("[center]"+message)
+#func send_notifcation(message : String):
+#	hud.gui_notify.add_notify_message("[center]"+message)
 
 #client side, but what call it may or may not need rep
 func allow_input(use_input:bool = true):
@@ -80,7 +82,6 @@ func print_copyright():
 	print(Engine.get_license_text())
 
 func _ready():
-	
 #	event_update.connect(on_event_update)
 	
 	#print_debug(get_player_handler_index(get_player_handler()))

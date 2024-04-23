@@ -36,7 +36,7 @@ func handle_messages() :
 		%NotifyText.text = str(message) + message_extension
 		#NOTE: below can help fit the messge to a max size, but may need text size
 		#to fine tune it.
-		%NotifyBox.size.y = (min(%NotifyText.get_line_count(),3)*12)+24
+		%NotifyBox.size.y = (min(%NotifyText.get_line_count(),3)*12)+32
 		visible = true
 		notify_list.erase(message)
 		if %NotifyText.get_line_count() > 2:

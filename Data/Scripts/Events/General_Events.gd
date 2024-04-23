@@ -9,9 +9,10 @@ class_name General_Events extends Object
 	
 static func get_world():
 	return Game.world
-	
-static func get_HUD():
-	return Game.hud
+
+#Not needed if autoload
+#static func get_HUD():
+#	return Hud
 	
 #can add a get_player, but for now it not needed
 	
@@ -21,8 +22,8 @@ static func spawn_entity(entity:Node):
 static func change_level(level:Level_Data, handler:Node, instigator:Node, offset:Vector2):
 	Game.world.change_level(level,handler,instigator,offset)
 	
-static func start_dialog(handler, speaker, dialog_data):
-	Game.hud.gui_dialog.open_dialog(dialog_data)
+static func start_dialog(dialog_data):
+	Hud.gui_dialog.open_dialog(dialog_data)
 
 static func send_notifcation(message : String):
-	Game.hud.gui_notify.add_notify_message("[center]"+message)
+	Hud.gui_notify.add_notify_message("[center]"+message)

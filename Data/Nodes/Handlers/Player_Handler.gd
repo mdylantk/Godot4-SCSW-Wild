@@ -106,6 +106,10 @@ func input_update(event:InputEvent):
 					if interaction_source != null:
 						var interaction = interaction_source.interact(
 							self,pawn,interaction_source,{})
+							
+						#below will break a lot. also unsing unhandle also causes issues
+						#so the dialog and fish minigame need to be redeign or this need to handle it diffrently
+						#get_viewport().set_input_as_handled()
 
 
 ##Region Listerners

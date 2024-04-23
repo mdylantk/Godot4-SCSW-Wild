@@ -9,6 +9,7 @@ class_name Server_Handler extends Node
 var peer:ENetMultiplayerPeer
 
 func _ready() -> void:
+	print_debug("I am ready")
 	#NOTE: the game may need to handle this or redirect it up top the game
 	multiplayer.peer_connected.connect(on_peer_connected)
 	multiplayer.peer_disconnected.connect(on_peer_connected)

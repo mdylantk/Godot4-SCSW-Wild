@@ -37,6 +37,8 @@ func open_dialog(new_data:Dialog_Data) :
 		#update_text() process seem to run after this, may need to use signal and timers instead of processes
 		set_process(true)
 		dialog_data.end.connect(close_dialog)
+		#update_text()
+		visible = true
 
 func close_dialog():
 	visible = false
@@ -91,22 +93,35 @@ func _process(_delta):
 			#return
 			
 		if Input.is_action_just_pressed("Accept") :
-			update_text()
+			#update_text()
 			
 			pass
 			#cycle text or end it if at end
 		if Input.is_action_just_pressed("Cancel") :
 				#cancle the text. ideally not flagging intro read
-			end_dialog()
+			#end_dialog()
+			pass
 	#note: may need to listen to player input(or for now untill a player hud/control is set up) and maybe only listen to it here
 
-func update_text():
+func _input(event: InputEvent) -> void:
+	#NOTE visability check fails. not really needed, but system need to be
+	#reanyalzed to rebuild to work with godot better
+	#NOTE: need a system to pause game related gui when in menu
+	#could have it pause with the game, but maybe it want to pause the game
+	#so just need to extend the system(but locally(by handler handles children input)
+	if dialog_data != null:
+		if event.is_action_pressed("Accept"):
+			update_text()
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("Cancel"):
+			end_dialog()
+			get_viewport().set_input_as_handled()
 
+func update_text():
 	if dialog_data != null:
 
 		var dialog_text = dialog_data.get_text(dialog_index)
 		if dialog_text == null:
-
 			dialog_index = 0
 			end_dialog()
 		else:

@@ -1,4 +1,3 @@
-#@tool
 class_name World_Handler extends Node2D
 
 #TODO: add common world event as signals and call them correct so they can be listen to
@@ -40,6 +39,7 @@ func on_level_removed(level:Node):
 
 
 func _ready():
+	print_debug("I am ready")
 	if world_seed == 0:
 		world_seed = randi()
 

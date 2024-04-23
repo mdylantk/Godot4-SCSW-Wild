@@ -80,8 +80,8 @@ func fish_update():
 		for fish_id in range(active_fish.size()):
 			var fish = active_fish[fish_id]
 			move_fish(fish)
-		await Timers.sleep(fish_update_rate)
-		#await get_tree().create_timer(fish_update_rate).timeout
+		#await Timers.sleep(fish_update_rate)
+		await get_tree().create_timer(fish_update_rate,false).timeout
 
 func move_fish(fish_data:Dictionary):
 	if fish_data["move_rate"] >= randf():

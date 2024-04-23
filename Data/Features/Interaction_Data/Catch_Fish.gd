@@ -20,7 +20,7 @@ func _start():
 	#note: only one fish game per action...but only one should exist if not
 	#dynamicly added
 	if fish_game == null:
-		fish_game = Game.hud.fishing_game
+		fish_game = Hud.fishing_game
 		#fish_game.add_fish(Vector2i(24,24),fish_game.rare_fish_atlas_coords,2,
 		#	{"move_rate":randf_range(.5,1),"type":"rare fish"}
 		#)
@@ -115,7 +115,7 @@ func on_catch(fish_data:Dictionary):
 
 func on_miss(vaild:bool = false):
 	if vaild == true:
-		Game.send_notifcation("Failed to catch a fish.")
+		General_Events.send_notifcation("Failed to catch a fish.")
 		end_game()
 
 func on_cancel():

@@ -22,7 +22,7 @@ static func acquire_item(target,item,handler = null,prefix = "Acquired"):
 			prefix +" "+ str(item["meta"]["name"]) + " but unable to carry anymore."
 			)
 	elif handler != null:
-		Game.send_notifcation( 
+		General_Events.send_notifcation( 
 			prefix +" "+ str(item["meta"]["name"])
 			)
 		#handler.get_hud().gui_notify.add_notify_message(
