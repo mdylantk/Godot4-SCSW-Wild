@@ -8,6 +8,10 @@ class_name Server_Handler extends Node
 
 var peer:ENetMultiplayerPeer
 
+#NOTE: this not being used. a prototype. also probably should
+#be an autoload too
+
+
 func _ready() -> void:
 	print_debug("I am ready")
 	#NOTE: the game may need to handle this or redirect it up top the game

@@ -5,6 +5,10 @@ class_name Player_Handler extends Node2D
 #@export_file("*.tscn") var default_pawn = "res://Data/Node/Actors/Player.tscn"
 @export var default_pawn : PackedScene = load("uid://bugclr6n3igb4")
 
+@export_category("interact")
+@export var interact_distance : float = 24
+@export var interact_tracer: Collsion_Trace_2D
+
 var pawn #pawn may be move around, so a direct ref will be used to track it
 var uid = 0 #may or may not be needed if there a built in way to get a user id\
 
@@ -17,8 +21,13 @@ func _ready():
 	#player_meta_changed.connect(player_meta_changed_test)
 	
 	if state == null :
-		state = Player_State.new() 
+		state = Player_State.new()
+		#TODO: should also add a player id to it once a system is added to handle it
+		#also for single player, player and game should be contain in a save folder so more than
+		#one save can be created
+		state.file_name = "player_state"
 		#this also could be where loading state happens if state is created when player 'joins'
+	state.load_state()
 	if pawn == null:
 		#pawn_state = Pawn_State.Null
 		#if has_node("Player"):
@@ -46,7 +55,6 @@ func _ready():
 
 
 
-
 func _physics_process(_delta) :
 	if pawn != null:
 		pawn.move(movement_input)
@@ -57,32 +65,26 @@ func _physics_process(_delta) :
 func input_update(event:InputEvent):
 	#movement for the pawn(return is pawn is null
 	if pawn != null :
+		#test
+		if state.dirty:
+			print_debug("saving")
+			state.save_state()
+		#test end
 		movement_input = Vector2(
 			Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
 			).normalized()
-
 		if event.is_action("Sprint"):
 			pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
-	#NOTE: facing direction is being ref here, and if pawn lacks it, it could be a problem
-	#may need to make sure all pawns have it or find an indirect way to get a value
-	#but it is in the base pawn movement so it may be fine for now
-	#NOTEL: this came from player.any location or ref to self should be for pawn unless new
-	#if pawn != null :
-		if event.is_action("Accept") && event.is_action_pressed("Accept"):
-			var space_state = get_world_2d().direct_space_state #can get a lot just with the player
-			# use global coordinates, not local to node
-			var query = PhysicsRayQueryParameters2D.create(
-				pawn.global_position, 
-				pawn.global_position+(pawn.movement_component.facing_dirction*24),
-				0b10000000_00000000_00000000_00001000, #last is 1, first is 32
-				[pawn])
-			#NOTE: collsion mask may override each other. so if there two interact on one object for tracing
-			#then only the first will trigger
-			#0b10000000_00000000_00000000_00001101
-			#query.exclude = [local_player]
-			var result = space_state.intersect_ray(query)
 			
-			
+		if event.is_action_pressed("Accept"):
+			var result := {}
+			if interact_tracer != null:
+				result = interact_tracer.line_trace(
+					get_world_2d().direct_space_state,
+					pawn.global_position,
+					pawn.global_position+(pawn.movement_component.facing_dirction*interact_distance),
+					[pawn]
+					)
 			if "collider" in result:
 			#	Game_Utility.get_action(result["collider"],"on_interact").call(
 			#			self, pawn, result["collider"], {}
@@ -112,7 +114,7 @@ func input_update(event:InputEvent):
 						#get_viewport().set_input_as_handled()
 
 
-##Region Listerners
+#Region Listerners
 func on_item_gain(inventory, slot, old_item):
 	#could leave this and just properly connect/disconnect on pawn change
 	#the could check the new slot data
@@ -121,8 +123,9 @@ func on_item_gain(inventory, slot, old_item):
 	#interact with the handler(like it kind of doing now) to do the check
 	#NOTE: Big issue is that score is update when unable to store fish
 	#but a check with the return value should fix that
-	print("inv: "+ str(inventory))
-	print("slot: "+ str(slot))
-	print("old: "+ str(old_item))
-	print("new: "+ str(inventory.items[slot]))
+	#print("inv: "+ str(inventory))
+	#print("slot: "+ str(slot))
+	#print("old: "+ str(old_item))
+	print_debug("new: "+ str(inventory.items[slot]))
+	pass
 

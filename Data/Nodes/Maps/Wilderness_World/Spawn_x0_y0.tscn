@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://blyxjt47otoln"]
+[gd_scene load_steps=23 format=3 uid="uid://blyxjt47otoln"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_ijlli"]
 [ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_d0e8t"]
@@ -11,8 +11,11 @@
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="9_ceyac"]
 [ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Instance_Data.gd" id="10_o6buh"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="11_cekdw"]
+[ext_resource type="Script" path="res://Data/Nodes/Components/Interactive_Component.gd" id="12_fvj26"]
+[ext_resource type="Resource" uid="uid://nrh8trhov6yk" path="res://Data/Resources/Fish_Item.tres" id="13_4sksh"]
+[ext_resource type="Script" path="res://Data/Features/Interaction_Data/Catch_Fish.gd" id="15_a55u6"]
 
-[sub_resource type="Resource" id="Resource_u6nsm"]
+[sub_resource type="Resource" id="Resource_fdmjt"]
 resource_local_to_scene = true
 script = ExtResource("6_hjdim")
 dialog_data = ExtResource("4_f33wt")
@@ -28,7 +31,7 @@ region = Rect2(17, 357, 16, 16)
 script = ExtResource("10_o6buh")
 instance_scene = "uid://hepasgr3svoi"
 
-[sub_resource type="Resource" id="Resource_hvgc5"]
+[sub_resource type="Resource" id="Resource_gt0iv"]
 resource_local_to_scene = true
 script = ExtResource("11_cekdw")
 level_data = SubResource("Resource_e0maw")
@@ -38,6 +41,12 @@ entry_point_id = "world"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m2me0"]
 size = Vector2(16, 16)
+
+[sub_resource type="Resource" id="Resource_qk4qw"]
+script = ExtResource("15_a55u6")
+fish_item_source = ExtResource("13_4sksh")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v3v22"]
 
 [node name="TileMap" type="TileMap"]
 y_sort_enabled = true
@@ -54,7 +63,7 @@ position = Vector2(376, 184)
 metadata/Dialog = ExtResource("4_f33wt")
 
 [node name="Interact_Component" parent="NCP" instance=ExtResource("5_dfv4w")]
-interactive_data = SubResource("Resource_u6nsm")
+interactive_data = SubResource("Resource_fdmjt")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NCP/Interact_Component"]
 shape = SubResource("RectangleShape2D_rw47r")
@@ -78,10 +87,20 @@ position = Vector2(376, 152)
 texture = SubResource("AtlasTexture_qphu2")
 
 [node name="Interact_Component" parent="Old_Man_House" instance=ExtResource("5_dfv4w")]
-interactive_data = SubResource("Resource_hvgc5")
+interactive_data = SubResource("Resource_gt0iv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Old_Man_House/Interact_Component"]
 shape = SubResource("RectangleShape2D_m2me0")
+
+[node name="Area2DTest" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 8
+script = ExtResource("12_fvj26")
+interactive_data = SubResource("Resource_qk4qw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2DTest"]
+position = Vector2(87, 119)
+shape = SubResource("RectangleShape2D_v3v22")
 
 [editable path="NCP"]
 [editable path="Old_Man_House"]

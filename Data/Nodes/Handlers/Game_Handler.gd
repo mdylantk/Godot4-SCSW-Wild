@@ -1,5 +1,9 @@
 class_name Game_Handler extends Node2D
 
+#NOTE: making most handlers autoload. this will handle running the game
+#mostly spawning players and AI as well as act like glue to the other handlers
+
+
 @export var state : Savable_State 
 #todo, try to have this autoload instead of static ref. maybe use a auroload scrip only to get this ref
 #static var game : Game_Handler #todo change to game
@@ -15,8 +19,8 @@ signal player_created(handler:Node, index : int)
 
 ##Core Handlers
 #@onready var hud = Hud #NOTE:TODO Hud should call Game and listen to Game. Game should run without knowing abut HUD
-@onready var input : Node = %Input_Handler
-@onready var world : Node = %World_Handler
+#@onready var input : Node = %Input_Handler
+#@onready var world : Node = %World_Handler
 @onready var server : Node = %Server_Handler
 
 func get_player_handler(index : int = 0):
@@ -43,7 +47,7 @@ func load_player_handler(index : int = 0):
 			#TODO: maybe design it so the hud know the player, but the player do not
 			#would require Game.HUD to call gui events like notify
 			#hud.player_handler = player
-			input.player_handler = player
+			User_Input.player_handler = player
 			#player.state.data_changed.connect(hud.on_player_state_change)
 			#hud.handler_setup(player)
 		player_created.emit(player,index)
@@ -60,7 +64,7 @@ func get_player_handler_index(player):
 
 ### General game events ###
 func change_level(level, handler):
-	world.change_level(level,handler)
+	World.change_level(level,handler)
 	#hud.loading = true
 
 #client side for the most part. just need to have events trigger in it rep if nessary
@@ -73,7 +77,7 @@ func change_level(level, handler):
 
 #client side, but what call it may or may not need rep
 func allow_input(use_input:bool = true):
-	input.enable_input = use_input
+	User_Input.enable_input = use_input
 
 
 func print_copyright():
@@ -89,6 +93,7 @@ func _ready():
 	#game = self
 	if state == null :
 		state = Game_State.new()
+		state.file_name = "game_state"
 	if state.random_seed == 0 :
 		randomize()
 		state.random_seed = randi()
@@ -112,7 +117,7 @@ func _ready():
 @rpc("any_peer","call_local")
 func start_game():
 	load_player_handler()
-	world.level_data = load("uid://cvna13cf6rc1p")
+	World.level_data = load("uid://cvna13cf6rc1p")
 	#the idea is there at least a main menu in the future
 	#start game would init the world. before that there may be game
 	#config or waiting for players

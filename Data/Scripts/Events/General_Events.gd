@@ -8,7 +8,7 @@ class_name General_Events extends Object
 #a lot in the case of magor system redesign
 	
 static func get_world():
-	return Game.world
+	return World
 
 #Not needed if autoload
 #static func get_HUD():
@@ -17,10 +17,10 @@ static func get_world():
 #can add a get_player, but for now it not needed
 	
 static func spawn_entity(entity:Node):
-	Game.world.add_child(entity)
+	World.add_child(entity)
 	
 static func change_level(level:Level_Data, handler:Node, instigator:Node, offset:Vector2):
-	Game.world.change_level(level,handler,instigator,offset)
+	World.change_level(level,handler,instigator,offset)
 	
 static func start_dialog(dialog_data):
 	Hud.gui_dialog.open_dialog(dialog_data)

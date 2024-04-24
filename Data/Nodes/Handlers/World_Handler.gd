@@ -2,7 +2,7 @@ class_name World_Handler extends Node2D
 
 #TODO: add common world event as signals and call them correct so they can be listen to
 #updates that state it pos/souce and if it load/unloaded
-signal chunk_update(tile_map, chunk_position, is_unloaded)
+#signal chunk_update(tile_map, chunk_position, is_unloaded)
 #signal region_update
 
 @export var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
