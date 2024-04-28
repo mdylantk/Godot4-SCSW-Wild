@@ -20,7 +20,7 @@ func _start():
 	#note: only one fish game per action...but only one should exist if not
 	#dynamicly added
 	if fish_game == null:
-		fish_game = Hud.fishing_game
+		fish_game = UI.fishing_game
 		#fish_game.add_fish(Vector2i(24,24),fish_game.rare_fish_atlas_coords,2,
 		#	{"move_rate":randf_range(.5,1),"type":"rare fish"}
 		#)

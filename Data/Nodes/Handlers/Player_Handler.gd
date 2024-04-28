@@ -40,6 +40,11 @@ func _ready():
 		pawn = default_pawn.instantiate()
 		pawn.add_to_group("player_controlled")
 		General_Events.spawn_entity(pawn)
+		
+		var test_inv = state.fetch("inventory", "pawn")
+		if test_inv != null:
+			print(test_inv)
+			pawn.inventory.items = test_inv
 		#Game.world.add_child(pawn)
 		#pawn_ref.name = "Player" #todo: make child of world main scene for objects
 		#pawn = pawn_ref
@@ -67,7 +72,7 @@ func input_update(event:InputEvent):
 	if pawn != null :
 		#test
 		if state.dirty:
-			print_debug("saving")
+			#print_debug("saving")
 			state.save_state()
 		#test end
 		movement_input = Vector2(
@@ -127,5 +132,7 @@ func on_item_gain(inventory, slot, old_item):
 	#print("slot: "+ str(slot))
 	#print("old: "+ str(old_item))
 	print_debug("new: "+ str(inventory.items[slot]))
+	state.store("inventory", inventory.items, "pawn")
+	print_debug(state.data)
 	pass
 

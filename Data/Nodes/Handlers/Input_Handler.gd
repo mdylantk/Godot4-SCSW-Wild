@@ -1,6 +1,6 @@
 class_name Input_Handler extends Node
 
-@export var enable_input : bool = true 
+@export var enable_input : bool = false 
 
 #NOTE: knowing the handler will allow network vaildation
 var player_handler : Player_Handler
@@ -19,4 +19,5 @@ func _input(event:InputEvent):
 	if !enable_input or player_handler == null: 
 		return
 	else:
-		player_handler.input_update(event)
+		pass
+		#player_handler.input_update(event)

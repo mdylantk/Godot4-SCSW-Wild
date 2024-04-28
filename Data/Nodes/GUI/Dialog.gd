@@ -37,7 +37,7 @@ func open_dialog(new_data:Dialog_Data) :
 		#update_text() process seem to run after this, may need to use signal and timers instead of processes
 		set_process(true)
 		dialog_data.end.connect(close_dialog)
-		#update_text()
+		update_text()
 		visible = true
 
 func close_dialog():
@@ -125,7 +125,7 @@ func update_text():
 			dialog_index = 0
 			end_dialog()
 		else:
-
+	
 			dialog_index += 1
 			$Text.text = dialog_text
 			visible = true

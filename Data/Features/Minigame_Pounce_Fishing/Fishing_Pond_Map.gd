@@ -20,14 +20,19 @@ signal canceled()
 
 var running : bool = false :
 	set(value):
+		
+		if running == value:
+			#running all the time was causing pausing to break
+			return
 		running = value
 		if running:
-			Game.allow_input(false)
+			UI.enable_player_input = false
 			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 			set_layer_enabled(0,true)
 			visible = true
 		else:#if active_fish.is_empty():
-			Game.allow_input(true)
+			UI.enable_player_input = true
+			#Game.allow_input(true)
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			set_layer_enabled(0,false)
 			visible = false

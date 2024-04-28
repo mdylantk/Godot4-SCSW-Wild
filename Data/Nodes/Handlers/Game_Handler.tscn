@@ -13,7 +13,9 @@ random_seed = 1150104489
 data = {}
 path = "user://"
 file_name = "state"
-save_type = 0
+key = ""
+is_encrypted = true
+save_type = 2
 
 [node name="Game_Handler" type="Node2D" groups=["Game_Handler"]]
 y_sort_enabled = true

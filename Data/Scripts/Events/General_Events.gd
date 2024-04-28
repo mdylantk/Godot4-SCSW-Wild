@@ -23,7 +23,7 @@ static func change_level(level:Level_Data, handler:Node, instigator:Node, offset
 	World.change_level(level,handler,instigator,offset)
 	
 static func start_dialog(dialog_data):
-	Hud.gui_dialog.open_dialog(dialog_data)
+	UI.gui_dialog.open_dialog(dialog_data)
 
 static func send_notifcation(message : String):
-	Hud.gui_notify.add_notify_message("[center]"+message)
+	UI.gui_notify.add_notify_message("[center]"+message)

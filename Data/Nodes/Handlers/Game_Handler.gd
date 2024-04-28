@@ -47,9 +47,10 @@ func load_player_handler(index : int = 0):
 			#TODO: maybe design it so the hud know the player, but the player do not
 			#would require Game.HUD to call gui events like notify
 			#hud.player_handler = player
-			User_Input.player_handler = player
+			#UI.player_handler = player
 			#player.state.data_changed.connect(hud.on_player_state_change)
 			#hud.handler_setup(player)
+			pass
 		player_created.emit(player,index)
 		return player
 
@@ -76,8 +77,8 @@ func change_level(level, handler):
 #	hud.gui_notify.add_notify_message("[center]"+message)
 
 #client side, but what call it may or may not need rep
-func allow_input(use_input:bool = true):
-	User_Input.enable_input = use_input
+#func allow_input(use_input:bool = true):
+#	UI.enable_input = use_input
 
 
 func print_copyright():

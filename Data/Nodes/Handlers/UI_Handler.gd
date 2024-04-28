@@ -1,4 +1,4 @@
-class_name HUD_Handler extends CanvasLayer
+class_name UI_Handler extends Node
 
 #generic signal that state when a gui scene been update...if said update emit it(placeholder mostly)
 #currently no use since most update per process. also children may call their own, but may also call this
@@ -18,7 +18,8 @@ signal gui_update(element)
 	set(value):
 		if(%LoadingScreen):
 			%LoadingScreen.visible = value
-		User_Input.enable_input = !value
+		if loading != value: #nned these check so state do not get refreshed to an invaild one
+			enable_player_input = !value
 		###NOTE!!! below works. above do not disable input
 		#Game.input.set_process_input(!value)
 		loading = value
@@ -32,6 +33,10 @@ signal gui_update(element)
 @onready var gui_dialog := %Dialog
 
 @onready var fishing_game := %FishingPondMap
+
+##enable the input for the player controller, else
+##player contoller will nopt process the input
+@export var enable_player_input : bool = true
 
 @onready var debug : Label = %Debug
 @export var enable_debug : bool = true
@@ -51,6 +56,7 @@ func handler_setup(handler):
 	var rare_fish_count = Savedata_Helper.fetch_player_score(handler,"rare_fish_caught")
 	%Score.set_common_score(common_fish_count)
 	%Score.set_rare_score(rare_fish_count)
+	player_handler = handler
 
 func on_player_state_change(source, id, old_value, new_value, group):
 	if old_value == new_value:
@@ -74,6 +80,12 @@ func on_player_created(player:Node, index : int):
 	if index == 0: #0 should be host or owning client. may need a better way or a built in way
 		player.state.data_changed.connect(on_player_state_change)
 		handler_setup(player)
+
+func _input(event:InputEvent):
+	if enable_player_input and player_handler != null: 
+		player_handler.input_update(event)
+		
+
 
 func _process(_delta):
 	var camera_global_position : Vector2

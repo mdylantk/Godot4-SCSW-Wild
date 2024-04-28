@@ -1,0 +1,86 @@
+[gd_scene load_steps=13 format=3 uid="uid://cc1hxktnb4a1k"]
+
+[ext_resource type="Script" path="res://Data/Nodes/Handlers/UI_Handler.gd" id="1_htxbl"]
+[ext_resource type="PackedScene" uid="uid://ctvmde4ov5w2x" path="res://Data/Nodes/GUI/Dialog.tscn" id="2_0wofj"]
+[ext_resource type="PackedScene" uid="uid://bh5qglvs6rygh" path="res://Data/Nodes/GUI/score.tscn" id="3_qtng4"]
+[ext_resource type="PackedScene" uid="uid://df500lm7ih60h" path="res://Data/Nodes/GUI/Notify.tscn" id="4_m1dom"]
+[ext_resource type="PackedScene" uid="uid://c6qkqs4t14j5w" path="res://Data/Nodes/GUI/Loading_Screen.tscn" id="5_t52tc"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="6_nymfg"]
+[ext_resource type="PackedScene" uid="uid://brre7crunbrjj" path="res://Data/Features/Minigame_Pounce_Fishing/Fishing_Pond_Map.tscn" id="7_531g0"]
+[ext_resource type="PackedScene" uid="uid://b8gbuuqjxib" path="res://Data/Nodes/GUI/Main_Menu.tscn" id="8_ufq3w"]
+[ext_resource type="PackedScene" uid="uid://b80ly070yrqgt" path="res://Data/Nodes/GUI/Credits_Menu.tscn" id="9_6enyp"]
+[ext_resource type="Script" path="res://Data/Nodes/GUI/Credits_Menu.gd" id="10_dvdad"]
+[ext_resource type="PackedScene" uid="uid://clfctvdo5gs0b" path="res://Data/Nodes/GUI/Options_Menu.tscn" id="11_3jetq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wsma3"]
+atlas = ExtResource("6_nymfg")
+region = Rect2(697, 272, 16, 16)
+
+[node name="UI" type="Node" groups=["HUD"]]
+process_mode = 3
+script = ExtResource("1_htxbl")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+editor_description = "This is just a container for all the gui. The main goal is to keep elemets scale to the window."
+
+[node name="Dialog" parent="HUD" instance=ExtResource("2_0wofj")]
+unique_name_in_owner = true
+process_mode = 1
+visible = false
+
+[node name="Score" parent="HUD" instance=ExtResource("3_qtng4")]
+unique_name_in_owner = true
+visible = false
+
+[node name="Notify" parent="HUD" instance=ExtResource("4_m1dom")]
+unique_name_in_owner = true
+visible = false
+
+[node name="LoadingScreen" parent="HUD" instance=ExtResource("5_t52tc")]
+unique_name_in_owner = true
+
+[node name="HomePoint" type="CanvasLayer" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+
+[node name="TextureRect" type="TextureRect" parent="HUD/HomePoint"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = 4.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_wsma3")
+
+[node name="Debug" type="Label" parent="HUD"]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -153.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 88.0
+grow_horizontal = 0
+
+[node name="FishingPondMap" parent="HUD" instance=ExtResource("7_531g0")]
+unique_name_in_owner = true
+process_mode = 1
+visible = false
+
+[node name="Main_Menu" parent="HUD" node_paths=PackedStringArray("options_menu", "credits_menu") instance=ExtResource("8_ufq3w")]
+unique_name_in_owner = true
+options_menu = NodePath("../Options_Menu")
+credits_menu = NodePath("../Credits_Menu")
+
+[node name="Credits_Menu" parent="HUD" instance=ExtResource("9_6enyp")]
+unique_name_in_owner = true
+layer = 11
+script = ExtResource("10_dvdad")
+
+[node name="Options_Menu" parent="HUD" instance=ExtResource("11_3jetq")]
+unique_name_in_owner = true

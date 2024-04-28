@@ -7,7 +7,8 @@ static var max_stack_size : int = 99 #note, this can not be override in export. 
 
 func new_item(amount = 1, meta = {}): 
 	var item : Dictionary = {}
-	item["type"] = self #since the item created is base off a templace, it should have an instance in
+	#ResourceLoader.get_resource_uid(self.resource_path)
+	item["type"] = self.resource_path#since the item created is base off a templace, it should have an instance in
 	#the data base. Note: creating a new item resource at runtime is risky and this not design to handle that
 	#since that new dynamic source may be lost on load ore change. item data is for dynamic item info
 	item["amount"] = amount
@@ -24,7 +25,7 @@ static func is_item(item : Dictionary):
 static func get_type(item):
 	if item.has("type") :
 		#this may be null or not an Item, so more check should be added
-		return item["type"]
+		return load(item["type"])
 	return Item #NOTE: change this since it could cause issues
 
 static func get_amount(item:Dictionary):
@@ -80,3 +81,4 @@ static func is_similar_item(source_item: Dictionary, other_item: Dictionary):
 #the object to spawn if item can be drop or spawn in world. most likly will be a use a share item entity
 #but that may not always be wanted(also a meta tag could override this
 @export_file("*.tscn") var item_entity : String
+

@@ -17,11 +17,10 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Hud="*res://Data/Nodes/Handlers/HUD_Handler.tscn"
+UI="*res://Data/Nodes/Handlers/UI_Handler.tscn"
 Resources="*res://Data/Nodes/Handlers/Resource_Handler.tscn"
 Game="*res://Data/Nodes/Handlers/Game_Handler.tscn"
 World="*res://Data/Nodes/Handlers/World_Handler.tscn"
-User_Input="*res://Data/Nodes/Handlers/Input_Handler.tscn"
 Audio="*res://Data/Nodes/Handlers/Audio_Handler.tscn"
 
 [display]
