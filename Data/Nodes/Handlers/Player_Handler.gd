@@ -9,6 +9,8 @@ class_name Player_Handler extends Node2D
 @export var interact_distance : float = 24
 @export var interact_tracer: Collsion_Trace_2D
 
+@export var test_c : Action_Group
+
 var pawn #pawn may be move around, so a direct ref will be used to track it
 var uid = 0 #may or may not be needed if there a built in way to get a user id\
 
@@ -117,7 +119,18 @@ func input_update(event:InputEvent):
 						#below will break a lot. also unsing unhandle also causes issues
 						#so the dialog and fish minigame need to be redeign or this need to handle it diffrently
 						#get_viewport().set_input_as_handled()
-
+	#currently disable untill needed for more tests
+	if false and event.is_action("Sprint"):
+		var test_data = {
+			"test": randi_range(1,7),
+			"handler": self,
+			"source": pawn
+		}
+		test_c.run(test_data)
+	#print(test_data["test"])
+	#set_meta("tester",test_data["test"])
+	#print_debug(test_c.is_true(test_data))
+	
 
 #Region Listerners
 func on_item_gain(inventory, slot, old_item):

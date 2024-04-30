@@ -2,7 +2,38 @@ class_name Dialog_Script_Resource extends Resource
 
 #this is the text that will be used if no other logic or 
 #varibles are provided
+#@export
+
+
+
 @export_multiline var default_script : String
+
+#NOTE TODO NEW: may use this, but change it to be used per entry. 
+#a text tie with an action. should be one way (forward) and the dialog
+#handler or what not should keep track of last? could also use arrays and link
+#actions to segments. this also could be vague and children can handle complex actions
+#so this mostly be a string with a getter to get the string or an a string in an array
+#and the action. 
+#NOTE in other words, instead of using a key, an index may be used. dialog data will keep a list of
+#these as keys, into, and default
+#NOTE: also could just have a container with key, text, and action
+#in this case both text and action is an array. text would ref an index to trigger an action
+#START NEW EXPERIMENT
+@export var dialog_key : String
+@export_multiline var dialog : Array[String] #if more than one, then random pull from the array
+#@export var trigger_id : String #Note also could add an action that handles the index, but may be harder to work with
+#NOTE: maybe the id should be encode in the array. or could use the array index plus dialog id
+#END new experiment
+#NOTE:WHAT IF there two set of data . this which hold text and action(maybe formating)
+#and a segment that hold an array of these and state if it in steps or random.
+#step just means the text is split by actions. greet=greet-action then to a yell-yell action
+#after it is finish
+
+
+#NOTE: could just not add actions to this and instead have dialog data handle actions 
+#with if statements. just need to have a way to delay text array as random or static
+#or just bulk it for static with spliters or auto spliter. also mayne an id for triggers
+#so dialog can react if it waiting for it.
 
 #NOTE and TODO: add a dictoranry to be populated by varibles
 #this should be pass on to dialog_data and should contain varibles

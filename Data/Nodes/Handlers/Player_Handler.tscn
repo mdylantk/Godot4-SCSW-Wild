@@ -1,8 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://bdpv2nuo5qsqg"]
+[gd_scene load_steps=11 format=3 uid="uid://bdpv2nuo5qsqg"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/Player_Handler.gd" id="1_d3v36"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Data/Nodes/Actors/Player.tscn" id="2_vymv8"]
 [ext_resource type="Script" path="res://Data/Features/Tools/Collsion_Trace_2D.gd" id="3_vjst7"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/A_Add_To_Data.gd" id="4_4njk8"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/A_Send_Notification.gd" id="4_prgpm"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/Action_Group.gd" id="5_lu8l3"]
 
 [sub_resource type="Resource" id="Resource_kdy7y"]
 script = ExtResource("3_vjst7")
@@ -11,8 +14,27 @@ collide_with_bodies = true
 hit_from_inside = true
 collsion_mask = 2147483656
 
+[sub_resource type="Resource" id="Resource_abudo"]
+script = ExtResource("4_4njk8")
+addtional_data = {
+"a": "mew",
+"b": 8,
+"c": Vector2(4, 8)
+}
+
+[sub_resource type="Resource" id="Resource_c2f58"]
+script = ExtResource("4_prgpm")
+message = "meow {a} {b} {c}"
+
+[sub_resource type="Resource" id="Resource_mpce8"]
+script = ExtResource("5_lu8l3")
+comparison = 0
+conditions = Array[Resource("res://Data/Features/Action_System/Base_Conditional.gd")]([])
+actions = Array[Resource("res://Data/Features/Action_System/Base_Action.gd")]([SubResource("Resource_abudo"), SubResource("Resource_c2f58")])
+
 [node name="Player_Handler" type="Node2D" groups=["Player_Handlers"]]
 y_sort_enabled = true
 script = ExtResource("1_d3v36")
 default_pawn = ExtResource("2_vymv8")
 interact_tracer = SubResource("Resource_kdy7y")
+test_c = SubResource("Resource_mpce8")
