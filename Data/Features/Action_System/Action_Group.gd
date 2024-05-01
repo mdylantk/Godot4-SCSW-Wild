@@ -1,4 +1,7 @@
-class_name Action_Group extends Resource
+class_name Action_Group extends Base_Action
+#will extends base action since works the same as an action
+#may be a bit odd since it also call actions. if it becomes an issue,
+#then it can be made its own type
 
 @export_enum("AND","OR") var comparison:int
 @export var conditions : Array[Base_Conditional]
@@ -24,3 +27,4 @@ func run(data:={}):
 	if is_true:
 		for action:Base_Action in actions:
 			action.run(data)
+

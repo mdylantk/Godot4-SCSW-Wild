@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/Player_Handler.gd" id="1_d3v36"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Data/Nodes/Actors/Player.tscn" id="2_vymv8"]
 [ext_resource type="Script" path="res://Data/Features/Tools/Collsion_Trace_2D.gd" id="3_vjst7"]
-[ext_resource type="Script" path="res://Data/Features/Action_System/A_Add_To_Data.gd" id="4_4njk8"]
-[ext_resource type="Script" path="res://Data/Features/Action_System/A_Send_Notification.gd" id="4_prgpm"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Add_To_Data.gd" id="4_s6jw0"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Send_Notification.gd" id="5_0grcv"]
 [ext_resource type="Script" path="res://Data/Features/Action_System/Action_Group.gd" id="5_lu8l3"]
 
 [sub_resource type="Resource" id="Resource_kdy7y"]
@@ -15,7 +15,7 @@ hit_from_inside = true
 collsion_mask = 2147483656
 
 [sub_resource type="Resource" id="Resource_abudo"]
-script = ExtResource("4_4njk8")
+script = ExtResource("4_s6jw0")
 addtional_data = {
 "a": "mew",
 "b": 8,
@@ -23,8 +23,8 @@ addtional_data = {
 }
 
 [sub_resource type="Resource" id="Resource_c2f58"]
-script = ExtResource("4_prgpm")
-message = "meow {a} {b} {c}"
+script = ExtResource("5_0grcv")
+message = "meow {a} {b} {c} {test}"
 
 [sub_resource type="Resource" id="Resource_mpce8"]
 script = ExtResource("5_lu8l3")

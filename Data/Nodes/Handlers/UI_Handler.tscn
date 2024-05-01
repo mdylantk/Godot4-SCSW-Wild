@@ -25,7 +25,6 @@ editor_description = "This is just a container for all the gui. The main goal is
 
 [node name="Dialog" parent="HUD" instance=ExtResource("2_0wofj")]
 unique_name_in_owner = true
-process_mode = 1
 visible = false
 
 [node name="Score" parent="HUD" instance=ExtResource("3_qtng4")]

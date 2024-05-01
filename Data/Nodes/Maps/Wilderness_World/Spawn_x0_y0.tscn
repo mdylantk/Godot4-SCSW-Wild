@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://blyxjt47otoln"]
+[gd_scene load_steps=27 format=3 uid="uid://blyxjt47otoln"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_ijlli"]
 [ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_d0e8t"]
@@ -12,10 +12,11 @@
 [ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Instance_Data.gd" id="10_o6buh"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Level_Transfer.gd" id="11_cekdw"]
 [ext_resource type="Script" path="res://Data/Nodes/Components/Interactive_Component.gd" id="12_fvj26"]
-[ext_resource type="Resource" uid="uid://nrh8trhov6yk" path="res://Data/Resources/Fish_Item.tres" id="13_4sksh"]
-[ext_resource type="Script" path="res://Data/Features/Interaction_Data/Catch_Fish.gd" id="15_a55u6"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Send_Notification.gd" id="13_vtdic"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Set_Dialog.gd" id="14_hfiqy"]
+[ext_resource type="Script" path="res://Data/Features/Interaction_Data/Action_On_Interact.gd" id="15_hqe25"]
 
-[sub_resource type="Resource" id="Resource_qvkuu"]
+[sub_resource type="Resource" id="Resource_hcqww"]
 resource_local_to_scene = true
 script = ExtResource("6_hjdim")
 dialog_data = ExtResource("4_f33wt")
@@ -31,7 +32,7 @@ region = Rect2(17, 357, 16, 16)
 script = ExtResource("10_o6buh")
 instance_scene = "uid://hepasgr3svoi"
 
-[sub_resource type="Resource" id="Resource_04jne"]
+[sub_resource type="Resource" id="Resource_y6k6h"]
 resource_local_to_scene = true
 script = ExtResource("11_cekdw")
 level_data = SubResource("Resource_e0maw")
@@ -42,9 +43,25 @@ entry_point_id = "world"
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m2me0"]
 size = Vector2(16, 16)
 
-[sub_resource type="Resource" id="Resource_qk4qw"]
-script = ExtResource("15_a55u6")
-fish_item_source = ExtResource("13_4sksh")
+[sub_resource type="Resource" id="Resource_b1qlm"]
+script = ExtResource("13_vtdic")
+message = "dialog finished"
+
+[sub_resource type="Resource" id="Resource_7hp1s"]
+script = ExtResource("13_vtdic")
+message = "Dialog canceled"
+
+[sub_resource type="Resource" id="Resource_hxnnr"]
+script = ExtResource("14_hfiqy")
+speaker_name = "Meow"
+text = "meow /p this is a test /p meow mew mew /p here some data: handler = {handler}"
+accept_action = SubResource("Resource_b1qlm")
+cancel_action = SubResource("Resource_7hp1s")
+cancelable = true
+
+[sub_resource type="Resource" id="Resource_20owq"]
+script = ExtResource("15_hqe25")
+action = SubResource("Resource_hxnnr")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v3v22"]
 
@@ -63,7 +80,7 @@ position = Vector2(376, 184)
 metadata/Dialog = ExtResource("4_f33wt")
 
 [node name="Interact_Component" parent="NCP" instance=ExtResource("5_dfv4w")]
-interactive_data = SubResource("Resource_qvkuu")
+interactive_data = SubResource("Resource_hcqww")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NCP/Interact_Component"]
 shape = SubResource("RectangleShape2D_rw47r")
@@ -87,7 +104,7 @@ position = Vector2(376, 152)
 texture = SubResource("AtlasTexture_qphu2")
 
 [node name="Interact_Component" parent="Old_Man_House" instance=ExtResource("5_dfv4w")]
-interactive_data = SubResource("Resource_04jne")
+interactive_data = SubResource("Resource_y6k6h")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Old_Man_House/Interact_Component"]
 shape = SubResource("RectangleShape2D_m2me0")
@@ -96,7 +113,7 @@ shape = SubResource("RectangleShape2D_m2me0")
 collision_layer = 8
 collision_mask = 8
 script = ExtResource("12_fvj26")
-interactive_data = SubResource("Resource_qk4qw")
+interactive_data = SubResource("Resource_20owq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2DTest"]
 position = Vector2(87, 119)

@@ -8,7 +8,83 @@ var cooldown_timer : float = 0
 var dialog_index = 0
 var dialog_data : Dialog_Data
 
-#todo: probably add signals to this or data so that func may not need to be call or var watched
+##action to run if about to end dialog
+var cancel_action : Base_Action
+##acttion to run if about to finish dialog
+var accept_action : Base_Action
+
+##handles the text in parts since the display only can fit so much
+var split_text : PackedStringArray
+var page_index : int = 0
+
+##the data used for the actions. this is shared since it should be a ref of a state
+##also chain action may need to be careful of reusing the same data.
+var data := {}
+
+var is_cancelable:bool = true
+
+#NOTE TODO: should work on rrwriting this to handles displaying text
+#and assiment of action to buttons
+
+#START new
+#this are simple setters. can be expended on as needed
+#should also have a refresh which may just change visability of stuff
+#and probably should null it just incase
+
+#this is meant to change speaker data independent of setting text so it
+#only need to be called when the speaker changes
+func setup_speaker(display_name:String = "", icon:Texture2D = null):
+	$Name.text = "[center]"+display_name
+	$Icon.texture = icon
+
+func setup_text(
+		text:String, accept:Base_Action = null, cancel:Base_Action = null,
+		start_dialog:bool = true, cancelable: bool = true
+	):
+	split_text = text.split("/p")
+	accept_action = accept
+	cancel_action = cancel
+	
+	is_cancelable=cancelable
+	
+	if start_dialog:
+		#this will trigger the dialog so a seprate action wont need to start it
+		#only apply if dialog not started.
+		#Note: could have gui or UI handle it, or signal up and have the action
+		#call these
+		update_page_text(0)
+		visible = true
+
+func update_page_text(index:int = 0):
+	#todo: if typewrite effect is used, forwarding (probably happen before this is calles)
+	#should display all text first
+	if index < split_text.size() and index >= 0:
+		$Text.text = split_text[index].format(data)
+		print_debug(index)
+		page_index = index
+	elif index < 0 and is_cancelable:
+		print_debug("start")
+		#note: will disable dialog. action can restart it afterwards
+		#NOTE: may need a flag to diable this so some dialogs can not be canceled
+		#but only finished. an action could do that as well. all it dose is keep this viable
+		visible = false
+		if cancel_action != null:
+			cancel_action.run()
+		#NOTE: is_cancelable will disable cancel action
+		#mostly to prevent it from repeating. if a action is needed
+		#then faking the canel blocking via action be ideal
+		
+	elif index >= split_text.size():
+		print_debug("end")
+		visible = false
+		if accept_action != null:
+			accept_action.run()
+		
+	else:
+		print_debug("this probably being called since the dialog can not be canceled")
+
+
+#END new
 
 func start_dialog(new_target, new_data) :
 	#targer is needed to know if player get too far form it.
@@ -90,18 +166,6 @@ func _process(_delta):
 			#but target can not be null either. so a check is needed either way unless this is remotly reset
 		if (dialog_data.current_handler.pawn.global_position - dialog_data.current_speaker.global_position).length() > 64 :
 			end_dialog()
-			#return
-			
-		if Input.is_action_just_pressed("Accept") :
-			#update_text()
-			
-			pass
-			#cycle text or end it if at end
-		if Input.is_action_just_pressed("Cancel") :
-				#cancle the text. ideally not flagging intro read
-			#end_dialog()
-			pass
-	#note: may need to listen to player input(or for now untill a player hud/control is set up) and maybe only listen to it here
 
 func _input(event: InputEvent) -> void:
 	#NOTE visability check fails. not really needed, but system need to be
@@ -115,6 +179,18 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		elif event.is_action_pressed("Cancel"):
 			end_dialog()
+			get_viewport().set_input_as_handled()
+	#NOTE: new system needs to check of at an end of text
+	#and if so, run action of exist or finish the dialog
+		
+		
+	if event.is_action_pressed("Accept"):
+		if visible:
+			update_page_text(page_index+1)
+			get_viewport().set_input_as_handled()
+	if event.is_action_pressed("Cancel"):
+		if visible:
+			update_page_text(page_index-1)
 			get_viewport().set_input_as_handled()
 
 func update_text():
