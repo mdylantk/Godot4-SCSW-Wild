@@ -69,7 +69,7 @@ func update_page_text(index:int = 0):
 		#but only finished. an action could do that as well. all it dose is keep this viable
 		visible = false
 		if cancel_action != null:
-			cancel_action.run()
+			cancel_action.run(data)
 		#NOTE: is_cancelable will disable cancel action
 		#mostly to prevent it from repeating. if a action is needed
 		#then faking the canel blocking via action be ideal
@@ -78,7 +78,7 @@ func update_page_text(index:int = 0):
 		print_debug("end")
 		visible = false
 		if accept_action != null:
-			accept_action.run()
+			accept_action.run(data)
 		
 	else:
 		print_debug("this probably being called since the dialog can not be canceled")

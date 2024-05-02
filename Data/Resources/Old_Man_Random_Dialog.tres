@@ -1,0 +1,62 @@
+[gd_resource type="Resource" script_class="Random_Action" load_steps=12 format=3 uid="uid://be5snvrbt8c0c"]
+
+[ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Set_Dialog.gd" id="1_p7bdn"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ksa1v"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/Random_Action.gd" id="3_c03kn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2nkl"]
+atlas = ExtResource("2_ksa1v")
+region = Rect2(442, 170, 16, 17)
+
+[sub_resource type="Resource" id="Resource_j3g1p"]
+script = ExtResource("1_p7bdn")
+speaker_name = "Old Man"
+speaker_icon = SubResource("AtlasTexture_d2nkl")
+text = "There is no need to rush to explore. Plenty of time here to get lost."
+cancelable = true
+
+[sub_resource type="Resource" id="Resource_3satk"]
+script = ExtResource("1_p7bdn")
+speaker_name = "Old Man"
+speaker_icon = SubResource("AtlasTexture_d2nkl")
+text = "I wish my imagination was as good as it once was. Then maybe a new fish would come and surprise me."
+cancelable = true
+
+[sub_resource type="Resource" id="Resource_s6qks"]
+script = ExtResource("1_p7bdn")
+speaker_name = "Old Man"
+speaker_icon = SubResource("AtlasTexture_d2nkl")
+text = "Hello there, nice day for fishing."
+cancelable = true
+
+[sub_resource type="Resource" id="Resource_n80sm"]
+script = ExtResource("1_p7bdn")
+speaker_name = "Old Man"
+speaker_icon = SubResource("AtlasTexture_d2nkl")
+text = "Sometimes I worry the forest eat people or maybe that a better though than people just leaving me."
+cancelable = true
+
+[sub_resource type="Resource" id="Resource_mdb5y"]
+script = ExtResource("1_p7bdn")
+speaker_name = "Old Man"
+speaker_icon = SubResource("AtlasTexture_d2nkl")
+text = "I remember a fish called a catfish, but I just can not recall what it look like."
+cancelable = true
+
+[sub_resource type="Resource" id="Resource_vhu3o"]
+script = ExtResource("1_p7bdn")
+speaker_name = "Old Man"
+speaker_icon = SubResource("AtlasTexture_d2nkl")
+text = "This place would be a lot worst if there was monster, raiders, or worst...teenagers."
+cancelable = true
+
+[sub_resource type="Resource" id="Resource_twtvl"]
+script = ExtResource("1_p7bdn")
+speaker_name = "Old Man"
+speaker_icon = SubResource("AtlasTexture_d2nkl")
+text = "I do miss the sea..or almost. I am not a fan of the humidity."
+cancelable = true
+
+[resource]
+script = ExtResource("3_c03kn")
+actions = Array[Resource("res://Data/Features/Action_System/Base_Action.gd")]([SubResource("Resource_j3g1p"), SubResource("Resource_3satk"), SubResource("Resource_s6qks"), SubResource("Resource_n80sm"), SubResource("Resource_mdb5y"), SubResource("Resource_vhu3o"), SubResource("Resource_twtvl")])
