@@ -116,7 +116,19 @@ func _ready():
 
 
 @rpc("any_peer","call_local")
-func start_game():
+func start_game(is_new:bool = true, save_name:String="Default"):
+	Resources.current_save_name = save_name
+	if is_new:
+		var path:String = Resources.get_save_path(false)
+		if DirAccess.dir_exists_absolute(path):
+			var dir:DirAccess = DirAccess.open(path)
+			for file in dir.get_files():
+				#will only remove files that is consider save files. this may need to be expanded on
+				#also may need to move this logic to the resource handler
+				if file.contains(".data") or file.contains(".cfg") or file.contains(".tres"):
+					dir.remove(file)
+			DirAccess.remove_absolute(path)
+	
 	load_player_handler()
 	World.level_data = load("uid://cvna13cf6rc1p")
 	#the idea is there at least a main menu in the future

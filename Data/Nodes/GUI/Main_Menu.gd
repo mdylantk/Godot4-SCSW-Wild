@@ -28,7 +28,7 @@ func _on_resume_button_pressed() -> void:
 
 
 func _on_new_game_button_pressed() -> void:
-	Game.start_game()
+	Game.start_game(true)
 	print_debug("new game pressed")
 	%Resume_Button.visible = true
 	#%LoadingScreen.visible = true
@@ -37,6 +37,7 @@ func _on_new_game_button_pressed() -> void:
 	#NOTE! hiding new game untill a restart system is added
 	visible = false
 	%New_Game_Button.visible = false
+	%Continue_Button.visible = false
 	#%HomePoint.visible = true
 
 
@@ -53,3 +54,14 @@ func _on_exit_button_pressed() -> void:
 func _on_credits_button_pressed() -> void:
 	print_debug("credits pressed")
 	credits_menu.visible = true
+
+
+func _on_continue_button_pressed() -> void:
+	Game.start_game(false)
+	print_debug("continue pressed")
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	get_tree().paused = false
+	visible = false
+	%Resume_Button.visible = true
+	%Continue_Button.visible = false
+	%New_Game_Button.visible = false

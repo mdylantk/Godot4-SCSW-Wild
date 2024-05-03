@@ -11,7 +11,6 @@ resource_local_to_scene = true
 script = ExtResource("2_bcmum")
 random_seed = 1150104489
 data = {}
-path = "user://"
 file_name = "state"
 key = ""
 is_encrypted = true

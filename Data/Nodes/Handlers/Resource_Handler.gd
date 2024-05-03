@@ -7,8 +7,19 @@ class_name Resource_Handler extends Node
 @export var client_settings_file: String = "user://client_settings.cfg"
 @export var server_settings_file: String = "user://server_settings.cfg"
 @onready var auto_save: Timer = %Auto_Save
+
+@export var save_path : String = "user://"
+@export var current_save_name : String = "Default"
+
+func get_save_path(create_path:bool=true)->String:
+	var path = save_path +"/"+current_save_name
+	if !DirAccess.dir_exists_absolute(path) and create_path:
+		DirAccess.make_dir_recursive_absolute(path)
+	return path
+
 var configs :={}
 var configs_to_save:Array[String] = []
+
 #todo: maybe have this store the in a dict
 #also config files seem to not exist after a while, but sometime they are fine
 #this working fine since the other is catching the ref long term

@@ -1,12 +1,14 @@
-extends CanvasLayer
+class_name Dialog_Handler extends CanvasLayer
+signal start()
+signal end(canceled)
 
 #TODO: target and such is stored in the dialog data. 
 #may need to verify the speaker is speaking to the correct player in the future
 #so may need to pass the pawn or handler who owns this
-var target = null
-var cooldown_timer : float = 0
-var dialog_index = 0
-var dialog_data : Dialog_Data
+#var target = null
+#var cooldown_timer : float = 0
+#var dialog_index = 0
+#var dialog_data : Dialog_Data
 
 ##action to run if about to end dialog
 var cancel_action : Base_Action
@@ -68,6 +70,7 @@ func update_page_text(index:int = 0):
 		#NOTE: may need a flag to diable this so some dialogs can not be canceled
 		#but only finished. an action could do that as well. all it dose is keep this viable
 		visible = false
+		end.emit(true)
 		if cancel_action != null:
 			cancel_action.run(data)
 		#NOTE: is_cancelable will disable cancel action
@@ -77,6 +80,7 @@ func update_page_text(index:int = 0):
 	elif index >= split_text.size():
 		print_debug("end")
 		visible = false
+		end.emit(false)
 		if accept_action != null:
 			accept_action.run(data)
 		
@@ -86,86 +90,86 @@ func update_page_text(index:int = 0):
 
 #END new
 
-func start_dialog(new_target, new_data) :
+#func start_dialog(new_target, new_data) :
 	#targer is needed to know if player get too far form it.
 	#could also be a point, but an object allow more option
 	#but could hold it in the dialog_data...but having owner ref there seem redundent 
-	if new_target != null :
-		target = new_target
-		if new_data is Dialog_Data:
-			dialog_data = new_data
-		elif target.has_meta("Dialog"):
-			dialog_data = target.get_meta("Dialog")
+#	if new_target != null :
+#		target = new_target
+#		if new_data is Dialog_Data:
+#			dialog_data = new_data
+#		elif target.has_meta("Dialog"):
+#			dialog_data = target.get_meta("Dialog")
 		
-		if dialog_data != null :
-			$Name.text = "[center]"+dialog_data.name
-			$Icon.texture = dialog_data.icon
-			dialog_data.state = 1 #need a way to let owner od dialog know it is cycling through text. this is one possbility
+#		if dialog_data != null :
+#			$Name.text = "[center]"+dialog_data.name
+#			$Icon.texture = dialog_data.icon
+#			dialog_data.state = 1 #need a way to let owner od dialog know it is cycling through text. this is one possbility
 			#update_text() process seem to run after this, may need to use signal and timers instead of processes
-			set_process(true)
+#			set_process(true)
 			
-func open_dialog(new_data:Dialog_Data) :
-	dialog_data = new_data
-	if dialog_data != null :
-		$Name.text = "[center]"+dialog_data.name
-		$Icon.texture = dialog_data.icon
+#func open_dialog(new_data:Dialog_Data) :
+#	dialog_data = new_data
+#	if dialog_data != null :
+#		$Name.text = "[center]"+dialog_data.name
+#		$Icon.texture = dialog_data.icon
 		#dialog_data.state = 1 #need a way to let owner od dialog know it is cycling through text. this is one possbility
 		#update_text() process seem to run after this, may need to use signal and timers instead of processes
-		set_process(true)
-		dialog_data.end.connect(close_dialog)
-		update_text()
-		visible = true
+#		set_process(true)
+#		dialog_data.end.connect(close_dialog)
+#		update_text()
+#		visible = true
 
-func close_dialog():
-	visible = false
-	set_process(false)
-	dialog_index = 0
-	dialog_data.end.disconnect(close_dialog)
-	dialog_data = null
+#func close_dialog():
+#	visible = false
+#	set_process(false)
+#	dialog_index = 0
+#	dialog_data.end.disconnect(close_dialog)
+#	dialog_data = null
 
-func end_dialog():
-	if dialog_data != null:
-		dialog_data.end_dialog()
+#func end_dialog():
+#	if dialog_data != null:
+#		dialog_data.end_dialog()
 		#if dialog_data.state == 0:
 			#NOTE: end_dialog is not being called from dialog_data.
 			#close_dialog()
 			#pass
-	return
-	visible = false
-	target = null
+#	return
+#	visible = false
+#	target = null
 	#Todo: decide if dialog should clear it state of target and handler.
-	#clearing speaker is optional since usally speaker is the owner of the dialog data
-	if dialog_data != null :
-		dialog_data.state = 0
-	dialog_data = null
-	set_process(false)
-	dialog_index = 0
+#	#clearing speaker is optional since usally speaker is the owner of the dialog data
+#	if dialog_data != null :
+#		dialog_data.state = 0
+#	dialog_data = null
+#	set_process(false)
+#	dialog_index = 0
 
-func _process(_delta):
+#func _process(_delta):
 	#may need to have this on a timer that can be pasued
 	
-	if dialog_data == null:
+#	if dialog_data == null:
 		#NOTE: this is a fail safe and was not needed. just here incase the system changes
-		end_dialog() 
-		return
+#		end_dialog() 
+#		return
 		
 	#Note: there may be a case where there is no speaker. this case the logic
 	#should allow dialog to continue, but need to freeze player or have a timer
-	if dialog_data.current_speaker == null or dialog_data.current_handler == null:
-		end_dialog() 
+#	if dialog_data.current_speaker == null or dialog_data.current_handler == null:
+#		end_dialog() 
 		#return
 		#if visible :
 		#	visible = false
 		#set_process(false)
 
-	else:
+#	else:
 		#todo: try to catch these or have them set in the data
 			#NOTE: leaving the area while talking will break this.
 			#so added the check for player. may need a function when acessing pawn to compress this issue
 			#ideally in a static function or in the player handler(this is ideal since it is acessable)
 			#but target can not be null either. so a check is needed either way unless this is remotly reset
-		if (dialog_data.current_handler.pawn.global_position - dialog_data.current_speaker.global_position).length() > 64 :
-			end_dialog()
+#		if (dialog_data.current_handler.pawn.global_position - dialog_data.current_speaker.global_position).length() > 64 :
+#			end_dialog()
 
 func _input(event: InputEvent) -> void:
 	#NOTE visability check fails. not really needed, but system need to be
@@ -173,13 +177,13 @@ func _input(event: InputEvent) -> void:
 	#NOTE: need a system to pause game related gui when in menu
 	#could have it pause with the game, but maybe it want to pause the game
 	#so just need to extend the system(but locally(by handler handles children input)
-	if dialog_data != null:
-		if event.is_action_pressed("Accept"):
-			update_text()
-			get_viewport().set_input_as_handled()
-		elif event.is_action_pressed("Cancel"):
-			end_dialog()
-			get_viewport().set_input_as_handled()
+#	if dialog_data != null:
+#		if event.is_action_pressed("Accept"):
+#			update_text()
+#			get_viewport().set_input_as_handled()
+#		elif event.is_action_pressed("Cancel"):
+#			end_dialog()
+#			get_viewport().set_input_as_handled()
 	#NOTE: new system needs to check of at an end of text
 	#and if so, run action of exist or finish the dialog
 		
@@ -193,15 +197,15 @@ func _input(event: InputEvent) -> void:
 			update_page_text(page_index-1)
 			get_viewport().set_input_as_handled()
 
-func update_text():
-	if dialog_data != null:
+#func update_text():
+#	if dialog_data != null:
 
-		var dialog_text = dialog_data.get_text(dialog_index)
-		if dialog_text == null:
-			dialog_index = 0
-			end_dialog()
-		else:
-	
-			dialog_index += 1
-			$Text.text = dialog_text
-			visible = true
+#		var dialog_text = dialog_data.get_text(dialog_index)
+#		if dialog_text == null:
+#			dialog_index = 0
+#			end_dialog()
+#		else:
+#	
+#			dialog_index += 1
+#			$Text.text = dialog_text
+#			visible = true
