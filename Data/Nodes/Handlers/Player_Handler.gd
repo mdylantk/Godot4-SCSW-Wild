@@ -1,4 +1,4 @@
-class_name Player_Handler extends Node2D
+class_name Player_Handler extends Controller_Handler
 
 @export var state : Player_State
 
@@ -11,12 +11,16 @@ class_name Player_Handler extends Node2D
 
 @export var test_c : Base_Action
 
-var pawn #pawn may be move around, so a direct ref will be used to track it
-var uid = 0 #may or may not be needed if there a built in way to get a user id\
+var pawn:Node #pawn may be move around, so a direct ref will be used to track it
+var uid:int = 0 #may or may not be needed if there a built in way to get a user id\
 
 #catch the movement since the pawn moves every frame. 
 var movement_input: Vector2
 
+func get_state()->Savable_State:
+	return state
+func get_pawn(index:int=0)->Node:
+	return pawn
 
 func _ready():
 	#this is to test the signal
@@ -84,10 +88,11 @@ func input_update(event:InputEvent):
 			pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
 			
 		if event.is_action_pressed("Accept"):
+			var world:World2D = get_viewport().get_camera_2d().get_world_2d()
 			var result := {}
 			if interact_tracer != null:
 				result = interact_tracer.line_trace(
-					get_world_2d().direct_space_state,
+					world.direct_space_state,
 					pawn.global_position,
 					pawn.global_position+(pawn.movement_component.facing_dirction*interact_distance),
 					[pawn]

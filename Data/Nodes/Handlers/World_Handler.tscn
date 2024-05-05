@@ -7,5 +7,12 @@ y_sort_enabled = true
 script = ExtResource("1_57p0l")
 world_seed = 1401584422
 
+[node name="World_Clock" type="Timer" parent="."]
+autostart = true
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+unique_name_in_owner = true
+
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
 [connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
+[connection signal="timeout" from="World_Clock" to="." method="_on_world_clock_timeout"]

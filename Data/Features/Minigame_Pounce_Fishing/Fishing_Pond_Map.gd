@@ -18,9 +18,11 @@ signal canceled()
 
 @onready var cursor = %Cursor
 
+#NOTE: dose not always disable collsion on load.
+#either attach to a diffrent viewport or have it run a similar logic flow
+#on ready
 var running : bool = false :
 	set(value):
-		
 		if running == value:
 			#running all the time was causing pausing to break
 			return
@@ -29,12 +31,16 @@ var running : bool = false :
 			UI.enable_player_input = false
 			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 			set_layer_enabled(0,true)
+			for layer_id in get_layers_count():
+				set_layer_enabled(layer_id,true)
 			visible = true
 		else:#if active_fish.is_empty():
 			UI.enable_player_input = true
 			#Game.allow_input(true)
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			set_layer_enabled(0,false)
+			for layer_id in get_layers_count():
+				set_layer_enabled(layer_id,false)
+			#set_layer_enabled(0,false)
 			visible = false
 var active_fish : Array[Dictionary]
 
@@ -215,6 +221,7 @@ func _input(event:InputEvent):
 	if running:
 		if event.is_action("Cancel"):
 			cancel()
+			get_viewport().set_input_as_handled()
 		elif event.is_action("Accept"):# is InputEventMouseButton:
 			#TODO: need to have release reset input on new/resume game
 			#but also need to make sure release is not needed to use input
@@ -222,12 +229,15 @@ func _input(event:InputEvent):
 			#TODO: may add this to the _process except on relase
 			if event.is_pressed() and mouse_state == 0:
 				mouse_state = 1
+				get_viewport().set_input_as_handled()
 			elif event.is_released() and mouse_state == 2:
 				mouse_state = 3
 				catch_fish(local_to_map(cursor.position))
+				get_viewport().set_input_as_handled()
 				cursor.value = 0#cursor.min_value
 			elif event.is_released() and mouse_state < 0:
 				mouse_state = 0
+				get_viewport().set_input_as_handled()
 		elif event is InputEventMouseMotion && mouse_mode:
 			var cursor_coord: Vector2 = event.position
 			update_cursor_position(cursor_coord)

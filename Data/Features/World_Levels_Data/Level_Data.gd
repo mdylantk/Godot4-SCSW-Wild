@@ -5,6 +5,9 @@ signal level_removed(level:Node)
 signal entity_created(entity:Node)
 signal entity_removed(entity:Node)
 
+@export var environment_data : Environment_Data
+
+
 #an identifier used to link this level to other or similar levels
 #the main use is to catch a position for this level so that players can
 #swap back to that point when re-entering that level. also using a metadata or dict
@@ -41,4 +44,3 @@ func get_level_scene(position:Vector2) -> Node:
 
 func process_players(pawn:Node):
 	pass
-

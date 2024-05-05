@@ -49,6 +49,7 @@ func _start():
 	#TEST END
 func pick_fish():
 	var picked_name = {}
+	if random_table == null : random_table = Fish_Table.new()
 	picked_name = random_table.pick_from_table(true)
 	if picked_name != null:
 		var fish_name = picked_name["pick"]

@@ -1,16 +1,29 @@
-class_name AI_Handler extends Node2D
+class_name AI_Handler extends Controller_Handler
 
 @export var default_pawn : PackedScene = load("uid://bruyakjvb8wwp")  
+@export var controller_name : String = "enemy"
+@export var state : Savable_State :
+	set(value):
+		state = value
+		state.file_name = controller_name+"_state"
+		
+@export var enable : bool 
 #but this is the enemy to spawn. could be an array, but for testing this will be simple
-var active_pawns #this may be replace by group if reliable
+var active_pawns: Array[Node] #this may be replace by group if reliable
 var max_spawn_count : int = 10
 var spawn_delay : float = 15
 
+func get_state()->Savable_State:
+	return state
+func get_pawn(index:int=0)->Node:
+	return active_pawns[index]
+
 func _ready():
+	if !enable: return
 	var pawn_ref = default_pawn.instantiate()
 	add_child(pawn_ref)
 	#pawn_ref.name = "Enemy" #todo: make child of world main scene for objects
-	active_pawns = pawn_ref
+	active_pawns.append(pawn_ref)
 	pawn_ref.attacked.connect(on_pawn_hit)
 	
 func on_pawn_hit(attacker, target, data):
@@ -25,23 +38,25 @@ func on_pawn_hit(attacker, target, data):
 func _process(delta):
 	#TODO need the world_handler to frezze(pause) it children when no level_data
 	#or when loading new areas
-	if active_pawns != null && Game.get_player_handler() != null:
+	if active_pawns.size() <= 0: return
+	var pawn = active_pawns[0]
+	if pawn != null && Game.get_player_handler() != null:
 		var target = Game.get_player_handler().pawn
 		if target.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
-			var test_vector : Vector2 = target.global_position - active_pawns.global_position
-			active_pawns.visible = true 
+			var test_vector : Vector2 = target.global_position - pawn.global_position
+			pawn.visible = true 
 			test_vector = test_vector * delta
-			active_pawns.move(test_vector.normalized())
+			pawn.move(test_vector.normalized())
 		
 		#poor way to have enemy catch up to player after being hit
-			if (active_pawns.global_position - target.global_position).length() > 320:
-				active_pawns.movement_component.sprint_strength = 8
+			if (pawn.global_position - target.global_position).length() > 320:
+				pawn.movement_component.sprint_strength = 8
 			else:
-				active_pawns.movement_component.sprint_strength  = 0
+				pawn.movement_component.sprint_strength  = 0
 		else:
 			#when ever a pawn is not visable, it should enter a sleep state
 			#or in this case visablity is used as a way to put it to sleep
-			active_pawns.visible = false
+			pawn.visible = false
 			pass
 			
 		#NOTE:could have it location change if target too far as well as add an

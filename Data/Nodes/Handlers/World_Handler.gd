@@ -17,6 +17,8 @@ class_name World_Handler extends Node2D
 				value.level_created.connect(on_level_created)
 				value.level_removed.connect(on_level_removed)
 				value.load_level()
+				if value.environment_data == null:
+					%CanvasModulate.color = Color(1,1,1,1)
 				
 			if level_data != null:
 				#unload old level
@@ -24,7 +26,10 @@ class_name World_Handler extends Node2D
 				level_data.level_created.disconnect(on_level_created)
 				level_data.level_removed.disconnect(on_level_removed)
 			level_data = value
+			if level_data == null:
+				%CanvasModulate.color = Color(1,1,1,1)
 
+var is_time_setting: bool = false
 	
 func on_level_created(level:Node):
 	add_child(level)
@@ -90,3 +95,15 @@ func _on_child_exiting_tree(node):
 	#print_debug(node)
 	if player_pawns.has(node):
 		player_pawns.erase(node)
+
+
+func _on_world_clock_timeout() -> void:
+	if level_data == null: 
+		return
+	if level_data.environment_data == null:
+		return
+	var enviroment:Environment_Data = level_data.environment_data
+	enviroment.forward_time()
+	%CanvasModulate.color = enviroment.get_environment_color()
+
+	
