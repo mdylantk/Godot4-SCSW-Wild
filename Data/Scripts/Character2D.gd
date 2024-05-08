@@ -1,40 +1,51 @@
 class_name Character2D extends CharacterBody2D
 
-#these signals are for owning handler to listen for events or for other
-#nodes to listen to
-#agressive interaction. may or may not be trigger with on_interaction
+#TODO: redo the parametters. attacked should return what was attack, the pawn(self), and
+#either data or somekind of ref that can be used to create the data
+#same interacted. handler not nessary since the handler will be the one listening in
+#NOTE: may use a node like interaction component and just check for the class
+#then the action can be grab or perform there. interactions as only actions may not works
+#unless a subsystem is design to handle it such as the fishing game need to be able to
+#let the owner know if a fish is caught. could add the owner to data and have an action to run when fish is
+#caught. (optional action 1 add the fish, but this logic may be built in0 action(2) will remove the owner
+#or set it on a time out (invisable and uninteractable
 signal attacked(attacker, target, data)
 #passive interaction
-signal interacted(handler, instigator, interactee, data)
+signal interacted(instigator, interactee, data) #NOTE interactee is currently the interact componet
+#Note: could make a export add to meta data, but only works for objects with scripts
 
-
-#TODO: rename this to Character2D or something that means controllable Character
-#most of the logic here(outside of components and node) should help in navigating
-
+#NOTE: this should be used for anything that can be controlled by a controller
+#It should have a facing vector, func to call to trigger attacks, interactions, or actions
+#and signals to notify controller of the results of the attakck/interactions
+#also need a way to give it movement comands. move(currenly have one) and move_to
+#(need one for AI. this means a point is set and the AI will move to it). 
+#everything else the child should be able to do. 
+#movement componet may need to change a little. just need something that handles
+#processing the commands for the case of AI or pathfinding without knowing much of the logic
+#could make another componet or node called brain. it would be told positions and stuff 
+#and run to move_to logic base on the data provided. also could use metadata to store that data
+#and have the child check it self and run the logic that way. 
+#movement componet is just a way to swap out how the character will move per tick or 
+#in other words how the velocity will change
 
 @export var movement_component : Movement_Component_2D = Advance2DMovement.new()
-@export var interaction_component : Interactive_Data
+#@export var interaction_component : Interactive_Data
 
-#@export var slide : bool = false #allow faking sliding, allowing velocity to either slowly decrease or not decrease--
-
-#TODO: in the future, having a resource to load sprite  and other varibles
-#may be better so similar nodes could be reused or changed
 @onready var sprite = $Sprite2D
 
 
+func attack()->void:
+	#NOTE: this will tell the character do the attack logic so the controller do not
+	#have to know about variations of attack
+	#NOTE: switching attacks would mean there is one active attack that get switch by other means
+	#that not nessary a responsibility of the controller(but could be due to processing input)
+	#so a system to handle that may be needed
+	pass
+func interact()->void:
+	#NOTE: this is to isolate the interaction cast from controller to fine tune
+	#how it will be triggered. a signal will be used to listen for interaction if there is one
+	pass
 
-func on_interaction(handler, instigator, interactee, data):
-	if interaction_component != null:
-		interaction_component.interact(handler, instigator, interactee, data)
-	interacted.emit(handler, instigator, interactee, data)
-	
-func on_attacked(attacker, target, data = {}):
-	#data is infomation generated throughthe attack logic
-	#so it should be populated as much as possible before being passed
-	#example is damage done and infomation on damage and hit locations
-	#TODO: decide if attack logic should be handle by a component or 
-	#just overrided by the child
-	attacked.emit(attacker, target, data)
 
 func update_sprite() :
 	if sprite != null :

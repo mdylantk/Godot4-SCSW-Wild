@@ -5,13 +5,9 @@ class_name Player_Handler extends Controller_Handler
 #@export_file("*.tscn") var default_pawn = "res://Data/Node/Actors/Player.tscn"
 @export var default_pawn : PackedScene = load("uid://bugclr6n3igb4")
 
-@export_category("interact")
-@export var interact_distance : float = 24
-@export var interact_tracer: Collsion_Trace_2D
 
-@export var test_c : Base_Action
 
-var pawn:Node #pawn may be move around, so a direct ref will be used to track it
+var pawn:Character2D #pawn may be move around, so a direct ref will be used to track it
 var uid:int = 0 #may or may not be needed if there a built in way to get a user id\
 
 #catch the movement since the pawn moves every frame. 
@@ -19,7 +15,7 @@ var movement_input: Vector2
 
 func get_state()->Savable_State:
 	return state
-func get_pawn(index:int=0)->Node:
+func get_pawn(index:int=0)->Character2D:
 	return pawn
 
 func _ready():
@@ -35,25 +31,15 @@ func _ready():
 		#this also could be where loading state happens if state is created when player 'joins'
 	state.load_state()
 	if pawn == null:
-		#pawn_state = Pawn_State.Null
-		#if has_node("Player"):
-		#	pawn = $Player
-			#pawn_state = Pawn_State.Init
-			#set pawn to $player if it exist
-			#good for testing and automatic set up,
-			#but a function should be called instead
-		#else:
 		pawn = default_pawn.instantiate()
 		pawn.add_to_group("player_controlled")
 		General_Events.spawn_entity(pawn)
+		pawn.interacted.connect(on_pawn_interaction)
 		
 		var test_inv = state.fetch("inventory", "pawn")
 		if test_inv != null:
 			print(test_inv)
 			pawn.inventory.items = test_inv
-		#Game.world.add_child(pawn)
-		#pawn_ref.name = "Player" #todo: make child of world main scene for objects
-		#pawn = pawn_ref
 	#TODO: need a func to possess and unpossesed pawns so the data
 	#is correct.
 	#players group is a group that holds all player pawns. used
@@ -64,7 +50,11 @@ func _ready():
 	#on_transfer()
 	pawn.inventory.slot_update.connect(on_item_gain)
 
-
+#NOTE this should be the new system. allow pawn to controll how the data is fetched
+func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
+	var interaction : Interactive_Component = collider as Interactive_Component
+	if interaction != null:
+		interaction.interact(self,source_pawn,data["collider"],data)
 
 func _physics_process(_delta) :
 	if pawn != null:
@@ -88,23 +78,9 @@ func input_update(event:InputEvent):
 			pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
 			
 		if event.is_action_pressed("Accept"):
-			var world:World2D = get_viewport().get_camera_2d().get_world_2d()
-			var result := {}
-			if interact_tracer != null:
-				result = interact_tracer.line_trace(
-					world.direct_space_state,
-					pawn.global_position,
-					pawn.global_position+(pawn.movement_component.facing_dirction*interact_distance),
-					[pawn]
-					)
-			if "collider" in result:
-			#	Game_Utility.get_action(result["collider"],"on_interact").call(
-			#			self, pawn, result["collider"], {}
-			#			)
-			#	return #returning here to have it check tile for debug reason
-			#	#ideally the source 'result["collider"]' would need to be coverted
-			#	#to be used with tiles perhaps. or the logic can be push to Game_Utility
-				if result["collider"] is TileMap :
+			pawn.interact()
+
+			#	if result["collider"] is TileMap :
 					#below test for tilemap data. keeping for now so it be easier to
 					#set up a tile base interaction system like search/forage/look/chop
 					#print(result["rid"])
@@ -114,27 +90,6 @@ func input_update(event:InputEvent):
 					#	result["collider"].get_layer_for_body_rid(result["rid"]),
 					#	result["collider"].get_coords_for_body_rid(result["rid"])
 					#))
-					pass
-				else:
-					var interaction_source := result["collider"] as Interactive_Component
-					if interaction_source != null:
-						var interaction = interaction_source.interact(
-							self,pawn,interaction_source,{})
-							
-						#below will break a lot. also unsing unhandle also causes issues
-						#so the dialog and fish minigame need to be redeign or this need to handle it diffrently
-						#get_viewport().set_input_as_handled()
-	#currently disable untill needed for more tests
-	if false and event.is_action_pressed("Sprint"):
-		var test_data = {
-			"test": randi_range(1,7),
-			"handler": self,
-			"source": pawn
-		}
-		test_c.run(test_data)
-	#print(test_data["test"])
-	#set_meta("tester",test_data["test"])
-	#print_debug(test_c.is_true(test_data))
 	
 
 #Region Listerners
