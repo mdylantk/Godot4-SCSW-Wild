@@ -123,3 +123,18 @@ func _process(_delta):
 	#await get_tree().create_timer(1).timeout #A delay so things can finish up. currrenty need to be appled difftrently or not used
 #	$LoadingScreen.visible = is_loading
 
+
+
+func _on_main_menu_request_focus_change(id: String) -> void:
+	%Main_Menu.visible = false
+	match id:
+		"options":
+			%Options_Menu.visible = true
+		"credits":
+			%Credits_Menu.visible = true
+
+
+
+func _on_submenu_close(node: Node) -> void:
+	%Main_Menu.visible = true
+	node.visible = false

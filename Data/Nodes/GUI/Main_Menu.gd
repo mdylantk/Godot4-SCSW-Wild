@@ -1,14 +1,14 @@
 extends CanvasLayer
+signal request_focus_change(id:String)
 
-@export var options_menu : Node
-@export var credits_menu : Node
+#@export var options_menu : Node
+#@export var credits_menu : Node
 
+@export var default_focus : Array[Control]
 
 func _input(event: InputEvent) -> void:
-	
-
 	if event.is_action_pressed("Start"):
-		if visible  && %Resume_Button.visible:
+		if visible && %Resume_Button.visible:
 			visible = false
 			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 			get_tree().paused = false
@@ -43,17 +43,19 @@ func _on_new_game_button_pressed() -> void:
 
 func _on_options_button_pressed() -> void:
 	print_debug("options pressed")
-	options_menu.visible = true
+	request_focus_change.emit("options")
+	#options_menu.visible = true
 
 
 func _on_exit_button_pressed() -> void:
 	print_debug("exit pressed")
-	get_tree().quit()
+	Game.end_game(true)
 
 
 func _on_credits_button_pressed() -> void:
 	print_debug("credits pressed")
-	credits_menu.visible = true
+	request_focus_change.emit("credits")
+	#credits_menu.visible = true
 
 
 func _on_continue_button_pressed() -> void:
@@ -65,3 +67,13 @@ func _on_continue_button_pressed() -> void:
 	%Resume_Button.visible = true
 	%Continue_Button.visible = false
 	%New_Game_Button.visible = false
+
+func _ready() -> void:
+	_on_visibility_changed()
+
+func _on_visibility_changed() -> void:
+	if visible and !default_focus.is_empty():
+		for focus_object in default_focus:
+			if focus_object.visible:
+				focus_object.grab_focus()
+				break

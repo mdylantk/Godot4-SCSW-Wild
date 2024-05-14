@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://b80ly070yrqgt"]
+[gd_scene load_steps=4 format=3 uid="uid://b80ly070yrqgt"]
 
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_s5aiu"]
+[ext_resource type="Script" path="res://Data/Nodes/GUI/Credits_Menu.gd" id="1_tdwf1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trfd7"]
 atlas = ExtResource("1_s5aiu")
@@ -8,6 +9,7 @@ region = Rect2(816, 357, 16, 16)
 
 [node name="Credits_Menu" type="CanvasLayer"]
 visible = false
+script = ExtResource("1_tdwf1")
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -35,3 +37,5 @@ patch_margin_left = 8
 patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

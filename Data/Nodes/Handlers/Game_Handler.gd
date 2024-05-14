@@ -138,9 +138,11 @@ func start_game(is_new:bool = true, save_name:String="Default"):
 	#game. just need a way to end the host status 
 	pass
 
-func end_game():
+func end_game(full_quit:bool = false):
+	print_debug("ending game")
+	if full_quit:
+		get_tree().quit()
 	#basicly just make sure every system calls an unload
 	#and then either shut down or go to mode_selection
-	pass
 
 

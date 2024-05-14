@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cc1hxktnb4a1k"]
+[gd_scene load_steps=12 format=3 uid="uid://cc1hxktnb4a1k"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/UI_Handler.gd" id="1_htxbl"]
 [ext_resource type="PackedScene" uid="uid://ctvmde4ov5w2x" path="res://Data/Nodes/GUI/Dialog.tscn" id="2_0wofj"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://brre7crunbrjj" path="res://Data/Features/Minigame_Pounce_Fishing/Fishing_Pond_Map.tscn" id="7_531g0"]
 [ext_resource type="PackedScene" uid="uid://b8gbuuqjxib" path="res://Data/Nodes/GUI/Main_Menu.tscn" id="8_ufq3w"]
 [ext_resource type="PackedScene" uid="uid://b80ly070yrqgt" path="res://Data/Nodes/GUI/Credits_Menu.tscn" id="9_6enyp"]
-[ext_resource type="Script" path="res://Data/Nodes/GUI/Credits_Menu.gd" id="10_dvdad"]
 [ext_resource type="PackedScene" uid="uid://clfctvdo5gs0b" path="res://Data/Nodes/GUI/Options_Menu.tscn" id="11_3jetq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wsma3"]
@@ -71,15 +70,16 @@ unique_name_in_owner = true
 process_mode = 1
 visible = false
 
-[node name="Main_Menu" parent="HUD" node_paths=PackedStringArray("options_menu", "credits_menu") instance=ExtResource("8_ufq3w")]
+[node name="Main_Menu" parent="." instance=ExtResource("8_ufq3w")]
 unique_name_in_owner = true
-options_menu = NodePath("../Options_Menu")
-credits_menu = NodePath("../Credits_Menu")
 
-[node name="Credits_Menu" parent="HUD" instance=ExtResource("9_6enyp")]
+[node name="Credits_Menu" parent="." instance=ExtResource("9_6enyp")]
 unique_name_in_owner = true
 layer = 11
-script = ExtResource("10_dvdad")
 
-[node name="Options_Menu" parent="HUD" instance=ExtResource("11_3jetq")]
+[node name="Options_Menu" parent="." instance=ExtResource("11_3jetq")]
 unique_name_in_owner = true
+
+[connection signal="request_focus_change" from="Main_Menu" to="." method="_on_main_menu_request_focus_change"]
+[connection signal="close" from="Credits_Menu" to="." method="_on_submenu_close"]
+[connection signal="close" from="Options_Menu" to="." method="_on_submenu_close"]

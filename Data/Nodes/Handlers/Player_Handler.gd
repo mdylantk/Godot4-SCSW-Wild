@@ -90,7 +90,42 @@ func input_update(event:InputEvent):
 					#	result["collider"].get_layer_for_body_rid(result["rid"]),
 					#	result["collider"].get_coords_for_body_rid(result["rid"])
 					#))
-	
+#NOTE: test prove that current system can save resource base items
+#just need to test if it works in arrays
+#WARNING: works with arrays, but not flagging dirty since the arrays
+#contains resources of the same id. so the changes are not noticable
+#could force it to flag as dirty or could keep using dictionary as data
+#since all the logic is in place. 
+#NOTE: could warp the item dictionary with the item, but require the item resource
+#path to be known and require looping inventories before saves. better as it a dictionary
+#can use static classes to interact with it for reability
+#NOTE: TODO: maybe should force the dirty flag. resources support types and
+#it helps with readablity and helps with odd(yet quick) fix like loading the resource
+#before acessing it. may not be needed here. just need to change the fuctions to work
+#with self and provide the data. amount, durability, quality, and a dictionary call meta
+#and anything else that is going to be commonly used. meta for the less common modifiers
+#Note that the saves will break more often if the item structure changes.
+#		if event.is_action("ScrollLeft"):
+#			if item1 == null: item1= Item.new()
+#			if item2 == null: 
+#				#item2 = load("res://Data/Resources/Fish_Item.tres")
+#				item2= Item.new()
+#			print_debug(item1.is_similar_to(item2))
+#			var items : Array[Item]
+#			#print(state.fetch("items","test"))
+#			if state.fetch("items","test") != null:
+#				items = state.fetch("items","test")
+#			if items.is_empty():
+#				items.append(Item.new())
+#			print_debug(items)
+#			print(items[0].amount)
+#			items[0].amount = items[0].amount + 1
+#			state.store("items",items,"test",true)
+#			print(state.dirty)
+
+#TEST:
+#var item1:Item
+#var item2:Item
 
 #Region Listerners
 func on_item_gain(inventory, slot, old_item):

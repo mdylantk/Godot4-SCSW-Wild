@@ -106,4 +106,3 @@ func _on_world_clock_timeout() -> void:
 	enviroment.forward_time()
 	%CanvasModulate.color = enviroment.get_environment_color()
 
-	

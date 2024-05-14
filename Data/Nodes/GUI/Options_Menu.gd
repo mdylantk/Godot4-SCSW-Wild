@@ -1,6 +1,7 @@
 extends CanvasLayer
-
+signal close(node:Node)
 #var config : ConfigFile
+@export var default_focus : Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -12,7 +13,7 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if visible:
 		if event.is_action_pressed("Start") or event.is_action_pressed("Cancel"):
-			visible = false
+			close.emit(self)
 			get_viewport().set_input_as_handled()
 
 func _on_settings_loaded(id:String, config: ConfigFile, is_new : bool):
@@ -35,3 +36,6 @@ func _on_music_volume_slider_value_changed(value: float) -> void:
 	#TODO: add a delay. like add this as a callable var if null and run it latter, nulling and saving the config
 		#Resources.save_settings(Resources.client_settings, Resources.client_settings_path)
 		
+func _on_visibility_changed() -> void:
+	if visible and default_focus != null:
+		default_focus.grab_focus()

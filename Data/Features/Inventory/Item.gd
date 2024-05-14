@@ -82,3 +82,61 @@ static func is_similar_item(source_item: Dictionary, other_item: Dictionary):
 #but that may not always be wanted(also a meta tag could override this
 @export_file("*.tscn") var item_entity : String
 
+#NOTE: may use this instead of dictionaries.
+#just need to keep the old static functions(maybe comment out) just incase 
+#dictinary end up being better. 
+#NOTE: if use this, can cast to child types to get access to additional var
+#like durabulity or quality. the base item will share common item function and varibles
+var amount:int = 1
+#NOTE: metadata might not be needed since it may exist for objects? so using the built
+#in may be better
+#var metadata := {}
+
+#this check if two items are similar (meaning if they can stack)
+#this could be a lot of checks if the item have a lot of data
+#and may be better with a get type or get class override, but require more work
+#to make sure the types are correctly set
+
+
+#NOTE: should call super and use it return value to see if the base values are same
+##this check if the exported values are the same so that other items types
+##can add their own checks(and should else diffrent items may stack)
+func _is_same_item(other_item:Item)->bool:
+	if (display_name == other_item.display_name and
+		discription == other_item.discription and 
+		tooltip == other_item.tooltip and 
+		icon == other_item.icon
+	):
+		return true
+	return false
+
+func is_similar_to(other_item:Item)->bool:
+	if other_item == null: return false
+	if (_is_same_item(other_item)):
+		if get_meta_list().is_empty() and other_item.get_meta_list().is_empty():
+			return true
+		elif get_meta_list().size() != other_item.get_meta_list().size():
+			return false
+		else:
+			for key in get_meta_list():
+					#NOTE: resources might break this so it may be best to
+					#either not use resources/object or stress test it with 
+					#a resource case
+				var self_value = get_meta(key)
+				var other_value = other_item.get_meta(key)
+				if typeof(self_value) == typeof(other_value):
+					if get_meta(key) != other_item.get_meta(key):
+						return false
+				else:
+					return false
+			return true
+	return false
+
+##this check if the item is exactly the same
+##for usages dealing with quests. Thought it best to check the amount
+##instead, but this will be here as another option where both items need to be ther same
+func is_equal_to(other_item:Item) -> bool :
+	if is_similar_to(other_item):
+		if amount == other_item.amount:
+			return true
+	return false
