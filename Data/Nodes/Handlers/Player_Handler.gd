@@ -13,6 +13,10 @@ var uid:int = 0 #may or may not be needed if there a built in way to get a user 
 #catch the movement since the pawn moves every frame. 
 var movement_input: Vector2
 
+#may need to use a scene of a camera incase the camrea is deleted with pawn before reparented
+#or try to listen for changes that may cause it to be deleted
+@onready var controller_camera : Camera2D = %Camera2D
+
 func get_state()->Savable_State:
 	return state
 func get_pawn(index:int=0)->Character2D:
@@ -31,11 +35,18 @@ func _ready():
 		#this also could be where loading state happens if state is created when player 'joins'
 	state.load_state()
 	if pawn == null:
-		pawn = default_pawn.instantiate()
-		pawn.add_to_group("player_controlled")
+		#pawn = default_pawn.instantiate()
+		possess_pawn(default_pawn.instantiate())
+		#pawn.add_to_group("player_controlled")
 		General_Events.spawn_entity(pawn)
-		pawn.interacted.connect(on_pawn_interaction)
+		#pawn.interacted.connect(on_pawn_interaction)
 		
+		#NOTE: when switching pawns, inventory will be diffrent(or should)
+		#so need a way to add id to inventorys if it a presistant object
+		#uid may work in some cases, but adding number to end if exist and force
+		#to create may be another way, but they would need to be loaded in
+		#also could try to save the character fully at the cost of changes breaking 
+		#things.
 		var test_inv = state.fetch("inventory", "pawn")
 		if test_inv != null:
 			print(test_inv)
@@ -50,11 +61,27 @@ func _ready():
 	#on_transfer()
 	pawn.inventory.slot_update.connect(on_item_gain)
 
+
+func possess_pawn(new_pawn: Node):
+	if pawn != null:
+		pawn.remove_from_group("player_controlled")
+		pawn.interacted.disconnect(on_pawn_interaction)
+		pawn.tree_exited.disconnect(on_pawn_exited_tree) 
+	pawn = new_pawn
+	new_pawn.add_to_group("player_controlled")
+	new_pawn.interacted.connect(on_pawn_interaction)
+	new_pawn.tree_exited.connect(on_pawn_exited_tree) 
+	controller_camera.reparent(new_pawn)
+func on_pawn_exited_tree():
+	#an attempt to save the camera from being freed
+	if pawn.is_queued_for_deletion():
+		controller_camera.reparent(self)
+
 #NOTE this should be the new system. allow pawn to controll how the data is fetched
 func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
 	var interaction : Interactive_Component = collider as Interactive_Component
 	if interaction != null:
-		interaction.interact(self,source_pawn,data["collider"],data)
+		interaction.interact(self,source_pawn,collider,data)
 
 func _physics_process(_delta) :
 	if pawn != null:

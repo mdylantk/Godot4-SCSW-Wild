@@ -7,3 +7,11 @@
 y_sort_enabled = true
 script = ExtResource("1_d3v36")
 default_pawn = ExtResource("2_vymv8")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
+zoom = Vector2(2, 2)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+editor_draw_limits = true
+editor_draw_drag_margin = true
