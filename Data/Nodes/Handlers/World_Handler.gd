@@ -49,7 +49,7 @@ func _ready():
 		world_seed = randi()
 
 
-func change_level(new_level_data:Level_Data,handler:Node, instigator = null,
+func change_level(new_level_data:Level_Data,handler:Node, instigator:Node = null,
 	location_offset = Vector2()
 ):
 	#NOTE:player location for world position can be store in player handler

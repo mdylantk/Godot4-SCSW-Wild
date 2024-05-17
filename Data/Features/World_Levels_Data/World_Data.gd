@@ -84,7 +84,7 @@ var near_by_coords :Array[Vector2i] =[
 #TODO: So far added a way to handle and load tilemap to replace the old system
 #just need to move the generation logic over here
 
-func get_level_property(name:String) -> Variant:
+func get_level_property(name:StringName) -> Variant:
 	if name == "level_id":
 		return level_id
 	return null
@@ -285,3 +285,5 @@ func is_level_loaded(location:Vector2)->bool:
 	#return loaded_tilemaps.has(coords)
 	#return loaded_tilemaps.has(coords) or loose_tilemaps.has(coords)
 	
+func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
+	return Savedata_Helper.fetch_player_position(handler,level_id)

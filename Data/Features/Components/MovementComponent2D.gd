@@ -1,9 +1,16 @@
 class_name Movement_Component_2D extends Resource
+signal facing_change(new_facing:Vector2, old_facing:Vector2)
+
 #this hold share functionality between moving an object
 #as well as common varibles. It will not move the object
 #but provide the caculation needed to move as desired
 @export var base_speed : float = 64
-@export var facing_dirction : Vector2 = Vector2.RIGHT
+@export var facing_dirction : Vector2 = Vector2.RIGHT :
+	set (value):
+		if facing_dirction != value:
+			facing_change.emit(value, facing_dirction)
+			facing_dirction = value
+			
 @export var sprint_modifier : float = 1
 
 var sprint_strength : float = 0

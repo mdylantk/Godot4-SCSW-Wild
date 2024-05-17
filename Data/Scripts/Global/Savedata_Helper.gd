@@ -24,10 +24,10 @@ class_name Savedata_Helper extends Object
 
 #mostly for world position. should not be used for all locations, just ones that
 #contain dynamic entrances like random poi on the world map. 
-static func store_player_position(handler:Player_Handler,new_location:Vector2,id:String):
+static func store_player_position(handler:Player_Handler,new_location:Vector2,id:StringName):
 	handler.state.store(id,new_location,"positions")
 	
-static func fetch_player_position(handler:Player_Handler,id:String)->Vector2:
+static func fetch_player_position(handler:Player_Handler,id:StringName)->Vector2:
 	var value = handler.state.fetch(id,"positions")
 	if typeof(value) == TYPE_VECTOR2:
 		return value
@@ -35,10 +35,10 @@ static func fetch_player_position(handler:Player_Handler,id:String)->Vector2:
 		return Vector2()
 
 #Generic score set/get by an id. using a int since most score are counters
-static func store_player_score(handler:Player_Handler,new_score:int,id:String):
+static func store_player_score(handler:Player_Handler,new_score:int,id:StringName):
 	handler.state.store(id,new_score,"scores")
 	
-static func fetch_player_score(handler:Player_Handler,id:String)->int:
+static func fetch_player_score(handler:Player_Handler,id:StringName)->int:
 	var value = handler.state.fetch(id,"scores")
 	if typeof(value) == TYPE_INT:
 		return value

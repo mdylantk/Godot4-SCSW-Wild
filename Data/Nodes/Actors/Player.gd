@@ -1,20 +1,63 @@
 extends Character2D
 
+@export var interact_cast : ShapeCast2D
+
 @onready var inventory = $Inventory
 
+func _ready()->void:
+	movement_component.facing_change.connect(on_facing_changed)
+	movement_state_change.connect(on_movement_state_change)
+	
+func on_movement_state_change(new_value:MovementStates, old_value:MovementStates):
+	if new_value == MovementStates.IDLE:
+		$AnimatedSprite2D.play("sit")
+		$AnimationPlayer.stop()
+	elif new_value == MovementStates.STOPPED:
+		$AnimatedSprite2D.play("default")
+		$AnimationPlayer.stop()
+	else:
+		if new_value == MovementStates.SPRINTING:
+			$AnimationPlayer.speed_scale = 2
+		else:
+			$AnimationPlayer.speed_scale = 1
+		if old_value == MovementStates.IDLE:
+			$AnimationPlayer.play("movement")
+			$AnimatedSprite2D.play("default")
+		elif old_value == MovementStates.STOPPED:
+			$AnimationPlayer.play("movement")
 
-func _process(_delta):
+func on_facing_changed(new_facing:Vector2,old_facing:Vector2):
 	#update the spite to indicate hit direction
-	$Direction.position = movement_component.facing_dirction*12
+	$Direction.position = new_facing * 12
+	%ShapeCast2D.target_position = new_facing * 24
+	#NOTE: move this here so that Character2D wont need to depend on
+	#sprite2d. the issue is that this logic need to be applied to anything that want to use it
+	#but can just subtype sprite enities and animate sprite enities if needed\
+	
+	if $AnimatedSprite2D != null :
+		if new_facing.x < 0 :
+			$AnimatedSprite2D.flip_h = true
+		elif new_facing.x > 0: 
+			$AnimatedSprite2D.flip_h = false
+
+func on_sprint_changed(new_sprint:float, old_sprint:float):
+	pass
+	#$AnimationPlayer.speed_scale = new_sprint + 1
 
 func interact():
-	%RayCast2D.target_position = movement_component.facing_dirction * 24
-	%RayCast2D.force_raycast_update()
-	if %RayCast2D.get_collider() != null:
-		var data := {
-			"source":self,
-			"target":%RayCast2D.get_collider().owner,
-			"collider":%RayCast2D.get_collider(),
-			"collider_rid":%RayCast2D.get_collider_rid()
-		}
-		interacted.emit(self, %RayCast2D.get_collider(),data)
+	#NOTE: may need a way to cycle the list or nullify last interacted object
+	#or just check for one. attacking on the other hand may need to do more
+	if interact_cast == null: return
+	interact_cast.force_shapecast_update()
+	var results :Array = interact_cast.collision_result
+	var data :={"source":self}
+	if !results.is_empty():
+		data["collider"] = results[0].collider
+		
+		data["collision_results"] = results
+		if data["collider"].owner != null:
+			data["target"] = data["collider"].owner
+		else:
+			data["target"] = data["collider"]
+		interacted.emit(self, data["collider"],data)
+

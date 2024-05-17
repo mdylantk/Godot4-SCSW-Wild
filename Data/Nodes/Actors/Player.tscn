@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=12 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
@@ -7,27 +7,71 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
 size = Vector2(14, 6)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_l57v0"]
-atlas = ExtResource("2_ps8hu")
-region = Rect2(493, 119, 16, 16)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_21snw"]
 atlas = ExtResource("2_ps8hu")
 region = Rect2(442, 187, 16, 16)
 
-[node name="Player" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ifpql"]
+size = Vector2(8, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r33os"]
+atlas = ExtResource("2_ps8hu")
+region = Rect2(493, 119, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dh3mb"]
+atlas = ExtResource("2_ps8hu")
+region = Rect2(510, 119, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_aymj4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r33os")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dh3mb")
+}],
+"loop": true,
+"name": &"sit",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_sgr0e"]
+resource_name = "default"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:offset")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -1), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q78uo"]
+_data = {
+"movement": SubResource("Animation_sgr0e")
+}
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("interact_cast")]
 collision_layer = 21
 collision_mask = 21
 script = ExtResource("1_07gio")
+interact_cast = NodePath("ShapeCast2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_fb00q")
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-y_sort_enabled = true
-texture_filter = 1
-texture = SubResource("AtlasTexture_l57v0")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2, 2)
@@ -43,9 +87,22 @@ texture = SubResource("AtlasTexture_21snw")
 
 [node name="Inventory" parent="." instance=ExtResource("3_m3amk")]
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
 unique_name_in_owner = true
-process_mode = 4
+position = Vector2(0, 3)
+enabled = false
+shape = SubResource("RectangleShape2D_ifpql")
+target_position = Vector2(0, 16)
+max_results = 2
 collision_mask = 8
-hit_from_inside = true
 collide_with_areas = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_aymj4")
+animation = &"sit"
+offset = Vector2(0, -0.147714)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_q78uo")
+}

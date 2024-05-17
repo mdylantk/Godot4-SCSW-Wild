@@ -15,9 +15,12 @@ collision_mask = 0
 script = ExtResource("1_sxhnx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
 shape = SubResource("RectangleShape2D_uhyft")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 1
 y_sort_enabled = true
 texture = SubResource("AtlasTexture_o64lb")
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

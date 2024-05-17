@@ -8,24 +8,20 @@ signal entity_removed(entity:Node)
 @export var environment_data : Environment_Data
 
 
-#an identifier used to link this level to other or similar levels
-#the main use is to catch a position for this level so that players can
-#swap back to that point when re-entering that level. also using a metadata or dict
-#and grab data from dynamic getters and setters could be useful
-
-#NOTE: TODO: need to make sure the instance spawn in a resonable place
-#and that the player get sent to that point
-#ideally the instance is center at 0,0 and world are base on a player
-#var or a direct setting from the transfer
-
-#Note: this is an abstract getter so levels can add expose 
-#public properties instead of delaring it here
-func get_level_property(name:String) -> Variant:
+func get_level_property(name:StringName) -> Variant:
 	return null
 
 func is_level_loaded(location:Vector2)->bool:
 	return true
-	
+
+#either use a string or an int for the spawn location id
+#int is less readable, smaller, and probably quicker
+#but both cases require looking in the level data to know what is avalible
+#but default is return if not used. could also plug in an enum to level transfer
+#and aggree to reserve the index for the enum amount and anything else is extra
+#handler is pass incase it need a stored position
+func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
+	return Vector2()
 
 #the main functions to start and end the level_data
 func load_level():

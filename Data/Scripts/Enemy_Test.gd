@@ -1,4 +1,4 @@
-extends Character2D
+class_name EnemyTest extends Character2D
 signal hit(pawn)
 
 #NOTE:Interact componet should be used, but this may be fine for quick interactions
@@ -11,3 +11,11 @@ signal hit(pawn)
 #		on_attacked(instigator, interactee, data)
 #		#hit.emit(self)
 #		print_debug("MEOWOW!")
+
+func _ready() -> void:
+	_on_visibility_changed()
+
+
+func _on_visibility_changed() -> void:
+	%CollisionShape2D.set_deferred("disabled",!visible)
+		#%CollisionShape2D.disabled = visible
