@@ -25,7 +25,7 @@ func _ready():
 	#pawn_ref.name = "Enemy" #todo: make child of world main scene for objects
 	active_pawns.append(pawn_ref)
 	pawn_ref.attacked.connect(on_pawn_hit)
-	
+
 func on_pawn_hit(attacker, target, data):
 	if target.visible:
 		target.visible = false
@@ -34,7 +34,11 @@ func on_pawn_hit(attacker, target, data):
 		target.visible = true
 		set_process(true)
 
-
+#what if check if there a brain node and send data there. then it will move the node
+#to a point and wait? still seem wrong since children should not control parent.
+#and this should run the on tick and the brain just contains vairables to use.
+#could have most entites have a simple process that run on a base brain(then the brain
+#would be better as a resource)
 func _process(delta):
 	#TODO need the world_handler to frezze(pause) it children when no level_data
 	#or when loading new areas
@@ -43,10 +47,16 @@ func _process(delta):
 	if pawn != null && Game.get_player_handler() != null:
 		var target = Game.get_player_handler().pawn
 		if target.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
+			if pawn.brain_component is AI_Controlled_Brain:
+				var brain : AI_Controlled_Brain = pawn.brain_component as AI_Controlled_Brain
+				brain.set_move_to_location(target.global_position)
+
+			
+			
 			var test_vector : Vector2 = target.global_position - pawn.global_position
 			pawn.visible = true 
 			test_vector = test_vector * delta
-			pawn.move(test_vector.normalized())
+			#pawn.move(test_vector.normalized())
 		
 		#poor way to have enemy catch up to player after being hit
 			if (pawn.global_position - target.global_position).length() > 320:

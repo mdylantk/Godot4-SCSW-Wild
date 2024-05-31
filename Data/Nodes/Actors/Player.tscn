@@ -1,18 +1,16 @@
-[gd_scene load_steps=12 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=18 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Actors/Player.gd" id="1_07gio"]
+[ext_resource type="Script" path="res://Data/Features/Components/Player_Controlled_Brain.gd" id="2_0x1pg"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Data/Features/Inventory/Inventory.tscn" id="3_m3amk"]
+[ext_resource type="Script" path="res://Data/Nodes/Components/Shaped_Interactor.gd" id="4_qftw7"]
+
+[sub_resource type="Resource" id="Resource_fsu3f"]
+script = ExtResource("2_0x1pg")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
 size = Vector2(14, 6)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_21snw"]
-atlas = ExtResource("2_ps8hu")
-region = Rect2(442, 187, 16, 16)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ifpql"]
-size = Vector2(8, 6)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_r33os"]
 atlas = ExtResource("2_ps8hu")
@@ -41,17 +39,81 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_du65h"]
+resource_name = "idle"
+length = 0.001
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"sit", 1.0, false],
+"method": &"play"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_7orey"]
+resource_name = "left"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:flip_h")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_meqo5"]
+resource_name = "right"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:flip_h")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
 [sub_resource type="Animation" id="Animation_sgr0e"]
 resource_name = "default"
 length = 0.6
 loop_mode = 1
-tracks/0/type = "value"
+tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D:offset")
-tracks/0/interp = 2
+tracks/0/path = NodePath("AnimatedSprite2D")
+tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"default", 1.0, false],
+"method": &"play"
+}]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:offset")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.3, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
@@ -60,40 +122,55 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_q78uo"]
 _data = {
-"movement": SubResource("Animation_sgr0e")
+"idle": SubResource("Animation_du65h"),
+"left": SubResource("Animation_7orey"),
+"right": SubResource("Animation_meqo5"),
+"walk": SubResource("Animation_sgr0e")
 }
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("interact_cast")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ifpql"]
+size = Vector2(6, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_21snw"]
+atlas = ExtResource("2_ps8hu")
+region = Rect2(442, 187, 16, 16)
+
+[node name="Player" type="CharacterBody2D"]
 collision_layer = 21
 collision_mask = 21
 script = ExtResource("1_07gio")
-interact_cast = NodePath("ShapeCast2D")
+brain_component = SubResource("Resource_fsu3f")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_fb00q")
 
-[node name="Direction" type="Sprite2D" parent="."]
-position = Vector2(12, 0)
-scale = Vector2(0.25, 0.25)
-texture = SubResource("AtlasTexture_21snw")
-
 [node name="Inventory" parent="." instance=ExtResource("3_m3amk")]
-
-[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
-position = Vector2(0, 3)
-enabled = false
-shape = SubResource("RectangleShape2D_ifpql")
-target_position = Vector2(0, 16)
-max_results = 2
-collision_mask = 8
-collide_with_areas = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_aymj4")
 animation = &"sit"
+flip_h = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_q78uo")
 }
+
+[node name="Shaped_Interactor" type="Node2D" parent="." node_paths=PackedStringArray("shape_cast")]
+position = Vector2(0, 3)
+script = ExtResource("4_qftw7")
+shape_cast = NodePath("ShapeCast2D")
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="Shaped_Interactor"]
+enabled = false
+shape = SubResource("RectangleShape2D_ifpql")
+target_position = Vector2(24, 0)
+max_results = 2
+collision_mask = 8
+collide_with_areas = true
+
+[node name="Direction" type="Sprite2D" parent="Shaped_Interactor"]
+position = Vector2(14, 0)
+scale = Vector2(0.25, 0.25)
+texture = SubResource("AtlasTexture_21snw")

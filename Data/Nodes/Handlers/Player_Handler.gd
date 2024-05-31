@@ -10,6 +10,8 @@ class_name Player_Handler extends Controller_Handler
 var pawn:Character2D #pawn may be move around, so a direct ref will be used to track it
 var uid:int = 0 #may or may not be needed if there a built in way to get a user id\
 
+var pawns_interactor:Interactor_Base
+
 #catch the movement since the pawn moves every frame. 
 var movement_input: Vector2
 
@@ -65,17 +67,33 @@ func _ready():
 func possess_pawn(new_pawn: Node):
 	if pawn != null:
 		pawn.remove_from_group("player_controlled")
-		pawn.interacted.disconnect(on_pawn_interaction)
-		pawn.tree_exited.disconnect(on_pawn_exited_tree) 
+		handle_pawns_connections(pawn,true)
+		#pawn.interacted.disconnect(on_pawn_interaction)
+		#pawn.tree_exited.disconnect(on_pawn_exited_tree) 
 	pawn = new_pawn
 	new_pawn.add_to_group("player_controlled")
-	new_pawn.interacted.connect(on_pawn_interaction)
-	new_pawn.tree_exited.connect(on_pawn_exited_tree) 
+	handle_pawns_connections(new_pawn)
+	#new_pawn.interacted.connect(on_pawn_interaction)
+	#new_pawn.tree_exited.connect(on_pawn_exited_tree) 
 	controller_camera.reparent(new_pawn)
+	
 func on_pawn_exited_tree():
 	#an attempt to save the camera from being freed
 	if pawn.is_queued_for_deletion():
 		controller_camera.reparent(self)
+
+func handle_pawns_connections(target_pawn:Node, remove:bool = false):
+	var interactor:Interactor_Base = Interactor_Base.find_vaild_child(pawn)
+	if remove:
+		if interactor != null:
+			interactor.interaction.disconnect(on_pawn_interaction)
+		target_pawn.tree_exited.disconnect(on_pawn_exited_tree) 
+		pawns_interactor = null
+	else:
+		if interactor != null:
+			interactor.interaction.connect(on_pawn_interaction)
+		target_pawn.tree_exited.connect(on_pawn_exited_tree)
+		pawns_interactor = interactor
 
 #NOTE this should be the new system. allow pawn to controll how the data is fetched
 func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
@@ -83,9 +101,9 @@ func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
 	if interaction != null:
 		interaction.interact(self,source_pawn,collider,data)
 
-func _physics_process(_delta) :
-	if pawn != null:
-		pawn.move(movement_input)
+#func _physics_process(_delta) :
+#	if pawn != null:
+#		pawn.move(movement_input)
 		#this will be used unless a generic point can be predicted to use for the
 		#pawn to move to
 
@@ -98,14 +116,15 @@ func input_update(event:InputEvent):
 			#print_debug("saving")
 			state.save_state()
 		#test end
-		movement_input = Vector2(
-			Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
-			).normalized()
+#		movement_input = Vector2(
+#			Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
+#			).normalized()
 		if event.is_action("Sprint"):
 			pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
 			
 		if event.is_action_pressed("Accept"):
-			pawn.interact()
+			if pawns_interactor != null:
+				pawns_interactor.interact(pawn)
 
 			#	if result["collider"] is TileMap :
 					#below test for tilemap data. keeping for now so it be easier to

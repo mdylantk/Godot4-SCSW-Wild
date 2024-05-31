@@ -4,12 +4,13 @@ class_name Character2D extends CharacterBody2D
 signal attacked(attacker, target, data)
 signal interacted(instigator, interactee, data)
 
-signal movement_state_change(new_value:MovementStates, old_value:MovementStates)
+signal movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2)
 
-enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING }
+enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
 ##This if for caculate velocity change and store varibles related to how it change
 @export var movement_component : Movement_Component_2D = Advance2DMovement.new()
+@export var brain_component : Base_Brain = Base_Brain.new()
 #@export var interaction_component : Interactive_Data
 
 
@@ -17,7 +18,7 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING }
 var movement_state : MovementStates = MovementStates.IDLE:
 	set(value):
 		if movement_state != value:
-			movement_state_change.emit(value,movement_state)
+			movement_state_change.emit(value,movement_state,movement_component.facing_dirction)
 			movement_state = value
 			
 #trying to notify changes in movement. may allow additional mode but for now
@@ -41,6 +42,8 @@ func interact()->void:
 #in a dir every physic update. may also have a move to location task, but then again the handler could do that
 func move(direction : Vector2):
 	if movement_component != null:
+		if direction != movement_component.facing_dirction:
+			movement_state = MovementStates.TURNING
 		velocity = movement_component.update_velocity(velocity,direction)
 	if velocity != Vector2.ZERO:
 		move_and_slide()
@@ -57,5 +60,8 @@ func move(direction : Vector2):
 	else:
 		movement_state = MovementStates.IDLE
 		return false
+		
+func _physics_process(delta: float) -> void:
+	move(brain_component.get_move_vector(global_position))
 
 
