@@ -1,31 +1,38 @@
 class_name AI_Controlled_Brain extends Base_Brain
 
-#note this class is a simple AI and might not use navigation. children of this may
 
-##the point id the AI will try to reach. 
-@export var point_id : int = 0
-##the points the AI could move to. 
-@export var move_to_points : Array[Vector2]
+#NOTE could use update for more advance versions to change focus location
+#can swap it out is nessary. just need signals to notify changes in the state
+#TODO: this should handle more than movement. things like when to do an action or 
+#not to do it. could also do that in update and send signals to notify owner
+#of a change. like stating an attack is desired. AI controller could class check
+#so it only will try to listen of brain is a vaild AI brain (so the base AI brain
+#should know the signals used. if it cant, then an abstract signal should be used
+#or another class check
 
-#may have a type use a simple object and set the metadata so multi characters
-#can share it. no real reason to make a dedicated type unless one want to make all
-#the classes needed to make it easier to read. controller can listen to brain for
-#info they discover and add to data (or brain can modify data directly) if needed
-#var shared_data : Resource
 
-var move_to_location : Vector2
+@export var move_to_location : Vector2
+@export var desire_distance : float = 16
+var at_target_location : bool = false
 
-#NOTE: multi points might be best as a metadata? a bit risky for types, but the other option
-#is to use a function or object that handles varibles that the brain may need to know about to make
-#decisions. such as targets and points of intrest caculated by the AI or a group leader
-#NOTE also using metadata may be a pain? since it be harder to listen to so a setter function
-#may be easier and could be improved if metadata appears too bulky. but the object idea may be best
-#then only a ref to it is needed and the brain will only need to store data base on itself
-#TODO: decide on how this object(well maybe a resource) should function so that function expose 
-#here could be simpified or removed could have set location remove if the object handles it
-##set the location the AI will move to.
-func set_move_to_location(new_location := Vector2()) -> void:
-	move_to_location = new_location
+func get_move_vector(pawn:Node2D = null) -> Vector2:
+	if at_target_location: #test to see if it stop at the target
+		return Vector2()
+	var move_to = get_move_to_location()
+	#will use the move to location if there is no metadata
+	return Vector2(pawn.global_position.direction_to(move_to))
 
-func get_move_vector(current_position := Vector2()) -> Vector2:
-	return Vector2(current_position.direction_to(move_to_location))
+func get_move_to_location() -> Vector2:
+	if has_meta(&"move_to"):
+		var move_to = get_meta(&"move_to")
+		if typeof(move_to) == TYPE_VECTOR2:
+			return move_to
+		if (move_to as Node2D) != null:
+			return move_to.global_position
+	return move_to_location
+
+#an example case for func update(): is to see if target is near current location
+#may need to pass location) and if true, change location to a new one. 
+func update(pawn:Node2D = null, handler: Controller_Handler = null) -> void :
+	at_target_location = (pawn.global_position - get_move_to_location()).length() < desire_distance
+	pass

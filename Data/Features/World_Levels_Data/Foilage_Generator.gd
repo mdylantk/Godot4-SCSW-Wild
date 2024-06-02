@@ -59,12 +59,66 @@ func tile_picker(
 			print_debug("tile not null, passing")
 
 	else:
-		if tilemap.get_cell_tile_data(0,coords) == null:
-			tilemap.set_cell(0,coords,0,tile)
+		#NOTE: currently only generate on null zones of the first 4 layers
+		#this means foilage wont generate on place ground. 
+		#TODO: decide if the tiles should be update on all layers or 
+		#should put into the data and render later. the lag not really
+		#noticable and may be easier like this. could add objects
+		#for deciding how each layer is picked.
+		#instead of running multple generators, could have a generator that run
+		#steps together
+		if (
+				tilemap.get_cell_tile_data(0,coords) == null &&
+				tilemap.get_cell_tile_data(1,coords) == null #&&
+				#tilemap.get_cell_tile_data(2,coords) == null 
+			):
+			#TODO in the future there may be proper ground
+			#the idea is to have a layer for ground and surface ground
+			#then a layer for objects
+			#base ground could be check if null or all of the zones could be
+			#in general if land and air tiles are used, then layer 0 should have some data
+			#NOTE: seem with the current system, full land added around 30 mb of ram
+			#NOTE: also with a collsion for full land, that an additonal ~50 mb (~80)
+			#NOTE: with a nav layer, the amount is increase by another ~60mb (~140mb)
+			#BIG NOTE: Can not have nav on 0,0 (the empty tile) else the fps tanks. collsion is fine
+			#this is the ground layer 
+			
+			#tilemap.set_cell(1,coords,0,Vector2(17,0))
+			#this is the foilage
+			tilemap.set_cell(1,coords,0,tile)
+		#NOTE: land and see can not be in the same tile. it may be best
+		#to either deisgn it to be land and water with both collsions or
+		#not have land as collsion and manually check if not water for enities
+		#that can only swim
+		#NOTE: also could use land layer on water edge to fake it. the issue then
+		#is the water need the ends else it will let enities pass
+		#if (tilemap.get_cell_tile_data(0,coords) == null):
+		#	tilemap.set_cell(0,coords,2,Vector2(2,1))
+
+func format_tilemap_layers(tilemap:TileMap):
+	#the ground level
+	tilemap.set_layer_z_index(0,0)
+	tilemap.set_layer_y_sort_enabled(0,true)
+	#the object level
+	if tilemap.get_layers_count() < 2:
+		tilemap.add_layer(1)
+		tilemap.set_layer_y_sort_enabled(1,true)
+		tilemap. set_layer_z_index(1,0)
+	#the overhead level
+	#if tilemap.get_layers_count() < 3:
+	#	tilemap.add_layer(2)
+	#	tilemap.set_layer_y_sort_enabled(2,true)
+	#	tilemap. set_layer_z_index(2,2)
+	#NOTE: could set tile meta (like one for type or flags) so it can check the type 
+	#instead of seeing if it null. water_foilable can allow water table foilage and land
+	#for land(but currently it be null since there is no land). 
+	#TODO: decide on single or multi layers. multi may be useful if switch to
+	#a more detail tilesets
 
 func generate_tilemap(
 		tilemap:TileMap, data:Array = [], use_data:bool = false
 	):
+	format_tilemap_layers(tilemap)
 	for region_x in range(region_size):
 		for region_y in range(region_size):
 			if self != null and tilemap != null:

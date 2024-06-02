@@ -1,19 +1,17 @@
 class_name Base_Brain extends Resource
-#the purpous of this is to isolate the character process logic. More so the
-#move on input logic so it can be replace to things like move to point or other
-#AI base movement logic. default will return nothing or the movement input vector
-#this could also listen to input as well, but it should not need to. the charaters
-#can grab data from this if it is hosted here and the AI can set changes
+##ask for the controller/character(or listerner) that it would like to do an action.
+##This action usally an input event triggers like attack or interact
+signal character_action_request(id:StringName)
 
-#so beside geting move direction, character should also listen to this for fake input changes.
-#or the AI/player controller will handle that, but may limit allowing the brain to handle 
-#more independent tasks.
-#so it may also need a process/update function that alow it to run its own logic per tick
-#or a callable for the character to run if not null. it could also connect to an AI update clock
-#but would need a ref to it
+#NOTE: decided to use the controller (and it state) for the share data. update
+#roll is to store data locally to be used for other function(if needed) else
+#could pass handlers to thouse function if nessary
 
-func get_move_vector(current_position := Vector2()) -> Vector2:
+func get_move_vector(pawn:Node2D = null) -> Vector2:
 	return Vector2()
-	
-func update() -> void :
+
+#should be called from a timer or owning node. it ment to run checks to deicide actions
+#so it should not need to run often. usally when a change is made or to similate reaction time of AI
+func update(pawn:Node2D = null, handler: Controller_Handler = null) -> void :
+	#print_debug("meowing " + str(pawn))
 	pass

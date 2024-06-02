@@ -1,23 +1,28 @@
-[gd_scene load_steps=7 format=3 uid="uid://bruyakjvb8wwp"]
+[gd_scene load_steps=9 format=3 uid="uid://bruyakjvb8wwp"]
 
 [ext_resource type="Script" path="res://Data/Scripts/Enemy_Test.gd" id="1_sxhnx"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_1i0dm"]
 [ext_resource type="Script" path="res://Data/Features/Components/AI_Controlled_Brain.gd" id="2_mhgnx"]
+[ext_resource type="Script" path="res://Data/Nodes/Components/Base_Hurtbox.gd" id="4_kh8ca"]
 
 [sub_resource type="Resource" id="Resource_1h3td"]
 script = ExtResource("2_mhgnx")
-point_id = 0
-move_to_points = Array[Vector2]([])
+move_to_location = Vector2(0, 0)
+desire_distance = 16.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uhyft"]
+size = Vector2(16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o64lb"]
 atlas = ExtResource("2_1i0dm")
 region = Rect2(442, 136, 16, 16)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0xekb"]
+size = Vector2(16, 16)
+
 [node name="EnemyTest" type="CharacterBody2D"]
-collision_layer = 8
-collision_mask = 0
+collision_layer = 516
+collision_mask = 512
 script = ExtResource("1_sxhnx")
 brain_component = SubResource("Resource_1h3td")
 
@@ -29,5 +34,14 @@ shape = SubResource("RectangleShape2D_uhyft")
 z_index = 1
 y_sort_enabled = true
 texture = SubResource("AtlasTexture_o64lb")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("4_kh8ca")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("RectangleShape2D_0xekb")
+debug_color = Color(0.972549, 0, 0, 0.419608)
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

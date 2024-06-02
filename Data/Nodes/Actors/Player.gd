@@ -4,6 +4,7 @@ extends Character2D
 
 @onready var inventory = $Inventory
 
+
 #NOTE attack may need to be realted to a node or something. attack dection 
 #mosty likly will change so one shapecast wont solve all the conditions.
 #so a cast or projectile would be used. the node will be responsible in singeling back hit results
@@ -83,3 +84,4 @@ func on_facing_changed(new_facing:Vector2,old_facing:Vector2):
 
 #func _on_shaped_interactor_interaction(interactor: Node, interactee: Node, data: Dictionary) -> void:
 #	interacted.emit(interactor, interactee,data)
+

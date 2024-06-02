@@ -13,18 +13,28 @@ var active_pawns: Array[Node] #this may be replace by group if reliable
 var max_spawn_count : int = 10
 var spawn_delay : float = 15
 
+
 func get_state()->Savable_State:
 	return state
 func get_pawn(index:int=0)->Node:
 	return active_pawns[index]
 
+func handle_pawn(pawn:Node)->void:
+	if !active_pawns.has(pawn):
+		active_pawns.append(pawn)
+		pawn.attacked.connect(on_pawn_hit)
+
+func unhandle_pawn(pawn:Node)->void:
+	if active_pawns.has(pawn):
+		active_pawns.erase(pawn)
+		pawn.attacked.disconnect(on_pawn_hit)
+	pass
+
 func _ready():
 	if !enable: return
 	var pawn_ref = default_pawn.instantiate()
-	add_child(pawn_ref)
-	#pawn_ref.name = "Enemy" #todo: make child of world main scene for objects
-	active_pawns.append(pawn_ref)
-	pawn_ref.attacked.connect(on_pawn_hit)
+	World.add_child(pawn_ref)
+	handle_pawn(pawn_ref)
 
 func on_pawn_hit(attacker, target, data):
 	if target.visible:
@@ -34,11 +44,11 @@ func on_pawn_hit(attacker, target, data):
 		target.visible = true
 		set_process(true)
 
-#what if check if there a brain node and send data there. then it will move the node
-#to a point and wait? still seem wrong since children should not control parent.
-#and this should run the on tick and the brain just contains vairables to use.
-#could have most entites have a simple process that run on a base brain(then the brain
-#would be better as a resource)
+func on_ai_update():
+	for pawn in active_pawns:
+		if pawn.brain_component != null:
+			pawn.brain_component.update(pawn,self)
+			
 func _process(delta):
 	#TODO need the world_handler to frezze(pause) it children when no level_data
 	#or when loading new areas
@@ -49,8 +59,12 @@ func _process(delta):
 		if target.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
 			if pawn.brain_component is AI_Controlled_Brain:
 				var brain : AI_Controlled_Brain = pawn.brain_component as AI_Controlled_Brain
-				brain.set_move_to_location(target.global_position)
-
+				#brain.move_to_location = target.global_position
+				brain.set_meta(&"move_to",target)
+				#maybe store data like move to location as a metadata?
+				#could store it as a vector or node2d at the cost of checking first
+				#brain.update(pawn)
+			on_ai_update()
 			
 			
 			var test_vector : Vector2 = target.global_position - pawn.global_position

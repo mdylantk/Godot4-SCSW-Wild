@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=20 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Script" path="res://Data/Features/Components/Player_Controlled_Brain.gd" id="2_0x1pg"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Data/Features/Inventory/Inventory.tscn" id="3_m3amk"]
 [ext_resource type="Script" path="res://Data/Nodes/Components/Shaped_Interactor.gd" id="4_qftw7"]
+[ext_resource type="Script" path="res://Data/Nodes/Components/Base_Hurtbox.gd" id="6_3jdhg"]
 
 [sub_resource type="Resource" id="Resource_fsu3f"]
 script = ExtResource("2_0x1pg")
@@ -135,9 +136,12 @@ size = Vector2(6, 6)
 atlas = ExtResource("2_ps8hu")
 region = Rect2(442, 187, 16, 16)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ovqcn"]
+size = Vector2(14, 12)
+
 [node name="Player" type="CharacterBody2D"]
-collision_layer = 21
-collision_mask = 21
+collision_layer = 261
+collision_mask = 433
 script = ExtResource("1_07gio")
 brain_component = SubResource("Resource_fsu3f")
 
@@ -158,6 +162,7 @@ libraries = {
 }
 
 [node name="Shaped_Interactor" type="Node2D" parent="." node_paths=PackedStringArray("shape_cast")]
+visible = false
 position = Vector2(0, 3)
 script = ExtResource("4_qftw7")
 shape_cast = NodePath("ShapeCast2D")
@@ -174,3 +179,12 @@ collide_with_areas = true
 position = Vector2(14, 0)
 scale = Vector2(0.25, 0.25)
 texture = SubResource("AtlasTexture_21snw")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("6_3jdhg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("RectangleShape2D_ovqcn")
+debug_color = Color(0.972549, 0, 0, 0.419608)

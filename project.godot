@@ -137,14 +137,17 @@ Start={
 [layer_names]
 
 2d_physics/layer_1="Physical"
-2d_physics/layer_2="Visable"
+2d_physics/layer_2="Visible"
 2d_physics/layer_3="Hittable"
 2d_physics/layer_4="Interactable"
 2d_physics/layer_5="Shallow-Water"
 2d_physics/layer_6="Deep-Water"
-2d_physics/layer_7="Dense-Forest"
+2d_physics/layer_7="Land"
 2d_physics/layer_8="Air"
-2d_physics/layer_9="Anti-Air"
+2d_physics/layer_9="Blocking_Land"
+2d_physics/layer_10="Blocking_Air"
+2d_physics/layer_11="Blocking_Shallow_Water"
+2d_physics/layer_12="Blocking_Deep_Water"
 
 [rendering]
 

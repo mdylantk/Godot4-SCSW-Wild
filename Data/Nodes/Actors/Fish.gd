@@ -7,6 +7,9 @@ func remove_self():
 	self_ref.queue_free()
 
 
-func _on_interact_component_finished(canceled:bool, data:Interactive_Data):
+func _on_interact_component_finished(canceled:bool, _data:Interactive_Data):
 	if !canceled:
 		remove_self()
+
+func _ready() -> void:
+	$AnimationPlayer.current_animation = "Idle"

@@ -9,3 +9,12 @@ func get_state()->Savable_State:
 func get_pawn(index:int=0)->Node:
 	return null
 
+##shared functionality that state that a new pawn should be controlled
+##AI may stash it in an array while player may replace the current pawn
+func handle_pawn(pawn:Node)->void:
+	pass
+##shared functionality that state that a new pawn should no longer be controlled
+##If player only have one pawn, this would remove it and the player lose acess to a pawn
+##if handle pawns are stored in an array, then they would be removed
+func unhandle_pawn(pawn:Node)->void:
+	pass

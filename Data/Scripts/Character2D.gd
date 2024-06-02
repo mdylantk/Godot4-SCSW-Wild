@@ -14,7 +14,6 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 #@export var interaction_component : Interactive_Data
 
 
-
 var movement_state : MovementStates = MovementStates.IDLE:
 	set(value):
 		if movement_state != value:
@@ -60,8 +59,11 @@ func move(direction : Vector2):
 	else:
 		movement_state = MovementStates.IDLE
 		return false
-		
+	
 func _physics_process(delta: float) -> void:
-	move(brain_component.get_move_vector(global_position))
+	if brain_component != null:
+		move(brain_component.get_move_vector(self))
+	
+	
 
 
