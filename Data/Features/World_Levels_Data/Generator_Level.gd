@@ -94,7 +94,9 @@ func load_static_tilemap(static_map:Node,coords:Vector2i):
 	static_tilemaps[coords] = static_map
 	static_map.transform[2] = level_coords_to_world(coords)
 	var processing_map = static_map as One_Bit_Tilemap
-	level_created.emit(static_map)
+#	map_added(static_map)
+	add_child(static_map)
+	#level_created.emit(static_map)
 	await Game.get_tree().create_timer(1).timeout
 	loaded_tilemaps[coords] = static_map
 	#loaded_tilemaps[coords] = static_map
@@ -107,8 +109,9 @@ func clear_tilemaps(tilemap_dictionary:Dictionary):
 	for coords in tilemap_dictionary.keys():
 		var tilemap = tilemap_dictionary[coords]
 		if tilemap != null :
-			level_removed.emit(tilemap)
-			tilemap.queue_free()
+#			map_removed(tilemap)
+			#level_removed.emit(tilemap)
+			tilemap.call_deferred("queue_free")
 		else:
 			print_debug("WARNING: tilemap is null")
 		tilemap_dictionary.erase(coords)
@@ -209,8 +212,9 @@ func handle_tilemaps():
 		if loose_tilemaps.size()>max_loose_maps:
 			#print_debug("removing" + str(loose_coords) )
 			if loose_map != null :
-				level_removed.emit(loose_map)
-				loose_map.queue_free()
+				#map_removed(loose_map)
+				#level_removed.emit(loose_map)
+				loose_map.call_deferred("queue_free")
 			else:
 				print_debug("WARNING: tilemap is null")
 			if static_tilemaps.has(loose_coords):
@@ -234,7 +238,9 @@ func caculate_active_regions(position:Vector2):
 
 func create_tilemap():
 	var tilemap := TileMap.new()
-	level_created.emit(tilemap)
+#	map_added(tilemap)
+	add_child(tilemap)
+	#level_created.emit(tilemap)
 	return tilemap
 
 #NOTE: need to load and init tilemap. this just set things up
@@ -255,28 +261,6 @@ func level_coords_to_world(coords: Vector2i) -> Vector2 :
 	return coords * chunk_distance
 	#return Vector2i(coords.x, coords.y)
 
-func load_level():
-	if !generators[0].scene_finished.is_connected(on_generator_end):
-		generators[0].scene_finished.connect(on_generator_end)
-
-func unload_level():
-	clear_tilemaps(loaded_tilemaps)
-	clear_tilemaps(processing_tilemaps)
-	clear_tilemaps(loose_tilemaps)
-	clear_tilemaps(static_tilemaps)
-	
-	_deferring_handle_tilemaps = false
-	active_regions = []
-	#clear_chunks(loaded_chunks.keys())
-	pass
-
-func process_players(pawn:Node):
-	if pawn as Node2D:
-		var grid_location = world_to_level_coords(pawn.global_position)
-		#loaded_point = grid_location
-		caculate_active_regions(pawn.global_position)
-
-#WORLD Handler old logic
 
 func is_level_loaded(location:Vector2)->bool:
 	var coords = world_to_level_coords(location)
@@ -286,3 +270,17 @@ func is_level_loaded(location:Vector2)->bool:
 	
 func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
 	return Savedata_Helper.fetch_player_position(handler,level_id)
+
+
+func _process(delta: float) -> void:
+	#currently using this, though the update may happen too often
+	#will use the current viewport. may cause issue of camera move around too much
+	#(but that should not happen since we want stuff to render around camera)
+	#and would need to change if multi viewports are ever added
+	caculate_active_regions(get_viewport().get_camera_2d().global_position)
+
+func _ready() -> void:
+	#NOTE: this get called each time it is attach to tree. 
+	if !generators[0].scene_finished.is_connected(on_generator_end):
+		generators[0].scene_finished.connect(on_generator_end)
+

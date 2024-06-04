@@ -14,7 +14,8 @@ day_time = 0.75
 sun_rise = false
 environment_color = SubResource("Gradient_1rs7o")
 
-[node name="GeneratorLevel" type="Node"]
+[node name="GeneratorLevel" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_a382x")
 generators = Array[Resource("res://Data/Features/World_Levels_Data/Generator_Data.gd")]([ExtResource("2_68tqv")])
 static_chunks = {

@@ -193,4 +193,5 @@ func on_item_gain(inventory, slot, old_item):
 	
 func on_level_changed(level:Base_Level, spawn_index: int = 0):
 	if level != null and pawn != null:
+		pawn.reparent(level)
 		pawn.global_position = level.get_spawn_position(spawn_index, self)

@@ -1,4 +1,4 @@
-class_name World_Handler extends Node2D
+class_name World_Handler extends Node
 
 signal level_changed(new_level : Base_Level, spawn_index : int)
 
@@ -9,6 +9,8 @@ signal level_changed(new_level : Base_Level, spawn_index : int)
 
 @export var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 @export var world_seed : int = 0
+
+@export var max_levels_stored : int = 2
 
 var level_data : Object :
 	set(value):
@@ -36,12 +38,6 @@ var loaded_levels := {}
 #the issue of being ine the same World2d
 var loaded_level : Base_Level
 func load_level(uid:String, spawn_index : int = 0) -> Base_Level:
-	#issue if more than one scene need to load. uid wont be enough. would need to format it
-	#or use an object. also could have the scene handle multiple instance itself
-	#may be a bit odd and need a bit of infomation for it to work correctly
-	#but mulitple instances of the same scene may not be nessary for this project
-	#levels may act similar to minecraft dim. world handler just handle them
-	
 	if !loaded_levels.has(uid):
 		var new_level = (load(uid) as PackedScene).instantiate()
 		if new_level != null:
@@ -54,37 +50,46 @@ func load_level(uid:String, spawn_index : int = 0) -> Base_Level:
 		unload_level(loaded_level)
 		loaded_level = loaded_levels[uid]
 	if loaded_level != null: #just a check, but usally should not happen unless
-		#loaded_level was null and there is no vaild level uid  or loaded level
-		loaded_level.level_created.connect(on_level_created)
-		loaded_level.level_removed.connect(on_level_removed)
-		loaded_level.load_level()
+		#loaded_level.load_level()
 		if loaded_level.environment_data == null:
 			%CanvasModulate.color = Color(1,1,1,1)
 	else:
 		%CanvasModulate.color = Color(1,1,1,1)
 	level_changed.emit(loaded_level, spawn_index)
+	remove_unused_levels()
 	return loaded_level
 		
 #will unload from scene, but not remove from memory
 func unload_level(level:Base_Level):
 	if loaded_level != null:
-		level.unload_level()
-		level.level_created.disconnect(on_level_created)
-		level.level_removed.disconnect(on_level_removed)
 		remove_child(loaded_level)
+		
+func remove_unused_levels():
+	for level_uid in loaded_levels.keys():
+		var level : Base_Level = loaded_levels[level_uid]
+		if level == loaded_level:
+			level.active_age = 1
+		elif level.active_age >= max_levels_stored:
+			#level.unload_level()
+			loaded_levels.erase(level_uid)
+			level.call_deferred("queue_free")
+		else:
+			level.active_age += 1
 
 var is_time_setting: bool = false
 	
 func on_level_created(level:Node):
-	add_child(level)
+	print_debug("this should not be called anymore")
+	#add_child(level)
 		
 func on_level_removed(level:Node):
-	if level != self and level.get_parent() != null:
-		remove_child(level)
-	elif(level.get_parent() == null):
-		print_debug("level parent is null")
-	else:
-		print_debug("someone trying to detached world handler from itself")
+	print_debug("this should not be called anymore")
+#	if level != self and level.get_parent() != null:
+#		remove_child(level)
+#	elif(level.get_parent() == null):
+#		print_debug("level parent is null")
+#	else:
+#		print_debug("someone trying to detached world handler from itself")
 
 
 func _ready():
@@ -100,6 +105,8 @@ func change_level(new_level_data:Object,handler:Node, instigator:Node = null,
 	#location offset may be ideal place to pass it since the tigger will be
 	#passing a return point and could load it from player
 	#the same gose for reverse.
+	print_debug("this should not be called anymore")
+	return
 	print_debug("changing level")
 	if (new_level_data as Level_Data) != null:
 		level_data = new_level_data
@@ -120,41 +127,44 @@ func is_chunk_loaded(location):
 		return loaded_level.is_level_loaded(location)
 	return true
 
-var player_pawns :Array[Node] = []
+#var player_pawns :Array[Node] = []
 
 
-func _process(_delta):
-	var level
-	if level_data != null:
-		level = level_data
-	elif loaded_level != null:
-		level = loaded_level
-	else:
-		return
-	for pawn in player_pawns:
-		if pawn == null:
-			player_pawns.erase(pawn)
-		elif pawn.is_in_group("player_controlled"):
+#func _process(_delta):
+#	var level
+#	if level_data != null:
+#		level = level_data
+#	elif loaded_level != null:
+#		level = loaded_level
+#	else:
+#		return
+	
+#	for pawn in player_pawns:
+#		if pawn == null:
+#			player_pawns.erase(pawn)
+#		elif pawn.is_in_group("player_controlled"):
 			
-			level.process_players(pawn)
+#			level.process_players(pawn)
 			#TODO add some function to level data
-			pass
-		else:
-			player_pawns.erase(pawn)
+#			pass
+#		else:
+#			player_pawns.erase(pawn)
 
 #NOTE: can get world location from HUD, but getting it here may be a bit odd
 #also if server, kind of need to know about the player so this may be idea
 func _on_child_entered_tree(node):
+	pass
 	#print_debug(node)
-	if node.is_in_group("player_controlled"): #and !player_pawns.has(node):
-		player_pawns.append(node)
+	#if node.is_in_group("player_controlled"): #and !player_pawns.has(node):
+	#	player_pawns.append(node)
 
 
 
 func _on_child_exiting_tree(node):
 	#print_debug(node)
-	if player_pawns.has(node):
-		player_pawns.erase(node)
+	pass
+	#if player_pawns.has(node):
+	#	player_pawns.erase(node)
 
 
 func _on_world_clock_timeout() -> void:

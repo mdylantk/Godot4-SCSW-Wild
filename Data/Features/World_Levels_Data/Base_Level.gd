@@ -12,10 +12,10 @@ class_name Base_Level extends Node
 
 #NOTE will remate level_data here to try to reused world and instance data
 #TODO: should create level under itself same with enities
-signal level_created(level:Node)
-signal level_removed(level:Node)
-signal entity_created(entity:Node)
-signal entity_removed(entity:Node)
+#signal level_created(level:Node)
+#signal level_removed(level:Node)
+#signal entity_created(entity:Node)
+#signal entity_removed(entity:Node)
 
 #this may or maynot be used. could be use as a node
 @export var environment_data : Environment_Data
@@ -23,9 +23,13 @@ signal entity_removed(entity:Node)
 @export var default_spawn_position : Vector2
 @export var use_default_spawn_position : bool = false
 
+##this is a counter for the world handler to know if the level need to be culled
+##the world handler will update it as needed (NOTE: also could store as a metadata)
+var active_age : int = 1
 
-func get_level_property(name:StringName) -> Variant:
-	return null
+#TODO: this probably should not be used. can use metadata or directly acess it
+#func get_level_property(name:StringName) -> Variant:
+#	return null
 
 func is_level_loaded(location:Vector2)->bool:
 	return true
@@ -41,21 +45,16 @@ func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
 		return default_spawn_position
 	return Vector2()
 
-#the main functions to start and end the level_data
-func load_level():
-	pass
-func unload_level():
-	pass
 
-#a function getting level ref at the region position. children should override this
-#since the logic may need to be diffrent, it may just return an empty region data
-#or it will return a tilemap scene wither from a dic or just one. it should return a scene
-#since region is just a helper object and state for generation or chunk/region base logic
+#Note: maybe have this be called directly in nodes that need to dynamily add and remove
+#func map_added(level:Node):
+##	add_child(level)
+	
+#func map_removed(level:Node):
+#	level.call_deferred("queue_free")
+
 
 func get_level_scene(position:Vector2) -> Node:
 	return null
 	pass
 
-#TODO this should be handle directly by detecting entry/leaving of node tree and group id
-func process_players(pawn:Node):
-	pass

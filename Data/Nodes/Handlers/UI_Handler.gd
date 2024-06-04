@@ -81,7 +81,9 @@ func on_player_created(player:Node, index : int):
 		player.state.data_changed.connect(on_player_state_change)
 		handler_setup(player)
 
-func _input(event:InputEvent):
+##general gameplay input for player. may need to have player handle this
+##directly and pause the player if game is pause or gameplay is paused
+func _unhandled_input(event:InputEvent):
 	if enable_player_input and player_handler != null: 
 		player_handler.input_update(event)
 		
@@ -106,13 +108,14 @@ func _process(_delta):
 			#but then there need signals or direct calls to set that and world loading
 			#not as simple
 			#NOTE: by checking four corner point, boader loading cases could be solved
-			
+		
 		loading = not (
 			World.is_chunk_loaded(camera_global_position + Vector2(320,320)) and
 			World.is_chunk_loaded(camera_global_position + Vector2(-320,320)) and
 			World.is_chunk_loaded(camera_global_position + Vector2(320,-320)) and
 			World.is_chunk_loaded(camera_global_position + Vector2(-320,-320))
 				)
+		#loading = false
 	if enable_debug:
 		debug.text = str(camera_global_position)
 			#debug.get_canvas_transform().affine_inverse() * debug.get_screen_position()

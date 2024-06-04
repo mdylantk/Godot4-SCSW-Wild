@@ -2,8 +2,7 @@
 
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/World_Handler.gd" id="1_57p0l"]
 
-[node name="World_Handler" type="Node2D" groups=["World_Handler"]]
-y_sort_enabled = true
+[node name="World_Handler" type="Node" groups=["World_Handler"]]
 script = ExtResource("1_57p0l")
 world_seed = 1401584422
 
