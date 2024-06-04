@@ -19,7 +19,7 @@ static func get_world():
 static func spawn_entity(entity:Node):
 	World.add_child(entity)
 	
-static func change_level(level:Level_Data, handler:Node, instigator:Node, offset:Vector2):
+static func change_level(level:Object, handler:Node, instigator:Node, offset:Vector2):
 	World.change_level(level,handler,instigator,offset)
 	
 static func start_dialog(dialog_data):

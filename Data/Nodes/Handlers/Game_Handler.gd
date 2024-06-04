@@ -130,7 +130,8 @@ func start_game(is_new:bool = true, save_name:String="Default"):
 			DirAccess.remove_absolute(path)
 	
 	load_player_handler()
-	World.level_data = load("uid://cvna13cf6rc1p")
+	#World.level_data = load("uid://cvna13cf6rc1p")
+	World.load_level("uid://cldlaymbe77mn")
 	#the idea is there at least a main menu in the future
 	#start game would init the world. before that there may be game
 	#config or waiting for players

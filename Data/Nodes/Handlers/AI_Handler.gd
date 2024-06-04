@@ -35,6 +35,7 @@ func _ready():
 	var pawn_ref = default_pawn.instantiate()
 	World.add_child(pawn_ref)
 	handle_pawn(pawn_ref)
+	super()
 
 func on_pawn_hit(attacker, target, data):
 	if target.visible:

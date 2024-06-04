@@ -1,5 +1,7 @@
 class_name World_Handler extends Node2D
 
+signal level_changed(new_level : Base_Level, spawn_index : int)
+
 #TODO: add common world event as signals and call them correct so they can be listen to
 #updates that state it pos/souce and if it load/unloaded
 #signal chunk_update(tile_map, chunk_position, is_unloaded)
@@ -8,7 +10,7 @@ class_name World_Handler extends Node2D
 @export var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 @export var world_seed : int = 0
 
-@export var level_data : Level_Data :
+var level_data : Object :
 	set(value):
 		print_debug("setting level")
 		if level_data != value:
@@ -28,6 +30,48 @@ class_name World_Handler extends Node2D
 			level_data = value
 			if level_data == null:
 				%CanvasModulate.color = Color(1,1,1,1)
+
+var loaded_levels := {}
+#this just store the current level. only one per client unless viewport is used to solve
+#the issue of being ine the same World2d
+var loaded_level : Base_Level
+func load_level(uid:String, spawn_index : int = 0) -> Base_Level:
+	#issue if more than one scene need to load. uid wont be enough. would need to format it
+	#or use an object. also could have the scene handle multiple instance itself
+	#may be a bit odd and need a bit of infomation for it to work correctly
+	#but mulitple instances of the same scene may not be nessary for this project
+	#levels may act similar to minecraft dim. world handler just handle them
+	
+	if !loaded_levels.has(uid):
+		var new_level = (load(uid) as PackedScene).instantiate()
+		if new_level != null:
+			loaded_levels[uid] = new_level
+			add_child(new_level)
+			unload_level(loaded_level)
+			loaded_level = new_level
+	else:
+		add_child(loaded_levels[uid])
+		unload_level(loaded_level)
+		loaded_level = loaded_levels[uid]
+	if loaded_level != null: #just a check, but usally should not happen unless
+		#loaded_level was null and there is no vaild level uid  or loaded level
+		loaded_level.level_created.connect(on_level_created)
+		loaded_level.level_removed.connect(on_level_removed)
+		loaded_level.load_level()
+		if loaded_level.environment_data == null:
+			%CanvasModulate.color = Color(1,1,1,1)
+	else:
+		%CanvasModulate.color = Color(1,1,1,1)
+	level_changed.emit(loaded_level, spawn_index)
+	return loaded_level
+		
+#will unload from scene, but not remove from memory
+func unload_level(level:Base_Level):
+	if loaded_level != null:
+		level.unload_level()
+		level.level_created.disconnect(on_level_created)
+		level.level_removed.disconnect(on_level_removed)
+		remove_child(loaded_level)
 
 var is_time_setting: bool = false
 	
@@ -49,7 +93,7 @@ func _ready():
 		world_seed = randi()
 
 
-func change_level(new_level_data:Level_Data,handler:Node, instigator:Node = null,
+func change_level(new_level_data:Object,handler:Node, instigator:Node = null,
 	location_offset = Vector2()
 ):
 	#NOTE:player location for world position can be store in player handler
@@ -57,26 +101,42 @@ func change_level(new_level_data:Level_Data,handler:Node, instigator:Node = null
 	#passing a return point and could load it from player
 	#the same gose for reverse.
 	print_debug("changing level")
-	level_data = new_level_data
+	if (new_level_data as Level_Data) != null:
+		level_data = new_level_data
+	elif (new_level_data as Base_Level):
+		var old_level = find_child(level_data.name)	
+		if old_level == null:
+			level_data = new_level_data
+		else:
+			print_debug("level is already attach to scene")
+	else:
+		print_debug("invaild type")
 
 #TODO: change name to: is_loaded_at or is_ready_at unless chunk end up sounding better
 func is_chunk_loaded(location):
 	if level_data != null:
 		return level_data.is_level_loaded(location)
+	elif loaded_level != null:
+		return loaded_level.is_level_loaded(location)
 	return true
 
 var player_pawns :Array[Node] = []
 
 
 func _process(_delta):
-	if level_data == null:
+	var level
+	if level_data != null:
+		level = level_data
+	elif loaded_level != null:
+		level = loaded_level
+	else:
 		return
 	for pawn in player_pawns:
 		if pawn == null:
 			player_pawns.erase(pawn)
 		elif pawn.is_in_group("player_controlled"):
 			
-			level_data.process_players(pawn)
+			level.process_players(pawn)
 			#TODO add some function to level data
 			pass
 		else:
@@ -98,11 +158,16 @@ func _on_child_exiting_tree(node):
 
 
 func _on_world_clock_timeout() -> void:
-	if level_data == null: 
-		return
-	if level_data.environment_data == null:
-		return
-	var enviroment:Environment_Data = level_data.environment_data
-	enviroment.forward_time()
-	%CanvasModulate.color = enviroment.get_environment_color()
+	if level_data != null: 
+		if level_data.environment_data == null:
+			return
+		var enviroment:Environment_Data = level_data.environment_data
+		enviroment.forward_time()
+		%CanvasModulate.color = enviroment.get_environment_color()
+	elif loaded_level != null: 
+		if loaded_level .environment_data == null:
+			return
+		var enviroment:Environment_Data = loaded_level.environment_data
+		enviroment.forward_time()
+		%CanvasModulate.color = enviroment.get_environment_color()
 

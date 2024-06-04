@@ -24,6 +24,7 @@ default_player_handler = ExtResource("3_iithg")
 
 [node name="AI_Handler" type="Node2D" parent="."]
 script = ExtResource("3_8kfs5")
+controller_name = null
 enable = true
 
 [node name="Server_Handler" type="Node" parent="."]

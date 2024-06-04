@@ -18,3 +18,10 @@ func handle_pawn(pawn:Node)->void:
 ##if handle pawns are stored in an array, then they would be removed
 func unhandle_pawn(pawn:Node)->void:
 	pass
+	
+func on_level_changed(level:Base_Level, spawn_index: int = 0):
+	pass
+	
+func _ready() -> void:
+	World.level_changed.connect(on_level_changed)
+

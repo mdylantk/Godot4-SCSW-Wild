@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://blyxjt47otoln"]
+[gd_scene load_steps=17 format=3 uid="uid://blyxjt47otoln"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_ijlli"]
 [ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_d0e8t"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://dghoogotf0r7u" path="res://Data/Nodes/Actors/Fish.tscn" id="7_y3v0u"]
 [ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Nodes/Actors/Interactive_Body2d.tscn" id="8_y0am1"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="9_ceyac"]
-[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Instance_Data.gd" id="10_o6buh"]
 [ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Level_Transfer.gd" id="12_cyc1h"]
 [ext_resource type="Resource" uid="uid://bax1gyeyncjmp" path="res://Data/Resources/Old_Man_Dialog_Actions.tres" id="13_w83no"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Action_On_Interact.gd" id="15_hqe25"]
@@ -23,18 +22,13 @@ size = Vector2(16, 16)
 atlas = ExtResource("9_ceyac")
 region = Rect2(17, 357, 16, 16)
 
-[sub_resource type="Resource" id="Resource_4o3n4"]
-script = ExtResource("10_o6buh")
-instance_scene = "uid://hepasgr3svoi"
-spawn_point = Vector2(8, -8)
-
 [sub_resource type="Resource" id="Resource_61env"]
 script = ExtResource("12_cyc1h")
-level_data = SubResource("Resource_4o3n4")
-spawn_location = Vector2(0, 0)
+level_uid = "uid://dclondyf2dohh"
+spawn_location = null
 store_entry_point = true
-entry_point_id = &"world"
-spawn_index = 0
+entry_point_id = null
+spawn_index = null
 
 [sub_resource type="Resource" id="Resource_lpdb6"]
 script = ExtResource("15_hqe25")

@@ -25,6 +25,7 @@ func get_pawn(index:int=0)->Character2D:
 	return pawn
 
 func _ready():
+	super()
 	#this is to test the signal
 	#player_meta_changed.connect(player_meta_changed_test)
 	
@@ -189,4 +190,7 @@ func on_item_gain(inventory, slot, old_item):
 	state.store("inventory", inventory.items, "pawn")
 	print_debug(state.data)
 	pass
-
+	
+func on_level_changed(level:Base_Level, spawn_index: int = 0):
+	if level != null and pawn != null:
+		pawn.global_position = level.get_spawn_position(spawn_index, self)

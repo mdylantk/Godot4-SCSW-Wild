@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dclondyf2dohh"]
+
+[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Base_Level.gd" id="1_t73yg"]
+[ext_resource type="PackedScene" uid="uid://hepasgr3svoi" path="res://Data/Nodes/Maps/Instances/InstanceTest.tscn" id="2_y6uyh"]
+
+[node name="TestHouse" type="Node"]
+script = ExtResource("1_t73yg")
+default_spawn_position = Vector2(8, -8)
+use_default_spawn_position = true
+
+[node name="TileMap" parent="." instance=ExtResource("2_y6uyh")]
