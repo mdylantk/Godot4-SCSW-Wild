@@ -1,10 +1,16 @@
-[gd_resource type="Resource" script_class="Item" load_steps=2 format=3 uid="uid://nrh8trhov6yk"]
+[gd_resource type="Resource" script_class="Item" load_steps=4 format=3 uid="uid://nrh8trhov6yk"]
 
 [ext_resource type="Script" path="res://Data/Features/Inventory/Item.gd" id="1_bt854"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_gb1aq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ototd"]
+atlas = ExtResource("1_gb1aq")
+region = Rect2(561, 289, 16, 16)
 
 [resource]
 script = ExtResource("1_bt854")
 display_name = "Fish"
 discription = "This is a fish"
-tooltip = "smells fishy"
+tooltip = "Smells fishy"
+icon = SubResource("AtlasTexture_ototd")
 item_entity = ""

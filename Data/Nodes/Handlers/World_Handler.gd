@@ -12,27 +12,6 @@ signal level_changed(new_level : Base_Level, spawn_index : int)
 
 @export var max_levels_stored : int = 2
 
-var level_data : Object :
-	set(value):
-		print_debug("setting level")
-		if level_data != value:
-			#load new level
-			if value != null:
-				value.level_created.connect(on_level_created)
-				value.level_removed.connect(on_level_removed)
-				value.load_level()
-				if value.environment_data == null:
-					%CanvasModulate.color = Color(1,1,1,1)
-				
-			if level_data != null:
-				#unload old level
-				level_data.unload_level()
-				level_data.level_created.disconnect(on_level_created)
-				level_data.level_removed.disconnect(on_level_removed)
-			level_data = value
-			if level_data == null:
-				%CanvasModulate.color = Color(1,1,1,1)
-
 var loaded_levels := {}
 #this just store the current level. only one per client unless viewport is used to solve
 #the issue of being ine the same World2d
@@ -78,77 +57,18 @@ func remove_unused_levels():
 
 var is_time_setting: bool = false
 	
-func on_level_created(level:Node):
-	print_debug("this should not be called anymore")
-	#add_child(level)
-		
-func on_level_removed(level:Node):
-	print_debug("this should not be called anymore")
-#	if level != self and level.get_parent() != null:
-#		remove_child(level)
-#	elif(level.get_parent() == null):
-#		print_debug("level parent is null")
-#	else:
-#		print_debug("someone trying to detached world handler from itself")
-
-
 func _ready():
 	print_debug("I am ready")
 	if world_seed == 0:
 		world_seed = randi()
 
 
-func change_level(new_level_data:Object,handler:Node, instigator:Node = null,
-	location_offset = Vector2()
-):
-	#NOTE:player location for world position can be store in player handler
-	#location offset may be ideal place to pass it since the tigger will be
-	#passing a return point and could load it from player
-	#the same gose for reverse.
-	print_debug("this should not be called anymore")
-	return
-	print_debug("changing level")
-	if (new_level_data as Level_Data) != null:
-		level_data = new_level_data
-	elif (new_level_data as Base_Level):
-		var old_level = find_child(level_data.name)	
-		if old_level == null:
-			level_data = new_level_data
-		else:
-			print_debug("level is already attach to scene")
-	else:
-		print_debug("invaild type")
-
 #TODO: change name to: is_loaded_at or is_ready_at unless chunk end up sounding better
 func is_chunk_loaded(location):
-	if level_data != null:
-		return level_data.is_level_loaded(location)
-	elif loaded_level != null:
+	if loaded_level != null:
 		return loaded_level.is_level_loaded(location)
 	return true
 
-#var player_pawns :Array[Node] = []
-
-
-#func _process(_delta):
-#	var level
-#	if level_data != null:
-#		level = level_data
-#	elif loaded_level != null:
-#		level = loaded_level
-#	else:
-#		return
-	
-#	for pawn in player_pawns:
-#		if pawn == null:
-#			player_pawns.erase(pawn)
-#		elif pawn.is_in_group("player_controlled"):
-			
-#			level.process_players(pawn)
-			#TODO add some function to level data
-#			pass
-#		else:
-#			player_pawns.erase(pawn)
 
 #NOTE: can get world location from HUD, but getting it here may be a bit odd
 #also if server, kind of need to know about the player so this may be idea
@@ -168,13 +88,7 @@ func _on_child_exiting_tree(node):
 
 
 func _on_world_clock_timeout() -> void:
-	if level_data != null: 
-		if level_data.environment_data == null:
-			return
-		var enviroment:Environment_Data = level_data.environment_data
-		enviroment.forward_time()
-		%CanvasModulate.color = enviroment.get_environment_color()
-	elif loaded_level != null: 
+	if loaded_level != null: 
 		if loaded_level .environment_data == null:
 			return
 		var enviroment:Environment_Data = loaded_level.environment_data

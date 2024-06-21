@@ -14,10 +14,10 @@ region = Rect2(136, 170, 16, 16)
 [sub_resource type="Resource" id="Resource_lnhep"]
 script = ExtResource("6_78t3v")
 level_uid = "uid://cldlaymbe77mn"
-spawn_location = null
-store_entry_point = null
+spawn_location = Vector2(0, 0)
+store_entry_point = false
 entry_point_id = &"old_man_house"
-spawn_index = null
+spawn_index = 0
 
 [sub_resource type="Resource" id="Resource_cqq0u"]
 script = ExtResource("7_upu15")

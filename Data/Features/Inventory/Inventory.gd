@@ -5,11 +5,40 @@ class_name Inventory extends Node
 #signal item_removed(handler, item, data)
 signal slot_update(inventory, slot, old_item)
 
+#TODO: new system may listen to item events to auto add or remove item (such are adding more
+#than max stack size will tigger a signal. same when depleting an item)
+#this should also make the inventory send a signal if the item can not be removed
+#or even if there not enough of the item(though the use for the latter is unknown
+#NOTE: Ignore above(kind of) should listen to depleted so the item can be removed
+#but the inventory should handle creating new ones and adjusting values so the
+#data is more directly accessable. 
+
+
 #will depend on Item for item creation and checks
 #probably will use an array for item storage. can filter it into an dictionary 
 #if sorting is nessary, but array allow a fix sized
 @export var size : int = 100
 @export var items : Array[Dictionary]
+
+@export var inventory : Array[Item]
+
+func add_to_inventory(new_item:Item, amount : int = 1):
+	var remaining_amount : int = amount
+	for item in inventory:
+		if item.is_similar_to(new_item):
+			#fill up item amount to the max
+			remaining_amount = item.increase_amount(remaining_amount)
+	#if
+	#if there any amount left over, then add new items untill the amount is used up
+	#(meaning the amount in new item will be ignored/overridden)
+
+#TODO convert to use reource(Item) for items instead of dictionary now that it is known resources 
+#are not too hard to save with player state
+#TODO just need a way to add metadata. could add it directly or loop a dictionary
+#so a new item wont nessary need to be made to add to a stack, just use the pass resorce ref
+#and a dictionary of modifcations
+#this only issue is that there may already be a metadata in the ref(which is not really an issue)
+#so it may not be nessary. also maybe a new item is not too bad since the ref will be remove if it not stored
 
 
 func add_item(item : Dictionary):

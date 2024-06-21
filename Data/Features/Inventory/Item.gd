@@ -1,5 +1,7 @@
 class_name Item extends Resource
 
+signal amount_depleted()
+#signal amount_overflow(excess:int)
 #TODO: try the static approch that just treats an item stack as a dictionary
 #also inventory node would be a componet that will have an resource, array, or dictionary
 #of owned items
@@ -140,3 +142,23 @@ func is_equal_to(other_item:Item) -> bool :
 		if amount == other_item.amount:
 			return true
 	return false
+	
+func increase_amount(new_amount:int) -> int:
+	var total_amount : int = amount + new_amount
+	var remaining_amount : int = new_amount
+	if new_amount == 0:
+		return 0
+	elif new_amount > 0:
+		remaining_amount = max(total_amount-max_stack_size,0)
+		amount = min(total_amount, max_stack_size)
+		#if amount > max_stack_size:
+			#amount_overflow.emit(remaining_amount)
+	else:
+		remaining_amount = min(total_amount,0)
+		amount = max(total_amount, 0)
+		if amount <= 0:
+			amount_depleted.emit()
+			
+	#TODO check if this works
+	return remaining_amount
+	
