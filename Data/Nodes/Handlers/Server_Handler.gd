@@ -1,5 +1,7 @@
 class_name Server_Handler extends Node
 
+#NOTE: maybe this should be a singleton?
+
 @export var address := "127.0.0.1"
 @export var port := 8888
 @export var max_player := 8 #note 32 may be godot max?

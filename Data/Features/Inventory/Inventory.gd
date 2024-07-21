@@ -22,15 +22,51 @@ signal slot_update(inventory, slot, old_item)
 
 @export var inventory : Array[Item]
 
-func add_to_inventory(new_item:Item, amount : int = 1):
+func add_to_inventory(new_item:Item, amount : int = 1) -> int:
 	var remaining_amount : int = amount
-	for item in inventory:
-		if item.is_similar_to(new_item):
+	var trash_items : Array[Item]
+	if remaining_amount > 0:
+		for item in inventory:
+			if Inventory_Handler.is_similar_item(item, new_item):
+				remaining_amount = Inventory_Handler.increase_item_amount(item, remaining_amount)
+				#if item.amount <= 0:
+				#	trash_items.append(item)
+		for new_slot in range(100-inventory.size()):
+			if remaining_amount > 0:
+				var new_item_stack : Item = new_item.duplicate()
+				var new_amount = remaining_amount
+				if remaining_amount > new_item_stack.max_stack_size:
+					new_amount = new_item_stack.max_stack_size
+					remaining_amount = remaining_amount - new_item_stack.max_stack_size
+				else:
+					new_amount = remaining_amount
+					remaining_amount = 0
+				new_item_stack.amount = new_amount
+				inventory.append(new_item_stack)
+			else:
+				break
+	elif remaining_amount < 0:
+		var orignal_size = inventory.size()
+		for i in range(orignal_size):
+			var slot = orignal_size - (i+1)
+			var item = inventory[slot]
+			if Inventory_Handler.is_similar_item(item, new_item):
+				remaining_amount = Inventory_Handler.increase_item_amount(item, remaining_amount)
+				if item.amount <= 0:
+					#will remove directly since removing without looping directly
+					#should only rearrange the slots that was checked already
+					inventory.remove_at(slot)
+					#trash_items.append(item)
+		#if item.is_similar_to(new_item):
 			#fill up item amount to the max
-			remaining_amount = item.increase_amount(remaining_amount)
+		#	remaining_amount = item.increase_amount(remaining_amount)
+	
+#	for item in trash_items:
+#		inventory.erase(item)
 	#if
 	#if there any amount left over, then add new items untill the amount is used up
 	#(meaning the amount in new item will be ignored/overridden)
+	return remaining_amount
 
 #TODO convert to use reource(Item) for items instead of dictionary now that it is known resources 
 #are not too hard to save with player state

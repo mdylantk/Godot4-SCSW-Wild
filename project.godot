@@ -22,6 +22,7 @@ Resources="*res://Data/Nodes/Handlers/Resource_Handler.tscn"
 Game="*res://Data/Nodes/Handlers/Game_Handler.tscn"
 World="*res://Data/Nodes/Handlers/World_Handler.tscn"
 Audio="*res://Data/Nodes/Handlers/Audio_Handler.tscn"
+InventoryHandler="*res://Data/Features/Inventory/Inventory_Handler.gd"
 
 [display]
 

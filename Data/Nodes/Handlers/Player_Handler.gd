@@ -137,6 +137,12 @@ func input_update(event:InputEvent):
 					#	result["collider"].get_layer_for_body_rid(result["rid"]),
 					#	result["collider"].get_coords_for_body_rid(result["rid"])
 					#))
+		if event.is_action_pressed("ScrollRight"):
+			InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),100)
+			pass
+		if event.is_action_pressed("ScrollLeft"):
+			InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),-10)
+			pass
 #NOTE: test prove that current system can save resource base items
 #just need to test if it works in arrays
 #WARNING: works with arrays, but not flagging dirty since the arrays

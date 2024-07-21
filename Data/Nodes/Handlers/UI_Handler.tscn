@@ -64,6 +64,9 @@ offset_top = 1.0
 offset_right = -2.0
 offset_bottom = 88.0
 grow_horizontal = 0
+text = "dfds
+"
+horizontal_alignment = 1
 
 [node name="FishingPondMap" parent="HUD" instance=ExtResource("7_531g0")]
 unique_name_in_owner = true

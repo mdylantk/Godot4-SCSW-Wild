@@ -117,7 +117,26 @@ func _process(_delta):
 				)
 		#loading = false
 	if enable_debug:
-		debug.text = str(camera_global_position)
+		var debug_text = str(camera_global_position)
+		if player_handler != null:
+			#NOTE: this need to change with the new item system. was added with the old to get it working
+			var player_old_inventory = player_handler.state.fetch("inventory", "pawn")
+			var player_inventory = player_handler.pawn.inventory.inventory
+			if player_old_inventory != null:
+				debug_text = debug_text + "\n" + "Old Inventory:"
+				for item in player_old_inventory:
+					debug_text = debug_text + "\n" + str(item["meta"]["name"]) + ":"+ str(item["amount"])
+			#this will display new inventory items when the system is added.
+			#the source currently from the pawn inventory instead of player state
+			#(since saving is the last part if adding it)
+			if player_inventory != null:
+				debug_text = debug_text + "\n" + "Inventory:"
+				for item in player_inventory:
+					#debug_text = debug_text + "\n" + str(item)
+					debug_text = debug_text + "\n" + str(item.display_name) + ":"+ str(item.amount)
+		debug.text = debug_text
+		
+		
 			#debug.get_canvas_transform().affine_inverse() * debug.get_screen_position()
 
 
