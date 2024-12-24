@@ -1,5 +1,9 @@
 class_name Input_Handler extends Node
 
+#TODO: discontiue this one all connections are removed.
+#let the game or wither the world/player/ui handle input toggling
+#ideally the UI could handle extra input state if nessary
+
 @export var enable_input : bool = false 
 
 #NOTE: knowing the handler will allow network vaildation

@@ -65,5 +65,3 @@ func _physics_process(delta: float) -> void:
 		move(brain_component.get_move_vector(self))
 	
 	
-
-

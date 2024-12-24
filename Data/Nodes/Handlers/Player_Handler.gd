@@ -51,9 +51,9 @@ func _ready():
 		#also could try to save the character fully at the cost of changes breaking 
 		#things.
 		var test_inv = state.fetch("inventory", "pawn")
+		print_debug(test_inv)
 		if test_inv != null:
-			print(test_inv)
-			pawn.inventory.items = test_inv
+			pawn.inventory.inventory = test_inv
 	#TODO: need a func to possess and unpossesed pawns so the data
 	#is correct.
 	#players group is a group that holds all player pawns. used
@@ -138,10 +138,10 @@ func input_update(event:InputEvent):
 					#	result["collider"].get_coords_for_body_rid(result["rid"])
 					#))
 		if event.is_action_pressed("ScrollRight"):
-			InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),100)
+			#InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),100)
 			pass
 		if event.is_action_pressed("ScrollLeft"):
-			InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),-10)
+			#InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),-10)
 			pass
 #NOTE: test prove that current system can save resource base items
 #just need to test if it works in arrays
@@ -192,8 +192,8 @@ func on_item_gain(inventory, slot, old_item):
 	#print("inv: "+ str(inventory))
 	#print("slot: "+ str(slot))
 	#print("old: "+ str(old_item))
-	print_debug("new: "+ str(inventory.items[slot]))
-	state.store("inventory", inventory.items, "pawn")
+	#state.store("inventory", inventory.items, "pawn")
+	state.store("inventory", inventory.inventory, "pawn")
 	print_debug(state.data)
 	pass
 	

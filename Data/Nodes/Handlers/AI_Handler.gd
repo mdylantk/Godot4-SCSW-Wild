@@ -123,4 +123,3 @@ func _process(delta):
 #but that mostly for the test AI. real AI may need more stuff like hook to let 
 #it know when a pawn it owns spawns or despawns. may be ideal to use groups for
 #this case
-

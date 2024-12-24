@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cldlaymbe77mn"]
+[gd_scene load_steps=8 format=3 uid="uid://cldlaymbe77mn"]
 
 [ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Generator_Level.gd" id="1_a382x"]
 [ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Data/Resources/World_Foilage_Generator.tres" id="2_68tqv"]
+[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Generator_Data.gd" id="2_y68fk"]
 [ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Data/Resources/Noise_Maps/World_Detail_Map.tres" id="3_qg0pl"]
 [ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Environment_Data.gd" id="4_cn4un"]
 
@@ -19,7 +20,7 @@ environment_color = SubResource("Gradient_8dly7")
 [node name="GeneratorLevel" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_a382x")
-generators = Array[Resource("res://Data/Features/World_Levels_Data/Generator_Data.gd")]([ExtResource("2_68tqv")])
+generators = Array[ExtResource("2_y68fk")]([ExtResource("2_68tqv")])
 static_chunks = {
 Vector2(0, 0): "uid://blyxjt47otoln"
 }

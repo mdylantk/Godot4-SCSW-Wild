@@ -57,4 +57,3 @@ func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
 func get_level_scene(position:Vector2) -> Node:
 	return null
 	pass
-

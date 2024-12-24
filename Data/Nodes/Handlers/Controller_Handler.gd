@@ -24,4 +24,3 @@ func on_level_changed(level:Base_Level, spawn_index: int = 0):
 	
 func _ready() -> void:
 	World.level_changed.connect(on_level_changed)
-

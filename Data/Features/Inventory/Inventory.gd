@@ -18,19 +18,27 @@ signal slot_update(inventory, slot, old_item)
 #probably will use an array for item storage. can filter it into an dictionary 
 #if sorting is nessary, but array allow a fix sized
 @export var size : int = 100
-@export var items : Array[Dictionary]
 
 @export var inventory : Array[Item]
+
+#NOTE: unable to get path or uid of resource in code
+#so saving resources is more ideal dispite being able to be modified
+#for a safer way, a item array would be needed and manually assign items
+#to an id.
+
+
 
 func add_to_inventory(new_item:Item, amount : int = 1) -> int:
 	var remaining_amount : int = amount
 	var trash_items : Array[Item]
 	if remaining_amount > 0:
+		#todo: may need to get the slot id for this
 		for item in inventory:
-			if Inventory_Handler.is_similar_item(item, new_item):
-				remaining_amount = Inventory_Handler.increase_item_amount(item, remaining_amount)
+			if item.is_similar_to(new_item):
+				remaining_amount = item.increase_amount(remaining_amount)
 				#if item.amount <= 0:
 				#	trash_items.append(item)
+				slot_update.emit(self,0,item)
 		for new_slot in range(100-inventory.size()):
 			if remaining_amount > 0:
 				var new_item_stack : Item = new_item.duplicate()
@@ -43,6 +51,7 @@ func add_to_inventory(new_item:Item, amount : int = 1) -> int:
 					remaining_amount = 0
 				new_item_stack.amount = new_amount
 				inventory.append(new_item_stack)
+				slot_update.emit(self,inventory.size()-1,new_item_stack)
 			else:
 				break
 	elif remaining_amount < 0:
@@ -50,12 +59,13 @@ func add_to_inventory(new_item:Item, amount : int = 1) -> int:
 		for i in range(orignal_size):
 			var slot = orignal_size - (i+1)
 			var item = inventory[slot]
-			if Inventory_Handler.is_similar_item(item, new_item):
-				remaining_amount = Inventory_Handler.increase_item_amount(item, remaining_amount)
+			if item.is_similar_to(new_item):
+				remaining_amount = item.increase_amount(remaining_amount)
 				if item.amount <= 0:
 					#will remove directly since removing without looping directly
 					#should only rearrange the slots that was checked already
 					inventory.remove_at(slot)
+					slot_update.emit(self,slot,item)
 					#trash_items.append(item)
 		#if item.is_similar_to(new_item):
 			#fill up item amount to the max
@@ -75,69 +85,3 @@ func add_to_inventory(new_item:Item, amount : int = 1) -> int:
 #and a dictionary of modifcations
 #this only issue is that there may already be a metadata in the ref(which is not really an issue)
 #so it may not be nessary. also maybe a new item is not too bad since the ref will be remove if it not stored
-
-
-func add_item(item : Dictionary):
-#	print("trying to add item: " + str(item))
-	var item_type = Item.get_type(item)
-	var remaining_amount = item_type.get_amount(item)
-	var is_removing = remaining_amount < 0
-	var empty_items : Array[int] = []
-	#note: item type should be an class or have item func. it may be better to use that than Item since
-	#then other types can override the logic
-#	print("looping inventory")
-	for inventory_slot in range(items.size()):
-		var other_item = items[inventory_slot]
-		if is_removing:
-			other_item = items[items.size()-1-inventory_slot]
-	#for other_item in inventory:
-		if item_type.is_similar_item(item, other_item):
-#			print("adding amount: " + str(remaining_amount))
-			remaining_amount = item_type.add_amount(other_item, remaining_amount)
-			slot_update.emit(self, inventory_slot, other_item.duplicate(true))
-			if remaining_amount <= 0 and !is_removing:
-				break
-				#return remaining_amount
-		elif other_item.is_empty() and !is_removing:
-#			print("catching null item")
-			empty_items.append(inventory_slot)
-			slot_update.emit(self, inventory_slot, other_item.duplicate(true))
-	if remaining_amount > 0:
-#		print("looping null")
-		if !empty_items.is_empty():
-#			print("looping null")
-			for null_slot in empty_items:
-				items[null_slot] = item_type.new_item(1, item["meta"])
-				var null_item = items[null_slot]
-#				print("null item : " + str(null_item))
-				remaining_amount -= item_type.get_amount(null_item)
-				if remaining_amount > 0:
-#					print("adding amount: " + str(remaining_amount))
-					remaining_amount = item_type.add_amount(null_item, remaining_amount)
-					slot_update.emit(self, null_slot, {})
-#					print("remaining: " + str(remaining_amount))
-					if remaining_amount <= 0:
-						break
-						#return 0
-						#todo figure out why was returning 0
-				else:
-					slot_update.emit(self, null_slot, {})
-#	print("extending inventory")
-	#NOTE: after hitting stack size it break and remainer is a negative number. need to see what went wrong
-	if remaining_amount > 0 and items.size() < size:
-		while remaining_amount > 0 and items.size() < size:
-			items.append(item_type.new_item(1, item["meta"]))
-			var new_slot = items.size()-1
-			var new_item = items[new_slot]
-#			print("new item : " + str(new_item))
-			remaining_amount -= item_type.get_amount(new_item)
-			if remaining_amount > 0:
-#				print("adding amount: " + str(remaining_amount))
-				remaining_amount = item_type.add_amount(new_item, remaining_amount)
-				slot_update.emit(self, new_slot, {})
-#				print("remaining: " + str(remaining_amount))
-			else:
-				#this is here so it oly get called once
-				slot_update.emit(self, new_slot, {})
-	#slot_update.emit(self, -1, {})
-	return remaining_amount

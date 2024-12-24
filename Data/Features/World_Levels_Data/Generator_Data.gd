@@ -20,4 +20,3 @@ func generate(scene:Node):
 #will use data instead of scene since it should not modify the scene, just the data
 func generate_with_data(data: Array):
 	data_finished.emit(self, data)
-

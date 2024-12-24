@@ -17,25 +17,15 @@ playback_mode = 1
 random_pitch = 1.5
 streams_count = 10
 stream_0/stream = ExtResource("1_bft0h")
-stream_0/weight = 1.0
 stream_1/stream = ExtResource("2_0ii2d")
-stream_1/weight = 1.0
 stream_2/stream = ExtResource("3_t5j2g")
-stream_2/weight = 1.0
 stream_3/stream = ExtResource("4_d36fc")
-stream_3/weight = 1.0
 stream_4/stream = ExtResource("5_mljla")
-stream_4/weight = 1.0
 stream_5/stream = ExtResource("6_alai7")
-stream_5/weight = 1.0
 stream_6/stream = ExtResource("7_8soxw")
-stream_6/weight = 1.0
 stream_7/stream = ExtResource("8_v0yuj")
-stream_7/weight = 1.0
 stream_8/stream = ExtResource("9_yr6jp")
-stream_8/weight = 1.0
 stream_9/stream = ExtResource("10_klpnm")
-stream_9/weight = 1.0
 
 [node name="Audio_Handler" type="Node"]
 

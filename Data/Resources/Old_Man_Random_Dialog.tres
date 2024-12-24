@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="Random_Action" load_steps=12 format=3 uid="uid://be5snvrbt8c0c"]
+[gd_resource type="Resource" script_class="Random_Action" load_steps=13 format=3 uid="uid://be5snvrbt8c0c"]
 
+[ext_resource type="Script" path="res://Data/Features/Action_System/Base_Action.gd" id="1_i4ub3"]
 [ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Set_Dialog.gd" id="1_p7bdn"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ksa1v"]
 [ext_resource type="Script" path="res://Data/Features/Action_System/Random_Action.gd" id="3_c03kn"]
@@ -59,4 +60,4 @@ cancelable = true
 
 [resource]
 script = ExtResource("3_c03kn")
-actions = Array[Resource("res://Data/Features/Action_System/Base_Action.gd")]([SubResource("Resource_j3g1p"), SubResource("Resource_3satk"), SubResource("Resource_s6qks"), SubResource("Resource_n80sm"), SubResource("Resource_mdb5y"), SubResource("Resource_vhu3o"), SubResource("Resource_twtvl")])
+actions = Array[ExtResource("1_i4ub3")]([SubResource("Resource_j3g1p"), SubResource("Resource_3satk"), SubResource("Resource_s6qks"), SubResource("Resource_n80sm"), SubResource("Resource_mdb5y"), SubResource("Resource_vhu3o"), SubResource("Resource_twtvl")])

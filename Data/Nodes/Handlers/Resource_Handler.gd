@@ -52,4 +52,3 @@ func _on_auto_save() -> void:
 
 func _ready() -> void:
 	auto_save.timeout.connect(_on_auto_save)
-

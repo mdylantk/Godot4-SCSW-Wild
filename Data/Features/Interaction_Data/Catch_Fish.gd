@@ -1,7 +1,7 @@
 class_name Catch_Fish extends Interactive_Data
 
 @export var random_table: Random_Table_Resource = Fish_Table.new()
-@export var fish_item_source : Item = preload("res://Data/Resources/Fish_Item.tres")
+@export var fish_item_source : Item_Type = preload("res://Data/Resources/Fish_Item.tres")
 
 var fish_game
 #var fisher
@@ -64,8 +64,24 @@ func add_fish(fish_data:Dictionary):
 		print_debug(fish_data["type"])
 		data["fish_data"] = fish_data
 		var fish_name = fish_data["type"]["pick"]
-		var fish_item = fish_item_source.new_item(1,{"name":fish_name})
-		var remaning_amount = Item_Events.acquire_item(interactor,fish_item,handler,"Caught")
+		#var fish_item = fish_item_source.new_item(1,{"name":fish_name})
+		
+		##NOTE: segment trying to add a test of the new item system
+		var new_fish_item = Item.new()#load("uid://nrh8trhov6yk").duplicate()
+		new_fish_item.type = load("uid://nrh8trhov6yk") as Item_Type
+		new_fish_item.set_meta("unique_name",fish_name)
+		var inventory : Inventory
+		for child in interactor.get_children():
+			if child is Inventory:
+				inventory = child
+				break
+		if inventory == null:
+			print_debug("dose not have inventory")
+		var remaining_amount = inventory.add_to_inventory(new_fish_item,1)
+		#InventoryHandler.add_item(handler,interactor,new_fish_item)
+		#TODO: let the inventory handle notify? or check if the item was added
+		UI.gui_notify.add_notify_message("[center]"+"Acquired "+ fish_name )
+		#var remaning_amount = Item_Events.acquire_item(interactor,fish_item,handler,"Caught")
 		#TODO: need a way to log caught fish. this just statisitic like
 		#number caught, biggest and smallest size caught, and such
 		

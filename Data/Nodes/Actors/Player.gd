@@ -84,4 +84,3 @@ func on_facing_changed(new_facing:Vector2,old_facing:Vector2):
 
 #func _on_shaped_interactor_interaction(interactor: Node, interactee: Node, data: Dictionary) -> void:
 #	interacted.emit(interactor, interactee,data)
-

@@ -283,4 +283,3 @@ func _ready() -> void:
 	#NOTE: this get called each time it is attach to tree. 
 	if !generators[0].scene_finished.is_connected(on_generator_end):
 		generators[0].scene_finished.connect(on_generator_end)
-
