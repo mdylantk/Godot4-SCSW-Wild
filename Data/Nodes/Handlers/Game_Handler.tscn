@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dvaxx0ke0p27m"]
+[gd_scene load_steps=6 format=3 uid="uid://dvaxx0ke0p27m"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/Game_State.gd" id="2_bcmum"]
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/AI_Handler.gd" id="3_8kfs5"]
-[ext_resource type="PackedScene" uid="uid://bdpv2nuo5qsqg" path="res://Data/Nodes/Handlers/Player_Handler.tscn" id="3_iithg"]
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/Server_Handler.gd" id="7_clhfr"]
 
 [sub_resource type="Resource" id="Resource_vn004"]
@@ -14,17 +13,15 @@ data = {}
 file_name = "state"
 key = ""
 is_encrypted = true
-save_type = 2
+save_id = ""
 
 [node name="Game_Handler" type="Node2D" groups=["Game_Handler"]]
 y_sort_enabled = true
 script = ExtResource("1_gpdo0")
 state = SubResource("Resource_vn004")
-default_player_handler = ExtResource("3_iithg")
 
 [node name="AI_Handler" type="Node2D" parent="."]
 script = ExtResource("3_8kfs5")
-controller_name = null
 enable = true
 
 [node name="Server_Handler" type="Node" parent="."]

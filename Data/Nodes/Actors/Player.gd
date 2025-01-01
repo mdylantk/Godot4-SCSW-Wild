@@ -14,7 +14,21 @@ func _ready()->void:
 	movement_component.facing_change.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
 	
-	
+	character_state.saving.connect(on_state_saving)
+	character_state_loaded() #handling it here since the setter may
+	#get called before it is ready
+	#TODO: have state loaded called on ready if state not null
+	#AND only have it called in setter if getr_tree == null
+	#then it should be unlikly to be called twice
+
+func on_state_saving():
+	if inventory != null:
+		character_state.set_meta("inventory",inventory.inventory)
+
+func character_state_loaded():
+	if inventory != null and character_state != null:
+		inventory.inventory = character_state.get_meta("inventory",inventory.inventory)
+
 func on_movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2):
 	if direction.x < 0 :
 		$AnimationPlayer.play("left")

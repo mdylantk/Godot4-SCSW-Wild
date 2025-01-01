@@ -42,21 +42,18 @@ signal gui_update(element)
 @export var enable_debug : bool = true
 
 
-var player_handler : Player_Handler
-
 #var player_state : Savable_State
 #var player_pawn 
 #func _ready():
 	#pass
 
-func handler_setup(handler):
+func handler_setup():
 	#NOTE: GUI may ask for handler or listen for handler, since there little reason
 	#for game or anything else to acces HUD. HUD ment to observe all and act like input
-	var common_fish_count = Savedata_Helper.fetch_player_score(handler,"common_fish_caught")
-	var rare_fish_count = Savedata_Helper.fetch_player_score(handler,"rare_fish_caught")
+	var common_fish_count = Savedata_Helper.fetch_player_score(Player,"common_fish_caught")
+	var rare_fish_count = Savedata_Helper.fetch_player_score(Player,"rare_fish_caught")
 	%Score.set_common_score(common_fish_count)
 	%Score.set_rare_score(rare_fish_count)
-	player_handler = handler
 
 func on_player_state_change(source, id, old_value, new_value, group):
 	if old_value == new_value:
@@ -74,18 +71,19 @@ func _ready() -> void:
 	%Main_Menu.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	
-	Game.player_created.connect(on_player_created)
+	#Player.state.data_changed.connect(on_player_state_change)
+	#handler_setup()
 
 func on_player_created(player:Node, index : int):
 	if index == 0: #0 should be host or owning client. may need a better way or a built in way
-		player.state.data_changed.connect(on_player_state_change)
-		handler_setup(player)
+		Player.state.data_changed.connect(on_player_state_change)
+		handler_setup()
 
 ##general gameplay input for player. may need to have player handle this
 ##directly and pause the player if game is pause or gameplay is paused
 func _unhandled_input(event:InputEvent):
-	if enable_player_input and player_handler != null: 
-		player_handler.input_update(event)
+	if enable_player_input: 
+		Player.input_update(event)
 		
 
 
@@ -108,20 +106,16 @@ func _process(_delta):
 			#but then there need signals or direct calls to set that and world loading
 			#not as simple
 			#NOTE: by checking four corner point, boader loading cases could be solved
-		
-		loading = not (
-			World.is_chunk_loaded(camera_global_position + Vector2(320,320)) and
-			World.is_chunk_loaded(camera_global_position + Vector2(-320,320)) and
-			World.is_chunk_loaded(camera_global_position + Vector2(320,-320)) and
-			World.is_chunk_loaded(camera_global_position + Vector2(-320,-320))
-				)
-		#loading = false
+
 	if enable_debug:
 		var debug_text = str(camera_global_position)
-		if player_handler != null:
+		debug_text = debug_text + "\n" + "Level loading: " + str(World.level_loading)
 			#NOTE: this need to change with the new item system. was added with the old to get it working
-			var player_old_inventory = player_handler.state.fetch("inventory", "pawn")
-			var player_inventory = player_handler.pawn.inventory.inventory
+		#NOTE: may need player or game connect these to signal instead of a direct ref
+		if Player.state != null:
+			#var player_old_inventory = Player.state.fetch("inventory", "pawn")
+			var player_inventory = Player.pawn.inventory.inventory
+
 #			if player_old_inventory != null:
 #				debug_text = debug_text + "\n" + "Old Inventory:"
 #				for item in player_old_inventory:
@@ -136,7 +130,7 @@ func _process(_delta):
 					debug_text = (
 						debug_text + "\n" + 
 						str(item.get_meta("unique_name",str(item.type.display_name))) +
-						 "("+str(item.type.display_name)+"):" + 
+							"("+str(item.type.display_name)+"):" + 
 						str(item.amount)
 						)
 		debug.text = debug_text

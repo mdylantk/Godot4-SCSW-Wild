@@ -9,6 +9,7 @@
 script = ExtResource("2_mhgnx")
 move_to_location = Vector2(0, 0)
 desire_distance = 16.0
+preserve_direction = true
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uhyft"]
 size = Vector2(16, 16)

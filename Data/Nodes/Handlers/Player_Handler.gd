@@ -28,7 +28,7 @@ func _ready():
 	super()
 	#this is to test the signal
 	#player_meta_changed.connect(player_meta_changed_test)
-	
+func setup():
 	if state == null :
 		state = Player_State.new()
 		#TODO: should also add a player id to it once a system is added to handle it
@@ -50,10 +50,10 @@ func _ready():
 		#to create may be another way, but they would need to be loaded in
 		#also could try to save the character fully at the cost of changes breaking 
 		#things.
-		var test_inv = state.fetch("inventory", "pawn")
-		print_debug(test_inv)
-		if test_inv != null:
-			pawn.inventory.inventory = test_inv
+		#var test_inv = state.fetch("inventory", "pawn")
+		#print_debug(test_inv)
+		#if test_inv != null:
+		#	pawn.inventory.inventory = test_inv
 	#TODO: need a func to possess and unpossesed pawns so the data
 	#is correct.
 	#players group is a group that holds all player pawns. used
@@ -62,7 +62,7 @@ func _ready():
 	
 	#pawn_state = Pawn_State.Alive
 	#on_transfer()
-	pawn.inventory.slot_update.connect(on_item_gain)
+	
 
 
 func possess_pawn(new_pawn: Node):
@@ -76,7 +76,20 @@ func possess_pawn(new_pawn: Node):
 	handle_pawns_connections(new_pawn)
 	#new_pawn.interacted.connect(on_pawn_interaction)
 	#new_pawn.tree_exited.connect(on_pawn_exited_tree) 
+	#NOTE: decide on how the camera works. can get a ref from the
+	#viewport so the camera owner can change without keeping track of
+	#the camera
 	controller_camera.reparent(new_pawn)
+	
+	#NOTE  below should be handle diffrently
+	#just here because debugging
+	await get_tree().process_frame
+	pawn.inventory.slot_update.connect(on_item_gain)
+	#var test_inv = state.fetch("inventory", "pawn")
+	#print_debug(test_inv)
+	#print_debug(state.fetch("pawn","inventory"))
+	#if test_inv != null:
+	#	pawn.inventory.inventory = test_inv
 	
 func on_pawn_exited_tree():
 	#an attempt to save the camera from being freed
@@ -143,42 +156,8 @@ func input_update(event:InputEvent):
 		if event.is_action_pressed("ScrollLeft"):
 			#InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),-10)
 			pass
-#NOTE: test prove that current system can save resource base items
-#just need to test if it works in arrays
-#WARNING: works with arrays, but not flagging dirty since the arrays
-#contains resources of the same id. so the changes are not noticable
-#could force it to flag as dirty or could keep using dictionary as data
-#since all the logic is in place. 
-#NOTE: could warp the item dictionary with the item, but require the item resource
-#path to be known and require looping inventories before saves. better as it a dictionary
-#can use static classes to interact with it for reability
-#NOTE: TODO: maybe should force the dirty flag. resources support types and
-#it helps with readablity and helps with odd(yet quick) fix like loading the resource
-#before acessing it. may not be needed here. just need to change the fuctions to work
-#with self and provide the data. amount, durability, quality, and a dictionary call meta
-#and anything else that is going to be commonly used. meta for the less common modifiers
-#Note that the saves will break more often if the item structure changes.
-#		if event.is_action("ScrollLeft"):
-#			if item1 == null: item1= Item.new()
-#			if item2 == null: 
-#				#item2 = load("res://Data/Resources/Fish_Item.tres")
-#				item2= Item.new()
-#			print_debug(item1.is_similar_to(item2))
-#			var items : Array[Item]
-#			#print(state.fetch("items","test"))
-#			if state.fetch("items","test") != null:
-#				items = state.fetch("items","test")
-#			if items.is_empty():
-#				items.append(Item.new())
-#			print_debug(items)
-#			print(items[0].amount)
-#			items[0].amount = items[0].amount + 1
-#			state.store("items",items,"test",true)
-#			print(state.dirty)
 
-#TEST:
-#var item1:Item
-#var item2:Item
+
 
 #Region Listerners
 func on_item_gain(inventory, slot, old_item):
@@ -193,11 +172,42 @@ func on_item_gain(inventory, slot, old_item):
 	#print("slot: "+ str(slot))
 	#print("old: "+ str(old_item))
 	#state.store("inventory", inventory.items, "pawn")
-	state.store("inventory", inventory.inventory, "pawn")
-	print_debug(state.data)
+	#state.store("inventory", inventory.inventory, "pawn")
+	#print_debug(state.data)
 	pass
-	
+
+#TODO: have the level or game create a new pawn base on a template
+#either here or in the game mode. the pawn could also be generic and have it appearnce
+#change when a new stat is loaded.
+#NOTE TODO: use this indead of the group calls with the new system
+#but pass a spawn point so the player can decided how to spawn in
+#though havining the level handle this would be better
+#the issue is dealing with dynamic spawn character allies
+#also need to decided on either keeping pawns between levels or recreating them
+#this may be base on how much overhead there is in recreating. recreating would allow
+#levels more control of the type of pawn used (can easly override it)
 func on_level_changed(level:Base_Level, spawn_index: int = 0):
 	if level != null and pawn != null:
 		pawn.reparent(level)
 		pawn.global_position = level.get_spawn_position(spawn_index, self)
+	
+func reparent_pawn(new_level:Node):
+	pawn.reparent(new_level)
+	
+func relocate_pawn(new_location:Vector2,player_index:int=0):
+	if player_index == 0 and pawn != null:
+		pawn.position = new_location
+
+##will use a save point (or 0,0 if none)
+func relocate_pawn_from_saved_point(level_id:String,player_index:int=0,default:Vector2=Vector2()):
+	#print_debug(name.split("Player_Handler")[1])
+	if player_index == 0 and pawn != null:
+		#TODO: should check if it exist, else use a pass loction
+		var new_location = state.fetch(level_id,"positions")
+		print_debug(new_location)
+		if new_location == null:
+			pawn.position = default
+		else:
+			pawn.position = new_location
+	else:
+		pass

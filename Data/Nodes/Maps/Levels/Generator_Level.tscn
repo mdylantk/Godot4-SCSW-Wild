@@ -17,7 +17,7 @@ day_time = 0.0
 sun_rise = false
 environment_color = SubResource("Gradient_8dly7")
 
-[node name="GeneratorLevel" type="Node2D"]
+[node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]
 y_sort_enabled = true
 script = ExtResource("1_a382x")
 generators = Array[ExtResource("2_y68fk")]([ExtResource("2_68tqv")])
@@ -27,3 +27,6 @@ Vector2(0, 0): "uid://blyxjt47otoln"
 random_chunks = Array[String](["uid://clicnkneu0ddm", "uid://bngicde5fixcp", "uid://cyg3wosoq0787", "uid://t7rhh625brgr", "uid://duqgklvehxux0", "uid://bbaafkh4f04vx", "uid://m6q0b4c1q5f6"])
 random_chunk_noise_map = ExtResource("3_qg0pl")
 environment_data = SubResource("Resource_s01f1")
+environment_color = NodePath("CanvasModulate")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]

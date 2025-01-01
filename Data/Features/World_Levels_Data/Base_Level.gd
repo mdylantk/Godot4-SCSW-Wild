@@ -19,6 +19,7 @@ class_name Base_Level extends Node
 
 #this may or maynot be used. could be use as a node
 @export var environment_data : Environment_Data
+@export var environment_color : CanvasModulate
 
 @export var default_spawn_position : Vector2
 @export var use_default_spawn_position : bool = false
@@ -57,3 +58,22 @@ func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
 func get_level_scene(position:Vector2) -> Node:
 	return null
 	pass
+	
+func _ready() -> void:
+	get_tree().call_group(
+		"Players", "relocate_pawn", default_spawn_position
+	)
+
+	World.world_update.connect(_on_world_update)
+
+##NOTE: this is a temp solution, but basicly the level should either listen
+##to world update or periodicly check the world time state and update its own
+##environment. The level should handle itself, but the world is for keeping some
+##global setting connected
+##TODO: have a diffrent function that pass data about the time state and handle
+##time base on a float (0-1) so the world can keep a global time and the float
+##is the point in day.
+func _on_world_update() -> void:
+	if environment_data != null and environment_color != null:
+		environment_data.forward_time()
+		environment_color.color = environment_data.get_environment_color()

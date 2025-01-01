@@ -278,8 +278,25 @@ func _process(delta: float) -> void:
 	#(but that should not happen since we want stuff to render around camera)
 	#and would need to change if multi viewports are ever added
 	caculate_active_regions(get_viewport().get_camera_2d().global_position)
+	#TODO add a way to keep the loading screen up for a bit. below only check the
+	#active chunk
+	var loading:bool = true
+	for coords in near_by_coords:
+		loading = !is_level_loaded(get_viewport().get_camera_2d().global_position + Vector2(coords))
+		if loading:
+			print_debug(get_viewport().get_camera_2d().global_position + Vector2(coords))
+			break
+	World.level_loading = loading
 
 func _ready() -> void:
+	
 	#NOTE: this get called each time it is attach to tree. 
 	if !generators[0].scene_finished.is_connected(on_generator_end):
 		generators[0].scene_finished.connect(on_generator_end)
+	
+	get_tree().call_group(
+		"Players", "relocate_pawn_from_saved_point", level_id, 0, default_spawn_position
+	)
+	World.world_update.connect(_on_world_update)
+	#TODO: the upper level will need to handle loading screen directly
+	#just need to have something called when loaded (and loading if needed)

@@ -1,7 +1,20 @@
 class_name Game_Handler extends Node2D
 
+#NEW NOTE and TODO: ignore below, this should init game and maintain game loop
+#nothing should acess this handler normally and this handler should listen 
+#to other handler to trigger events.
 #NOTE: making most handlers autoload. this will handle running the game
 #mostly spawning players and AI as well as act like glue to the other handlers
+
+#TODO: need to handle pause in a non invasive way. currently it is fine,
+#but moving pasuing here may cause issues if freeze states are not kept track of
+#current world loading can be check in world. can also do the same with UI
+#that just means that instead of freezing input when there is change, verify
+#that the change also reflects the input state. if world finish loading, but
+#game menu is up, then do not unpause player handler input. same the other way around
+
+#TODO INPUT when new level is loaded, have this tell the controllers to pause their
+#inputs. GUI would be set to a loading mode so it can decide on what input to allow
 
 
 @export var state : Savable_State 
@@ -9,7 +22,7 @@ class_name Game_Handler extends Node2D
 #static var game : Game_Handler #todo change to game
 #@export_file("*.tscn") var default_player_handler : \
 #	String = "res://Data/Nodes/Handlers/Player_Handler.tscn"
-@export var default_player_handler : PackedScene = load("uid://bdpv2nuo5qsqg")
+#@export var default_player_handler : PackedScene = load("uid://bdpv2nuo5qsqg")
 #PackedScene may be better? 
 	
 #note: this might not have signals, but instead link all the handler signals
@@ -24,6 +37,8 @@ signal player_created(handler:Node, index : int)
 @onready var server : Node = %Server_Handler
 
 func get_player_handler(index : int = 0):
+	if Player != null and index == 0:
+		return Player
 	#todo, if index -1, maybe get the owning player?
 	#NOTE: player_handler could also be a resource if nessary, but a node may be easier
 	if has_node("Player_Handler"+str(index)):
@@ -35,14 +50,19 @@ func get_seed() -> int :
 	return state.random_seed
 		
 func load_player_handler(index : int = 0):
-	if !has_node("Player_Handler"+str(index)):
-		var player = default_player_handler.instantiate()
-		player.name = "Player_Handler"+str(index)
-		add_child(player)
+	if Player != null:
+		Player.setup()
+		Player.state.data_changed.connect(UI.on_player_state_change)
+		UI.handler_setup()
+		return
+	#if !has_node("Player_Handler"+str(index)):
+		#var player = default_player_handler.instantiate()
+		#player.name = "Player_Handler"+str(index)
+		#add_child(player)
 		#TODO may be best to pass the pawn to the world handler
 		#so the world can check the pos instead of a redundent tick link
 		#player.world = get_world_handler()
-		if index == 0: #TODO: need to make sure the correct client get link to hud
+		#if index == 0: #TODO: need to make sure the correct client get link to hud
 		#else hud input will be all mess up. will limit to the host controller atm
 			#TODO: maybe design it so the hud know the player, but the player do not
 			#would require Game.HUD to call gui events like notify
@@ -50,13 +70,15 @@ func load_player_handler(index : int = 0):
 			#UI.player_handler = player
 			#player.state.data_changed.connect(hud.on_player_state_change)
 			#hud.handler_setup(player)
-			pass
-		player_created.emit(player,index)
-		return player
+			#pass
+		#player_created.emit(player,index)
+		#return player
 
 #a way to get play index without storing it in a var
 #for cases where uid is not currently being used
 func get_player_handler_index(player):
+	if player == Player:
+		return 0
 	return player.name.split("Player_Handler")[1]
 	
 #func _init():
@@ -64,8 +86,8 @@ func get_player_handler_index(player):
 #	load_player()
 
 ### General game events ###
-func change_level(level, handler):
-	World.change_level(level,handler)
+#func change_level(level, handler):
+#	World.change_level(level,handler)
 	#hud.loading = true
 
 #client side for the most part. just need to have events trigger in it rep if nessary
@@ -113,6 +135,18 @@ func _ready():
 	
 	#start_game.rpc()
 	#TODO: learn how to seed properly so same seed will generate same world
+	
+	#NOTE: connect to other handler signals to maintain game flow
+	#since game handler should know all, but none should directly acess it
+	World.level_ready.connect(on_level_ready)
+	World.level_busy.connect(on_level_busy)
+	
+	
+	#world connecting is a redirect of that logic so
+	#the game do not need to be told to change level. instead the world
+	#can call trigger it
+	World.level_changing.connect(change_level)
+	
 
 
 @rpc("any_peer","call_local")
@@ -132,7 +166,14 @@ func start_game(is_new:bool = true, save_name:String="Default"):
 	
 	load_player_handler()
 	#World.level_data = load("uid://cvna13cf6rc1p")
-	World.load_level("uid://cldlaymbe77mn")
+	
+	
+	#await get_tree().process_frame
+	change_level("uid://cldlaymbe77mn")
+	
+	
+	#World.load_level("uid://cldlaymbe77mn")
+	
 	#the idea is there at least a main menu in the future
 	#start game would init the world. before that there may be game
 	#config or waiting for players
@@ -146,3 +187,57 @@ func end_game(full_quit:bool = false):
 		get_tree().quit()
 	#basicly just make sure every system calls an unload
 	#and then either shut down or go to mode_selection
+	
+#Below is the new game change logic
+func change_level(uid):
+	if OK == get_tree().change_scene_to_file(uid):
+		#NOTE: will move player pawns to game for now untill a reusable
+		#player pawn is made to be added as needed in levels instead of 
+		#reparenting
+		get_tree().call_group("Players", "reparent_pawn", self)
+		get_tree().tree_changed.connect(on_tree_changed)
+		#tell GUI and controllers that the gamplay is loading(disable imput and such)
+		World.level_loading = true
+	else:
+		print_debug("Error, unable to load scene")
+
+func on_tree_changed():
+	var level = get_tree().get_current_scene()
+	if level != null:
+		get_tree().tree_changed.disconnect(on_tree_changed)
+		level_changed(level)
+		get_tree().call_group("Players", "reparent_pawn", level)
+		World.level_loading = false
+		#tell GUI and controllers that the gamplay is may be loaded
+		#though the world may need to pass another signal
+		#like level_ready. the issue is that there no relibale way
+		#to ensure it will be called unless the level is known or a delay 
+		#is used to allow the level to tell the world it is loading and to 
+		#wait for the okay
+
+#NOTE: below may seem redundent, but both the game and level handles setting the level
+#the world could take over the loading of the level, but I wanted the get_tree logic
+#to be reserver for the game handler or other 'know it all' systems
+##called when world say the level ready. ideally a frame after the level _ready()
+##unless the level delay the signal
+##should only be called once per level load unless a busy func is added for
+##dynamic loading
+func on_level_ready():
+	UI.loading = false
+	pass
+##called when level is loading something and need gameplay pause
+func on_level_busy():
+	UI.loading = true
+	pass
+	
+#NOTE: this gives the player a character. either one tag in the level
+#or a fix one provided here(or another handler)
+func level_changed(new_level:Node):
+	print_debug("level changed")
+	#NOTE: below was to regester a pawn, but may use brain or something similar
+	#to directly assign itself
+	#for child:Node in new_level.get_children():
+	#	if child.is_in_group("player"):
+	#		print_debug("player found")
+	#		Player.pawn = child
+	#		break

@@ -85,6 +85,7 @@ func _ready() -> void:
 
 func _on_autosave_timer_timeout() -> void:
 	print_debug("(autosave) saving")
+	get_tree().call_group("Autosave", "autosave")
 	save_data(save_state,"Data",default_path+"/"+save_name,false)
 	#save_data(client_state,"settings",default_path,false)
 	pass # Replace with function body.

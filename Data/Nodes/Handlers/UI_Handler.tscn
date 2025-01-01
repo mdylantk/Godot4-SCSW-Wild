@@ -21,6 +21,7 @@ script = ExtResource("1_htxbl")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 editor_description = "This is just a container for all the gui. The main goal is to keep elemets scale to the window."
+layer = 10
 
 [node name="Dialog" parent="HUD" instance=ExtResource("2_0wofj")]
 unique_name_in_owner = true
@@ -75,13 +76,15 @@ visible = false
 
 [node name="Main_Menu" parent="." instance=ExtResource("8_ufq3w")]
 unique_name_in_owner = true
+layer = 20
 
 [node name="Credits_Menu" parent="." instance=ExtResource("9_6enyp")]
 unique_name_in_owner = true
-layer = 11
+layer = 30
 
 [node name="Options_Menu" parent="." instance=ExtResource("11_3jetq")]
 unique_name_in_owner = true
+layer = 30
 
 [connection signal="request_focus_change" from="Main_Menu" to="." method="_on_main_menu_request_focus_change"]
 [connection signal="close" from="Credits_Menu" to="." method="_on_submenu_close"]

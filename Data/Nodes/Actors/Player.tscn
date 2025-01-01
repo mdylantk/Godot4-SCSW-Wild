@@ -1,14 +1,23 @@
-[gd_scene load_steps=20 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=22 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Script" path="res://Data/Features/Components/Player_Controlled_Brain.gd" id="2_0x1pg"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
+[ext_resource type="Script" path="res://Data/Scripts/Character_State.gd" id="3_4ckbq"]
 [ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Data/Features/Inventory/Inventory.tscn" id="3_m3amk"]
 [ext_resource type="Script" path="res://Data/Nodes/Components/Shaped_Interactor.gd" id="4_qftw7"]
 [ext_resource type="Script" path="res://Data/Nodes/Components/Base_Hurtbox.gd" id="6_3jdhg"]
 
 [sub_resource type="Resource" id="Resource_fsu3f"]
 script = ExtResource("2_0x1pg")
+
+[sub_resource type="Resource" id="Resource_xp0uq"]
+script = ExtResource("3_4ckbq")
+data = {}
+file_name = "state"
+key = ""
+is_encrypted = true
+save_id = "player"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
 size = Vector2(14, 6)
@@ -139,11 +148,12 @@ region = Rect2(442, 187, 16, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ovqcn"]
 size = Vector2(14, 12)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["Autosave"]]
 collision_layer = 261
 collision_mask = 433
 script = ExtResource("1_07gio")
 brain_component = SubResource("Resource_fsu3f")
+character_state = SubResource("Resource_xp0uq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)
