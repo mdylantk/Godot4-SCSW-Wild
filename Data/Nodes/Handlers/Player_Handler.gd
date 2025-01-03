@@ -12,8 +12,21 @@ var uid:int = 0 #may or may not be needed if there a built in way to get a user 
 
 var pawns_interactor:Interactor_Base
 
+#TODO decide to add a input_enable flag to handle disabling player input
+#or see if godot have a way to stop sending input here
+
 #catch the movement since the pawn moves every frame. 
 var movement_input: Vector2
+
+var paused : bool = false:
+	set(value):
+		paused = value
+		
+		if !paused : return
+		if pawn == null : return
+		if pawn.brain_component == null : return
+		pawn.brain_component.set_direction(Vector2())
+		
 
 #may need to use a scene of a camera incase the camrea is deleted with pawn before reparented
 #or try to listen for changes that may cause it to be deleted
@@ -36,7 +49,7 @@ func setup():
 		#one save can be created
 		state.file_name = "player_state"
 		#this also could be where loading state happens if state is created when player 'joins'
-	state.load_state()
+	#state.load_state()
 	if pawn == null:
 		#pawn = default_pawn.instantiate()
 		possess_pawn(default_pawn.instantiate())
@@ -121,41 +134,48 @@ func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
 		#this will be used unless a generic point can be predicted to use for the
 		#pawn to move to
 
-
-func input_update(event:InputEvent):
+func _unhandled_input(event:InputEvent):
+	if paused : return
+#func input_update(event:InputEvent):
 	#movement for the pawn(return is pawn is null
-	if pawn != null :
-		#test
-		if state.dirty:
-			#print_debug("saving")
-			state.save_state()
-		#test end
-#		movement_input = Vector2(
-#			Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
-#			).normalized()
-		if event.is_action("Sprint"):
-			pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
-			
-		if event.is_action_pressed("Accept"):
-			if pawns_interactor != null:
-				pawns_interactor.interact(pawn)
+	if pawn == null : return
+	#if state.dirty:
+	#	state.save_state()
+	if event.is_action("Sprint"):
+		pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
+		get_viewport().set_input_as_handled()
+	if event.is_action_pressed("Accept"):
+		if pawns_interactor != null:
+			pawns_interactor.interact(pawn)
+			get_viewport().set_input_as_handled()
 
-			#	if result["collider"] is TileMap :
-					#below test for tilemap data. keeping for now so it be easier to
-					#set up a tile base interaction system like search/forage/look/chop
-					#print(result["rid"])
-					#print(result["collider"].get_coords_for_body_rid(result["rid"]))
-					#print(result["collider"].get_layer_for_body_rid(result["rid"]))
-					#print(result["collider"].get_cell_tile_data(
-					#	result["collider"].get_layer_for_body_rid(result["rid"]),
-					#	result["collider"].get_coords_for_body_rid(result["rid"])
-					#))
-		if event.is_action_pressed("ScrollRight"):
-			#InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),100)
-			pass
-		if event.is_action_pressed("ScrollLeft"):
-			#InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),-10)
-			pass
+		#	if result["collider"] is TileMap :
+				#below test for tilemap data. keeping for now so it be easier to
+				#set up a tile base interaction system like search/forage/look/chop
+				#print(result["rid"])
+				#print(result["collider"].get_coords_for_body_rid(result["rid"]))
+				#print(result["collider"].get_layer_for_body_rid(result["rid"]))
+				#print(result["collider"].get_cell_tile_data(
+				#	result["collider"].get_layer_for_body_rid(result["rid"]),
+				#	result["collider"].get_coords_for_body_rid(result["rid"])
+				#))
+	if event.is_action_pressed("ScrollRight"):
+		#InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),100)
+		pass
+	if event.is_action_pressed("ScrollLeft"):
+		#InventoryHandler.add_item(self, pawn,load("uid://nrh8trhov6yk"),-10)
+		pass
+		
+	if (event.is_action("Left") or event.is_action("Right") or
+		event.is_action("Forward") or event.is_action("Back")
+	):
+		if pawn.brain_component != null:
+			pawn.brain_component.set_direction(Vector2(
+				Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
+			).normalized())
+			get_viewport().set_input_as_handled()
+
+
 
 
 

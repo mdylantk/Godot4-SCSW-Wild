@@ -1,5 +1,12 @@
-extends CanvasLayer
+class_name Main_Menu extends CanvasLayer
 signal request_focus_change(id:String)
+
+signal resume()
+signal pause()
+signal new_game(id:String)
+signal load_game(id:String)
+signal end_game()
+
 
 #@export var options_menu : Node
 #@export var credits_menu : Node
@@ -11,35 +18,39 @@ func _input(event: InputEvent) -> void:
 		if visible && %Resume_Button.visible:
 			visible = false
 			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-			get_tree().paused = false
+			resume.emit()
+			#get_tree().paused = false
 			get_viewport().set_input_as_handled()
 			
 		else:
 			visible = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			get_tree().paused = true
+			pause.emit()
+			#get_tree().paused = true
 			get_viewport().set_input_as_handled()
 
 func _on_resume_button_pressed() -> void:
 	visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	get_tree().paused = false
+	resume.emit()
+	#get_tree().paused = false
 	print_debug("resume pressed")
 
 
 func _on_new_game_button_pressed() -> void:
-	Game.start_game(true)
+	#Game.start_game(true)
 	print_debug("new game pressed")
 	%Resume_Button.visible = true
 	#%LoadingScreen.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	get_tree().paused = false
+	#get_tree().paused = false
 	#NOTE! hiding new game untill a restart system is added
 	visible = false
 	%New_Game_Button.visible = false
 	%Continue_Button.visible = false
 	#%HomePoint.visible = true
-
+	
+	new_game.emit()
 
 func _on_options_button_pressed() -> void:
 	print_debug("options pressed")
@@ -49,7 +60,8 @@ func _on_options_button_pressed() -> void:
 
 func _on_exit_button_pressed() -> void:
 	print_debug("exit pressed")
-	Game.end_game(true)
+	#Game.end_game(true)
+	end_game.emit()
 
 
 func _on_credits_button_pressed() -> void:
@@ -59,14 +71,15 @@ func _on_credits_button_pressed() -> void:
 
 
 func _on_continue_button_pressed() -> void:
-	Game.start_game(false)
+	#Game.start_game(false)
 	print_debug("continue pressed")
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	get_tree().paused = false
+	#get_tree().paused = false
 	visible = false
 	%Resume_Button.visible = true
 	%Continue_Button.visible = false
 	%New_Game_Button.visible = false
+	load_game.emit("Default")
 
 func _ready() -> void:
 	_on_visibility_changed()

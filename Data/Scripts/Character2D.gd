@@ -8,8 +8,12 @@ signal movement_state_change(new_value:MovementStates, old_value:MovementStates,
 
 enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
-##This if for caculate velocity change and store varibles related to how it change
+##This is for caculate velocity change and store varibles related to how it change
 @export var movement_component : Movement_Component_2D = Advance2DMovement.new()
+##this is for controlling the character indirectly. it handles the move direction
+##and self contain ai logic that do not need to know much about the world
+##(example: character may walk in zigzags, so the brain would change the direction
+##to allow the character to zigzag in the desire direction)
 @export var brain_component : Base_Brain = Base_Brain.new()
 #@export var interaction_component : Interactive_Data
 @export var character_state : Character_State :
@@ -59,8 +63,10 @@ func interact()->void:
 
 #this is simple and will override any movement that been set. basily a handler(player or ai) can tell it to move
 #in a dir every physic update. may also have a move to location task, but then again the handler could do that
-func move(direction : Vector2):
-	direction = brain_component.get_direction(position,velocity,direction)
+func move():
+	var direction : Vector2
+	if brain_component != null:
+		direction = brain_component.get_direction(position,velocity)
 	if movement_component != null:
 		if direction != movement_component.facing_dirction:
 			movement_state = MovementStates.TURNING
@@ -82,9 +88,6 @@ func move(direction : Vector2):
 		return false
 	
 func _physics_process(delta: float) -> void:
-	if brain_component != null:
-		##TODO: have the controller handle calling move
-		#brain_component.get_direction(position,velocity)
-		move(Vector2())
+	move()
 	
 	

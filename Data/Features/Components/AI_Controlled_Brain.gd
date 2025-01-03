@@ -23,12 +23,6 @@ var at_target_location : bool = false :
 			location_reached.emit()
 		at_target_location = value
 
-func get_move_vector(pawn:Node2D = null) -> Vector2:
-	if at_target_location: #test to see if it stop at the target
-		return Vector2()
-	var move_to = get_move_to_location()
-	#will use the move to location if there is no metadata
-	return Vector2(pawn.global_position.direction_to(move_to))
 
 func get_move_to_location() -> Vector2:
 	if has_meta(&"move_to"):

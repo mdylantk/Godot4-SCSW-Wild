@@ -5,6 +5,12 @@ class_name UI_Handler extends Node
 #to let others know the object ref so they could connect if needed
 signal gui_update(element)
 
+signal ui_focus(disable_other_input:bool)
+
+##for the game handler to listen to. states that the game should be pause or resumed
+##ideally the UI will be the only input that will request it. events(such as scene change)
+##would trigger game to be pause and the game would need to decide when everything is ready
+
 @export var hide_hud : bool = false :
 	set(value):
 		if value != hide_hud:
@@ -13,7 +19,7 @@ signal gui_update(element)
 			%Score.visible = !hide_hud
 			%Dialog.visible = !hide_hud
 			%Notify.visible = !hide_hud
-		
+
 @onready var loading : bool = false :
 	set(value):
 		if(%LoadingScreen):
@@ -23,14 +29,27 @@ signal gui_update(element)
 		###NOTE!!! below works. above do not disable input
 		#Game.input.set_process_input(!value)
 		loading = value
+		#request_pause.emit(value)
 	get:
 		return %LoadingScreen.visible
+
+#var in_main_menu:bool:
+#	set(value):
+#		in_main_menu = value
+#		%Main_Menu.visible = value
+		
 
 #may not be the best, but exposing these so they can be called directly instead of having to look them up
 #should only be for more static gui types
 @onready var gui_notify := %Notify
 @onready var gui_score := %Score
 @onready var gui_dialog := %Dialog
+
+#NOTE: expose menu should also follow guildlines as the handler
+#they are, more or less, another independent system to listen to
+#so the game menu should provide signals so the game can run the game
+#spec logic
+@onready var main_menu : Main_Menu = %Main_Menu
 
 @onready var fishing_game := %FishingPondMap
 
@@ -67,9 +86,16 @@ func on_player_state_change(source, id, old_value, new_value, group):
 			%Score.set_rare_score(new_value)
 
 func _ready() -> void:
-	get_tree().paused = true
+	_on_menu_visibility_changed()
+	#TODO: try to let the game handler handle tree events such as pausing
+	#this could read the tree if needing to know if paused if needed
+	#the current scene should handle the UI state for cases where the UI dirves
+	#the gameloop (aka start menu. main menu deviation should happpen because of
+	#the start scene instead of solving it in the UI
+	#get_tree().paused = true
 	%Main_Menu.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	pass
 	
 	#Player.state.data_changed.connect(on_player_state_change)
 	#handler_setup()
@@ -79,14 +105,16 @@ func on_player_created(player:Node, index : int):
 		Player.state.data_changed.connect(on_player_state_change)
 		handler_setup()
 
-##general gameplay input for player. may need to have player handle this
-##directly and pause the player if game is pause or gameplay is paused
-func _unhandled_input(event:InputEvent):
-	if enable_player_input: 
-		Player.input_update(event)
+#general gameplay input for player. may need to have player handle this
+#directly and pause the player if game is pause or gameplay is paused
+#func _unhandled_input(event:InputEvent):
+#	if enable_player_input: 
+#		Player.input_update(event)
 		
 
-
+#TODO: try not to ref handler in UI. currenly only for tests and debug
+#if need to ref an handler, can move the logic to a child ideally one that
+#is not expose as a var
 func _process(_delta):
 	var camera_global_position : Vector2
 	if get_viewport().get_camera_2d() != null:
@@ -109,7 +137,9 @@ func _process(_delta):
 
 	if enable_debug:
 		var debug_text = str(camera_global_position)
+		debug_text = debug_text + "\n" + "Game Paused: " + str(Game._pause_state) + "("+str(get_tree().paused)+")"
 		debug_text = debug_text + "\n" + "Level loading: " + str(World.level_loading)
+		debug_text = debug_text + "\n" + "player input: " + str(!Player.paused)
 			#NOTE: this need to change with the new item system. was added with the old to get it working
 		#NOTE: may need player or game connect these to signal instead of a direct ref
 		if Player.state != null:
@@ -159,3 +189,17 @@ func _on_main_menu_request_focus_change(id: String) -> void:
 func _on_submenu_close(node: Node) -> void:
 	%Main_Menu.visible = true
 	node.visible = false
+
+##called when a menu(that overrides player input) visibilty change.
+func _on_menu_visibility_changed() -> void:
+	ui_focus.emit(
+		%Dialog.visible or
+		%FishingPondMap.visible or 
+		%Main_Menu.visible or 
+		%LoadingScreen.visible or
+		%Credits_Menu.visible or
+		%Options_Menu.visible
+	)
+		#TODO: have menu objects in one major scene so the lot can have their visibilty
+		#changed all at once. That would allow they check only need to check
+		#dyanmic elements(fishing and dialog), menu, and loading screen

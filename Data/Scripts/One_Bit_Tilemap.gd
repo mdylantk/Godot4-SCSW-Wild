@@ -22,7 +22,7 @@ func _ready():
 
 func on_scene_finished(generator : Generator_Data, scene:Node):
 	if scene == self:
-		Metadata_Helper.set_is_ready(self,true)
+		set_meta("is_ready",true)
 		#set_meta("is_ready", true)
 		#there is no need to listen once finished
 		foilage_generator.scene_finished.disconnect(on_scene_finished)

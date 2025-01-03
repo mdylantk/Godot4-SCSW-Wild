@@ -18,6 +18,7 @@ sun_rise = false
 environment_color = SubResource("Gradient_8dly7")
 
 [node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]
+process_mode = 3
 y_sort_enabled = true
 script = ExtResource("1_a382x")
 generators = Array[ExtResource("2_y68fk")]([ExtResource("2_68tqv")])

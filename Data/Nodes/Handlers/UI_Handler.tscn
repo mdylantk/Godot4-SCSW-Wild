@@ -55,7 +55,30 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("AtlasTexture_wsma3")
 
-[node name="Debug" type="Label" parent="HUD"]
+[node name="FishingPondMap" parent="HUD" instance=ExtResource("7_531g0")]
+unique_name_in_owner = true
+process_mode = 1
+visible = false
+
+[node name="Main_Menu" parent="." instance=ExtResource("8_ufq3w")]
+unique_name_in_owner = true
+process_mode = 3
+layer = 20
+visible = false
+
+[node name="Credits_Menu" parent="." instance=ExtResource("9_6enyp")]
+unique_name_in_owner = true
+layer = 30
+
+[node name="Options_Menu" parent="." instance=ExtResource("11_3jetq")]
+unique_name_in_owner = true
+process_mode = 3
+layer = 30
+
+[node name="DebugLayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="Debug" type="Label" parent="DebugLayer"]
 unique_name_in_owner = true
 anchors_preset = 1
 anchor_left = 1.0
@@ -69,23 +92,12 @@ text = "dfds
 "
 horizontal_alignment = 1
 
-[node name="FishingPondMap" parent="HUD" instance=ExtResource("7_531g0")]
-unique_name_in_owner = true
-process_mode = 1
-visible = false
-
-[node name="Main_Menu" parent="." instance=ExtResource("8_ufq3w")]
-unique_name_in_owner = true
-layer = 20
-
-[node name="Credits_Menu" parent="." instance=ExtResource("9_6enyp")]
-unique_name_in_owner = true
-layer = 30
-
-[node name="Options_Menu" parent="." instance=ExtResource("11_3jetq")]
-unique_name_in_owner = true
-layer = 30
-
+[connection signal="visibility_changed" from="HUD/Dialog" to="." method="_on_menu_visibility_changed"]
+[connection signal="visibility_changed" from="HUD/LoadingScreen" to="." method="_on_menu_visibility_changed"]
+[connection signal="visibility_changed" from="HUD/FishingPondMap" to="." method="_on_menu_visibility_changed"]
 [connection signal="request_focus_change" from="Main_Menu" to="." method="_on_main_menu_request_focus_change"]
+[connection signal="visibility_changed" from="Main_Menu" to="." method="_on_menu_visibility_changed"]
 [connection signal="close" from="Credits_Menu" to="." method="_on_submenu_close"]
+[connection signal="visibility_changed" from="Credits_Menu" to="." method="_on_menu_visibility_changed"]
 [connection signal="close" from="Options_Menu" to="." method="_on_submenu_close"]
+[connection signal="visibility_changed" from="Options_Menu" to="." method="_on_menu_visibility_changed"]

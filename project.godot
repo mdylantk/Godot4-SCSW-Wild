@@ -19,7 +19,6 @@ config/icon="res://icon.svg"
 
 Data="*res://Data/Nodes/Handlers/Data_Handler.tscn"
 UI="*res://Data/Nodes/Handlers/UI_Handler.tscn"
-Resources="*res://Data/Nodes/Handlers/Resource_Handler.tscn"
 Player="*res://Data/Nodes/Handlers/Player_Handler.tscn"
 World="*res://Data/Nodes/Handlers/World_Handler.tscn"
 Audio="*res://Data/Nodes/Handlers/Audio_Handler.tscn"

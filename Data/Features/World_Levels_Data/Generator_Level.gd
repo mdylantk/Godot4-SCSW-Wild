@@ -149,7 +149,7 @@ func is_tilemap_ready(coords:Vector2i) -> bool:
 		if static_tilemaps.has(coords):
 			#NOTE: this is to allow static map to handle themselves
 			var tilemap : Node = static_tilemaps[coords]
-			return Metadata_Helper.get_is_ready(tilemap)
+			return tilemap.get_meta("is_ready",false) 
 			#if tilemap.has_meta("is_ready"):
 			#	return tilemap.get_meta("is_ready", false)
 		#if return false, tilemap dose not exist
@@ -283,9 +283,6 @@ func _process(delta: float) -> void:
 	var loading:bool = true
 	for coords in near_by_coords:
 		loading = !is_level_loaded(get_viewport().get_camera_2d().global_position + Vector2(coords))
-		if loading:
-			print_debug(get_viewport().get_camera_2d().global_position + Vector2(coords))
-			break
 	World.level_loading = loading
 
 func _ready() -> void:

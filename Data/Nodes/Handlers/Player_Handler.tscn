@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Data/Nodes/Actors/Player.tscn" id="2_vymv8"]
 
 [node name="Player_Handler" type="Node2D" groups=["Player_Handlers", "Players"]]
+process_mode = 3
 y_sort_enabled = true
 script = ExtResource("1_d3v36")
 default_pawn = ExtResource("2_vymv8")

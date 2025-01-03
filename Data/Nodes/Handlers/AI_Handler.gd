@@ -55,7 +55,7 @@ func _process(delta):
 	#or when loading new areas
 	if active_pawns.size() <= 0: return
 	var pawn = active_pawns[0]
-	if pawn != null:
+	if pawn != null and Player.pawn != null:
 		var target = Player.pawn
 		if target.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
 			if pawn.brain_component is AI_Controlled_Brain:
