@@ -1,90 +1,75 @@
-The system design so far will compose of:
-	-major handlers that will handler much of the game main logic
-	-static functions scripts that help connect paths to the handler. 
-		-some handler may have these static functions or they will not be 
-		static if base handler is easily acessable and assumed caller would 
-		know about the base handler logic.
-	-independent systems. group of resources that can wark by themselves, but
-		may need some variables set and signals connected to actually run with 
-		the game.
-		
-	-State_Resource systems: a resource of a nested dictionary for saving data
-		related to a major system like the game or player. The first layer is
-		group id to help reduce the length of the dictionary and possible looping time.
-		The rest are save var enteries. It abstract, but children could had a form of
-		fix features to the data. 
-		This still wip. 
-		
-	-Isolated modual actions and properties:
-		-nodes like enities will use a resource to state what it is or what it can do
-		as long as it have the logic to connect the two correctly (aka interaction() 
-		that would call interaction_data.interaction()). also these modual logic is not
-		nessarry if the node do not need acess to objects outside of itself and only ever
-		need the hard coded logic in itself.
-		-These actions should not do any logic to the owner. It can provide data for the owner,
-		 but the owner needs to acess it. If it interact with anything, it should used pass data to 
-		 interact with exteral systems. It can call higher system like handler and static functions logic
-		 if there no better way to abstract that call.
-		-The base action should be base on a role and provide the minunim abount of methoods and properties
-		to allow it to function fully. Worst case, a child of an extended base could be used. 
-		-Also there will not be one base action. there will be many of diffrent themes. 
-		-They are ment to reduce use of nodes to build unquie enities or level by using a pre-made node tree base
-		and these modual to refine it as needed. also allow actions such as interaction not be tied directly to
-		a premade node base but any node that carry the correct function and provided data/logic. 
-		
-system base layout so far:
-	(optional Main which swicthes games modes and host the init main menu):
-		-this would come before the rest.
-	Game (Game_Handler): The main game logic and represent the game.
-		Player_Handler: Represent the client side or Player Controller.
-			HUD: the client hud and gui elements
-		World_Handler: Represent the world or level. Loading, unloading, and handling
-			Level, Enities, and Pawns are possible children of this
-		(any other system will be under game except network which will need to 
-		be a sibling or higher up if the game logic ever need to be modual)
-		
-NOTE: Game_Handler logic is not meant to be switch out in this game. Why the extra layer 
-is consider optional.
-
-TODO:
-	generaly clean up and improve the logic. 
-	Beside that:
-		-make fishing more enjoyable
-		-improve world generation. world gen may or may not need a rewrite again
-		-improve the dialog system. Multible choices, random chices, easy editing,
-		localiztion, scripted logic, and data request are the main feature it should support.
-		Some, like scripting, is not as nessary and can be hard coded. data request may 
-		need way to look up data in the system. 
-		-maybe add a for of database so resources can be found easier in script as well
-		as added easier resources. 
-		-finish up the inventory and probably improve it more.
-			NOTE inventory should stay a dictonary. Most metadata or states should
-			be a dictonary of mostly simple data and path to static objects. 
-		Improve the old man speech. His is mostly a quick placeholder
-		-Try to add static typing to everything. base parents over children
-		for more abstract path as needed.
-		
-Note:
-	The game is a prototype for bigger project. The main goal now is to make the
-	code base easier to work with and expand on the exploration and fishing themes
-	where the main charater is a specail cat. Also with the limitation of only using Kenney
-	based art resources. 
+The game flow is being reworked to follow a more simple approch:
+	-Game Hander will act as an extention to the main game logic. It 
+	role is setting up listerns to other handlers and regulating the program flow.
+	Note: it should be treated as hidden to other system
 	
-	After a decent improved version of this game is made, it can be expanded upon with the
-	main orignal them. making fishing a side activity and pushing more around exploration,
-	civialtion expanding(resure humans and then set up shop at center), and lore/story (the world
-	is a abstracted space of timespace compression. greatly extended after a madman almost sucedded
-	in starting a chain reaction of the compression. now the link to it is more common allowing the
-	cat to travel to static world of diffrent time and universes if it stumble upon one).
+	*Below are self contain (global) handlers. They should worry only about their children
+	but other nodes can acess them. The child nodes of the handler do not nessary need to
+	follow this rule.
+	
+	-UI Handler: regulate and host the persistent UI node. It meant to be a shared
+	UI for all systems instead of having to relaod the UI all the times and reloading
+	its state.
+	
+	-Player Handler: the owning player controller in other words. Handles input config
+	replated to pawn control and may ref controlled units. Also may extend logic to the active
+	camera.
+	
+	-World Handler: The middle man that help with world transition as well as other
+	logic realted to the world state that indivitual level do not need to worry about
+	(unless they need to modify or listen to it).
+	Note: this should not hold  the active level. this help with the presistant state
+	of the world.
+	
+	-Data Handler: this handles savinga and loading as well as other file system
+	logic dealing with acessing or handling data. Most of the game states will be 
+	stored here unless a system want to handle it directly, then it can request it
+	from the data handler so it do not need to know the directory format.
+	
+	*Other handler may be added/used, but above are the current the main ones.
+	
+	-The level will be the game main scene. so it will use the root current scene.
+	this allow the game to work better with godot and allow levels to do what ever they want.
+	in other words any node can be a level, but active system may not work or act incorrectly
+	if not handle correcly before the switch (example is ui elemets unrealted to the level
+	may render if not hidden or unloaded on level switch)
+	Note: level can be 2d, 3d, control, or a mix of these, but there should only be one
+	active level. A handler can be made to handler paralle levels if needed, but the level should
+	try to handle that itself without exposing it globally.
+	
+	-acess to nodes outside it scope should be done via groups, traces, signals, or by handler.
+	acessing the root or scene tree (out side of the game handler) to get a node ref should be avoided
+	getting the current scene may be an exception, but may be better to have the world
+	directly store it and the game set and unset it. Also may be best if the level
+	is not know to other systems that do not handle it. Ideally the world, data, or another handler
+	should hold the data publicly avaible to the game.
+	
+	TODO: make sure scripts follow this pattern (since the old system was somewhat
+	the opposite of the new) and remove unused scripts and files since there a few old 
+	concept files laying about still.
+	
+	Note: try to have the game handler assign a pawn to the ui or split the logic
+	related to the player handler into a child node of the UI. Later be ideal moreso if
+	the UI handler do not know the exact details of the logic via script (aka stored as a node
+	or some upper class that do not contail the handler acessing logic). This more of a failsafe
+	incase godot do not abtract it enough. It shouldnt be an issue normally, but to prevent accidental
+	circular depencies. If UI acess Player, but player never acess UI, then it very likly nothing
+	bad will happen.
 	
 	
-ISSUES:
-	of writing this, the loading screen may bug out when far from spawn.
-	it may be because a chunk is not loaded, yet the player is not close enough
-	for it to be loaded. this issue is caused because they system a test and
-	need to be fix when the world logic is clean up. 
-	In short, only the chunk the player is in should trigger the loading screen
-	if it unloaded. any visable chunks should not unless the system can properly
-	have them loaded and make null chunks pass true for fix maps.
-	(I belive it is checking one chunk atm, but it is offset in a what that 
-	distance case the bug to be more noticable)
+	File structure:
+		TODO:
+			-move handlers into the systems folder and each handler should have their
+			own folder. this should contain the major childen scene and scripts related
+			to the system
+			
+			-Subsystems and addon like content should be added to the features
+			in folders related to their namespace
+			
+			-Levels or Maps should be used to hold the main scenes used in the game
+			
+			-scripts should be used to hold scripts that do not have a places elsewhere
+			-resources should be used for resources that lack a place to be. could add
+			scripts as a sub dir of resourcessame with scenes
+			
+			-assest should hold art and media realated to the game

@@ -93,7 +93,8 @@ func get_level_property(name:StringName) -> Variant:
 func load_static_tilemap(static_map:Node,coords:Vector2i):
 	static_tilemaps[coords] = static_map
 	static_map.transform[2] = level_coords_to_world(coords)
-	var processing_map = static_map as One_Bit_Tilemap
+	
+	#var processing_map = static_map as One_Bit_Tilemap
 #	map_added(static_map)
 	add_child(static_map)
 	#level_created.emit(static_map)
@@ -164,9 +165,16 @@ func dose_tilemap_exist(coords:Vector2i)-> bool:
 func on_generator_end(generator:Generator_Data, scene:Node):
 	var tilemap = (scene as TileMap)
 	if tilemap != null:
+		#NOTE: old, should switch to tiellayer
 		var coords = world_to_level_coords(tilemap.global_position)
 		if processing_tilemaps.has(coords):
 			loaded_tilemaps[coords] = tilemap
+			processing_tilemaps.erase(coords)
+	elif (scene as TileMapLayer) != null:
+		var tile_layer = (scene as TileMapLayer)
+		var coords = world_to_level_coords(tile_layer.global_position)
+		if processing_tilemaps.has(coords):
+			loaded_tilemaps[coords] = tile_layer
 			processing_tilemaps.erase(coords)
 	else:
 		print_debug("WARNING: processing_tilemaps may have a null pointer")
@@ -237,18 +245,19 @@ func caculate_active_regions(position:Vector2):
 
 
 func create_tilemap():
-	var tilemap := TileMap.new()
+	#var tilemap := TileMap.new()
+	var tilemap := TileMapLayer.new()
 #	map_added(tilemap)
 	add_child(tilemap)
 	#level_created.emit(tilemap)
 	return tilemap
 
 #NOTE: need to load and init tilemap. this just set things up
-func init_tilemap(tilemap:TileMap,coords:Vector2):
+func init_tilemap(tilemap:TileMapLayer,coords:Vector2):
 	#loaded_tilemaps[location] = tilemap
 	tilemap.y_sort_enabled = true
 	tilemap.texture_filter =CanvasItem.TEXTURE_FILTER_NEAREST
-	tilemap.set_layer_y_sort_enabled(0,true)
+	tilemap.set_y_sort_enabled(true)
 	tilemap.transform[2] = coords
 	if tilemap.tile_set == null: #NOTE: may want to force the tile_set? random maps should not need diffrent type
 		tilemap.tile_set = tile_set

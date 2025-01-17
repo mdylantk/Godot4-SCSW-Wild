@@ -1,15 +1,16 @@
-[gd_scene load_steps=12 format=3 uid="uid://cc1hxktnb4a1k"]
+[gd_scene load_steps=13 format=3 uid="uid://cc1hxktnb4a1k"]
 
-[ext_resource type="Script" path="res://Data/Nodes/Handlers/UI_Handler.gd" id="1_htxbl"]
-[ext_resource type="PackedScene" uid="uid://ctvmde4ov5w2x" path="res://Data/Nodes/GUI/Dialog.tscn" id="2_0wofj"]
-[ext_resource type="PackedScene" uid="uid://bh5qglvs6rygh" path="res://Data/Nodes/GUI/score.tscn" id="3_qtng4"]
-[ext_resource type="PackedScene" uid="uid://df500lm7ih60h" path="res://Data/Nodes/GUI/Notify.tscn" id="4_m1dom"]
-[ext_resource type="PackedScene" uid="uid://c6qkqs4t14j5w" path="res://Data/Nodes/GUI/Loading_Screen.tscn" id="5_t52tc"]
+[ext_resource type="Script" path="res://Data/Systems/UI/UI_Handler.gd" id="1_htxbl"]
+[ext_resource type="PackedScene" uid="uid://ctvmde4ov5w2x" path="res://Data/Systems/UI/Dialog.tscn" id="2_0wofj"]
+[ext_resource type="PackedScene" uid="uid://bh5qglvs6rygh" path="res://Data/Systems/UI/score.tscn" id="3_qtng4"]
+[ext_resource type="PackedScene" uid="uid://df500lm7ih60h" path="res://Data/Systems/UI/Notify.tscn" id="4_m1dom"]
+[ext_resource type="PackedScene" uid="uid://c6qkqs4t14j5w" path="res://Data/Systems/UI/Loading_Screen.tscn" id="5_t52tc"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="6_nymfg"]
 [ext_resource type="PackedScene" uid="uid://brre7crunbrjj" path="res://Data/Features/Minigame_Pounce_Fishing/Fishing_Pond_Map.tscn" id="7_531g0"]
-[ext_resource type="PackedScene" uid="uid://b8gbuuqjxib" path="res://Data/Nodes/GUI/Main_Menu.tscn" id="8_ufq3w"]
-[ext_resource type="PackedScene" uid="uid://b80ly070yrqgt" path="res://Data/Nodes/GUI/Credits_Menu.tscn" id="9_6enyp"]
-[ext_resource type="PackedScene" uid="uid://clfctvdo5gs0b" path="res://Data/Nodes/GUI/Options_Menu.tscn" id="11_3jetq"]
+[ext_resource type="PackedScene" uid="uid://b8gbuuqjxib" path="res://Data/Systems/UI/Main_Menu.tscn" id="8_ufq3w"]
+[ext_resource type="PackedScene" uid="uid://b80ly070yrqgt" path="res://Data/Systems/UI/Credits_Menu.tscn" id="9_6enyp"]
+[ext_resource type="PackedScene" uid="uid://clfctvdo5gs0b" path="res://Data/Systems/UI/Options_Menu.tscn" id="11_3jetq"]
+[ext_resource type="PackedScene" uid="uid://bsvm8im8i0rac" path="res://Data/Systems/UI/Debug_Hud.tscn" id="11_r8uiu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wsma3"]
 atlas = ExtResource("6_nymfg")
@@ -75,22 +76,7 @@ unique_name_in_owner = true
 process_mode = 3
 layer = 30
 
-[node name="DebugLayer" type="CanvasLayer" parent="."]
-layer = 100
-
-[node name="Debug" type="Label" parent="DebugLayer"]
-unique_name_in_owner = true
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -153.0
-offset_top = 1.0
-offset_right = -2.0
-offset_bottom = 88.0
-grow_horizontal = 0
-text = "dfds
-"
-horizontal_alignment = 1
+[node name="DebugHUD" parent="." instance=ExtResource("11_r8uiu")]
 
 [connection signal="visibility_changed" from="HUD/Dialog" to="." method="_on_menu_visibility_changed"]
 [connection signal="visibility_changed" from="HUD/LoadingScreen" to="." method="_on_menu_visibility_changed"]

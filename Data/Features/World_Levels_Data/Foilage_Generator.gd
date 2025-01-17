@@ -16,7 +16,10 @@ class_name Foilage_Generator extends Generator_Data
 
 
 func generate(tilemap:Node):
+	#NOTE: old, trying to switch to tilemap layer
 	if (tilemap as TileMap) != null:
+		await generate_tilemap(tilemap)
+	elif (tilemap as TileMapLayer) != null:
 		await generate_tilemap(tilemap)
 	if tilemap != null:
 		scene_finished.emit(self,tilemap)
@@ -43,7 +46,7 @@ func pick_foliage_tile(pos):
 		return Vector2i(0, 0)
 		
 func tile_picker(
-		tilemap:TileMap,region_coords:Vector2i, chunk_coords:Vector2i,
+		tilemap:TileMapLayer,region_coords:Vector2i, chunk_coords:Vector2i,
 		data:Array = [], use_data:bool = false
 	):
 	var coords = Vector2i(chunk_coords+(region_coords*chunk_size))
@@ -68,8 +71,8 @@ func tile_picker(
 		#instead of running multple generators, could have a generator that run
 		#steps together
 		if (
-				tilemap.get_cell_tile_data(0,coords) == null &&
-				tilemap.get_cell_tile_data(1,coords) == null #&&
+				tilemap.get_cell_tile_data(coords) == null# &&
+				#tilemap.get_cell_tile_data(coords) == null #&&
 				#tilemap.get_cell_tile_data(2,coords) == null 
 			):
 			#TODO in the future there may be proper ground
@@ -85,7 +88,7 @@ func tile_picker(
 			
 			#tilemap.set_cell(1,coords,0,Vector2(17,0))
 			#this is the foilage
-			tilemap.set_cell(1,coords,0,tile)
+			tilemap.set_cell(coords,0,tile)
 		#NOTE: land and see can not be in the same tile. it may be best
 		#to either deisgn it to be land and water with both collsions or
 		#not have land as collsion and manually check if not water for enities
@@ -95,6 +98,9 @@ func tile_picker(
 		#if (tilemap.get_cell_tile_data(0,coords) == null):
 		#	tilemap.set_cell(0,coords,2,Vector2(2,1))
 
+#Note: this might not be uses since there is no levels. may need to bundle layers at
+#most. should just handle each layer with diffrent generators. currtly using one layer
+#but the upper level would need to keep track of maps in layers
 func format_tilemap_layers(tilemap:TileMap):
 	#the ground level
 	tilemap.set_layer_z_index(0,0)
@@ -116,9 +122,9 @@ func format_tilemap_layers(tilemap:TileMap):
 	#a more detail tilesets
 
 func generate_tilemap(
-		tilemap:TileMap, data:Array = [], use_data:bool = false
+		tilemap:TileMapLayer, data:Array = [], use_data:bool = false
 	):
-	format_tilemap_layers(tilemap)
+	#format_tilemap_layers(tilemap)
 	for region_x in range(region_size):
 		for region_y in range(region_size):
 			if self != null and tilemap != null:
