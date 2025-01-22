@@ -47,8 +47,11 @@ func on_pawn_hit(attacker, target, data):
 
 func on_ai_update():
 	for pawn in active_pawns:
-		if pawn.brain!= null:
-			pawn.brain.update(pawn,self)
+		if pawn.brain != null:
+			#if pawn.brain != controller_brain and controller_brain != null:
+			#	pawn.brain = controller_brain
+			#pawn.brain.update(pawn,self)
+			pass
 			
 func _process(delta):
 	#TODO need the world_handler to frezze(pause) it children when no level_data
@@ -66,14 +69,19 @@ func _process(delta):
 	var pawn = active_pawns[0]
 	if pawn != null and player != null:
 		if player.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
-			if pawn.brain is AI_Controlled_Brain:
-				var brain : AI_Controlled_Brain = pawn.brain as AI_Controlled_Brain
+			if controller_brain is AI_Controlled_Brain:
+				var brain : AI_Controlled_Brain = controller_brain as AI_Controlled_Brain
 				#brain.move_to_location = target.global_position
+				
+				#TODO: update this to be less abstract. since brain is shared, can have a home,
+				#target, and focus point. then the pawn just need to store a state that
+				#can be modifiy by it and the brain. currently all pawns will share this
+				#point. the logic may current use a point in the data passed first, but not yet tested
 				brain.set_meta(&"move_to",player)
 				#maybe store data like move to location as a metadata?
 				#could store it as a vector or node2d at the cost of checking first
 				#brain.update(pawn)
-			on_ai_update()
+			#on_ai_update()
 			
 			
 			var test_vector : Vector2 = player.global_position - pawn.global_position
@@ -91,7 +99,7 @@ func _process(delta):
 			#or in this case visablity is used as a way to put it to sleep
 			pawn.visible = false
 			pass
-			
+		on_ai_update()	
 		#NOTE:could have it location change if target too far as well as add an
 		#interaction event where it will teleport when hit
 		

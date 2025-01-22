@@ -30,6 +30,15 @@ window/size/viewport_width=800
 window/size/viewport_height=600
 window/stretch/mode="viewport"
 
+[file_customization]
+
+folder_colors={
+"res://Data/Nodes/Actors/": "blue",
+"res://Data/Nodes/Components/": "blue",
+"res://Data/Nodes/Maps/": "blue",
+"res://Data/Systems/": "green"
+}
+
 [global_group]
 
 Players="All loaded player handlers"

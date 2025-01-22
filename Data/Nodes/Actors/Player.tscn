@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=23 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" path="res://Data/Nodes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
@@ -145,6 +145,15 @@ region = Rect2(442, 187, 16, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ovqcn"]
 size = Vector2(14, 12)
 
+[sub_resource type="Gradient" id="Gradient_80qsn"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_flttt"]
+gradient = SubResource("Gradient_80qsn")
+fill = 1
+fill_from = Vector2(0.504274, 0.512821)
+fill_to = Vector2(0.807692, 0.149573)
+
 [node name="Player" type="CharacterBody2D" groups=["Autosave", "Player_Pawns"]]
 collision_layer = 261
 collision_mask = 433
@@ -197,3 +206,7 @@ shape = SubResource("RectangleShape2D_ovqcn")
 debug_color = Color(0.972549, 0, 0, 0.419608)
 
 [node name="Camera2D" parent="." instance=ExtResource("7_b7ptm")]
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+energy = 0.25
+texture = SubResource("GradientTexture2D_flttt")

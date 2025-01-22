@@ -1,6 +1,24 @@
 ##This is the base class for controllers. Player and AI controllers should extend from this
 class_name Controller_Handler extends Node
 
+##This is the default brain the controller will use to talk to its owning units
+##controllers could use more than one brain, but usally one is all that is needed
+##(note: the brain can contain slots for a behavor tree. controller just assignt varibles
+##that may not be known by the pawn. imagin a hivemind calling to its minions to come home
+##the handler would set the prority to return home and make sure home location is the hive
+##the the minions will try to reach it while doing other tasks base on the brains logic and 
+##componets. NOTE: the brain do not need to have componets for this as long as it have
+##signals for the pawn to listen to. then it be more of a messager system) 
+@export var controller_brain : Base_Brain :
+	set(value):
+		#this just a failsafe. Normally brain should not be freed 
+		#unless major change in game mode 
+		if controller_brain != value:
+			if controller_brain  != null:
+				controller_brain.removed.emit()
+				#could also try to free it
+		controller_brain = value
+
 func get_state()->Savable_State:
 	return null
 

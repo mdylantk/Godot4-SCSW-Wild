@@ -66,3 +66,4 @@ func _on_world_update() -> void:
 	if environment_data != null and environment_color != null:
 		environment_data.forward_time()
 		environment_color.color = environment_data.get_environment_color()
+		

@@ -27,6 +27,7 @@ class_name Savedata_Helper extends Object
 static func store_player_position(handler:Player_Handler,new_location:Vector2,id:StringName):
 	handler.state.store(id,new_location,"positions")
 	
+	
 static func fetch_player_position(handler:Player_Handler,id:StringName)->Vector2:
 	var value = handler.state.fetch(id,"positions")
 	if typeof(value) == TYPE_VECTOR2:

@@ -1,3 +1,11 @@
+NOTE on folder colors:
+	-if folders are colored in the godot engin, then they may reprent the state
+	of the dir.
+	-GREEN: When a new dir sturcture is coming along, green is the ones being kept
+	-BLUE: dir that are ment to be kept, but may be moved at a later date
+	-RED: dir flagged for deletion, but may still need cleanup
+
+
 The game flow is being reworked to follow a more simple approch:
 	-Game Hander will act as an extention to the main game logic. It 
 	role is setting up listerns to other handlers and regulating the program flow.

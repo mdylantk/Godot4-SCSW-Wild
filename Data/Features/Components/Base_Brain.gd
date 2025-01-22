@@ -37,7 +37,7 @@ func set_direction(direction:Vector2=Vector2())->void:
 ##This allows the brain to override the direction.
 ##should be called before the move logic
 func get_direction(
-		position:Vector2, velocity:Vector2=Vector2()
+		position:Vector2, velocity:Vector2=Vector2(),data:Dictionary={}
 	)->Vector2:
 	return _direction
 

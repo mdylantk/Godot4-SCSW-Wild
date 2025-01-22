@@ -13,15 +13,15 @@ class_name Player_Handler extends Controller_Handler
 #level should be sync over the network so the assign would happen on client side after
 #server calls it. just need to make sure client can find the pawn they own(could do that serval ways
 #if ref can not be pass over network...like tagging/groups or the actual picking logic)
-@export var controller_brain : Base_Brain = Player_Controlled_Brain.new():
-	set(value):
-		#this just a failsafe. Normally brain should not be freed 
-		#unless major change in game mode 
-		if controller_brain != value:
-			if controller_brain  != null:
-				controller_brain.removed.emit()
-				#could also try to free it
-		controller_brain = value
+#@export var controller_brain : Base_Brain = Player_Controlled_Brain.new():
+#	set(value):
+#		#this just a failsafe. Normally brain should not be freed 
+#		#unless major change in game mode 
+#		if controller_brain != value:
+#			if controller_brain  != null:
+#				controller_brain.removed.emit()
+#				#could also try to free it
+#		controller_brain = value
 
 var pawn:Character2D #pawn may be move around, so a direct ref will be used to track it
 var uid:int = 0 #may or may not be needed if there a built in way to get a user id\

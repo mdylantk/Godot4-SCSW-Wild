@@ -25,13 +25,26 @@ var at_target_location : bool = false :
 		at_target_location = value
 
 
-func get_move_to_location() -> Vector2:
-	if has_meta(&"move_to"):
-		var move_to = get_meta(&"move_to")
+func get_move_to_location(data:Dictionary={}) -> Vector2:
+	#TODO: decide on if an object should be used or keep it abstract with dict
+	#just need a share way to store info so pawns can act diffrently
+	var move_to
+	if "target" in data:
+		move_to = data["target"]
 		if typeof(move_to) == TYPE_VECTOR2:
 			return move_to
-		if (move_to as Node2D) != null:
-			return move_to.global_position
+		if typeof(move_to) == TYPE_OBJECT:
+			if is_instance_valid(move_to):
+				if (move_to as Node2D) != null:
+					return move_to.global_position
+	if has_meta(&"move_to"):
+		move_to = get_meta(&"move_to")
+		if typeof(move_to) == TYPE_VECTOR2:
+			return move_to
+		if typeof(move_to) == TYPE_OBJECT:
+			if is_instance_valid(move_to):
+				if (move_to as Node2D) != null:
+					return move_to.global_position
 	return move_to_location
 
 #an example case for func update(): is to see if target is near current location
@@ -41,15 +54,15 @@ func update(pawn:Node2D = null, handler: Controller_Handler = null) -> void :
 	pass
 	
 func get_direction(
-		position:Vector2, velocity:Vector2=Vector2(), direction:Vector2=Vector2()
+		position:Vector2, velocity:Vector2=Vector2(), data:Dictionary={}
 	)->Vector2:
 	at_target_location = (position - get_move_to_location()).length() < desire_distance
 	if at_target_location: #test to see if it stop at the target
 		if preserve_direction:
-			return direction
+			return _direction
 		return Vector2() #direr
 	var move_to = get_move_to_location()
 	#will use the move to location if there is no metadata
 	return Vector2(position.direction_to(move_to))
 		
-	return direction
+	return _direction

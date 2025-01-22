@@ -16,7 +16,8 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 ##to allow the character to zigzag in the desire direction)
 @export var default_brain : Base_Brain : 
 	set(value):
-		brain = default_brain
+		default_brain = value
+		brain = value
 #@export var interaction_component : Interactive_Data
 @export var character_state : Character_State :
 	set(value):
@@ -43,7 +44,8 @@ var movement_state : MovementStates = MovementStates.IDLE:
 #it idle and move 
 var brain : Base_Brain:
 	set(value):
-		if brain == value: return
+		if brain == value: 
+			return
 		if brain:
 			brain_unassigned(brain)
 		if value:

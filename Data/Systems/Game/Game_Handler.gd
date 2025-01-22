@@ -1,17 +1,21 @@
 ##This handles the game and how it works with the other handlers
 ##it should freely acess any handlers as long as they do not acess it
 ##as well as connect to their signals so it can maintain the game loop
-class_name Game_Handler extends Node2D
+class_name Game_Handler extends Node
 
-
-signal event_update(event)
-signal player_created(handler:Node, index : int)
+#NOTE:this should be listen to signals and triggering events
+#so signals are not nessary
+#signal event_update(event)
+#signal player_created(handler:Node, index : int)
 
 #server may need to be it own handler or a component of this
 #this depends if anything but the game will ever need to comunicate with it
-@onready var server : Node = %Server_Handler
+#NOTE: can just acess it with % when needed. 
+#@onready var server : Node = %Server_Handler
 
-
+#Note: mostly a concept to allow various pause situaltion stored in one var
+#After a certain value, the tree would pause, else only certain systems will be 
+#paused
 enum Pause_States{
 	UNPAUSED = 0,
 	GAME_PAUSED = 1 << 1,  #set if the game want to pause the game.
@@ -45,26 +49,23 @@ func load_player_handler(index : int = 0):
 #	print(Engine.get_license_text())
 
 func _ready():
+	#make sure pause logic is done base on the default state
+	#else something may be not sync correctly
 	handle_pausing()
-#	event_update.connect(on_event_update)
-	
-	#print_debug(get_player_handler_index(get_player_handler()))
-	
-
 	
 	#NOTE: connect to other handler signals to maintain game flow
 	#since game handler should know all, but none should directly acess it
-	World.level_ready.connect(on_level_ready)
-	World.level_busy.connect(on_level_busy)
+	World.level_ready.connect(on_level_ready) #level is ready for game logic
+	World.level_busy.connect(on_level_busy) #level is still loading up
 	
 	
 	#world connecting is a redirect of that logic so
 	#the game do not need to be told to change level. instead the world
 	#can call trigger it
-	World.level_changing.connect(change_level)
+	World.level_changing.connect(change_level) #level is about tpo change
 	
 	UI.ui_focus.connect(on_ui_focus)
-	#Connect to Main Menu
+	#Connect to Main Menu to game related triggers
 	UI.main_menu.pause.connect(on_menu_pause)
 	UI.main_menu.resume.connect(on_menu_resume)
 	UI.main_menu.new_game.connect(on_new_game)
@@ -77,15 +78,12 @@ func _ready():
 @rpc("any_peer","call_local")
 func start_game(is_new:bool = true, save_name:String="Default"):
 	
-	#Resources.current_save_name = save_name
+	#set up the save state, either make sure it new or load from file
 	Data.init_save(save_name,!is_new)
+	
+	#set up at least one persistant seed to use in generators
+	#World seed is to help keep the world gen similar or the same between sessions
 	var world_seed : int
-	#NOTE mostly to make noise maps look diffrent
-	#but also setting the seed to the one save so new games
-	#may seem similar with random logic if the seed is the same
-	#NOTE changing the seed in the save could cause bugs
-	#like if player location is save/loaded, they could load in a 
-	#treeif the level gen they are in is not catched
 	if Data.save_state.has_section_key("Game","world_seed"):
 		world_seed = Data.save_state.get_value("Game","world_seed",0)
 		seed(world_seed)
@@ -94,29 +92,16 @@ func start_game(is_new:bool = true, save_name:String="Default"):
 		world_seed = randi()
 		Data.save_state.set_value("Game","world_seed",world_seed)
 		
-	#world.level_data.seed_maps(get_seed())
-	#TODO: have a handler for semi static resource
-	#and update the seeds from a save state
-	#TODO: the world probably should handle this
-	#or a resource manager
+	#load the maps and assign the seeds. could have a dedicated system
+	#to handle this or let the world (or level using world tools) handle it
 	var detail_map = load("uid://087vceuyr40g")
 	var height_map = load("uid://te65swlvsp53")
 	var variation_map = load("uid://cp0b4i2m77i8m")
 	detail_map.seed = world_seed
 	height_map.seed = world_seed
 	variation_map.seed = world_seed
-	#if is_new:
-	#	var path:String = Resources.get_save_path(false)
-	#	if DirAccess.dir_exists_absolute(path):
-	#		var dir:DirAccess = DirAccess.open(path)
-	#		for file in dir.get_files():
-				#will only remove files that is consider save files. this may need to be expanded on
-				#also may need to move this logic to the resource handler
-	#			if file.contains(".data") or file.contains(".cfg") or file.contains(".tres"):
-	#				dir.remove(file)
-	#		DirAccess.remove_absolute(path)
 	
-	load_player_handler()
+	#load_player_handler()
 	#World.level_data = load("uid://cvna13cf6rc1p")
 	
 	

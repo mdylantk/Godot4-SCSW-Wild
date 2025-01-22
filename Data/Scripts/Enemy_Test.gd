@@ -14,8 +14,8 @@ signal hit(pawn)
 
 func _ready() -> void:
 	_on_visibility_changed()
-	if brain == null:
-		brain = AI_Controlled_Brain.new()
+	#if brain == null:
+	#	brain = AI_Controlled_Brain.new()
 	#var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")
 	#if players.size() > 0:
 		#var player = players[0]

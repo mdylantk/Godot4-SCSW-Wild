@@ -277,6 +277,7 @@ func is_level_loaded(location:Vector2)->bool:
 	#return loaded_tilemaps.has(coords)
 	#return loaded_tilemaps.has(coords) or loose_tilemaps.has(coords)
 	
+#NOTE: this might not be needed anymore.
 func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
 	return Savedata_Helper.fetch_player_position(handler,level_id)
 
@@ -300,13 +301,16 @@ func _ready() -> void:
 	if !generators[0].scene_finished.is_connected(on_generator_end):
 		generators[0].scene_finished.connect(on_generator_end)
 	
-	get_tree().call_group(
-		"Players", "relocate_pawn_from_saved_point", level_id, 0, default_spawn_position
-	)
+	#get_tree().call_group(
+	#	"Players", "relocate_pawn_from_saved_point", level_id, 0, default_spawn_position
+	#)
 	World.world_update.connect(_on_world_update)
 	#TODO: the upper level will need to handle loading screen directly
 	#just need to have something called when loaded (and loading if needed)
 	
+	##assign the player a player controlled brain
+	##this could be cheated by making the brain a resource
+	##and using its ref for both player charaters and player handler
 	%Player.brain = Player.controller_brain
 	var player_pos = Player.state.fetch("world","positions")
 	if typeof(player_pos) == TYPE_VECTOR2:
