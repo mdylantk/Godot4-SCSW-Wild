@@ -3,6 +3,15 @@
 ##this meant to replace resource handler since it goal is similar but with an easier name
 class_name Data_Handler extends Node
 
+#TODO: add signals to listen to to monitor changes to save state
+#as well as add functions to modify the save state so that these will trigger
+#the savable state can still be used, but this can be used to make sure the
+#states is catched when assign or loaded so the signals can be set up
+##will emit when certain save state changes accure. This is not enforced, so not\
+##all changes will trigger this.
+signal save_state_change(section:String, key:String, value:Variant)
+signal save_state_ready()
+
 ##this is the key used for the default encryption. The main point of this key
 ##is to make the save file not easy to read instead. 
 @export var default_key : String = "lock"
@@ -60,10 +69,26 @@ func load_data(
 func save_settings():
 	save_data(client_state,"settings",default_path,false)
 	
+##should be called when game is ready. It will trigger the save_state_ready
+##signal(as well as load the state if flagged) so that other systems can start
+##using it. Could allow them to use it on ready, but any changes before the load
+##would be erase. They should not set anything, but the signal is to make sure it
+##dose not happen.
 func init_save(save_id:String=save_name,load_save:bool=false):
 	save_name = save_id
 	if load_save:
 		load_data(save_state,"Data",default_path+"/"+save_name,false)
+	else:
+		#save state should be reset if a game is already started and a new
+		#game is requested. 
+		save_state = ConfigFile.new()
+	save_state_ready.emit()
+
+##allow the save_state_change to be called on setting a value
+func add_to_save_state(section:String, key:String, value:Variant)->void:
+	save_state.set_value(section,key,value)
+	save_state_change.emit(section,key,value)
+	pass
 
 
 # Called when the node enters the scene tree for the first time.
@@ -76,7 +101,6 @@ func _ready() -> void:
 	
 	#saves should only load on ready for debugging
 	#and should be loaded only when new or load game task are performed
-	
 	
 	
 	print_debug("ready")

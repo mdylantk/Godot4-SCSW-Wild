@@ -17,7 +17,10 @@ static func get_world():
 #can add a get_player, but for now it not needed
 	
 static func spawn_entity(entity:Node):
-	World.add_child(entity)
+	if entity == null:
+		print_debug("if this is called, then entity is null or an old logic call this")
+	else:
+		World.add_child(entity)
 	
 static func change_level(level:Object, handler:Node, instigator:Node, offset:Vector2):
 	World.change_level(level,handler,instigator,offset)

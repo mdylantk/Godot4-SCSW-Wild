@@ -34,14 +34,9 @@ func handle_pausing():
  
 		
 func load_player_handler(index : int = 0):
-	if Player != null:
-		Player.setup()
-		Player.state.data_changed.connect(UI.on_player_state_change)
-		UI.handler_setup()
-		return
+	World.level_changed.connect(Player.on_level_changed)
+	Player.setup()
 
-
-	
 
 
 #func print_copyright():
@@ -151,8 +146,10 @@ func change_level(uid):
 		#NOTE: will move player pawns to game for now untill a reusable
 		#player pawn is made to be added as needed in levels instead of 
 		#reparenting
-		get_tree().call_group("Players", "reparent_pawn", self)
-		get_tree().tree_changed.connect(on_tree_changed)
+		#get_tree().call_group("Players", "reparent_pawn", self)\
+		
+		if !get_tree().tree_changed.is_connected(on_tree_changed):
+			get_tree().tree_changed.connect(on_tree_changed)
 		#tell GUI and controllers that the gamplay is loading(disable imput and such)
 		World.level_loading = true
 	else:
@@ -163,7 +160,7 @@ func on_tree_changed():
 	if level != null:
 		get_tree().tree_changed.disconnect(on_tree_changed)
 		level_changed(level)
-		get_tree().call_group("Players", "reparent_pawn", level)
+		#get_tree().call_group("Players", "reparent_pawn", level)
 		World.level_loading = false
 		#tell GUI and controllers that the gamplay is may be loaded
 		#though the world may need to pass another signal

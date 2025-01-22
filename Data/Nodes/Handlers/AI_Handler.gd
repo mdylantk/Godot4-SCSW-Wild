@@ -32,9 +32,9 @@ func unhandle_pawn(pawn:Node)->void:
 
 func _ready():
 	if !enable: return
-	var pawn_ref = default_pawn.instantiate()
-	World.add_child(pawn_ref)
-	handle_pawn(pawn_ref)
+	#var pawn_ref = default_pawn.instantiate()
+	#World.add_child(pawn_ref)
+	#handle_pawn(pawn_ref)
 	super()
 
 func on_pawn_hit(attacker, target, data):
@@ -47,34 +47,42 @@ func on_pawn_hit(attacker, target, data):
 
 func on_ai_update():
 	for pawn in active_pawns:
-		if pawn.brain_component != null:
-			pawn.brain_component.update(pawn,self)
+		if pawn.brain!= null:
+			pawn.brain.update(pawn,self)
 			
 func _process(delta):
 	#TODO need the world_handler to frezze(pause) it children when no level_data
 	#or when loading new areas
+	var active_pawns = get_tree().get_nodes_in_group("enemies")
+	
 	if active_pawns.size() <= 0: return
+	
+	var player = null
+	var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")
+	if players.size() > 0:
+		player = players[0]
+		#brain.set_meta(&"move_to",player)
+	
 	var pawn = active_pawns[0]
-	if pawn != null and Player.pawn != null:
-		var target = Player.pawn
-		if target.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
-			if pawn.brain_component is AI_Controlled_Brain:
-				var brain : AI_Controlled_Brain = pawn.brain_component as AI_Controlled_Brain
+	if pawn != null and player != null:
+		if player.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
+			if pawn.brain is AI_Controlled_Brain:
+				var brain : AI_Controlled_Brain = pawn.brain as AI_Controlled_Brain
 				#brain.move_to_location = target.global_position
-				brain.set_meta(&"move_to",target)
+				brain.set_meta(&"move_to",player)
 				#maybe store data like move to location as a metadata?
 				#could store it as a vector or node2d at the cost of checking first
 				#brain.update(pawn)
 			on_ai_update()
 			
 			
-			var test_vector : Vector2 = target.global_position - pawn.global_position
+			var test_vector : Vector2 = player.global_position - pawn.global_position
 			pawn.visible = true 
 			test_vector = test_vector * delta
 			#pawn.move(test_vector.normalized())
 		
 		#poor way to have enemy catch up to player after being hit
-			if (pawn.global_position - target.global_position).length() > 320:
+			if (pawn.global_position - player.global_position).length() > 320:
 				pawn.movement_component.sprint_strength = 8
 			else:
 				pawn.movement_component.sprint_strength  = 0

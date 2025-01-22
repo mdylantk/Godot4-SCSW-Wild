@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dvaxx0ke0p27m"]
 
-[ext_resource type="Script" path="res://Data/Nodes/Handlers/Game_Handler.gd" id="1_gpdo0"]
+[ext_resource type="Script" path="res://Data/Systems/Game/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/AI_Handler.gd" id="3_8kfs5"]
 [ext_resource type="Script" path="res://Data/Nodes/Handlers/Server_Handler.gd" id="7_clhfr"]
 

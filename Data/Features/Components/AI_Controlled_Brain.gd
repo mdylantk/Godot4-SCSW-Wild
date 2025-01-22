@@ -17,6 +17,7 @@ signal location_reached()
 ##this will return the pass direction or use the direction in caculations
 ##if false, it will return (0,0) in cases where the logic fails
 @export var preserve_direction : bool = true
+
 var at_target_location : bool = false :
 	set(value):
 		if value != at_target_location:

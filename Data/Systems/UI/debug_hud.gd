@@ -17,17 +17,15 @@ func _process(delta: float) -> void:
 		debug_text = debug_text + "\n" + "player input: " + str(!Player.paused)
 			#NOTE: this need to change with the new item system. was added with the old to get it working
 		#NOTE: may need player or game connect these to signal instead of a direct ref
-		if Player.state != null:
+		var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")
+		if players.size() > 0:
+			var player_inventory = players[0].inventory.inventory
+		#if Player.state != null and Player.pawn != null:
+			#TODO: have an inventory assign here or grab from state/data
+			#since acess to a pawn my be removed
 			#var player_old_inventory = Player.state.fetch("inventory", "pawn")
-			var player_inventory = Player.pawn.inventory.inventory
-
-#			if player_old_inventory != null:
-#				debug_text = debug_text + "\n" + "Old Inventory:"
-#				for item in player_old_inventory:
-#					debug_text = debug_text + "\n" + str(item["meta"]["name"]) + ":"+ str(item["amount"])
-			#this will display new inventory items when the system is added.
-			#the source currently from the pawn inventory instead of player state
-			#(since saving is the last part if adding it)
+			#var player_inventory = Player.pawn.inventory.inventory
+			
 			if player_inventory != null:
 				debug_text = debug_text + "\n" + "Inventory:"
 				for item in player_inventory:

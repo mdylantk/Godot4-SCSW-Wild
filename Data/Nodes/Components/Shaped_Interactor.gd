@@ -4,7 +4,7 @@ class_name Shaped_Interactor extends Interactor_Base
 
 func interact(interactor:Node = owner):
 	if shape_cast != null :
-		if shape_cast == null: return
+		if shape_cast == null or !is_inside_tree(): return
 		shape_cast.force_shapecast_update()
 		var results :Array = shape_cast.collision_result
 		var data :={"source":self}

@@ -20,6 +20,7 @@ func _ready()->void:
 	#TODO: have state loaded called on ready if state not null
 	#AND only have it called in setter if getr_tree == null
 	#then it should be unlikly to be called twice
+	%Shaped_Interactor.interaction.connect(on_interaction)
 
 func on_state_saving():
 	if inventory != null:
@@ -91,9 +92,21 @@ func on_facing_changed(new_facing:Vector2,old_facing:Vector2):
 			$AnimationPlayer.play("right")
 			#$AnimatedSprite2D.flip_h = false
 
-#func interact():
-#	$Shaped_Interactor.interact()
+func interact():
+	%Shaped_Interactor.interact(self)
 
+func on_interaction(source_pawn:Node, collider:Node, data:={}):
+	#TODO rethink this perhaps. either keep it but simpify it or pass the collected
+	#data to a handler or sub handler
+	#note: ideally this trigger and interaction, but bulk data should come from
+	#the character state(or charater), data handler, world handler, (optional) collsion data
+	#and player handler. meta should not nessary be needed and could be stored
+	#on either of the characters
+	#NOTE: other other character needs to be a character, so ideally the other character
+	#should listen to interaction and then tigger the action
+	var interaction : Interactive_Component = collider as Interactive_Component
+	if interaction != null:
+		interaction.interact(Player,self,collider,data)
 
 
 #func _on_shaped_interactor_interaction(interactor: Node, interactee: Node, data: Dictionary) -> void:

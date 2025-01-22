@@ -5,7 +5,23 @@ class_name Player_Handler extends Controller_Handler
 #@export_file("*.tscn") var default_pawn = "res://Data/Node/Actors/Player.tscn"
 @export var default_pawn : PackedScene = load("uid://bugclr6n3igb4")
 
-
+#TODO: try to handle input with the brain. can send input or handle t directly inside it
+#NOTE: pawn loading should be done by level with the player(or world->game) handling
+#spawning one if non exist in the level (not nessary)
+#so level goal is to be able to get points for all players and provide a character for them
+#(if they are able to have control). and then make sure to assign them the player controller
+#level should be sync over the network so the assign would happen on client side after
+#server calls it. just need to make sure client can find the pawn they own(could do that serval ways
+#if ref can not be pass over network...like tagging/groups or the actual picking logic)
+@export var controller_brain : Base_Brain = Player_Controlled_Brain.new():
+	set(value):
+		#this just a failsafe. Normally brain should not be freed 
+		#unless major change in game mode 
+		if controller_brain != value:
+			if controller_brain  != null:
+				controller_brain.removed.emit()
+				#could also try to free it
+		controller_brain = value
 
 var pawn:Character2D #pawn may be move around, so a direct ref will be used to track it
 var uid:int = 0 #may or may not be needed if there a built in way to get a user id\
@@ -19,13 +35,17 @@ var pawns_interactor:Interactor_Base
 var movement_input: Vector2
 
 var paused : bool = false:
+	#this stop input when this paused is true
+	#basicly when game pause, player pause too so this was a workaround
+	#TODO: see if there a way to listen to the game pausing
+	#else make sure something like this get enforce
 	set(value):
 		paused = value
 		
 		if !paused : return
-		if pawn == null : return
-		if pawn.brain_component == null : return
-		pawn.brain_component.set_direction(Vector2())
+		#if pawn == null : return
+		if controller_brain == null : return
+		controller_brain.set_direction(Vector2())
 		
 
 #may need to use a scene of a camera incase the camrea is deleted with pawn before reparented
@@ -38,10 +58,9 @@ func get_pawn(index:int=0)->Character2D:
 	return pawn
 
 func _ready():
-	super()
+	#super()
 	#this is to test the signal
 	#player_meta_changed.connect(player_meta_changed_test)
-func setup():
 	if state == null :
 		state = Player_State.new()
 		#TODO: should also add a player id to it once a system is added to handle it
@@ -50,6 +69,11 @@ func setup():
 		state.file_name = "player_state"
 		#this also could be where loading state happens if state is created when player 'joins'
 	#state.load_state()
+func setup():
+	#TODO let the level handles the pawn and give it a contoller brain
+	#can use groups if need a direct acess, though order may not be relible
+	#so may need one group for the primary client control...or just compare
+	#the controller brain (if same, then it one of the currenlt controlled pawns
 	if pawn == null:
 		#pawn = default_pawn.instantiate()
 		possess_pawn(default_pawn.instantiate())
@@ -79,6 +103,7 @@ func setup():
 
 
 func possess_pawn(new_pawn: Node):
+	return
 	if pawn != null:
 		pawn.remove_from_group("player_controlled")
 		handle_pawns_connections(pawn,true)
@@ -138,15 +163,19 @@ func _unhandled_input(event:InputEvent):
 	if paused : return
 #func input_update(event:InputEvent):
 	#movement for the pawn(return is pawn is null
-	if pawn == null : return
+	#if pawn == null : return
 	#if state.dirty:
 	#	state.save_state()
 	if event.is_action("Sprint"):
-		pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
-		get_viewport().set_input_as_handled()
+		if controller_brain != null:
+			controller_brain.action_triggered.emit("Sprint",event.get_action_strength("Sprint"))
+		#pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
+			get_viewport().set_input_as_handled()
 	if event.is_action_pressed("Accept"):
-		if pawns_interactor != null:
-			pawns_interactor.interact(pawn)
+		if controller_brain != null:
+			controller_brain.action_triggered.emit("Interact",1)
+		#if pawns_interactor != null:
+			#pawns_interactor.interact(pawn)
 			get_viewport().set_input_as_handled()
 
 		#	if result["collider"] is TileMap :
@@ -169,8 +198,8 @@ func _unhandled_input(event:InputEvent):
 	if (event.is_action("Left") or event.is_action("Right") or
 		event.is_action("Forward") or event.is_action("Back")
 	):
-		if pawn.brain_component != null:
-			pawn.brain_component.set_direction(Vector2(
+		if controller_brain != null:
+			controller_brain.set_direction(Vector2(
 				Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
 			).normalized())
 			get_viewport().set_input_as_handled()
@@ -212,7 +241,9 @@ func on_level_changed(level:Base_Level, spawn_index: int = 0):
 		pawn.global_position = level.get_spawn_position(spawn_index, self)
 	
 func reparent_pawn(new_level:Node):
-	pawn.reparent(new_level)
+	print_debug("try to remove repartenting of pawn")
+	pass
+	#pawn.reparent(new_level)
 	
 func relocate_pawn(new_location:Vector2,player_index:int=0):
 	if player_index == 0 and pawn != null:

@@ -39,9 +39,9 @@ static func store_player_score(handler:Player_Handler,new_score:int,id:StringNam
 	handler.state.store(id,new_score,"scores")
 	
 static func fetch_player_score(handler:Player_Handler,id:StringName)->int:
-	var value = handler.state.fetch(id,"scores")
-	if typeof(value) == TYPE_INT:
-		return value
-	else:
-		return 0
+	if handler.state != null:
+		var value = handler.state.fetch(id,"scores")
+		if typeof(value) == TYPE_INT:
+			return value
+	return 0
 	

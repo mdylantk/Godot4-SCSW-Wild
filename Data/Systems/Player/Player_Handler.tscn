@@ -1,0 +1,21 @@
+[gd_scene load_steps=6 format=3 uid="uid://bdpv2nuo5qsqg"]
+
+[ext_resource type="Script" path="res://Data/Systems/Player/Player_Handler.gd" id="1_d3v36"]
+[ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Data/Nodes/Actors/Player.tscn" id="2_vymv8"]
+[ext_resource type="Script" path="res://Data/Features/Components/Player_Controlled_Brain.gd" id="3_ar03a"]
+[ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Data/Nodes/Main_Camera.tscn" id="4_wnuel"]
+
+[sub_resource type="Resource" id="Resource_1h6t7"]
+script = ExtResource("3_ar03a")
+_direction = Vector2(0, 0)
+
+[node name="Player_Handler" type="Node2D" groups=["Player_Handlers", "Players"]]
+process_mode = 3
+y_sort_enabled = true
+script = ExtResource("1_d3v36")
+default_pawn = ExtResource("2_vymv8")
+controller_brain = SubResource("Resource_1h6t7")
+
+[node name="Camera2D" parent="." instance=ExtResource("4_wnuel")]
+unique_name_in_owner = true
+enabled = false

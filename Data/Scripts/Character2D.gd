@@ -14,7 +14,9 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 ##and self contain ai logic that do not need to know much about the world
 ##(example: character may walk in zigzags, so the brain would change the direction
 ##to allow the character to zigzag in the desire direction)
-@export var brain_component : Base_Brain = Base_Brain.new()
+@export var default_brain : Base_Brain : 
+	set(value):
+		brain = default_brain
 #@export var interaction_component : Interactive_Data
 @export var character_state : Character_State :
 	set(value):
@@ -39,6 +41,22 @@ var movement_state : MovementStates = MovementStates.IDLE:
 			
 #trying to notify changes in movement. may allow additional mode but for now
 #it idle and move 
+var brain : Base_Brain:
+	set(value):
+		if brain == value: return
+		if brain:
+			brain_unassigned(brain)
+		if value:
+			brain_assigned(value)
+		brain = value
+		
+
+func brain_assigned(new_brain:Base_Brain):
+	new_brain.action_triggered.connect(on_action_triggered)
+	pass
+func brain_unassigned(old_brain:Base_Brain):
+	old_brain.action_triggered.disconnect(on_action_triggered)
+	pass
 
 ##called when a character state is set/assign/loaded
 ##used to extract data from it that is handled outside the state
@@ -65,8 +83,8 @@ func interact()->void:
 #in a dir every physic update. may also have a move to location task, but then again the handler could do that
 func move():
 	var direction : Vector2
-	if brain_component != null:
-		direction = brain_component.get_direction(position,velocity)
+	if brain != null:
+		direction = brain.get_direction(position,velocity)
 	if movement_component != null:
 		if direction != movement_component.facing_dirction:
 			movement_state = MovementStates.TURNING
@@ -86,7 +104,23 @@ func move():
 	else:
 		movement_state = MovementStates.IDLE
 		return false
-	
+
+func on_action_triggered(action:String, value:float)-> void:
+	if action == "Sprint":
+		movement_component.sprint_strength = value
+		pass
+	if action == "Interact":
+		print_debug("MEOOW?")
+		#TODO have player have it own interactor or similar
+		#this is an old system, so may just let the pawn handles it full
+		#NOTE: Player hander was listen to pawn for interactions. so will
+		#need to redirect that logic here and skip the listening part
+		#can pass Player hander as the handler and it should still work
+		#Player.pawns_interactor.interact(self)
+		print_debug("meow")
+		interact()
+		pass
+
 func _physics_process(delta: float) -> void:
 	move()
 	

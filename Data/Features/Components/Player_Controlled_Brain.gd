@@ -1,5 +1,6 @@
 class_name Player_Controlled_Brain extends Base_Brain
 
+
 #NOTE: currenly base brain has direction and returns it by default. This
 #is here incase the controller uses the brain for action. ideally the pawn should be controlled
 #directly instead of checking strings so actions may be reserve for simple brain ai

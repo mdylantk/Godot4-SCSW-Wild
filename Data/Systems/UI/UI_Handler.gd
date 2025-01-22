@@ -59,30 +59,6 @@ signal ui_focus(disable_other_input:bool)
 
 
 
-#var player_state : Savable_State
-#var player_pawn 
-#func _ready():
-	#pass
-
-func handler_setup():
-	#NOTE: GUI may ask for handler or listen for handler, since there little reason
-	#for game or anything else to acces HUD. HUD ment to observe all and act like input
-	var common_fish_count = Savedata_Helper.fetch_player_score(Player,"common_fish_caught")
-	var rare_fish_count = Savedata_Helper.fetch_player_score(Player,"rare_fish_caught")
-	%Score.set_common_score(common_fish_count)
-	%Score.set_rare_score(rare_fish_count)
-
-func on_player_state_change(source, id, old_value, new_value, group):
-	if old_value == new_value:
-		#NOTE: need a way to know of changes if state is loaded or have
-		#predetermin values. could grab from player
-		return
-	if group == "scores":
-		if id == "common_fish_caught":
-			%Score.set_common_score(new_value)
-		elif id == "rare_fish_caught":
-			%Score.set_rare_score(new_value)
-
 func _ready() -> void:
 	_on_menu_visibility_changed()
 	#TODO: try to let the game handler handle tree events such as pausing
@@ -95,20 +71,6 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	pass
 	
-	#Player.state.data_changed.connect(on_player_state_change)
-	#handler_setup()
-
-func on_player_created(player:Node, index : int):
-	if index == 0: #0 should be host or owning client. may need a better way or a built in way
-		Player.state.data_changed.connect(on_player_state_change)
-		handler_setup()
-
-#general gameplay input for player. may need to have player handle this
-#directly and pause the player if game is pause or gameplay is paused
-#func _unhandled_input(event:InputEvent):
-#	if enable_player_input: 
-#		Player.input_update(event)
-		
 
 #TODO: try not to ref handler in UI. currenly only for tests and debug
 #if need to ref an handler, can move the logic to a child ideally one that
@@ -133,17 +95,11 @@ func _process(_delta):
 			#not as simple
 			#NOTE: by checking four corner point, boader loading cases could be solved
 
-		
-			#debug.get_canvas_transform().affine_inverse() * debug.get_screen_position()
 
-
-
-#func loading(is_loading):
-	#await get_tree().create_timer(1).timeout #A delay so things can finish up. currrenty need to be appled difftrently or not used
-#	$LoadingScreen.visible = is_loading
-
-
-
+#NOTE: this fine if menu is ment to be reused, but also
+#the main menu may be better if it have the other memebers as children
+#and just signal up if need UI to do somothing that can not be handled
+#by watching main menu visibilty
 func _on_main_menu_request_focus_change(id: String) -> void:
 	%Main_Menu.visible = false
 	match id:

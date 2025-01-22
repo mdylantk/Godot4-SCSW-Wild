@@ -10,7 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://k24j3aokcmwp" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 8.mp3" id="8_v0yuj"]
 [ext_resource type="AudioStream" uid="uid://bcm7ee14ix88r" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 9.mp3" id="9_yr6jp"]
 [ext_resource type="AudioStream" uid="uid://0kyoc42y1pj5" path="res://Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Ambient 10.mp3" id="10_klpnm"]
-[ext_resource type="Script" path="res://Data/Nodes/Handlers/RepeatAudioStreamPlayer.gd" id="11_ev3n0"]
+[ext_resource type="Script" path="res://Data/Systems/Audio/RepeatAudioStreamPlayer.gd" id="11_ev3n0"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_rec8i"]
 playback_mode = 1

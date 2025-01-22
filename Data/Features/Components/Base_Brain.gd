@@ -2,7 +2,12 @@ class_name Base_Brain extends Resource
 ##ask for the controller/character(or listerner) that it would like to do an action.
 ##This action usally an input event triggers like attack or interact
 ##NOTE:this a concept and may or may not be used(and most likly renamed)
-signal character_action_request(id:StringName)
+signal action_triggered(id:String, value:float)
+
+##called when the AI or Player host plans on freeing it from memory
+##may not be called but if it dose, then the charaters that owns this should remove
+##it from ref
+signal removed()
 
 #TODO: decide oh handling actions. this could hold function or send signals related
 #to actions. since this may be a responce script, the actions may be abstract

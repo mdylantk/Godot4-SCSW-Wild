@@ -306,3 +306,8 @@ func _ready() -> void:
 	World.world_update.connect(_on_world_update)
 	#TODO: the upper level will need to handle loading screen directly
 	#just need to have something called when loaded (and loading if needed)
+	
+	%Player.brain = Player.controller_brain
+	var player_pos = Player.state.fetch("world","positions")
+	if typeof(player_pos) == TYPE_VECTOR2:
+		%Player.position = player_pos
