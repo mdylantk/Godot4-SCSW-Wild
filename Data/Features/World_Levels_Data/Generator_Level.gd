@@ -311,7 +311,7 @@ func _ready() -> void:
 	##assign the player a player controlled brain
 	##this could be cheated by making the brain a resource
 	##and using its ref for both player charaters and player handler
-	%Player.brain = Player.controller_brain
+	#%Player.brain = Player.controller_brain
 	var player_pos = Player.state.fetch("world","positions")
 	if typeof(player_pos) == TYPE_VECTOR2:
 		%Player.position = player_pos

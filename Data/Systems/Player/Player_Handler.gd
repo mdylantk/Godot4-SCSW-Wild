@@ -70,6 +70,7 @@ func _ready():
 		#this also could be where loading state happens if state is created when player 'joins'
 	#state.load_state()
 func setup():
+	print_debug("this should not be used anymore")
 	#TODO let the level handles the pawn and give it a contoller brain
 	#can use groups if need a direct acess, though order may not be relible
 	#so may need one group for the primary client control...or just compare
@@ -103,6 +104,7 @@ func setup():
 
 
 func possess_pawn(new_pawn: Node):
+	print_debug("this should not be used anymore")
 	return
 	if pawn != null:
 		pawn.remove_from_group("player_controlled")
@@ -130,11 +132,13 @@ func possess_pawn(new_pawn: Node):
 	#	pawn.inventory.inventory = test_inv
 	
 func on_pawn_exited_tree():
+	print_debug("this should not be used anymore")
 	#an attempt to save the camera from being freed
 	if pawn.is_queued_for_deletion():
 		controller_camera.reparent(self)
 
 func handle_pawns_connections(target_pawn:Node, remove:bool = false):
+	print_debug("this should be change. should not directly handle pawns anymore")
 	var interactor:Interactor_Base = Interactor_Base.find_vaild_child(pawn)
 	if remove:
 		if interactor != null:
@@ -149,6 +153,7 @@ func handle_pawns_connections(target_pawn:Node, remove:bool = false):
 
 #NOTE this should be the new system. allow pawn to controll how the data is fetched
 func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
+	print_debug("this should be change. should not directly handle pawns anymore")
 	var interaction : Interactive_Component = collider as Interactive_Component
 	if interaction != null:
 		interaction.interact(self,source_pawn,collider,data)
@@ -167,11 +172,19 @@ func _unhandled_input(event:InputEvent):
 	#if state.dirty:
 	#	state.save_state()
 	if event.is_action("Sprint"):
+		if controller != null:
+			controller.trigger_action("Sprint",event.get_action_strength("Sprint"))
+			get_viewport().set_input_as_handled()
+		#
 		if controller_brain != null:
 			controller_brain.action_triggered.emit("Sprint",event.get_action_strength("Sprint"))
 		#pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
 			get_viewport().set_input_as_handled()
 	if event.is_action_pressed("Accept"):
+		if controller != null:
+			controller.trigger_action("Interact",1)
+			get_viewport().set_input_as_handled()
+		#
 		if controller_brain != null:
 			controller_brain.action_triggered.emit("Interact",1)
 		#if pawns_interactor != null:
@@ -198,6 +211,11 @@ func _unhandled_input(event:InputEvent):
 	if (event.is_action("Left") or event.is_action("Right") or
 		event.is_action("Forward") or event.is_action("Back")
 	):
+		if controller != null:
+			controller.set_direction(Vector2(
+				Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
+			).normalized())
+			get_viewport().set_input_as_handled()
 		if controller_brain != null:
 			controller_brain.set_direction(Vector2(
 				Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")

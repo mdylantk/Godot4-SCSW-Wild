@@ -49,9 +49,9 @@ func get_level_scene(position:Vector2) -> Node:
 	
 #layer handler is now an autoload, so could call it direcly...or tell world to tell player handler to relocate
 func _ready() -> void:
-	get_tree().call_group(
-		"Players", "relocate_pawn", default_spawn_position
-	)
+	#get_tree().call_group(
+	#	"Players", "relocate_pawn", default_spawn_position
+	#)
 
 	World.world_update.connect(_on_world_update)
 

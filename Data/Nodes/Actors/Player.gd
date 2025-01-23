@@ -21,6 +21,12 @@ func _ready()->void:
 	#AND only have it called in setter if getr_tree == null
 	#then it should be unlikly to be called twice
 	%Shaped_Interactor.interaction.connect(on_interaction)
+	#NOTE: controller is most likly already assign, so would
+	#need to call the assign logic else none of the connections will be applied
+	if %Brain.controller:
+		on_controller_assigned(%Brain.controller)
+	%Brain.controller_assigned.connect(on_controller_assigned)
+	%Brain.controller_unassigned.connect(on_controller_unassigned)
 
 func on_state_saving():
 	if inventory != null:
@@ -108,6 +114,21 @@ func on_interaction(source_pawn:Node, collider:Node, data:={}):
 	if interaction != null:
 		interaction.interact(Player,self,collider,data)
 
-
+func get_move_direction() -> Vector2:
+	return %Brain.get_move_direction(position,velocity)
 #func _on_shaped_interactor_interaction(interactor: Node, interactee: Node, data: Dictionary) -> void:
 #	interacted.emit(interactor, interactee,data)
+
+#temp connections. brain should handle this more directly, but is here untill
+#a character brain is created.
+func on_controller_assigned(controller:Controller)->void:
+	controller.action_triggered.connect(on_action_triggered)
+
+func on_controller_unassigned(controller:Controller)->void:
+	controller.action_triggered.disconnect(on_action_triggered)
+	
+func on_action_triggered(action:String, value:Variant)->void:
+	if action == "Sprint":
+		movement_component.sprint_strength = value
+	if action == "Interact":
+		interact()

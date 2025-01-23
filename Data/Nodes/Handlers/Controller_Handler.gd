@@ -19,6 +19,12 @@ class_name Controller_Handler extends Node
 				#could also try to free it
 		controller_brain = value
 
+##NOTE: this is plan to replace controller brain
+##(brain and controllers should be seperated. A brain may have a controller assign)
+@export var controller : Controller
+#NOTE: may not add the remove logic. controllers should not be created dymanicly
+#remove may be added if game require the controller to change in the handler
+
 func get_state()->Savable_State:
 	return null
 
