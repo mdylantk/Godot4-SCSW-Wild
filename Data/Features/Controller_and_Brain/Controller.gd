@@ -16,7 +16,6 @@ signal state_change()
 @export var direction : Vector2
 
 func trigger_action(action:String, value:Variant):
-	print_debug("Meow1",action,value)
 	action_triggered.emit(action,value)
 
 func set_direction(new_direction:Vector2):

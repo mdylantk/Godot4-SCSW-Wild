@@ -26,3 +26,6 @@ func _ready() -> void:
 func _on_visibility_changed() -> void:
 	%CollisionShape2D.set_deferred("disabled",!visible)
 		#%CollisionShape2D.disabled = visible
+		
+func get_move_direction()->Vector2:
+	return %Brain.get_move_direction(position, velocity)

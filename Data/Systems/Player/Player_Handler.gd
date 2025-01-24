@@ -44,8 +44,10 @@ var paused : bool = false:
 		
 		if !paused : return
 		#if pawn == null : return
-		if controller_brain == null : return
-		controller_brain.set_direction(Vector2())
+		#if controller_brain == null : return
+		#controller_brain.set_direction(Vector2())
+		if controller != null :
+			controller.set_direction(Vector2())
 		
 
 #may need to use a scene of a camera incase the camrea is deleted with pawn before reparented
@@ -176,8 +178,8 @@ func _unhandled_input(event:InputEvent):
 			controller.trigger_action("Sprint",event.get_action_strength("Sprint"))
 			get_viewport().set_input_as_handled()
 		#
-		if controller_brain != null:
-			controller_brain.action_triggered.emit("Sprint",event.get_action_strength("Sprint"))
+		#if controller_brain != null:
+		#	controller_brain.action_triggered.emit("Sprint",event.get_action_strength("Sprint"))
 		#pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
 			get_viewport().set_input_as_handled()
 	if event.is_action_pressed("Accept"):
@@ -185,8 +187,8 @@ func _unhandled_input(event:InputEvent):
 			controller.trigger_action("Interact",1)
 			get_viewport().set_input_as_handled()
 		#
-		if controller_brain != null:
-			controller_brain.action_triggered.emit("Interact",1)
+		#if controller_brain != null:
+		#	controller_brain.action_triggered.emit("Interact",1)
 		#if pawns_interactor != null:
 			#pawns_interactor.interact(pawn)
 			get_viewport().set_input_as_handled()
@@ -216,11 +218,11 @@ func _unhandled_input(event:InputEvent):
 				Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
 			).normalized())
 			get_viewport().set_input_as_handled()
-		if controller_brain != null:
-			controller_brain.set_direction(Vector2(
-				Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
-			).normalized())
-			get_viewport().set_input_as_handled()
+		#if controller_brain != null:
+		#	controller_brain.set_direction(Vector2(
+		#		Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
+		#	).normalized())
+		#	get_viewport().set_input_as_handled()
 
 
 

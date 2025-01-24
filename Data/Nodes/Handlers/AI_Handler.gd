@@ -37,6 +37,9 @@ func _ready():
 	#handle_pawn(pawn_ref)
 	super()
 
+#NOTE: this was a test. new system should let the pawn handle itm
+#but the controller could allow requests that the handler can listen to
+#or set the value directly
 func on_pawn_hit(attacker, target, data):
 	if target.visible:
 		target.visible = false
@@ -69,7 +72,13 @@ func _process(delta):
 	var pawn = active_pawns[0]
 	if pawn != null and player != null:
 		if player.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
-			if controller_brain is AI_Controlled_Brain:
+			if controller:
+				#since it in the process, will set the direction direcly
+				#but should make a AI brain that store points as vectors or node2D
+				#so it can track without depending on is hefty update
+				#controller.set_direction(player.global_position)
+				controller.set_meta(&"move_to",player) 
+			elif controller_brain is AI_Controlled_Brain:
 				var brain : AI_Controlled_Brain = controller_brain as AI_Controlled_Brain
 				#brain.move_to_location = target.global_position
 				

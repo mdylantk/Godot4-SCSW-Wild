@@ -90,8 +90,8 @@ func get_move_direction()->Vector2:
 func move():
 	var direction : Vector2 = get_move_direction()
 	##Note: this brain wont be use. make sure new logic is in get_movr_direction()
-	if brain != null:
-		direction = brain.get_direction(position,velocity)
+	#if brain != null:
+	#	direction = brain.get_direction(position,velocity)
 	if movement_component != null:
 		if direction != movement_component.facing_dirction:
 			movement_state = MovementStates.TURNING

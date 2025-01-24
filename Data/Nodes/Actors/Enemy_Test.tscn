@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://bruyakjvb8wwp"]
+[gd_scene load_steps=9 format=3 uid="uid://bruyakjvb8wwp"]
 
 [ext_resource type="Script" path="res://Data/Scripts/Enemy_Test.gd" id="1_sxhnx"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_1i0dm"]
+[ext_resource type="Script" path="res://Data/Nodes/Actors/AI_Brain.gd" id="4_1t4af"]
 [ext_resource type="Script" path="res://Data/Nodes/Components/Base_Hurtbox.gd" id="4_kh8ca"]
+[ext_resource type="Resource" uid="uid://0jak16wccjq4" path="res://Data/Resources/AI_Controller.tres" id="5_v6ko2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uhyft"]
 size = Vector2(16, 16)
@@ -36,5 +38,10 @@ script = ExtResource("4_kh8ca")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("RectangleShape2D_0xekb")
 debug_color = Color(0.972549, 0, 0, 0.419608)
+
+[node name="Brain" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_1t4af")
+controller = ExtResource("5_v6ko2")
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
