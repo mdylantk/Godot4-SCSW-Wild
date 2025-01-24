@@ -24,7 +24,7 @@ region = Rect2(17, 357, 16, 16)
 
 [sub_resource type="Resource" id="Resource_61env"]
 script = ExtResource("12_cyc1h")
-level_uid = "uid://dclondyf2dohh"
+level_uid = "uid://lv4hypjjj08a"
 spawn_location = Vector2(0, 0)
 store_entry_point = true
 entry_point_id = &"world"
