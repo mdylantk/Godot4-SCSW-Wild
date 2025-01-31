@@ -54,6 +54,7 @@ func _ready() -> void:
 	#)
 
 	World.world_update.connect(_on_world_update)
+	
 
 ##NOTE: this is a temp solution, but basicly the level should either listen
 ##to world update or periodicly check the world time state and update its own

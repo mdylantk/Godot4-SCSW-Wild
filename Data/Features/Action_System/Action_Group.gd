@@ -13,7 +13,7 @@ const comparison_state: Array[bool] = [true,false]
 #if condition is true, then action can run
 
 #simply if all contion is true (if and) or one is true(if or) the run all actions
-func run(data:={}):
+func run(data:Action_Data = null) -> bool:
 	var is_true:bool = comparison_state[comparison]
 	for condition:Base_Conditional in conditions:
 		if comparison == 0:
@@ -27,4 +27,4 @@ func run(data:={}):
 	if is_true:
 		for action:Base_Action in actions:
 			action.run(data)
-
+	return super(data)

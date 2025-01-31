@@ -14,10 +14,10 @@ class_name A_Give_Item extends Base_Action
 ##where id alone is not enough info. 
 @export var target_index : int = 0
 
-func run(data:={}):
+func run(data:Action_Data = null) -> bool:
 	print_debug("not yet added, so nothing happen")
 	#TODO: see if target exist and then check if it have an inventory
 	#then add the item
 	#NOTE: decide if this system should be simple like that or should have
 	#a dedicated handler
-	pass
+	return super(data)

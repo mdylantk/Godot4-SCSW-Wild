@@ -14,6 +14,7 @@ var page_index : int = 0
 ##the data used for the actions. this is shared since it should be a ref of a state
 ##also chain action may need to be careful of reusing the same data.
 var data := {}
+var action_data : Action_Data
 
 var is_cancelable:bool = true
 
@@ -77,7 +78,7 @@ func cancel():
 	visible = false
 	ended.emit(true)
 	if cancel_action != null:
-		cancel_action.run(data)
+		cancel_action.run(action_data)
 	
 func finish():
 	UI.enable_player_input = true
@@ -85,7 +86,7 @@ func finish():
 	visible = false
 	ended.emit(false)
 	if accept_action != null:
-		accept_action.run(data)
+		accept_action.run(action_data)
 
 
 

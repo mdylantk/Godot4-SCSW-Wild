@@ -13,6 +13,5 @@ class_name Base_Action extends Resource
 #a class/object/resource could also replace the array, but arrays are ligher
 
 
-
-func run(data:={}):
-	pass
+func run(data:Action_Data = null) -> bool:
+	return true

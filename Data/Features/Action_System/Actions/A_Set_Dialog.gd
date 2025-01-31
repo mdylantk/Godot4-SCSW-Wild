@@ -17,10 +17,22 @@ class_name A_Set_Dialog extends Base_Action
 #target/source for use with data since nested types would not work well
 #with the current system and it be easier to pass the data in the format call
 
-func run(data:={}):
-	UI.gui_dialog.data = data
+func run(data:Action_Data = null) -> bool:
+	var dialog_data : Dictionary
+	if data:
+		dialog_data = data.get_meta("dialog_data",{})
+	#NOTE: old(well current) dialog uses data, but also run actions for the caller
+	#could just use action data (or call it host action data) since it should also have
+	#dialog data. also could have exports to decided if an action data is created
+	#for this speaker. #TODO: just handler dialog directly than this round about way
+	#though this way still can be useful since the focus dialog is a state that need to be
+	#cancled though the actions done should be handled by the speaker via connecting 
+	#to dialog signals
+	UI.gui_dialog.data = dialog_data
+	UI.gui_dialog.action_data = data
 	UI.gui_dialog.setup_speaker(speaker_name,speaker_icon)
 	UI.gui_dialog.setup_text(text,accept_action, cancel_action,true,cancelable)
 	#NOTE: should the data be set here? could isolate it and add a flag stating
 	#on merging or overriding it. 
 	#could have a set text that just do not override the data
+	return super(data)

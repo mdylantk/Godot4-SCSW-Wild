@@ -7,5 +7,5 @@ func _run():
 		data["handler"] = handler
 		data["source"] = interactor
 		data["target"] = interactee
-		action.run(data)
+		action.run(Action_Data.new(interactor,interactee))
 	end_interact()

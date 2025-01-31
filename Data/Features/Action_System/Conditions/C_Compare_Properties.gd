@@ -6,31 +6,35 @@ class_name C_Compare_Properties extends Base_Conditional
 ##and there currently no error protection for those cases
 @export_enum("==","!=",">=","<=","<",">") var comparison : int
 #Note, could have game and world
-@export_enum("handler","source","target","data") var property_source : String
+@export_enum("handler","source","target","player","data") var property_source : String
 @export var property_name : String
 ##will always check metadata if source is a node, else use metadata
 @export var always_use_metadata_of_nodes : bool 
 @export var values_to_compare : Array #will use an array since can not export variant
 #will be treated as an and comparison
 
-func is_true(data:={})->bool:
+func is_true(data:Action_Data = null) -> bool:
 	#if null, would return false
 	var value : Variant
 	var source : Variant
+	if data == null:
+		return false
 	#checking for world and game since they may be added later
 	if property_source == "data":
-		if !data.has(property_name):
+		if !data.has_meta(property_name):
 			return false
-		value = data[property_name]
-	elif property_source != "game" and property_source != "world":
-		if !data.has(property_source):
+		value = data.get_meta(property_name)
+	elif property_source != "game" and property_source != "world" and property_source != "player":
+		if !data.has_meta(property_source):
 			print_debug("source is not included")
 			return false
-		source = data[property_source]
+		source = data.get_meta(property_source)
 	elif property_source == "game":
 		source = Game
 	elif property_source == "world":
 		source = World
+	elif property_source == "player":
+		source = Player
 	if always_use_metadata_of_nodes:
 		if (source as Node) == null:
 			print_debug("source is not node and thus may not have metadata")
@@ -38,10 +42,11 @@ func is_true(data:={})->bool:
 		value = source.get_meta(property_name,null)
 	else:
 		if property_source == "handler":
-			if source is Player_Handler:
-				value = source.state.fetch(property_name)
+			
 			#TODO: check for state else do as below
 			pass
+		if source is Player_Handler:
+			value = source.state.fetch(property_name)
 	if comparison > 1:
 		if value == null: return false
 	for compare_value in values_to_compare:
