@@ -9,16 +9,8 @@ class_name Generator_Level extends Base_Level
 ##Tile generator to run on nonstatic tilemaps.
 @export var generators : Array[Generator_Data]
 
-#TODO: rename static maps to World_name(x,y) or region_name(x,y) and store them
-#in a folder representing the world. or map(x,y) works too. only issue is that
-#the coords means nothing. they are just for organiztion reason. also if using region_name
-#the cords will represent the chunk pos within the region, not world. still only useful
-#for orgaition. wouild be nice to load in regions, but that will over complex the system
-#better to have a tooling system where regions can be edited and the maps in the region
-#get exported to the world_Data. there local position down scale to grib pos off set by
-#the region position located in the map world.
-
-#TODO add a region size/bound option to allow generation upto a certain size
+#TODO: should try to use scenes so a default scene is used with the desired
+#format. 
 
 ##Scenes to load at region positions. 
 ##Entries should be Vector2:String where String should be a scene uid or path
@@ -34,6 +26,8 @@ class_name Generator_Level extends Base_Level
 
 ##The Tileset to use for nonstatic tilemaps
 @export var tile_set : TileSet = preload("res://Data/Assets/low_Bit_Tileset.tres")
+
+@export var default_chunk : PackedScene = preload("res://Data/Nodes/Maps/TilemapTemplate.tscn")
 
 func update_static_regions():
 	for key in static_chunks:
@@ -246,21 +240,22 @@ func caculate_active_regions(position:Vector2):
 
 func create_tilemap():
 	#var tilemap := TileMap.new()
-	var tilemap := TileMapLayer.new()
+	#var tilemap := TileMapLayer.new()
+	var tilemap : Node = default_chunk.instantiate()
 #	map_added(tilemap)
 	add_child(tilemap)
 	#level_created.emit(tilemap)
 	return tilemap
 
 #NOTE: need to load and init tilemap. this just set things up
-func init_tilemap(tilemap:TileMapLayer,coords:Vector2):
+func init_tilemap(tilemap:Node,coords:Vector2):
 	#loaded_tilemaps[location] = tilemap
-	tilemap.y_sort_enabled = true
-	tilemap.texture_filter =CanvasItem.TEXTURE_FILTER_NEAREST
-	tilemap.set_y_sort_enabled(true)
+	#tilemap.y_sort_enabled = true
+	#tilemap.texture_filter =CanvasItem.TEXTURE_FILTER_NEAREST
+	#tilemap.set_y_sort_enabled(true)
 	tilemap.transform[2] = coords
-	if tilemap.tile_set == null: #NOTE: may want to force the tile_set? random maps should not need diffrent type
-		tilemap.tile_set = tile_set
+	#if tilemap.tile_set == null: #NOTE: may want to force the tile_set? random maps should not need diffrent type
+	#	tilemap.tile_set = tile_set
 
 #var grid_position = Vector2(x,y) + offset + loaded_point
 func world_to_level_coords(position: Vector2) -> Vector2i :
