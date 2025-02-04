@@ -2,12 +2,12 @@ class_name Generator_Level extends Base_Level
 
 @export var level_id := "world"
 
-@export var use_game_seed: bool = true
+#@export var use_game_seed: bool = true
 
 #TODO: make it so it will use all the generator instead of [0]
 #this would require data passs/return instead of setting directly
-##Tile generator to run on nonstatic tilemaps.
-@export var generators : Array[Generator_Data]
+#Tile generator to run on nonstatic tilemaps.
+#@export var generators : Array[Generator_Data]
 
 #TODO: should try to use scenes so a default scene is used with the desired
 #format. 
@@ -24,18 +24,10 @@ class_name Generator_Level extends Base_Level
 ##Noise should have decent range of grays and should be noisy else they will spawn in clusters.
 @export var random_chunk_noise_map : FastNoiseLite = FastNoiseLite.new()
 
-##The Tileset to use for nonstatic tilemaps
-@export var tile_set : TileSet = preload("res://Data/Assets/low_Bit_Tileset.tres")
+#The Tileset to use for nonstatic tilemaps
+#@export var tile_set : TileSet = preload("res://Data/Assets/low_Bit_Tileset.tres")
 
 @export var default_chunk : PackedScene = preload("res://Data/Nodes/Maps/TilemapTemplate.tscn")
-
-func update_static_regions():
-	for key in static_chunks:
-		if typeof(key) != TYPE_VECTOR2 or !(static_chunks[key] is PackedScene):
-			print_debug("Warning, static_chunks should be Vector2:PackScene")
-	return
-
-
 
 var tile_size : float = 16 #this is more dependent on the tile map, but the value should be fixed
 var chunk_size : float = 8
@@ -43,62 +35,66 @@ var region_size : float = 8
 var chunk_distance : float = tile_size*chunk_size*region_size
 
 #currently loaded maps
-var loaded_tilemaps := {}
+var loaded_regions := {}
 #maps that are flaged out of range
-var loose_tilemaps := {}
-var max_loose_maps : int = 8
+var loose_regions := {}
+var max_loose_regions : int = 8
 #static maps that can not be recycled
 #currently not in use, but may be the opposite of processing. also tilemaps
 #that are static will have additonal data. either a scene or an object with data and genration logic
-var static_tilemaps := {}
+var static_regions := {}
 #maps that are loaded, but not ready
-var processing_tilemaps := {}
-var processing : bool = false
+#var processing_regions := {}
+#var processing : bool = false
 #a array of catch positions. any tilemap not equal any will be move to loosed
 var active_regions : Array[Vector2i]
 
 
-var _deferring_handle_tilemaps := false
+var _deferring_handle_regions := false
 
 var near_by_coords :Array[Vector2i] =[
 		Vector2(-1,-1),Vector2(-1,0), Vector2(-1, 1),
 		Vector2(0,0),Vector2(0,-1), Vector2(1, -1),
 		Vector2(1,1),Vector2(0,1), Vector2(1,0)
 	]
-	
-#@export var grass_tiles : Array[Vector2i] = [Vector2i(5,0),Vector2i(6,0),
-#	Vector2i(7,0),Vector2i(0,2),Vector2i(0,0)]
-#@export var tree_tiles : Array[Vector2i] = [Vector2i(0,1),Vector2i(1,1),
-#	Vector2i(2,1),Vector2i(3,1),Vector2i(4,1),Vector2i(5,1),Vector2i(3,2),
-#	Vector2i(4,2),Vector2i(6,2),Vector2i(0,0)]
-#@export var rock_tiles : Array[Vector2i] = [Vector2i(5,2),Vector2i(1,0),
-#	Vector2i(2,0),Vector2i(3,0),Vector2i(4,0),Vector2i(0,0)]
 
-#TODO: So far added a way to handle and load tilemap to replace the old system
-#just need to move the generation logic over here
+##States if the regions around the viewport is fully loaded or not
+var is_ready:bool = true
 
+func update_static_regions():
+	for key in static_chunks:
+		if typeof(key) != TYPE_VECTOR2 or !(static_chunks[key] is PackedScene):
+			print_debug("Warning, static_chunks should be Vector2:PackScene")
+	return
+
+#NOTE: check if this is still being used. ideally the new system this handle 
+#the player location instead of some parent.
 func get_level_property(name:StringName) -> Variant:
 	if name == "level_id":
 		return level_id
 	return null
-
-
-#temp fixes
-func load_static_tilemap(static_map:Node,coords:Vector2i):
-	static_tilemaps[coords] = static_map
-	static_map.transform[2] = level_coords_to_world(coords)
 	
-	#var processing_map = static_map as One_Bit_Tilemap
-#	map_added(static_map)
+	
+func world_to_level_coords(position: Vector2) -> Vector2i :
+	return (position/chunk_distance).floor()
+	
+func level_coords_to_world(coords: Vector2i) -> Vector2 :
+	return coords * chunk_distance
+
+func load_default_region(coords:Vector2i):
+	var tilemap : Node = default_chunk.instantiate()
+	tilemap.transform[2] = level_coords_to_world(coords)
+	add_child(tilemap)
+	loaded_regions[coords] = tilemap
+
+
+func load_static_region(static_map:Node,coords:Vector2i):
+	static_regions[coords] = static_map
+	static_map.transform[2] = level_coords_to_world(coords)
 	add_child(static_map)
-	#level_created.emit(static_map)
-	await Game.get_tree().create_timer(1).timeout
-	loaded_tilemaps[coords] = static_map
-	#loaded_tilemaps[coords] = static_map
-	#TODO add a way to check to see if tilemap is loaded
-	#could force add the foilage generator to it
-	#and ignore other generators
-#temp fixes end
+	#await Game.get_tree().create_timer(1).timeout
+	loaded_regions[coords] = static_map
+	
 
 func clear_tilemaps(tilemap_dictionary:Dictionary):
 	for coords in tilemap_dictionary.keys():
@@ -137,167 +133,82 @@ func get_static_map(location:Vector2)->Node:
 	#TODO: need to see if a random static chunk is picked
 	return null
 
-func is_tilemap_ready(coords:Vector2i) -> bool:
-	if processing_tilemaps.has(coords):
-		return false
-	else:
-		if static_tilemaps.has(coords):
-			#NOTE: this is to allow static map to handle themselves
-			var tilemap : Node = static_tilemaps[coords]
-			return tilemap.get_meta("is_ready",false) 
-			#if tilemap.has_meta("is_ready"):
-			#	return tilemap.get_meta("is_ready", false)
-		#if return false, tilemap dose not exist
-		return dose_tilemap_exist(coords)
+func is_region_ready(coords:Vector2i) -> bool:
+	if loaded_regions.has(coords):
+		var region : Tilemap_Handler = loaded_regions[coords] as Tilemap_Handler
+		if region:
+			return region.is_ready
+	if static_regions.has(coords):
+		var region : Node = static_regions[coords]
+		if (region as Tilemap_Handler):
+			return region.is_ready
+		else:
+			return region.get_meta("is_ready",false) 
+		return dose_region_exist(coords)
+	return false
 
-func dose_tilemap_exist(coords:Vector2i)-> bool:
-	return (loaded_tilemaps.has(coords) or loose_tilemaps.has(coords)
-		or processing_tilemaps.has(coords) or static_tilemaps.has(coords)
+func dose_region_exist(coords:Vector2i)-> bool:
+	return (loaded_regions.has(coords) or loose_regions.has(coords)
+		or static_regions.has(coords)
 	)
-	
 
-func on_generator_end(generator:Generator_Data, scene:Node):
-	var tilemap = (scene as TileMap)
-	if tilemap != null:
-		#NOTE: old, should switch to tiellayer
-		var coords = world_to_level_coords(tilemap.global_position)
-		if processing_tilemaps.has(coords):
-			loaded_tilemaps[coords] = tilemap
-			processing_tilemaps.erase(coords)
-	elif (scene as TileMapLayer) != null:
-		var tile_layer = (scene as TileMapLayer)
-		var coords = world_to_level_coords(tile_layer.global_position)
-		if processing_tilemaps.has(coords):
-			loaded_tilemaps[coords] = tile_layer
-			processing_tilemaps.erase(coords)
-	else:
-		print_debug("WARNING: processing_tilemaps may have a null pointer")
-		print("but also if that the case, this object may be null " + str(self))
-	#generator.scene_finished.disconnect(on_generator_end)
 
-func handle_tilemaps():
-	#the timer is a placeholder. defer may be enough, so the update rate is all that may need to be handle
-	#await Game.get_tree().create_timer(1.0).timeout
+func handle_regions():
 	for coords in active_regions:
-		if loose_tilemaps.has(coords):
-			#print_debug("flagging importaint" + str(coords) )
-			loaded_tilemaps[coords] = loose_tilemaps[coords]
-			loose_tilemaps.erase(coords)
-		elif !dose_tilemap_exist(coords):
-			#print_debug("flagging new" + str(coords) )
+		if loose_regions.has(coords):
+			loaded_regions[coords] = loose_regions[coords]
+			loose_regions.erase(coords)
+		elif !dose_region_exist(coords):
 			var static_map = get_static_map(level_coords_to_world(coords))
 			if static_map != null:
-				load_static_tilemap(static_map,coords)
-				#loaded_tilemaps[coords] = static_map
-				#static_tilemaps[coords] = static_map
-				#level_created.emit(static_map)
-				#static_map.transform[2] = level_coords_to_world(coords)
+				load_static_region(static_map,coords)
 			else:
-				var new_tilemap = create_tilemap()
-				init_tilemap(new_tilemap,level_coords_to_world(coords))
-				processing_tilemaps[coords] = new_tilemap
-				
-				#generate_tilemap(new_tilemap, coords)
-				#print("Meoow " + str(coords))
-				generators[0].generate(new_tilemap)
+				load_default_region(coords)
 
-	for loaded_coords in loaded_tilemaps.keys():
-		var loaded_map = loaded_tilemaps[loaded_coords]
+
+	for loaded_coords in loaded_regions.keys():
+		var loaded_map = loaded_regions[loaded_coords]
 		if !active_regions.has(loaded_coords):
-			#print_debug("flagging old" + str(loaded_coords))
-			loose_tilemaps[loaded_coords] = loaded_tilemaps[loaded_coords]
-			loaded_tilemaps.erase(loaded_coords)
+			loose_regions[loaded_coords] = loaded_regions[loaded_coords]
+			loaded_regions.erase(loaded_coords)
 	
-	for loose_coords in loose_tilemaps.keys():
-		var loose_map = loose_tilemaps[loose_coords]
-		#remove
-		if loose_tilemaps.size()>max_loose_maps:
-			#print_debug("removing" + str(loose_coords) )
+	for loose_coords in loose_regions.keys():
+		var loose_map = loose_regions[loose_coords]
+		if loose_regions.size()>max_loose_regions:
 			if loose_map != null :
-				#map_removed(loose_map)
-				#level_removed.emit(loose_map)
 				loose_map.call_deferred("queue_free")
 			else:
 				print_debug("WARNING: tilemap is null")
-			if static_tilemaps.has(loose_coords):
-				static_tilemaps.erase(loose_coords)
-			loose_tilemaps.erase(loose_coords)
-			if loose_tilemaps.size()<=max_loose_maps:
+			if static_regions.has(loose_coords):
+				static_regions.erase(loose_coords)
+			loose_regions.erase(loose_coords)
+			if loose_regions.size()<=max_loose_regions:
 				break
 	active_regions.clear()
-	_deferring_handle_tilemaps = false
+	_deferring_handle_regions = false
 
-func caculate_active_regions(position:Vector2):
-	var loader_coords = world_to_level_coords(position)
+func caculate_active_regions(world_coord:Vector2):
+	var loader_coords = world_to_level_coords(world_coord)
 	for coord in near_by_coords:
 		var grid_position = loader_coords + coord
 		if !active_regions.has(grid_position):
 			active_regions.append(grid_position)
-		if !_deferring_handle_tilemaps:
-			call_deferred("handle_tilemaps")
-			_deferring_handle_tilemaps = true
-
-
-func create_tilemap():
-	#var tilemap := TileMap.new()
-	#var tilemap := TileMapLayer.new()
-	var tilemap : Node = default_chunk.instantiate()
-#	map_added(tilemap)
-	add_child(tilemap)
-	#level_created.emit(tilemap)
-	return tilemap
-
-#NOTE: need to load and init tilemap. this just set things up
-func init_tilemap(tilemap:Node,coords:Vector2):
-	#loaded_tilemaps[location] = tilemap
-	#tilemap.y_sort_enabled = true
-	#tilemap.texture_filter =CanvasItem.TEXTURE_FILTER_NEAREST
-	#tilemap.set_y_sort_enabled(true)
-	tilemap.transform[2] = coords
-	#if tilemap.tile_set == null: #NOTE: may want to force the tile_set? random maps should not need diffrent type
-	#	tilemap.tile_set = tile_set
-
-#var grid_position = Vector2(x,y) + offset + loaded_point
-func world_to_level_coords(position: Vector2) -> Vector2i :
-	return (position/chunk_distance).floor()
-	#return Vector2i(position.x, position.y)
-func level_coords_to_world(coords: Vector2i) -> Vector2 :
-	return coords * chunk_distance
-	#return Vector2i(coords.x, coords.y)
-
-
-func is_level_loaded(location:Vector2)->bool:
-	var coords = world_to_level_coords(location)
-	return is_tilemap_ready(coords)
-	#return loaded_tilemaps.has(coords)
-	#return loaded_tilemaps.has(coords) or loose_tilemaps.has(coords)
-	
-#NOTE: this might not be needed anymore.
-func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
-	return Savedata_Helper.fetch_player_position(handler,level_id)
+		
+		#first call will not be ready, but after it will depend on the
+		#Regions loaded
+		is_ready = !is_region_ready(world_to_level_coords(world_coord+Vector2(coord)))
+			
+	if !_deferring_handle_regions:
+		call_deferred("handle_regions")
+		_deferring_handle_regions = true
 
 
 func _process(delta: float) -> void:
-	#currently using this, though the update may happen too often
-	#will use the current viewport. may cause issue of camera move around too much
-	#(but that should not happen since we want stuff to render around camera)
-	#and would need to change if multi viewports are ever added
+	
 	caculate_active_regions(get_viewport().get_camera_2d().global_position)
-	#TODO add a way to keep the loading screen up for a bit. below only check the
-	#active chunk
-	var loading:bool = true
-	for coords in near_by_coords:
-		loading = !is_level_loaded(get_viewport().get_camera_2d().global_position + Vector2(coords))
-	World.level_loading = loading
+	World.level_loading = is_ready
 
 func _ready() -> void:
-	
-	#NOTE: this get called each time it is attach to tree. 
-	if !generators[0].scene_finished.is_connected(on_generator_end):
-		generators[0].scene_finished.connect(on_generator_end)
-	
-	
-
 	var player_pos = Player.state.fetch("world","positions")
 	if typeof(player_pos) == TYPE_VECTOR2:
 		%Player.position = player_pos

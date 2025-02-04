@@ -12,6 +12,8 @@ class_name Tilemap_Handler extends Node2D
 
 @export var tilemap_layers:Array[TileMapLayer]
 
+var is_ready : bool = false
+
 func get_tilemap_layer(index:int)->TileMapLayer:
 	if tilemap_layers.size() > index:
 		return tilemap_layers[index]
@@ -53,3 +55,6 @@ func is_tile_modifiable(coords:Vector2i, tags:Array[String] = [])->bool:
 		if tile.get_cell_tile_data(coords):
 			return false
 	return true
+	
+func _ready() -> void:
+	is_ready = true

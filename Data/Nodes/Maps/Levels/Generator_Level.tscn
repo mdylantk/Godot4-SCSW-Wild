@@ -1,26 +1,13 @@
-[gd_scene load_steps=15 format=3 uid="uid://cldlaymbe77mn"]
+[gd_scene load_steps=11 format=3 uid="uid://cldlaymbe77mn"]
 
 [ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Generator_Level.gd" id="1_a382x"]
-[ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Data/Resources/World_Foilage_Generator.tres" id="2_68tqv"]
-[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Generator_Data.gd" id="2_y68fk"]
+[ext_resource type="Resource" uid="uid://drg3ed6i36xt7" path="res://Data/Resources/World_Environment_Data.tres" id="3_d5n0r"]
 [ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Data/Resources/Noise_Maps/World_Detail_Map.tres" id="3_qg0pl"]
-[ext_resource type="Script" path="res://Data/Features/World_Levels_Data/Environment_Data.gd" id="4_cn4un"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Data/Nodes/Actors/Player.tscn" id="6_oks6f"]
 [ext_resource type="PackedScene" uid="uid://bruyakjvb8wwp" path="res://Data/Nodes/Actors/Enemy_Test.tscn" id="7_hjtk7"]
 [ext_resource type="Script" path="res://Data/Features/Components/MovementComponent2D.gd" id="8_0krqb"]
 [ext_resource type="Resource" uid="uid://orixgnr4wcrd" path="res://Data/Resources/AI_Brain.tres" id="9_uj1r3"]
 [ext_resource type="Script" path="res://Data/Scripts/Character_State.gd" id="10_soy8l"]
-
-[sub_resource type="Gradient" id="Gradient_8dly7"]
-offsets = PackedFloat32Array(0, 0.2, 0.8)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.000156136, 0.0698416, 0.32485, 1)
-metadata/_snap_enabled = true
-
-[sub_resource type="Resource" id="Resource_s01f1"]
-script = ExtResource("4_cn4un")
-day_time = 0.0
-sun_rise = false
-environment_color = SubResource("Gradient_8dly7")
 
 [sub_resource type="Resource" id="Resource_1lsxs"]
 script = ExtResource("8_0krqb")
@@ -40,13 +27,12 @@ save_id = ""
 process_mode = 3
 y_sort_enabled = true
 script = ExtResource("1_a382x")
-generators = Array[ExtResource("2_y68fk")]([ExtResource("2_68tqv")])
 static_chunks = {
 Vector2(0, 0): "uid://blyxjt47otoln"
 }
 random_chunks = Array[String](["uid://clicnkneu0ddm", "uid://bngicde5fixcp", "uid://cyg3wosoq0787", "uid://t7rhh625brgr", "uid://duqgklvehxux0", "uid://bbaafkh4f04vx", "uid://m6q0b4c1q5f6"])
 random_chunk_noise_map = ExtResource("3_qg0pl")
-environment_data = SubResource("Resource_s01f1")
+environment_data = ExtResource("3_d5n0r")
 environment_color = NodePath("CanvasModulate")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]

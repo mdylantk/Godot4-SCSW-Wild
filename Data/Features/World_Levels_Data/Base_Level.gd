@@ -6,7 +6,14 @@ class_name Base_Level extends Node
 #to world event to stay sync with the world. 
 #TODO: make sure the level assign evioment data or at least listen to world clock 
 #and update as needed.
-@export var environment_data : Environment_Data
+@export var environment_data : Environment_Data :
+	set(value):
+		if environment_data != value:
+			if environment_data:
+				environment_data.time_update.disconnect(on_time_update)
+			if value:
+				value.time_update.connect(on_time_update)
+			environment_data = value
 @export var environment_color : CanvasModulate
 
 @export var default_spawn_position : Vector2
@@ -47,14 +54,7 @@ func get_level_scene(position:Vector2) -> Node:
 	return null
 	pass
 	
-#layer handler is now an autoload, so could call it direcly...or tell world to tell player handler to relocate
-func _ready() -> void:
-	#get_tree().call_group(
-	#	"Players", "relocate_pawn", default_spawn_position
-	#)
 
-	World.world_update.connect(_on_world_update)
-	
 
 ##NOTE: this is a temp solution, but basicly the level should either listen
 ##to world update or periodicly check the world time state and update its own
@@ -63,8 +63,5 @@ func _ready() -> void:
 ##TODO: have a diffrent function that pass data about the time state and handle
 ##time base on a float (0-1) so the world can keep a global time and the float
 ##is the point in day.
-func _on_world_update() -> void:
-	if environment_data != null and environment_color != null:
-		environment_data.forward_time()
-		environment_color.color = environment_data.get_environment_color()
-		
+func on_time_update(delta:float):
+	environment_color.color = environment_data.get_environment_color()

@@ -34,6 +34,8 @@ signal request_unload_level(level:Base_Level)
 
 @export var max_levels_stored : int = 2
 
+@export var world_enviroment : Environment_Data
+
 ## a flag the level can set to true if it not ready after its ready function
 var level_loading : bool = false :
 	set(value):
@@ -130,11 +132,4 @@ func _on_child_exiting_tree(node):
 #todo: need to change this new system require level to change the evioment directly
 #NOTE: modulate here overriding the one in world, so turing it off for now
 func _on_world_clock_timeout() -> void:
-	world_update.emit()
-	return
-	if loaded_level != null: 
-		if loaded_level.environment_data == null:
-			return
-		var enviroment:Environment_Data = loaded_level.environment_data
-		enviroment.forward_time()
-		%CanvasModulate.color = enviroment.get_environment_color()
+	world_enviroment.forward_time()
