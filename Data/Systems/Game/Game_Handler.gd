@@ -35,14 +35,6 @@ var _pause_state : Pause_States = Pause_States.UNPAUSED:
 func handle_pausing():
 	get_tree().paused = _pause_state >= PAUSE_LEVEL
 
- 
-		
-func load_player_handler(index : int = 0):
-	World.level_changed.connect(Player.on_level_changed)
-	Player.setup()
-
-
-
 #func print_copyright():
 	#TODO include this in game and test Engine.get_license_info when built
 #	print(Engine.get_license_info)
@@ -101,22 +93,8 @@ func start_game(is_new:bool = true, save_name:String="Default"):
 	height_map.seed = world_seed
 	variation_map.seed = world_seed
 	
-	#load_player_handler()
-	#World.level_data = load("uid://cvna13cf6rc1p")
-	
-	
-	#await get_tree().process_frame
 	change_level("uid://cldlaymbe77mn")
-	
-	
-	#World.load_level("uid://cldlaymbe77mn")
-	
-	#the idea is there at least a main menu in the future
-	#start game would init the world. before that there may be game
-	#config or waiting for players
-	#for testing, player may start game as a host but can join someone elses
-	#game. just need a way to end the host status 
-	pass
+
 
 func end_game(full_quit:bool = false):
 	print_debug("ending game")
@@ -128,10 +106,6 @@ func end_game(full_quit:bool = false):
 #Below is the new game change logic
 func change_level(uid):
 	if OK == get_tree().change_scene_to_file(uid):
-		#NOTE: will move player pawns to game for now untill a reusable
-		#player pawn is made to be added as needed in levels instead of 
-		#reparenting
-		#get_tree().call_group("Players", "reparent_pawn", self)\
 		
 		if !get_tree().tree_changed.is_connected(on_tree_changed):
 			get_tree().tree_changed.connect(on_tree_changed)
@@ -174,7 +148,7 @@ func on_level_busy():
 #NOTE: this gives the player a character. either one tag in the level
 #or a fix one provided here(or another handler)
 func level_changed(new_level:Node):
-	print_debug("level changed")
+	print_debug("level changed: ", new_level)
 	#NOTE: below was to regester a pawn, but may use brain or something similar
 	#to directly assign itself
 	#for child:Node in new_level.get_children():

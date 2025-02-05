@@ -71,37 +71,7 @@ func _ready():
 		state.file_name = "player_state"
 		#this also could be where loading state happens if state is created when player 'joins'
 	#state.load_state()
-func setup():
-	print_debug("this should not be used anymore")
-	#TODO let the level handles the pawn and give it a contoller brain
-	#can use groups if need a direct acess, though order may not be relible
-	#so may need one group for the primary client control...or just compare
-	#the controller brain (if same, then it one of the currenlt controlled pawns
-	if pawn == null:
-		#pawn = default_pawn.instantiate()
-		possess_pawn(default_pawn.instantiate())
-		#pawn.add_to_group("player_controlled")
-		General_Events.spawn_entity(pawn)
-		#pawn.interacted.connect(on_pawn_interaction)
-		
-		#NOTE: when switching pawns, inventory will be diffrent(or should)
-		#so need a way to add id to inventorys if it a presistant object
-		#uid may work in some cases, but adding number to end if exist and force
-		#to create may be another way, but they would need to be loaded in
-		#also could try to save the character fully at the cost of changes breaking 
-		#things.
-		#var test_inv = state.fetch("inventory", "pawn")
-		#print_debug(test_inv)
-		#if test_inv != null:
-		#	pawn.inventory.inventory = test_inv
-	#TODO: need a func to possess and unpossesed pawns so the data
-	#is correct.
-	#players group is a group that holds all player pawns. used
-	#for checking if a character is player own for cases where
-	#actions are trigger only for players, but do not need a player_handler to work
-	
-	#pawn_state = Pawn_State.Alive
-	#on_transfer()
+
 	
 
 
@@ -160,11 +130,6 @@ func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
 	if interaction != null:
 		interaction.interact(self,source_pawn,collider,data)
 
-#func _physics_process(_delta) :
-#	if pawn != null:
-#		pawn.move(movement_input)
-		#this will be used unless a generic point can be predicted to use for the
-		#pawn to move to
 
 func _unhandled_input(event:InputEvent):
 	if paused : return
@@ -255,30 +220,24 @@ func on_item_gain(inventory, slot, old_item):
 #also need to decided on either keeping pawns between levels or recreating them
 #this may be base on how much overhead there is in recreating. recreating would allow
 #levels more control of the type of pawn used (can easly override it)
-func on_level_changed(level:Base_Level, spawn_index: int = 0):
-	if level != null and pawn != null:
-		pawn.reparent(level)
-		pawn.global_position = level.get_spawn_position(spawn_index, self)
+
 	
-func reparent_pawn(new_level:Node):
-	print_debug("try to remove repartenting of pawn")
-	pass
-	#pawn.reparent(new_level)
+
 	
-func relocate_pawn(new_location:Vector2,player_index:int=0):
-	if player_index == 0 and pawn != null:
-		pawn.position = new_location
+#func relocate_pawn(new_location:Vector2,player_index:int=0):
+#	if player_index == 0 and pawn != null:
+#		pawn.position = new_location
 
 ##will use a save point (or 0,0 if none)
-func relocate_pawn_from_saved_point(level_id:String,player_index:int=0,default:Vector2=Vector2()):
+#func relocate_pawn_from_saved_point(level_id:String,player_index:int=0,default:Vector2=Vector2()):
 	#print_debug(name.split("Player_Handler")[1])
-	if player_index == 0 and pawn != null:
+#	if player_index == 0 and pawn != null:
 		#TODO: should check if it exist, else use a pass loction
-		var new_location = state.fetch(level_id,"positions")
-		print_debug(new_location)
-		if new_location == null:
-			pawn.position = default
-		else:
-			pawn.position = new_location
-	else:
-		pass
+#		var new_location = state.fetch(level_id,"positions")
+#		print_debug(new_location)
+#		if new_location == null:
+#			pawn.position = default
+#		else:
+#			pawn.position = new_location
+#	else:
+#		pass

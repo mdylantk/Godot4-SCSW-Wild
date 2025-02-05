@@ -27,21 +27,8 @@ var running : bool = false :
 			#running all the time was causing pausing to break
 			return
 		running = value
-		if running:
-			UI.enable_player_input = false
-			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-			set_layer_enabled(0,true)
-			for layer_id in get_layers_count():
-				set_layer_enabled(layer_id,true)
-			visible = true
-		else:#if active_fish.is_empty():
-			UI.enable_player_input = true
-			#Game.allow_input(true)
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			for layer_id in get_layers_count():
-				set_layer_enabled(layer_id,false)
-			#set_layer_enabled(0,false)
-			visible = false
+		running_changed()
+		
 var active_fish : Array[Dictionary]
 
 #NOTE:this may need a rename? mouse_state is action state(of the cursor)
@@ -50,6 +37,19 @@ var mouse_state: int = 0
 var mouse_mode: bool = true
 
 #NOTE: mouse_state = -1 is to prevent input untill a fresh press
+
+#due to the logic in running only triggerng if it change, state may
+#not be the same. this can be called to fix it. also the state change
+#will be moved here instead of running setter
+func running_changed():
+	if running:
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	UI.enable_player_input = !running
+	for layer_id in get_layers_count():
+		set_layer_enabled(layer_id,running)
+	visible = running
 
 func pause():
 	running = false
@@ -257,3 +257,6 @@ func update_cursor_position(new_position : Vector2):
 	if vector_from_player.length() > max_length:
 		new_position = local_player_coords + (vector_from_player.normalized()*max_length)
 	cursor.position = new_position
+	
+func _ready() -> void:
+	running_changed()
