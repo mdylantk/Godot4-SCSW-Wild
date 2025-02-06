@@ -60,6 +60,9 @@ func brain_unassigned(old_brain:Base_Brain):
 	old_brain.action_triggered.disconnect(on_action_triggered)
 	pass
 
+func get_inventory()->Inventory:
+	return null
+
 ##called when a character state is set/assign/loaded
 ##used to extract data from it that is handled outside the state
 func character_state_loaded():

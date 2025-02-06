@@ -2,8 +2,14 @@ extends Character2D
 
 #@export var interact_cast : ShapeCast2D
 
+#TODO: make a getter function and let the children assign some kind of inventory
+#to return. may be better to have the inventory more self contained though
+#having a getter that return some node with item getting and setting functionality
+#is still better
 @onready var inventory = $Inventory
 
+func get_inventory()->Inventory:
+	return $Inventory
 
 #NOTE attack may need to be realted to a node or something. attack dection 
 #mosty likly will change so one shapecast wont solve all the conditions.
@@ -102,14 +108,6 @@ func interact():
 	%Shaped_Interactor.interact(self)
 
 func on_interaction(source_pawn:Node, collider:Node, data:={}):
-	#TODO rethink this perhaps. either keep it but simpify it or pass the collected
-	#data to a handler or sub handler
-	#note: ideally this trigger and interaction, but bulk data should come from
-	#the character state(or charater), data handler, world handler, (optional) collsion data
-	#and player handler. meta should not nessary be needed and could be stored
-	#on either of the characters
-	#NOTE: other other character needs to be a character, so ideally the other character
-	#should listen to interaction and then tigger the action
 	var interaction : Interactive_Component = collider as Interactive_Component
 	if interaction != null:
 		interaction.interact(Player,self,collider,data)

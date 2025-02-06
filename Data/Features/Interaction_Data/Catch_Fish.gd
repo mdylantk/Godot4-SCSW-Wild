@@ -71,10 +71,18 @@ func add_fish(fish_data:Dictionary):
 		new_fish_item.type = load("uid://nrh8trhov6yk") as Item_Type
 		new_fish_item.set_meta("unique_name",fish_name)
 		var inventory : Inventory
-		for child in interactor.get_children():
-			if child is Inventory:
-				inventory = child
-				break
+		if interactor as Character2D:
+			inventory = interactor.get_inventory()
+		else:
+			#old logic, may be fine for some systems, but most enities
+			#should have some kind of inventory interface
+			print_debug("MEOOW THIS SHOULD NOT BE CALLED. planing on disabling it")
+			#may disable this temp since things that interact mostly will be characters
+			#though non characters might have in inventory, but acessing it would be diffrent
+			for child in interactor.get_children():
+				if child is Inventory:
+					inventory = child
+					break
 		if inventory == null:
 			print_debug("dose not have inventory")
 		var remaining_amount = inventory.add_to_inventory(new_fish_item,1)

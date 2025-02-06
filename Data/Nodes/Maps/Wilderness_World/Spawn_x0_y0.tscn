@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://blyxjt47otoln"]
+[gd_scene load_steps=23 format=4 uid="uid://blyxjt47otoln"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_ijlli"]
 [ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_d0e8t"]
@@ -7,7 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://dghoogotf0r7u" path="res://Data/Nodes/Actors/Fish.tscn" id="7_y3v0u"]
 [ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Data/Nodes/Actors/Interactive_Body2d.tscn" id="8_y0am1"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="9_ceyac"]
-[ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Level_Transfer.gd" id="12_cyc1h"]
+[ext_resource type="Script" path="res://Data/Features/Inventory/Item.gd" id="10_pueuq"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Level_Transfer.gd" id="10_ybdv8"]
+[ext_resource type="Resource" uid="uid://nrh8trhov6yk" path="res://Data/Resources/Fish_Item.tres" id="11_apcif"]
+[ext_resource type="Script" path="res://Data/Features/Action_System/Actions/A_Give_Item.gd" id="12_7brfb"]
 [ext_resource type="Resource" uid="uid://bax1gyeyncjmp" path="res://Data/Resources/Old_Man_Dialog_Actions.tres" id="13_w83no"]
 [ext_resource type="Script" path="res://Data/Features/Interaction_Data/Action_On_Interact.gd" id="15_hqe25"]
 
@@ -22,20 +25,38 @@ size = Vector2(16, 16)
 atlas = ExtResource("9_ceyac")
 region = Rect2(17, 357, 16, 16)
 
-[sub_resource type="Resource" id="Resource_61env"]
-script = ExtResource("12_cyc1h")
+[sub_resource type="Resource" id="Resource_rdiom"]
+script = ExtResource("10_ybdv8")
 level_uid = "uid://lv4hypjjj08a"
 spawn_location = Vector2(0, 0)
 store_entry_point = true
 entry_point_id = &"world"
 spawn_index = 0
 
-[sub_resource type="Resource" id="Resource_lpdb6"]
+[sub_resource type="Resource" id="Resource_wl3yv"]
 script = ExtResource("15_hqe25")
-action = SubResource("Resource_61env")
+action = SubResource("Resource_rdiom")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_m2me0"]
 size = Vector2(16, 16)
+
+[sub_resource type="Resource" id="Resource_d6o4d"]
+script = ExtResource("10_pueuq")
+type = ExtResource("11_apcif")
+
+[sub_resource type="Resource" id="Resource_7dgfp"]
+script = ExtResource("12_7brfb")
+item = SubResource("Resource_d6o4d")
+item_meta = {
+"unique_name": "Test Fish"
+}
+give_to_owner = true
+target_id = "target"
+target_index = 0
+
+[sub_resource type="Resource" id="Resource_6kvcv"]
+script = ExtResource("15_hqe25")
+action = SubResource("Resource_7dgfp")
 
 [node name="TileMap" type="Node2D" node_paths=PackedStringArray("foilage_layer")]
 y_sort_enabled = true
@@ -82,14 +103,14 @@ position = Vector2(376, 152)
 texture = SubResource("AtlasTexture_qphu2")
 
 [node name="Interact_Component" parent="Old_Man_House" instance=ExtResource("5_dfv4w")]
-interactive_data = SubResource("Resource_lpdb6")
+interactive_data = SubResource("Resource_wl3yv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Old_Man_House/Interact_Component"]
 shape = SubResource("RectangleShape2D_m2me0")
 
 [node name="Interact_Component" parent="." instance=ExtResource("5_dfv4w")]
 position = Vector2(88, 120)
-interactive_data = SubResource("Resource_lpdb6")
+interactive_data = SubResource("Resource_6kvcv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interact_Component"]
 shape = SubResource("RectangleShape2D_m2me0")
