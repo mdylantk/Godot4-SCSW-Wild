@@ -1,6 +1,7 @@
-[gd_scene load_steps=23 format=4 uid="uid://blyxjt47otoln"]
+[gd_scene load_steps=24 format=4 uid="uid://blyxjt47otoln"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Data/Assets/low_Bit_Tileset.tres" id="1_ijlli"]
+[ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Data/Resources/World_Foilage_Generator.tres" id="2_b7hri"]
 [ext_resource type="Script" path="res://Data/Scripts/One_Bit_Tilemap.gd" id="2_d0e8t"]
 [ext_resource type="PackedScene" uid="uid://dlylyvjyir5df" path="res://Data/Nodes/Actors/NCP.tscn" id="3_o7k75"]
 [ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Data/Nodes/Components/Interactive_Component.tscn" id="5_dfv4w"]
@@ -62,7 +63,10 @@ action = SubResource("Resource_7dgfp")
 y_sort_enabled = true
 texture_filter = 1
 script = ExtResource("2_d0e8t")
+foilage_generator = ExtResource("2_b7hri")
 foilage_layer = NodePath("Ground")
+metadata/_edit_vertical_guides_ = [1024.0]
+metadata/_edit_horizontal_guides_ = [1024.0]
 
 [node name="Ground" type="TileMapLayer" parent="."]
 y_sort_enabled = true

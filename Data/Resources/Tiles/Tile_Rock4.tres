@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Tile_Info" load_steps=2 format=3 uid="uid://c6rkw4uq1xw17"]
+
+[ext_resource type="Script" path="res://Data/Scripts/Tile_Info.gd" id="1_jlylu"]
+
+[resource]
+script = ExtResource("1_jlylu")
+name = "Rock4"
+source_id = 0
+atlas_coords = Vector2i(4, 0)
+layer_id = -1
+alternative_tile = 0

@@ -11,6 +11,8 @@ script = ExtResource("2_jtn6a")
 foilage_generator = ExtResource("2_d3lfu")
 foilage_layer = NodePath("Layer0")
 tilemap_layers = [NodePath("Layer0")]
+metadata/_edit_vertical_guides_ = [1024.0]
+metadata/_edit_horizontal_guides_ = [1024.0]
 
 [node name="Layer0" type="TileMapLayer" parent="."]
 y_sort_enabled = true
