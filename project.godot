@@ -11,18 +11,18 @@ config_version=5
 [application]
 
 config/name="Strange Cat Strange Wilderness"
-run/main_scene="res://Data/Nodes/Main.tscn"
+run/main_scene="res://Common/Data/Nodes/Main.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Data="*res://Data/Systems/Data/Data_Handler.tscn"
-UI="*res://Data/Systems/UI/UI_Handler.tscn"
-Player="*res://Data/Systems/Player/Player_Handler.tscn"
-World="*res://Data/Systems/World/World_Handler.tscn"
-Audio="*res://Data/Systems/Audio/Audio_Handler.tscn"
-Game="*res://Data/Systems/Game/Game_Handler.tscn"
+Data="*res://Game/Data/Data_Handler.tscn"
+UI="*res://Game/UI/UI_Handler.tscn"
+Player="*res://Game/Player/Player_Handler.tscn"
+World="*res://Game/World/World_Handler.tscn"
+Audio="*res://Game/Audio/Audio_Handler.tscn"
+Game="*res://Game/Game/Game_Handler.tscn"
 
 [display]
 
@@ -33,10 +33,10 @@ window/stretch/mode="viewport"
 [file_customization]
 
 folder_colors={
-"res://Data/Nodes/Actors/": "blue",
-"res://Data/Nodes/Components/": "blue",
-"res://Data/Nodes/Maps/": "blue",
-"res://Data/Systems/": "green"
+"res://Common/Data/Nodes/Components/": "blue",
+"res://Game/": "green",
+"res://Game/Data/Maps/": "blue",
+"res://Game/Data/Scenes/Actors/": "blue"
 }
 
 [global_group]

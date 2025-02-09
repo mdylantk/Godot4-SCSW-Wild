@@ -1,0 +1,21 @@
+[gd_scene load_steps=6 format=3 uid="uid://dvaxx0ke0p27m"]
+
+[ext_resource type="Script" path="res://Game/Game/Game_Handler.gd" id="1_gpdo0"]
+[ext_resource type="Resource" uid="uid://orixgnr4wcrd" path="res://Common/Data/Resources/AI_Brain.tres" id="3_5g482"]
+[ext_resource type="Script" path="res://Common/Data/Nodes/Handlers/AI_Handler.gd" id="3_8kfs5"]
+[ext_resource type="Resource" uid="uid://0jak16wccjq4" path="res://Common/Data/Resources/AI_Controller.tres" id="4_ounbx"]
+[ext_resource type="Script" path="res://Common/Data/Nodes/Handlers/Server_Handler.gd" id="7_clhfr"]
+
+[node name="Game_Handler" type="Node2D" groups=["Game_Handler"]]
+y_sort_enabled = true
+script = ExtResource("1_gpdo0")
+
+[node name="AI_Handler" type="Node2D" parent="."]
+script = ExtResource("3_8kfs5")
+enable = true
+controller_brain = ExtResource("3_5g482")
+controller = ExtResource("4_ounbx")
+
+[node name="Server_Handler" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("7_clhfr")

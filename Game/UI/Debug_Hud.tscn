@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsvm8im8i0rac"]
+
+[ext_resource type="Script" path="res://Game/UI/debug_hud.gd" id="1_ydgd5"]
+
+[node name="DebugHUD" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_ydgd5")
+
+[node name="Debug" type="Label" parent="."]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -153.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 88.0
+grow_horizontal = 0
+text = "dfds
+"
+horizontal_alignment = 1

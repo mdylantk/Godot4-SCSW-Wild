@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://duq52ty34pkmx"
+path="res://.godot/imported/Fx 3.mp3-e480140c2c080d717036afc584344db5.mp3str"
+
+[deps]
+
+source_file="res://Common/Data/Assets/AlkaKrab Fantasy RPG Music Pack/mp3/Fx 3.mp3"
+dest_files=["res://.godot/imported/Fx 3.mp3-e480140c2c080d717036afc584344db5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

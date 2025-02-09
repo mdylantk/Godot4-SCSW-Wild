@@ -1,0 +1,47 @@
+[gd_scene load_steps=11 format=3 uid="uid://cldlaymbe77mn"]
+
+[ext_resource type="Script" path="res://Common/Data/Features/World_Levels_Data/Generator_Level.gd" id="1_a382x"]
+[ext_resource type="Resource" uid="uid://drg3ed6i36xt7" path="res://Common/Data/Resources/World_Environment_Data.tres" id="3_d5n0r"]
+[ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Game/Data/Resources/Noise_Maps/World_Detail_Map.tres" id="3_qg0pl"]
+[ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Data/Scenes/Actors/Player.tscn" id="6_oks6f"]
+[ext_resource type="PackedScene" uid="uid://bruyakjvb8wwp" path="res://Game/Data/Scenes/Actors/Enemy_Test.tscn" id="7_hjtk7"]
+[ext_resource type="Script" path="res://Common/Data/Features/Components/MovementComponent2D.gd" id="8_0krqb"]
+[ext_resource type="Resource" uid="uid://orixgnr4wcrd" path="res://Common/Data/Resources/AI_Brain.tres" id="9_uj1r3"]
+[ext_resource type="Script" path="res://Common/Data/Scripts/Character_State.gd" id="10_soy8l"]
+
+[sub_resource type="Resource" id="Resource_1lsxs"]
+script = ExtResource("8_0krqb")
+base_speed = 64.0
+facing_dirction = Vector2(1, 0)
+sprint_modifier = 1.0
+
+[sub_resource type="Resource" id="Resource_d4elj"]
+script = ExtResource("10_soy8l")
+data = {}
+file_name = "state"
+key = ""
+is_encrypted = true
+save_id = ""
+
+[node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]
+process_mode = 3
+y_sort_enabled = true
+script = ExtResource("1_a382x")
+static_chunks = {
+Vector2(0, 0): "uid://blyxjt47otoln"
+}
+random_chunks = Array[String](["uid://clicnkneu0ddm", "uid://bngicde5fixcp", "uid://cyg3wosoq0787", "uid://t7rhh625brgr", "uid://duqgklvehxux0", "uid://bbaafkh4f04vx", "uid://m6q0b4c1q5f6"])
+random_chunk_noise_map = ExtResource("3_qg0pl")
+environment_data = ExtResource("3_d5n0r")
+environment_color = NodePath("CanvasModulate")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("6_oks6f")]
+unique_name_in_owner = true
+
+[node name="EnemyTest" parent="." instance=ExtResource("7_hjtk7")]
+position = Vector2(-75, -76)
+movement_component = SubResource("Resource_1lsxs")
+default_brain = ExtResource("9_uj1r3")
+character_state = SubResource("Resource_d4elj")

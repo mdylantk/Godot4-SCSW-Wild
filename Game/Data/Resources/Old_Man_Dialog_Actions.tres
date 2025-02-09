@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="Action_If_Else" load_steps=7 format=3 uid="uid://bax1gyeyncjmp"]
+
+[ext_resource type="Script" path="res://Common/Data/Features/Action_System/Action_If_Else.gd" id="1_1tgue"]
+[ext_resource type="Script" path="res://Common/Data/Features/Action_System/Conditions/C_Compare_Properties.gd" id="1_u88dc"]
+[ext_resource type="Resource" uid="uid://du2h4y80euyrw" path="res://Game/Data/Resources/Old_Man_Intro_Dialog.tres" id="2_twdrw"]
+[ext_resource type="Resource" uid="uid://be5snvrbt8c0c" path="res://Game/Data/Resources/Old_Man_Random_Dialog.tres" id="4_gi6kf"]
+
+[sub_resource type="Resource" id="Resource_15f3x"]
+script = ExtResource("1_u88dc")
+comparison = 0
+property_source = "player"
+property_name = "old_man_visted"
+always_use_metadata_of_nodes = false
+values_to_compare = [true]
+
+[sub_resource type="Resource" id="Resource_qm1tl"]
+script = ExtResource("1_1tgue")
+false_action = ExtResource("4_gi6kf")
+
+[resource]
+script = ExtResource("1_1tgue")
+condition = SubResource("Resource_15f3x")
+true_action = SubResource("Resource_qm1tl")
+false_action = ExtResource("2_twdrw")

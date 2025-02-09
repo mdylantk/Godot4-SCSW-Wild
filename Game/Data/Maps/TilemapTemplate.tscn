@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://ba1djs75axgrn"]
+
+[ext_resource type="Script" path="res://Common/Data/Scripts/One_Bit_Tilemap.gd" id="1_pxaw0"]
+[ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Common/Data/Resources/World_Foilage_Generator.tres" id="2_adtg8"]
+[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Common/Data/Assets/low_Bit_Tileset.tres" id="3_s2now"]
+
+[node name="TileMap" type="Node2D" node_paths=PackedStringArray("foilage_layer", "tilemap_layers")]
+y_sort_enabled = true
+texture_filter = 1
+script = ExtResource("1_pxaw0")
+foilage_generator = ExtResource("2_adtg8")
+foilage_layer = NodePath("Layer0")
+tilemap_layers = [NodePath("Layer0")]
+metadata/_edit_vertical_guides_ = [1024.0]
+metadata/_edit_horizontal_guides_ = [1024.0]
+
+[node name="Layer0" type="TileMapLayer" parent="."]
+y_sort_enabled = true
+texture_filter = 1
+use_parent_material = true
+tile_set = ExtResource("3_s2now")

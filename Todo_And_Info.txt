@@ -67,17 +67,22 @@ The game flow is being reworked to follow a more simple approch:
 	
 	File structure:
 		TODO:
-			-move handlers into the systems folder and each handler should have their
-			own folder. this should contain the major childen scene and scripts related
-			to the system
+			-Main_Game:
+				this contains files unique to the game and should also try to mirror
+				the game scene tree at runtime. Any resuable files most likly be stored
+				under data
+				
+			-Common:
+				contain the base classes, reosurces and scenes used by game and engin.
+				
+			-Engine:
+				stores files related only for the engine. so engine tools and such
+				
 			
-			-Subsystems and addon like content should be added to the features
-			in folders related to their namespace
 			
-			-Levels or Maps should be used to hold the main scenes used in the game
-			
-			-scripts should be used to hold scripts that do not have a places elsewhere
-			-resources should be used for resources that lack a place to be. could add
-			scripts as a sub dir of resourcessame with scenes
-			
-			-assest should hold art and media realated to the game
+	Save System:
+		the current system saves anything savable added to it. It uses 'static' resource
+		(resources 'loaded' in) so changes source changes to 'static' export values are maintain
+		but if the dir it is in, any data that use it will break. So either make sure dir path is
+		perment solution or build a system to locate the file (or figure out how to use force uid)
+		

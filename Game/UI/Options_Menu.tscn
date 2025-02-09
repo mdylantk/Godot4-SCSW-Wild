@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://clfctvdo5gs0b"]
+
+[ext_resource type="Script" path="res://Game/UI/Options_Menu.gd" id="1_8csky"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Common/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_v72jc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_trfd7"]
+atlas = ExtResource("1_v72jc")
+region = Rect2(816, 357, 16, 16)
+
+[node name="Options_Menu" type="CanvasLayer" node_paths=PackedStringArray("default_focus")]
+layer = 11
+visible = false
+script = ExtResource("1_8csky")
+default_focus = NodePath("GridContainer/Music_Volume_Slider")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_trfd7")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="GridContainer" type="GridContainer" parent="."]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -245.0
+offset_top = 48.0
+offset_right = 245.0
+offset_bottom = -55.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+
+[node name="Label" type="Label" parent="GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Music Volume"
+
+[node name="VSeparator" type="VSeparator" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Music_Volume_Slider" type="HSlider" parent="GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="value_changed" from="GridContainer/Music_Volume_Slider" to="." method="_on_music_volume_slider_value_changed"]

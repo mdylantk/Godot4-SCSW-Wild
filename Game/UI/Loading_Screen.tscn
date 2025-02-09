@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6qkqs4t14j5w"]
+
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Common/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_pngi5"]
+[ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Common/Data/Assets/Main_Theme.tres" id="2_441cm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_trfd7"]
+atlas = ExtResource("1_pngi5")
+region = Rect2(816, 357, 16, 16)
+
+[node name="LoadingScreen" type="CanvasLayer"]
+layer = 9
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_trfd7")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -144.0
+offset_top = -12.0
+offset_right = 144.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_441cm")
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[center]Loading"
