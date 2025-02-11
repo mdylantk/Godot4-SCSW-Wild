@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="AI_Controlled_Brain" load_steps=2 format=3 uid="uid://orixgnr4wcrd"]
 
-[ext_resource type="Script" path="res://Common/Data/Features/Components/AI_Controlled_Brain.gd" id="1_rioh4"]
+[ext_resource type="Script" path="res://Common/Features/Components/AI_Controlled_Brain.gd" id="1_rioh4"]
 
 [resource]
 script = ExtResource("1_rioh4")

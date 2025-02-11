@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://wqfpqmmkbg0n"]
 
-[ext_resource type="Shader" path="res://Common/Data/Assets/Simple_Noise_Shader.gdshader" id="1_4dk0i"]
+[ext_resource type="Shader" path="res://Game/Data/Assets/Simple_Noise_Shader.gdshader" id="1_4dk0i"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_0v6uw"]
 fractal_type = 0

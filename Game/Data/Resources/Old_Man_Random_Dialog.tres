@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="Random_Action" load_steps=13 format=3 uid="uid://be5snvrbt8c0c"]
 
-[ext_resource type="Script" path="res://Common/Data/Features/Action_System/Base_Action.gd" id="1_i4ub3"]
-[ext_resource type="Script" path="res://Common/Data/Features/Action_System/Actions/A_Set_Dialog.gd" id="1_p7bdn"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Common/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ksa1v"]
-[ext_resource type="Script" path="res://Common/Data/Features/Action_System/Random_Action.gd" id="3_c03kn"]
+[ext_resource type="Script" path="res://Common/Features/Action_System/Base_Action.gd" id="1_i4ub3"]
+[ext_resource type="Script" path="res://Game/Data/Actions/Actions/A_Set_Dialog.gd" id="1_p7bdn"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ksa1v"]
+[ext_resource type="Script" path="res://Common/Features/Action_System/Random_Action.gd" id="3_c03kn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d2nkl"]
 atlas = ExtResource("2_ksa1v")

@@ -1,13 +1,13 @@
 [gd_scene load_steps=25 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" path="res://Game/Data/Scenes/Actors/Player.gd" id="1_07gio"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Common/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="Script" path="res://Common/Data/Scripts/Character_State.gd" id="3_4ckbq"]
-[ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Common/Data/Features/Inventory/Inventory.tscn" id="3_m3amk"]
-[ext_resource type="Script" path="res://Common/Data/Nodes/Components/Shaped_Interactor.gd" id="4_qftw7"]
-[ext_resource type="Script" path="res://Common/Data/Nodes/Components/Base_Hurtbox.gd" id="6_3jdhg"]
+[ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Common/Features/Inventory/Inventory.tscn" id="3_m3amk"]
+[ext_resource type="Script" path="res://Game/Data/Components/Shaped_Interactor.gd" id="4_qftw7"]
+[ext_resource type="Script" path="res://Game/Data/Components/Base_Hurtbox.gd" id="6_3jdhg"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Common/Data/Nodes/Main_Camera.tscn" id="7_b7ptm"]
-[ext_resource type="Script" path="res://Common/Data/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
+[ext_resource type="Script" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Common/Data/Resources/Player_Controller.tres" id="9_dfeth"]
 
 [sub_resource type="Resource" id="Resource_xp0uq"]

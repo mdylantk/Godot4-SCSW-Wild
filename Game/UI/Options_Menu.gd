@@ -21,10 +21,11 @@ func _input(event: InputEvent) -> void:
 			close.emit(self)
 			get_viewport().set_input_as_handled()
 
-func _on_settings_loaded(id:String, config: ConfigFile, is_new : bool):
+func _on_settings_loaded(id:String, is_new : bool):
 	if id == "client_settings":
 		var sound_volume = 30
 		if is_new:
+			if !config: config = ConfigFile.new()
 			config.set_value("sound","music_volume",sound_volume)
 		else:
 			sound_volume = config.get_value("sound","music_volume",sound_volume)

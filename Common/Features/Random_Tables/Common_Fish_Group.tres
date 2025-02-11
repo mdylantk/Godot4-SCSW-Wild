@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Weighted_Item_Group" load_steps=7 format=3 uid="uid://ckakf2hg2lvpa"]
+
+[ext_resource type="Script" path="res://Common/Features/Inventory/Item_Type.gd" id="1_4ji1g"]
+[ext_resource type="Resource" uid="uid://byav5our3f61f" path="res://Game/Data/Items/Fish/Carp.tres" id="2_lo1jv"]
+[ext_resource type="Resource" uid="uid://c7eib6m22me1j" path="res://Game/Data/Items/Fish/Guppy.tres" id="3_gesxv"]
+[ext_resource type="Resource" uid="uid://bs7mi5bxep50x" path="res://Game/Data/Items/Fish/Perch.tres" id="4_hmeah"]
+[ext_resource type="Resource" uid="uid://gy8smg01arpe" path="res://Game/Data/Items/Fish/Barb.tres" id="5_u86k2"]
+[ext_resource type="Script" path="res://Common/Features/Random_Tables/Weighted_Item_Group.gd" id="6_68eqj"]
+
+[resource]
+script = ExtResource("6_68eqj")
+items = Array[ExtResource("1_4ji1g")]([ExtResource("2_lo1jv"), ExtResource("3_gesxv"), ExtResource("4_hmeah"), ExtResource("5_u86k2")])
+name = "common"
+weight = 75

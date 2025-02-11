@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Weighted_Item_Group" load_steps=16 format=3 uid="uid://bfpod4qd0pb4w"]
+
+[ext_resource type="Script" path="res://Common/Features/Inventory/Item_Type.gd" id="1_djj5f"]
+[ext_resource type="Resource" uid="uid://dc1kidkqta7du" path="res://Game/Data/Items/Fish/Apple_Carp.tres" id="2_g3eq6"]
+[ext_resource type="Resource" uid="uid://dk3um40smtrc0" path="res://Game/Data/Items/Fish/Black_Bass.tres" id="3_61yy0"]
+[ext_resource type="Resource" uid="uid://bx2qcbv378fst" path="res://Game/Data/Items/Fish/Doom_Pike.tres" id="4_f424s"]
+[ext_resource type="Resource" uid="uid://c8jkdwheu6a73" path="res://Game/Data/Items/Fish/Fade_Barb.tres" id="5_lowfo"]
+[ext_resource type="Resource" uid="uid://ocn1enqk0dhh" path="res://Game/Data/Items/Fish/Killer_Salmon.tres" id="6_2kkv7"]
+[ext_resource type="Resource" uid="uid://tv0nok4shwhw" path="res://Game/Data/Items/Fish/King_Walleye.tres" id="7_bdh1o"]
+[ext_resource type="Resource" uid="uid://dotp4lh2hi73h" path="res://Game/Data/Items/Fish/Moon_Koi.tres" id="8_l3q1n"]
+[ext_resource type="Script" path="res://Common/Features/Random_Tables/Weighted_Item_Group.gd" id="9_ds021"]
+[ext_resource type="Resource" uid="uid://db8k4softx2h4" path="res://Game/Data/Items/Fish/Orange_Eel.tres" id="9_vcgqw"]
+[ext_resource type="Resource" uid="uid://hy3bdly0hq3h" path="res://Game/Data/Items/Fish/Rainbow_Trout.tres" id="10_f021i"]
+[ext_resource type="Resource" uid="uid://cu1q1e462ptjs" path="res://Game/Data/Items/Fish/Shadow_Pike.tres" id="11_k1o7p"]
+[ext_resource type="Resource" uid="uid://dbh2depsa3ael" path="res://Game/Data/Items/Fish/Silver_Guppy.tres" id="12_psbhk"]
+[ext_resource type="Resource" uid="uid://dhl8snr6vgesx" path="res://Game/Data/Items/Fish/Snake_Eel.tres" id="13_0jlil"]
+[ext_resource type="Resource" uid="uid://dq580j8d282dx" path="res://Game/Data/Items/Fish/Triple_Perch.tres" id="14_mau8i"]
+
+[resource]
+script = ExtResource("9_ds021")
+items = Array[ExtResource("1_djj5f")]([ExtResource("2_g3eq6"), ExtResource("3_61yy0"), ExtResource("4_f424s"), ExtResource("5_lowfo"), ExtResource("6_2kkv7"), ExtResource("7_bdh1o"), ExtResource("8_l3q1n"), ExtResource("9_vcgqw"), ExtResource("10_f021i"), ExtResource("11_k1o7p"), ExtResource("12_psbhk"), ExtResource("13_0jlil"), ExtResource("14_mau8i")])
+name = "rare"
+weight = 100

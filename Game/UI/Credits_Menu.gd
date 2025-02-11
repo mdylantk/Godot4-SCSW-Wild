@@ -18,7 +18,7 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	##This allow controller to scroll text box
 	if Input.is_action_pressed("Forward") or Input.is_action_pressed("Back"):
 		var scroll_amount: float = (

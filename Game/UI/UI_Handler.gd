@@ -1,9 +1,5 @@
 class_name UI_Handler extends Node
 
-#generic signal that state when a gui scene been update...if said update emit it(placeholder mostly)
-#currently no use since most update per process. also children may call their own, but may also call this
-#to let others know the object ref so they could connect if needed
-signal gui_update(element)
 
 signal ui_focus(disable_other_input:bool)
 

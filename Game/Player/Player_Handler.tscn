@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Game/Player/Player_Handler.gd" id="1_d3v36"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Data/Scenes/Actors/Player.tscn" id="2_vymv8"]
-[ext_resource type="Script" path="res://Common/Data/Features/Components/Player_Controlled_Brain.gd" id="3_ar03a"]
+[ext_resource type="Script" path="res://Common/Features/Components/Player_Controlled_Brain.gd" id="3_ar03a"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Common/Data/Resources/Player_Controller.tres" id="4_vte1q"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Common/Data/Nodes/Main_Camera.tscn" id="4_wnuel"]
 
