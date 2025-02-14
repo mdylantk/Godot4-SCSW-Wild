@@ -25,24 +25,42 @@ class_name Savedata_Helper extends Object
 #mostly for world position. should not be used for all locations, just ones that
 #contain dynamic entrances like random poi on the world map. 
 static func store_player_position(handler:Player_Handler,new_location:Vector2,id:StringName):
-	handler.state.store(id,new_location,"positions")
+	if Player.state:
+		Player.state.set_meta(id+"_location",new_location)
+	else:
+		print_debug("MEOW?")
+		handler.state.store(id,new_location,"positions")
 	
 	
 static func fetch_player_position(handler:Player_Handler,id:StringName)->Vector2:
-	var value = handler.state.fetch(id,"positions")
-	if typeof(value) == TYPE_VECTOR2:
-		return value
+	if Player.state:
+		if Player.state.has_meta(id+"_location"):
+			return Player.state.get_meta(id+"_location",Vector2())
 	else:
-		return Vector2()
+		print_debug("MEOW?")
+		var value = handler.state.fetch(id,"positions")
+		if typeof(value) == TYPE_VECTOR2:
+			return value
+
+	return Vector2()
 
 #Generic score set/get by an id. using a int since most score are counters
 static func store_player_score(handler:Player_Handler,new_score:int,id:StringName):
-	handler.state.store(id,new_score,"scores")
+	if Player.state:
+		Player.state.set_meta(id+"_score",new_score)
+	else:
+		print_debug("MEOW?")
+		handler.state.store(id,new_score,"scores")
 	
 static func fetch_player_score(handler:Player_Handler,id:StringName)->int:
-	if handler.state != null:
-		var value = handler.state.fetch(id,"scores")
-		if typeof(value) == TYPE_INT:
-			return value
+	if Player.state:
+		if Player.state.has_meta(id+"_score"):
+			return Player.state.get_meta(id+"_score",0)
+	else:
+		print_debug("MEOW?")
+		if handler.state != null:
+			var value = handler.state.fetch(id,"scores")
+			if typeof(value) == TYPE_INT:
+				return value
 	return 0
 	

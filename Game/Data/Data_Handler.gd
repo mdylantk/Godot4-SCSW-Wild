@@ -78,6 +78,7 @@ func init_save(save_id:String=save_name,load_save:bool=false):
 	save_name = save_id
 	if load_save:
 		load_data(save_state,"Data",default_path+"/"+save_name,false)
+		game_loaded()
 	else:
 		#save state should be reset if a game is already started and a new
 		#game is requested. 
@@ -86,6 +87,7 @@ func init_save(save_id:String=save_name,load_save:bool=false):
 
 ##allow the save_state_change to be called on setting a value
 func add_to_save_state(section:String, key:String, value:Variant)->void:
+	print_debug("Meow:", section, "key:", key, " value:",value)
 	save_state.set_value(section,key,value)
 	save_state_change.emit(section,key,value)
 	pass
@@ -105,11 +107,14 @@ func _ready() -> void:
 	
 	print_debug("ready")
 
+#TODO: decided on a better group name or spit the group?
 
+func game_loaded() -> void:
+	get_tree().call_group("Savable", "on_game_loaded")
 
 func _on_autosave_timer_timeout() -> void:
 	print_debug("(autosave) saving")
-	get_tree().call_group("Autosave", "autosave")
+	get_tree().call_group("Savable", "on_autosave")
 	save_data(save_state,"Data",default_path+"/"+save_name,false)
 	#save_data(client_state,"settings",default_path,false)
 	pass # Replace with function body.

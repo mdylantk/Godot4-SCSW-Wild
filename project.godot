@@ -42,9 +42,9 @@ folder_colors={
 [global_group]
 
 Players="All loaded player handlers"
-Autosave="Nodes with the autosave function in this group will be called just before the autosave saves"
 Player_Pawns=""
 enemies="A test group for enemies"
+Savable="Nodes with the autosave function in this group will be called just before the autosave saves"
 
 [input]
 

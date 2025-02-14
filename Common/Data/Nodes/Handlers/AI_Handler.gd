@@ -1,6 +1,6 @@
 class_name AI_Handler extends Controller_Handler
 
-@export var default_pawn : PackedScene = load("uid://bruyakjvb8wwp")  
+#@export var default_pawn : PackedScene = load("uid://bruyakjvb8wwp")  
 @export var controller_name : String = "enemy"
 @export var state : Savable_State :
 	set(value):
@@ -40,6 +40,8 @@ func _ready():
 #NOTE: this was a test. new system should let the pawn handle itm
 #but the controller could allow requests that the handler can listen to
 #or set the value directly
+#TODO: on_pawn_hit is not needed unless used as a notify
+#but even then should use controller for communication
 func on_pawn_hit(attacker, target, data):
 	if target.visible:
 		target.visible = false
@@ -48,103 +50,13 @@ func on_pawn_hit(attacker, target, data):
 		target.visible = true
 		set_process(true)
 
-func on_ai_update():
-	for pawn in active_pawns:
-		if pawn.brain != null:
-			#if pawn.brain != controller_brain and controller_brain != null:
-			#	pawn.brain = controller_brain
-			#pawn.brain.update(pawn,self)
-			pass
 			
 func _process(delta):
-	#TODO need the world_handler to frezze(pause) it children when no level_data
-	#or when loading new areas
-	var active_pawns = get_tree().get_nodes_in_group("enemies")
-	
-	if active_pawns.size() <= 0: return
-	
 	var player = null
 	var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")
 	if players.size() > 0:
 		player = players[0]
 		#brain.set_meta(&"move_to",player)
 	
-	var pawn = active_pawns[0]
-	if pawn != null and player != null:
-		if player.global_position.length() > 16*32: #lazy way of having the logic run if player not in spawn
-			if controller:
-				#since it in the process, will set the direction direcly
-				#but should make a AI brain that store points as vectors or node2D
-				#so it can track without depending on is hefty update
-				#controller.set_direction(player.global_position)
-				controller.set_meta(&"move_to",player) 
-			elif controller_brain is AI_Controlled_Brain:
-				var brain : AI_Controlled_Brain = controller_brain as AI_Controlled_Brain
-				#brain.move_to_location = target.global_position
-				
-				#TODO: update this to be less abstract. since brain is shared, can have a home,
-				#target, and focus point. then the pawn just need to store a state that
-				#can be modifiy by it and the brain. currently all pawns will share this
-				#point. the logic may current use a point in the data passed first, but not yet tested
-				brain.set_meta(&"move_to",player)
-				#maybe store data like move to location as a metadata?
-				#could store it as a vector or node2d at the cost of checking first
-				#brain.update(pawn)
-			#on_ai_update()
-			
-			
-			var test_vector : Vector2 = player.global_position - pawn.global_position
-			pawn.visible = true 
-			test_vector = test_vector * delta
-			#pawn.move(test_vector.normalized())
-		
-		#poor way to have enemy catch up to player after being hit
-			if (pawn.global_position - player.global_position).length() > 320:
-				pawn.movement_component.sprint_strength = 8
-			else:
-				pawn.movement_component.sprint_strength  = 0
-		else:
-			#when ever a pawn is not visable, it should enter a sleep state
-			#or in this case visablity is used as a way to put it to sleep
-			pawn.visible = false
-			pass
-		on_ai_update()	
-		#NOTE:could have it location change if target too far as well as add an
-		#interaction event where it will teleport when hit
-		
-		#the true goal is have the enemy fly at the player with a random offset
-		#and then removed(or relocated)
-		#but also it can not spawn or go near spawn and within a certain radius of spawn
-		#they are ment to steal fish. 
-		#the player could swat them away 
-		#maybe bodies of water will prevent spawning too
-		
-		#this is a simple idea for a conflict, but there is no loss 
-		#from running out of fish so more may be needed
-		#maybe bringing back the fish to the old man will improve his mood
-		#but lore wise, the fish seen would populate the pond. also could add
-		#health and fish can heal it. mostly for cases for more hostile enemies
-		#the cat may engage. but lore wise the cat is undying, so only inventory
-		#would be lost on defeat and the cat will spawn at spawn.
-		
-		#adding ncp and town grown would allow fish to be a for of currancy since the old man
-		#probably would not want to fish for everyone (or just can not fish enough) 
-		#so a form of mood booster or currancy
-		
-#this is similar to the player handler, but
-#it controlls AI enities or at least regulate then
-#pass what their AI can do
-#handle factions, plan squad like movements, and such
-
-#due to this needing to be design, much of the functionaly will be temp
-#since this should be bare bones and wnything that extends from it should
-#have the bulk logic
-
-#current goal: check and spawn enemies and give them goals. 
-#this require game to feed infomation to this. mostly a location in the 
-#world. a signal or a global event would be needed to request spawning an 
-#enitiy. also a target, but location and target can be shared since they are the
-#same since they should only spawn in loaded chunks which is center around players
-#but that mostly for the test AI. real AI may need more stuff like hook to let 
-#it know when a pawn it owns spawns or despawns. may be ideal to use groups for
-#this case
+	if controller and player != null:
+		controller.set_meta(&"move_to",player) 

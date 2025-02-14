@@ -209,6 +209,7 @@ func _process(delta: float) -> void:
 	World.level_loading = is_ready
 
 func _ready() -> void:
-	var player_pos = Player.state.fetch("world","positions")
+	#var player_pos = Player.state.fetch("world","positions")
+	var player_pos = Savedata_Helper.fetch_player_position(Player,"world")
 	if typeof(player_pos) == TYPE_VECTOR2:
 		%Player.position = player_pos

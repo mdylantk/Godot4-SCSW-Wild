@@ -46,7 +46,9 @@ func is_true(data:Action_Data = null) -> bool:
 			#TODO: check for state else do as below
 			pass
 		if source is Player_Handler:
-			value = source.state.fetch(property_name)
+			if source.state.has_meta(property_name):
+				value = source.state.get_meta(property_name)
+			#value = source.state.fetch(property_name)
 	if comparison > 1:
 		if value == null: return false
 	for compare_value in values_to_compare:

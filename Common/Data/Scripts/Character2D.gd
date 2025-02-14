@@ -10,15 +10,11 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
 ##This is for caculate velocity change and store varibles related to how it change
 @export var movement_component : Movement_Component_2D = Advance2DMovement.new()
-##this is for controlling the character indirectly. it handles the move direction
-##and self contain ai logic that do not need to know much about the world
-##(example: character may walk in zigzags, so the brain would change the direction
-##to allow the character to zigzag in the desire direction)
-@export var default_brain : Base_Brain : 
-	set(value):
-		default_brain = value
-		brain = value
-#@export var interaction_component : Interactive_Data
+
+
+#NOTE: the issue is that this can be saved. so this and the one in editor
+#may be diffrent. might be better to have a save/load function in the state
+#so that the tres file ref can be updated from the saved one
 @export var character_state : Character_State :
 	set(value):
 		#this will force it to make a clone instead of a ref
@@ -26,8 +22,12 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 		#be safe to modify. Note: since the resource is an object,
 		#can create a clone/load/setup function that will either duplicate() or load
 		#from disk
-		character_state = value.init_state()
-		character_state_loaded()
+		if value:
+			value.load_state()
+			character_state_loaded()
+		character_state = value
+		
+		
  #TODO: this would need to be a ref
 #to a resource for the state. would need to make an new instance of it so it 
 #can be modified. can use setters for that. also the state could have id so it 
@@ -40,18 +40,7 @@ var movement_state : MovementStates = MovementStates.IDLE:
 			movement_state_change.emit(value,movement_state,movement_component.facing_dirction)
 			movement_state = value
 			
-#trying to notify changes in movement. may allow additional mode but for now
-#it idle and move 
-var brain : Base_Brain:
-	set(value):
-		if brain == value: 
-			return
-		if brain:
-			brain_unassigned(brain)
-		if value:
-			brain_assigned(value)
-		brain = value
-		
+
 
 func brain_assigned(new_brain:Base_Brain):
 	new_brain.action_triggered.connect(on_action_triggered)
@@ -68,8 +57,9 @@ func get_inventory()->Inventory:
 func character_state_loaded():
 	pass
 	
-func autosave():
-	character_state.save_state()
+func on_autosave():
+	if character_state != null:
+		character_state.save_state()
 
 func attack()->void:
 	#NOTE: this will tell the character do the attack logic so the controller do not

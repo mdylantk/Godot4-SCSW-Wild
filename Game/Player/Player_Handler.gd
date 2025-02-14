@@ -133,11 +133,7 @@ func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
 
 func _unhandled_input(event:InputEvent):
 	if paused : return
-#func input_update(event:InputEvent):
-	#movement for the pawn(return is pawn is null
-	#if pawn == null : return
-	#if state.dirty:
-	#	state.save_state()
+	
 	if event.is_action("Sprint"):
 		if controller != null:
 			controller.trigger_action("Sprint",event.get_action_strength("Sprint"))
@@ -209,35 +205,3 @@ func on_item_gain(inventory, slot, old_item):
 	#state.store("inventory", inventory.inventory, "pawn")
 	#print_debug(state.data)
 	pass
-
-#TODO: have the level or game create a new pawn base on a template
-#either here or in the game mode. the pawn could also be generic and have it appearnce
-#change when a new stat is loaded.
-#NOTE TODO: use this indead of the group calls with the new system
-#but pass a spawn point so the player can decided how to spawn in
-#though havining the level handle this would be better
-#the issue is dealing with dynamic spawn character allies
-#also need to decided on either keeping pawns between levels or recreating them
-#this may be base on how much overhead there is in recreating. recreating would allow
-#levels more control of the type of pawn used (can easly override it)
-
-	
-
-	
-#func relocate_pawn(new_location:Vector2,player_index:int=0):
-#	if player_index == 0 and pawn != null:
-#		pawn.position = new_location
-
-##will use a save point (or 0,0 if none)
-#func relocate_pawn_from_saved_point(level_id:String,player_index:int=0,default:Vector2=Vector2()):
-	#print_debug(name.split("Player_Handler")[1])
-#	if player_index == 0 and pawn != null:
-		#TODO: should check if it exist, else use a pass loction
-#		var new_location = state.fetch(level_id,"positions")
-#		print_debug(new_location)
-#		if new_location == null:
-#			pawn.position = default
-#		else:
-#			pawn.position = new_location
-#	else:
-#		pass

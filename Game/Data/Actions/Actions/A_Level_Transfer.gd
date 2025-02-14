@@ -27,7 +27,8 @@ func run(data:Action_Data = null) -> bool:
 			
 			if store_entry_point:
 				var old_location : Vector2 = data.owner.global_position
-				Player.state.store(entry_point_id,old_location,"positions")
+				Savedata_Helper.store_player_position(Player,old_location,entry_point_id)
+				#Player.state.store(entry_point_id,old_location,"positions")
 		else:
 			return false
 		var level_loaded : Base_Level = World.load_level(level_uid, spawn_index) #should return bool to see if it ran

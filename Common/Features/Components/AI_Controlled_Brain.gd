@@ -56,6 +56,7 @@ func update(pawn:Node2D = null, handler: Controller_Handler = null) -> void :
 func get_direction(
 		position:Vector2, velocity:Vector2=Vector2(), data:Dictionary={}
 	)->Vector2:
+	print_debug("MEOW I AM BEING CALLED!!")
 	at_target_location = (position - get_move_to_location()).length() < desire_distance
 	if at_target_location: #test to see if it stop at the target
 		if preserve_direction:

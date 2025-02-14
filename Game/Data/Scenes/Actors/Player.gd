@@ -19,9 +19,9 @@ func get_inventory()->Inventory:
 func _ready()->void:
 	movement_component.facing_change.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
-	
-	character_state.saving.connect(on_state_saving)
-	character_state_loaded() #handling it here since the setter may
+	if character_state:
+		character_state.saving.connect(on_state_saving)
+		character_state_loaded() #handling it here since the setter may
 	#get called before it is ready
 	#TODO: have state loaded called on ready if state not null
 	#AND only have it called in setter if getr_tree == null
@@ -36,11 +36,19 @@ func _ready()->void:
 
 func on_state_saving():
 	if inventory != null:
+		print_debug("Meow saving")
 		character_state.set_meta("inventory",inventory.inventory)
 
 func character_state_loaded():
+	#TODO WHY IS IT NULL HERE?
+	print_debug("mew7", character_state)
 	if inventory != null and character_state != null:
-		inventory.inventory = character_state.get_meta("inventory",inventory.inventory)
+		if character_state.has_meta("inventory"):
+			print_debug("mew8 :", character_state.get_meta("inventory"))
+			inventory.inventory = character_state.get_meta("inventory",inventory.inventory)
+		else:
+			print_debug("mew8 null")
+		
 
 func on_movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2):
 	if direction.x < 0 :

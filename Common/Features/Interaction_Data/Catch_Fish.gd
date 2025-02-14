@@ -123,23 +123,27 @@ func add_fish(fish_data:Dictionary):
 		#protype fishlog
 		#Note: the proper system would use a log resource of fish resource
 		#with an entrie resource
-		log_fish(handler, fish_name, fish_data["type"]["rarity"], {"count":1})
+		#log_fish(handler, fish_name, fish_data["type"]["rarity"], {"count":1})
 		#print("fish log debug")
 		#print_debug(handler.state.data)
 
 #NOTE: new_handler is not needed since it should be set as handler
-func log_fish(new_handler, name, rarity, new_fish_data):
+#func log_fish(new_handler, name, rarity, new_fish_data):
 	#TODO: change or remove this. this is a prototype log.
 	#should add a statistics system
-	var fish_data = new_handler.state.fetch(name, "fish_log_"+str(rarity))
-	if fish_data == null:
-		new_handler.state.store(name,new_fish_data, "fish_log_"+str(rarity))
-		return
-	if new_fish_data.has("count"):
-		if fish_data.has("count"):
-			fish_data["count"] += new_fish_data["count"]
-		else:
-			fish_data["count"] = new_fish_data["count"]
+	#var fish_data = new_handler.state.fetch(name, "fish_log_"+str(rarity))
+#	var fish_data = {}
+#	if Player.state.has_meta(fish_log_"+str(rarity)"):
+#		fish_data[name] 
+	#new_handler.state.fetch(name, "fish_log_"+str(rarity))
+#	if fish_data == null:
+#		new_handler.state.store(name,new_fish_data, "fish_log_"+str(rarity))
+#		return
+#	if new_fish_data.has("count"):
+#		if fish_data.has("count"):
+#			fish_data["count"] += new_fish_data["count"]
+#		else:
+#			fish_data["count"] = new_fish_data["count"]
 			
 func on_catch(fish_data:Dictionary):
 	add_fish(fish_data)

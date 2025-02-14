@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cldlaymbe77mn"]
+[gd_scene load_steps=10 format=3 uid="uid://cldlaymbe77mn"]
 
 [ext_resource type="Script" path="res://Common/Features/World_Levels_Data/Generator_Level.gd" id="1_a382x"]
 [ext_resource type="Resource" uid="uid://drg3ed6i36xt7" path="res://Common/Data/Resources/World_Environment_Data.tres" id="3_d5n0r"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Data/Scenes/Actors/Player.tscn" id="6_oks6f"]
 [ext_resource type="PackedScene" uid="uid://bruyakjvb8wwp" path="res://Game/Data/Scenes/Actors/Enemy_Test.tscn" id="7_hjtk7"]
 [ext_resource type="Script" path="res://Common/Features/Components/MovementComponent2D.gd" id="8_0krqb"]
-[ext_resource type="Resource" uid="uid://orixgnr4wcrd" path="res://Common/Data/Resources/AI_Brain.tres" id="9_uj1r3"]
 [ext_resource type="Script" path="res://Common/Data/Scripts/Character_State.gd" id="10_soy8l"]
 
 [sub_resource type="Resource" id="Resource_1lsxs"]
@@ -17,11 +16,8 @@ sprint_modifier = 1.0
 
 [sub_resource type="Resource" id="Resource_d4elj"]
 script = ExtResource("10_soy8l")
-data = {}
-file_name = "state"
-key = ""
-is_encrypted = true
 save_id = ""
+save_meta = true
 
 [node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]
 process_mode = 3
@@ -43,5 +39,4 @@ unique_name_in_owner = true
 [node name="EnemyTest" parent="." instance=ExtResource("7_hjtk7")]
 position = Vector2(-75, -76)
 movement_component = SubResource("Resource_1lsxs")
-default_brain = ExtResource("9_uj1r3")
 character_state = SubResource("Resource_d4elj")

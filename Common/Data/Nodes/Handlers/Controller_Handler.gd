@@ -9,15 +9,15 @@ class_name Controller_Handler extends Node
 ##the the minions will try to reach it while doing other tasks base on the brains logic and 
 ##componets. NOTE: the brain do not need to have componets for this as long as it have
 ##signals for the pawn to listen to. then it be more of a messager system) 
-@export var controller_brain : Base_Brain :
-	set(value):
+#@export var controller_brain : Base_Brain :
+#	set(value):
 		#this just a failsafe. Normally brain should not be freed 
 		#unless major change in game mode 
-		if controller_brain != value:
-			if controller_brain  != null:
-				controller_brain.removed.emit()
+#		if controller_brain != value:
+#			if controller_brain  != null:
+#				controller_brain.removed.emit()
 				#could also try to free it
-		controller_brain = value
+#		controller_brain = value
 
 ##NOTE: this is plan to replace controller brain
 ##(brain and controllers should be seperated. A brain may have a controller assign)
@@ -48,3 +48,13 @@ func on_level_changed(level:Base_Level, spawn_index: int = 0):
 	
 func _ready() -> void:
 	World.level_changed.connect(on_level_changed)
+	
+func on_autosave():
+	var active_state = get_state()
+	if active_state != null:
+		active_state.save_state()
+	
+func on_game_loaded():
+	var active_state = get_state()
+	if active_state != null:
+		active_state.load_state()
