@@ -46,13 +46,24 @@ var level_loading : bool = false :
 			else:
 				level_ready.emit()
 
+func get_level_id()->String:
+	if get_tree().current_scene:
+		return get_tree().current_scene.name
+	return String()
+
+#DEPRECATED
 var loaded_levels := {}
 #this just store the current level. only one per client unless viewport is used to solve
 #the issue of being ine the same World2d
+#DEPRECATED: do not ref directly, level will be the current scene
 var loaded_level : Base_Level
+##load level by uid. the main handler(game) should listen to these signals
+##so it can load and unload the level withit being directly ref
 func load_level(uid:String, spawn_index : int = 0) -> Base_Level:
 	level_busy.emit()
 	level_changing.emit(uid)
+	#level_changed kind of pointless here. the game should trigger it
+	#when it is loaded in
 	level_changed.emit(get_tree().current_scene, spawn_index)
 	#NOTE: current scene most likly will be null. would need to await
 	#or something. returning a scene really not nessary. 
@@ -82,10 +93,12 @@ func load_level(uid:String, spawn_index : int = 0) -> Base_Level:
 
 		
 #will unload from scene, but not remove from memory
+#DEPRECATED
 func unload_level(level:Base_Level):
 	if loaded_level != null:
 		remove_child(loaded_level)
 		
+#DEPRECATED
 func remove_unused_levels():
 	for level_uid in loaded_levels.keys():
 		var level : Base_Level = loaded_levels[level_uid]
@@ -107,6 +120,7 @@ func _ready():
 
 
 #TODO: change name to: is_loaded_at or is_ready_at unless chunk end up sounding better
+#DEPRECATED
 func is_chunk_loaded(location):
 	if loaded_level != null:
 		return loaded_level.is_level_loaded(location)

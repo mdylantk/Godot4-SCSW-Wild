@@ -17,16 +17,51 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 #so that the tres file ref can be updated from the saved one
 @export var character_state : Character_State :
 	set(value):
-		#this will force it to make a clone instead of a ref
-		#The data assign should be static ref. the copy should
-		#be safe to modify. Note: since the resource is an object,
-		#can create a clone/load/setup function that will either duplicate() or load
-		#from disk
 		if value:
-			value.load_state()
+			if value.is_unique:
+				#TODO: this may get saved and loaded in cases where a whole level
+				#needs to save. then the save_id need to be something that represent the 
+				#owner of the state.Idealy the level or owner would handle the save and load
+				#calls or at least the id to link them.
+				#for now the state will not have the load func called since 
+				#there is no save feature that need to save dynamic objects
+				handle_state_connections(character_state,true)
+				character_state = value.duplicate()
+				handle_state_connections(character_state,false)
+			else:
+				handle_state_connections(character_state,true)
+				character_state = value
+				handle_state_connections(character_state,false)
+				#value.load_state()
+			#NOTE the flag to use path still need to be used
+			#this will be set for all states that rep a scene object(node)
+			#but will only be used of the flag is set from the provided state
+			if is_inside_tree(): 
+				character_state.source_path = get_path()
 			character_state_loaded()
-		character_state = value
-		
+			#value.load_state()
+		else:
+			handle_state_connections(character_state,true)
+			character_state = value
+			handle_state_connections(character_state,false)
+			
+func handle_state_connections(state: Character_State, is_disconnecting:bool = false):
+	if state:
+		if is_disconnecting:
+			state.saving.disconnect(on_state_saving)
+			state.loaded.disconnect(on_state_loaded)
+		else:
+			if !state.saving.is_connected(on_state_saving):
+				state.saving.connect(on_state_saving)
+			if !state.loaded.is_connected(on_state_loaded):
+				state.loaded.connect(on_state_loaded)
+				state.load_state() #if not connected, then it might not be loaded
+				#NOTE: shared states could cause multi load requests and thus 
+				#should try not to share states between characters unless they
+				#override this to ignore load_states and let a handler manage it
+				#such case is odd and unlikly, but load state need to be loaded
+				#when state changed and character states are handled by the character
+				#and thus that is their role
 		
  #TODO: this would need to be a ref
 #to a resource for the state. would need to make an new instance of it so it 
@@ -121,7 +156,29 @@ func on_action_triggered(action:String, value:float)-> void:
 		interact()
 		pass
 
+func on_state_saving() -> void:
+	pass
+
+func on_state_loaded() -> void:
+	pass
+	
+func _ready() -> void:
+	if character_state:
+		character_state.source_path = get_path()
+		handle_state_connections(character_state)
+		on_state_loaded() #calling this here since the state may load on init
+		#thus calling before signal connections
+		
+
+
 func _physics_process(delta: float) -> void:
 	move()
 	
-	
+#func _enter_tree() -> void:
+#	print_debug("MEOW ENTERED TREE MEOOOW!")
+#	if character_state:
+		#update the path when enter tree. NOTE: this may be unrelible for saving
+		#by path if node switches parents a lot. current system is not built for that
+		#case (well except for save_id being a way to bypass it)
+#		character_state.source_path = get_path()
+#		print_debug("? ",character_state.source_path)

@@ -212,4 +212,14 @@ func _ready() -> void:
 	#var player_pos = Player.state.fetch("world","positions")
 	var player_pos = Savedata_Helper.fetch_player_position(Player,"world")
 	if typeof(player_pos) == TYPE_VECTOR2:
+		pass
 		%Player.position = player_pos
+		#NOTE: Character state can store pos, but this one most likly will override it
+		#that is fine(if always the case) but this should be moved to a dedicated
+		#exit info struct since this value more dependent on exits
+		#so world pos can be set on entry and on exit as needed. additional points
+		#can be added, but may depend more on a offset vector to change player pos
+		#(which is just the look at line from the player to the desire point.
+		#this will allow Vector2.Zero from not setting player pos to 0,0 since we 
+		#are adding to it, not setting. "world" pos are the only ones that get set
+		#since worlds are large and the player default pos usally is 0,0

@@ -16,7 +16,9 @@ sprint_modifier = 1.0
 
 [sub_resource type="Resource" id="Resource_d4elj"]
 script = ExtResource("10_soy8l")
+unique = true
 save_id = ""
+use_path_if_valid = true
 save_meta = true
 
 [node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]

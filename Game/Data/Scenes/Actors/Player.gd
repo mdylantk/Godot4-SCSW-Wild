@@ -17,11 +17,12 @@ func get_inventory()->Inventory:
 #and triggered by the attack call. interaction could work the same 
 
 func _ready()->void:
+	super()
 	movement_component.facing_change.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
-	if character_state:
-		character_state.saving.connect(on_state_saving)
-		character_state_loaded() #handling it here since the setter may
+	#if character_state:
+	#	character_state.saving.connect(on_state_saving)
+	#	character_state_loaded() #handling it here since the setter may
 	#get called before it is ready
 	#TODO: have state loaded called on ready if state not null
 	#AND only have it called in setter if getr_tree == null
@@ -33,22 +34,34 @@ func _ready()->void:
 		on_controller_assigned(%Brain.controller)
 	%Brain.controller_assigned.connect(on_controller_assigned)
 	%Brain.controller_unassigned.connect(on_controller_unassigned)
+	
 
 func on_state_saving():
 	if inventory != null:
-		print_debug("Meow saving")
 		character_state.set_meta("inventory",inventory.inventory)
+	if World.get_level_id():
+		#NOTE TODO: the level should assign its own id and the scene tree
+		#way is only used if they do not. by allowing them to set it,
+		#they can disable saving of location related to their name
+		#NOTE: can also have them set the level id to "instance" or something
+		#so the level id is shared or add a flag that will remove
+		#temp pos. ideally can just use location for temp points
+		character_state.set_location(position)#,World.get_level_id())
+	#character_state.set_location(position,get_path())
+	#TODO: give world handler a function to return level id
+	#
 
-func character_state_loaded():
-	#TODO WHY IS IT NULL HERE?
-	print_debug("mew7", character_state)
+func on_state_loaded() -> void:
 	if inventory != null and character_state != null:
 		if character_state.has_meta("inventory"):
-			print_debug("mew8 :", character_state.get_meta("inventory"))
 			inventory.inventory = character_state.get_meta("inventory",inventory.inventory)
-		else:
-			print_debug("mew8 null")
-		
+	if World.get_level_id():
+		position = character_state.get_location(position)#,World.get_level_id())
+	#character_state.get_location(position,get_path())
+#func character_state_loaded():
+#	if inventory != null and character_state != null:
+#		if character_state.has_meta("inventory"):
+#			inventory.inventory = character_state.get_meta("inventory",inventory.inventory)
 
 func on_movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2):
 	if direction.x < 0 :

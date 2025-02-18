@@ -47,15 +47,14 @@ static func fetch_player_position(handler:Player_Handler,id:StringName)->Vector2
 #Generic score set/get by an id. using a int since most score are counters
 static func store_player_score(handler:Player_Handler,new_score:int,id:StringName):
 	if Player.state:
-		Player.state.set_meta(id+"_score",new_score)
+		Player.state.set_score(id, new_score)
 	else:
 		print_debug("MEOW?")
 		handler.state.store(id,new_score,"scores")
 	
 static func fetch_player_score(handler:Player_Handler,id:StringName)->int:
 	if Player.state:
-		if Player.state.has_meta(id+"_score"):
-			return Player.state.get_meta(id+"_score",0)
+		return Player.state.get_score(id)
 	else:
 		print_debug("MEOW?")
 		if handler.state != null:
