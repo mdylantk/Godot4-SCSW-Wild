@@ -1,11 +1,11 @@
 [gd_scene load_steps=13 format=3 uid="uid://dghoogotf0r7u"]
 
-[ext_resource type="Script" path="res://Game/Data/Scenes/Actors/Fish.gd" id="1_d58g8"]
+[ext_resource type="Script" uid="uid://cxwqiaqfqaxje" path="res://Game/Data/Scenes/Actors/Fish.gd" id="1_d58g8"]
 [ext_resource type="Resource" uid="uid://nrh8trhov6yk" path="res://Game/Data/Items/Fish/Fish_Item.tres" id="2_8kk7n"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_xhkgq"]
 [ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Game/Data/Components/Interactive_Component.tscn" id="5_2a1kj"]
 [ext_resource type="Resource" uid="uid://7ik7rawmbjbk" path="res://Common/Features/Random_Tables/Fish_List.tres" id="5_8acdy"]
-[ext_resource type="Script" path="res://Common/Features/Interaction_Data/Catch_Fish.gd" id="7_ssnj1"]
+[ext_resource type="Script" uid="uid://bh7ua1dn21qyg" path="res://Common/Features/Interaction_Data/Catch_Fish.gd" id="7_ssnj1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_34u5r"]
 size = Vector2(16, 16)
@@ -54,7 +54,7 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_72kqa"]
 _data = {
-"Idle": SubResource("Animation_b4c0c")
+&"Idle": SubResource("Animation_b4c0c")
 }
 
 [node name="Fish" type="CharacterBody2D"]

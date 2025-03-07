@@ -55,8 +55,14 @@ func on_state_loaded() -> void:
 	if inventory != null and character_state != null:
 		if character_state.has_meta("inventory"):
 			inventory.inventory = character_state.get_meta("inventory",inventory.inventory)
-	if World.get_level_id():
-		position = character_state.get_location(position)#,World.get_level_id())
+	#if World.get_level_id():
+		#NOTE: this is unrelible. old level stays too long and this get called before the
+		#swicth. 
+		#old system that let level assign location still works, so just add an exit data
+		#and have level assign locations as needed or let world act as the middle man
+		#and allow both to connect to signals and call a level ready signal
+		#print_debug(World.get_level_id()," meow ", character_state.get_location(position))
+		#position = character_state.get_location(position)#,World.get_level_id())
 	#character_state.get_location(position,get_path())
 #func character_state_loaded():
 #	if inventory != null and character_state != null:

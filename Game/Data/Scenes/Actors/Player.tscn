@@ -1,13 +1,13 @@
 [gd_scene load_steps=24 format=3 uid="uid://bugclr6n3igb4"]
 
-[ext_resource type="Script" path="res://Game/Data/Scenes/Actors/Player.gd" id="1_07gio"]
+[ext_resource type="Script" uid="uid://bp3atrikcfxmj" path="res://Game/Data/Scenes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Resource" uid="uid://bahvgyp1vgeky" path="res://Game/Data/States/Strange_Cat_State.tres" id="2_in53k"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Common/Features/Inventory/Inventory.tscn" id="3_m3amk"]
-[ext_resource type="Script" path="res://Game/Data/Components/Shaped_Interactor.gd" id="4_qftw7"]
-[ext_resource type="Script" path="res://Game/Data/Components/Base_Hurtbox.gd" id="6_3jdhg"]
+[ext_resource type="Script" uid="uid://ok522b0njxq0" path="res://Game/Data/Components/Shaped_Interactor.gd" id="4_qftw7"]
+[ext_resource type="Script" uid="uid://fhjjjbbj3dp1" path="res://Game/Data/Components/Base_Hurtbox.gd" id="6_3jdhg"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Common/Data/Nodes/Main_Camera.tscn" id="7_b7ptm"]
-[ext_resource type="Script" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
+[ext_resource type="Script" uid="uid://bgqgcg12is206" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Common/Data/Resources/Player_Controller.tres" id="9_dfeth"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
@@ -123,10 +123,10 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_q78uo"]
 _data = {
-"idle": SubResource("Animation_du65h"),
-"left": SubResource("Animation_7orey"),
-"right": SubResource("Animation_meqo5"),
-"walk": SubResource("Animation_sgr0e")
+&"idle": SubResource("Animation_du65h"),
+&"left": SubResource("Animation_7orey"),
+&"right": SubResource("Animation_meqo5"),
+&"walk": SubResource("Animation_sgr0e")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ifpql"]
@@ -167,7 +167,7 @@ flip_h = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_q78uo")
+&"": SubResource("AnimationLibrary_q78uo")
 }
 
 [node name="Shaped_Interactor" type="Node2D" parent="." node_paths=PackedStringArray("shape_cast")]

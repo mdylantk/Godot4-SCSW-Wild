@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bsvm8im8i0rac"]
 
-[ext_resource type="Script" path="res://Game/UI/debug_hud.gd" id="1_ydgd5"]
+[ext_resource type="Script" uid="uid://bjjdmu67x8vmv" path="res://Game/UI/debug_hud.gd" id="1_ydgd5"]
 
 [node name="DebugHUD" type="CanvasLayer"]
 layer = 100

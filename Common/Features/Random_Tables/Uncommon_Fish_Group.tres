@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="Weighted_Item_Group" load_steps=10 format=3 uid="uid://bgt70orijnguo"]
 
-[ext_resource type="Script" path="res://Common/Features/Inventory/Item_Type.gd" id="1_kxk2u"]
+[ext_resource type="Script" uid="uid://ifsjklmddyjn" path="res://Common/Features/Inventory/Item_Type.gd" id="1_kxk2u"]
 [ext_resource type="Resource" uid="uid://qmwgjuvhm0hw" path="res://Game/Data/Items/Fish/Koi.tres" id="2_tfxn3"]
 [ext_resource type="Resource" uid="uid://b3dj3wcwt2o4a" path="res://Game/Data/Items/Fish/Bass.tres" id="3_ynfba"]
 [ext_resource type="Resource" uid="uid://262dsjbvob87" path="res://Game/Data/Items/Fish/Eel.tres" id="4_0o5yr"]
 [ext_resource type="Resource" uid="uid://c8q8g870m8g0i" path="res://Game/Data/Items/Fish/Pike.tres" id="5_lr5g8"]
-[ext_resource type="Script" path="res://Common/Features/Random_Tables/Weighted_Item_Group.gd" id="6_d6daj"]
+[ext_resource type="Script" uid="uid://dc3f7rycs36le" path="res://Common/Features/Random_Tables/Weighted_Item_Group.gd" id="6_d6daj"]
 [ext_resource type="Resource" uid="uid://c6nhbb2ylq3g2" path="res://Game/Data/Items/Fish/Salmon.tres" id="6_p6n5i"]
 [ext_resource type="Resource" uid="uid://da3p2srikuve4" path="res://Game/Data/Items/Fish/Walleye.tres" id="7_unvfn"]
 [ext_resource type="Resource" uid="uid://bp41rp8k5u2vy" path="res://Game/Data/Items/Fish/Trout.tres" id="8_4nbci"]

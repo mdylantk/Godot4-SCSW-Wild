@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://brre7crunbrjj"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Game/Data/Assets/low_Bit_Tileset.tres" id="1_tfhm6"]
-[ext_resource type="Script" path="res://Common/Features/Minigame_Pounce_Fishing/Fishing_Pond_Map.gd" id="2_22xfp"]
+[ext_resource type="Script" uid="uid://djq00sspc6rbv" path="res://Common/Features/Minigame_Pounce_Fishing/Fishing_Pond_Map.gd" id="2_22xfp"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="3_fxox0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kqd4q"]

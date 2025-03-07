@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="A_Set_Dialog" load_steps=6 format=3 uid="uid://du2h4y80euyrw"]
 
-[ext_resource type="Script" path="res://Game/Data/Actions/Actions/A_Set_Player_Variables.gd" id="1_cfx6n"]
-[ext_resource type="Script" path="res://Game/Data/Actions/Actions/A_Set_Dialog.gd" id="2_vta28"]
+[ext_resource type="Script" uid="uid://bm2k54x4x11uf" path="res://Game/Data/Actions/Actions/A_Set_Player_Variables.gd" id="1_cfx6n"]
+[ext_resource type="Script" uid="uid://bj0mw3paee05g" path="res://Game/Data/Actions/Actions/A_Set_Dialog.gd" id="2_vta28"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="3_2bwko"]
 
 [sub_resource type="Resource" id="Resource_x6wjs"]

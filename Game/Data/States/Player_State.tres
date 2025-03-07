@@ -1,8 +1,9 @@
 [gd_resource type="Resource" script_class="Player_State" load_steps=2 format=3 uid="uid://c67c2fehtuhni"]
 
-[ext_resource type="Script" path="res://Common/Data/Nodes/Handlers/Player_State.gd" id="1_omn7m"]
+[ext_resource type="Script" uid="uid://smcr5iyfdmxe" path="res://Common/Data/Nodes/Handlers/Player_State.gd" id="1_omn7m"]
 
 [resource]
 script = ExtResource("1_omn7m")
 save_id = "Player_State"
+use_path_if_valid = false
 save_meta = true

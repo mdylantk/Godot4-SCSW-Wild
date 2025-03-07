@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bnt60muvh63sj"]
 
-[ext_resource type="Script" path="res://Game/Data/Components/Interactive_Component.gd" id="1_bb761"]
+[ext_resource type="Script" uid="uid://cbcfpkqn4nnk7" path="res://Game/Data/Components/Interactive_Component.gd" id="1_bb761"]
 
 [node name="Interact_Component" type="StaticBody2D"]
 collision_layer = 8

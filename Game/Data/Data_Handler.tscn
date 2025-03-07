@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cg6lsqeuo87mb"]
 
-[ext_resource type="Script" path="res://Game/Data/Data_Handler.gd" id="1_0iftp"]
+[ext_resource type="Script" uid="uid://dxdswh7khjowr" path="res://Game/Data/Data_Handler.gd" id="1_0iftp"]
 
 [node name="DataHandler" type="Node"]
 script = ExtResource("1_0iftp")

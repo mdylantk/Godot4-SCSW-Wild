@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Item_Type" load_steps=4 format=3 uid="uid://ocn1enqk0dhh"]
 
 [ext_resource type="Texture2D" uid="uid://bd5euihgbdggx" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/monochrome-transparent.png" id="1_0bf7y"]
-[ext_resource type="Script" path="res://Common/Features/Inventory/Item_Type.gd" id="2_vhp01"]
+[ext_resource type="Script" uid="uid://ifsjklmddyjn" path="res://Common/Features/Inventory/Item_Type.gd" id="2_vhp01"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_juioi"]
 atlas = ExtResource("1_0bf7y")

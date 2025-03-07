@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bdpv2nuo5qsqg"]
 
-[ext_resource type="Script" path="res://Game/Player/Player_Handler.gd" id="1_d3v36"]
+[ext_resource type="Script" uid="uid://c8i3segi87cqh" path="res://Game/Player/Player_Handler.gd" id="1_d3v36"]
 [ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/Data/States/Player_State.tres" id="2_1q2o3"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Data/Scenes/Actors/Player.tscn" id="2_vymv8"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Common/Data/Resources/Player_Controller.tres" id="4_vte1q"]

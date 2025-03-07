@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="Foilage_Generator" load_steps=23 format=3 uid="uid://c7267jk27323m"]
 
 [ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Game/Data/Resources/Noise_Maps/World_Detail_Map.tres" id="1_r5rn4"]
-[ext_resource type="Script" path="res://Common/Features/World_Levels_Data/Foilage_Generator.gd" id="2_cdwmf"]
-[ext_resource type="Script" path="res://Common/Data/Scripts/Tile_Info.gd" id="2_ye7g2"]
+[ext_resource type="Script" uid="uid://c7hm36m1w8roy" path="res://Common/Features/World_Levels_Data/Foilage_Generator.gd" id="2_cdwmf"]
+[ext_resource type="Script" uid="uid://df2p05the2ipl" path="res://Common/Data/Scripts/Tile_Info.gd" id="2_ye7g2"]
 [ext_resource type="Resource" uid="uid://dlpjnsvhvuc1m" path="res://Game/Data/Resources/Tiles/Tile_Grass0.tres" id="3_3gu74"]
 [ext_resource type="FastNoiseLite" uid="uid://cp0b4i2m77i8m" path="res://Game/Data/Resources/Noise_Maps/World_Variation_Map.tres" id="3_6ovfg"]
 [ext_resource type="Resource" uid="uid://d0xm0ad0ihwia" path="res://Game/Data/Resources/Tiles/Tile_Grass1.tres" id="4_i2aou"]

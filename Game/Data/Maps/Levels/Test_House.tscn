@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://lv4hypjjj08a"]
 
-[ext_resource type="Script" path="res://Common/Features/World_Levels_Data/Base_Level.gd" id="1_t73yg"]
+[ext_resource type="Script" uid="uid://chix5ta5ba87p" path="res://Common/Features/World_Levels_Data/Base_Level.gd" id="1_t73yg"]
 [ext_resource type="PackedScene" uid="uid://hepasgr3svoi" path="res://Game/Data/Maps/Instances/InstanceTest.tscn" id="2_y6uyh"]
 
 [node name="TestHouse" type="Node"]

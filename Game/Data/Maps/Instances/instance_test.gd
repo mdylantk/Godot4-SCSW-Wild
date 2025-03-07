@@ -10,3 +10,4 @@ func _ready() -> void:
 			#NOTE: need to see if there one set
 			#and not check for zero, but for now this is to test
 			%Player.position = player_pos
+	pass
