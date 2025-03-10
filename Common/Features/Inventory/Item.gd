@@ -10,16 +10,22 @@ signal amount_depleted()
 #of owned items
 static var max_stack_size : int = 99 #note, this can not be override in export. need to override the scrip
 
+#ResourceLoader.get_resource_uid(path)
+#@export var type : Item_Type = Item_Type.new():
 
+@export var type_uid : int = -1
 
-
-
-
-
-
-
-
-@export var type : Item_Type = Item_Type.new()
+func set_type(new_type:Item_Type) -> void:
+	if new_type:
+		type_uid = ResourceLoader.get_resource_uid(new_type.resource_path)
+	else:
+		type_uid = -1
+func get_type() -> Item_Type:
+	if ResourceUID.has_id(type_uid):
+		return load(ResourceUID.get_id_path(type_uid))
+	else:
+		print_debug("WARNING: Returning new Item_Type for Item")
+		return Item_Type.new()
 #@export var display_name : String = "Item"
 #@export var discription : String = "This is an item"
 #@export var tooltip : String = "tooltip of item"
@@ -33,7 +39,7 @@ static var max_stack_size : int = 99 #note, this can not be override in export. 
 #dictinary end up being better. 
 #NOTE: if use this, can cast to child types to get access to additional var
 #like durabulity or quality. the base item will share common item function and varibles
-var amount:int = 1
+@export var amount:int = 1
 #NOTE: metadata might not be needed since it may exist for objects? so using the built
 #in may be better
 #var metadata := {}
@@ -58,7 +64,8 @@ func is_same_item(other_item:Item)->bool:
 	#print_debug("icon: "+str(icon.get_rid()) + " vs " + str(other_item.icon.get_rid()))
 	#var test:Resource
 	#test.get_rid()
-	return type == other_item.type
+	return get_type() == other_item.get_type()
+	#return type == other_item.type
 	
 	#if (display_name == other_item.display_name and
 	#	discription == other_item.discription and 

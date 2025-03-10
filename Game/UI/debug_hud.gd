@@ -30,10 +30,13 @@ func _process(delta: float) -> void:
 				debug_text = debug_text + "\n" + "Inventory:"
 				for item in player_inventory:
 					#debug_text = debug_text + "\n" + str(item)
+					var item_type = item.get_type()
+					if item_type == null:
+						continue
 					debug_text = (
 						debug_text + "\n" + 
-						str(item.get_meta("unique_name",str(item.type.display_name))) +
-							"("+str(item.type.display_name)+"):" + 
+						str(item.get_meta("unique_name",str(item_type.display_name))) +
+							"("+str(item_type.display_name)+"):" + 
 						str(item.amount)
 						)
 		debug.text = debug_text

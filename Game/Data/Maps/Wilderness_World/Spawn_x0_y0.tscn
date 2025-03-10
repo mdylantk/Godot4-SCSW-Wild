@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="10_terbv"]
 [ext_resource type="Script" uid="uid://cxhenjxcqrr8u" path="res://Game/Data/Actions/Actions/A_Level_Transfer.gd" id="11_vcjrw"]
 [ext_resource type="Script" uid="uid://dpcfqu6pi0uwi" path="res://Common/Features/Inventory/Item.gd" id="12_pvsuw"]
-[ext_resource type="Resource" uid="uid://nrh8trhov6yk" path="res://Game/Data/Items/Fish/Fish_Item.tres" id="13_ti34r"]
+[ext_resource type="Resource" uid="uid://byav5our3f61f" path="res://Game/Data/Items/Fish/Carp.tres" id="13_n5vac"]
 [ext_resource type="Script" uid="uid://duo75yc6pgaxj" path="res://Game/Data/Actions/Actions/A_Give_Item.gd" id="14_ujeav"]
 
 [sub_resource type="Resource" id="Resource_u6lsk"]
@@ -43,11 +43,13 @@ size = Vector2(16, 16)
 
 [sub_resource type="Resource" id="Resource_d6o4d"]
 script = ExtResource("12_pvsuw")
-type = ExtResource("13_ti34r")
+type_uid = -1
+amount = 1
 
 [sub_resource type="Resource" id="Resource_7dgfp"]
 script = ExtResource("14_ujeav")
 item = SubResource("Resource_d6o4d")
+item_type = ExtResource("13_n5vac")
 item_meta = {
 "unique_name": "Test Fish"
 }

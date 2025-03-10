@@ -9,8 +9,8 @@ region = Rect2(561, 289, 17, 17)
 
 [resource]
 script = ExtResource("2_7hlp7")
-display_name = "Shadow Pike"
-discription = "This is a shadow pike"
+display_name = "Orange_Eel"
+discription = "This is a orange eel"
 tooltip = "Smells fishy"
 icon = SubResource("AtlasTexture_juioi")
 item_entity = ""

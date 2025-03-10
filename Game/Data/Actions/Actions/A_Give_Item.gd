@@ -2,6 +2,7 @@ class_name A_Give_Item extends Base_Action
 
 ##the item info needed to create or add an item to give
 @export var item : Item
+@export var item_type : Item_Type
 ##seems the metadata feild do not appear on the item
 ##so this is to manually set it. NOTE: should use an action to do this or
 ##use item varibles instead of metadata. so this may be removed later
@@ -56,12 +57,13 @@ func run(data:Action_Data = null) -> bool:
 		print_debug("inventory is null")
 		return false
 	
+	var new_item = item.duplicate()
+	new_item.set_type(item_type)
 	if item_meta.is_empty():
-		inventory.add_to_inventory(item,1)
+		inventory.add_to_inventory(new_item,1)
 	else:
 		#dupucate the item and then add the meta to prevent any modification of the
 		#assign item
-		var new_item = item.duplicate()
 		for key in item_meta:
 			new_item.set_meta(key,item_meta[key])
 		inventory.add_to_inventory(new_item,1)
