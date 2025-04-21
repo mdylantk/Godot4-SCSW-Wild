@@ -14,7 +14,7 @@ var page_index : int = 0
 ##the data used for the actions. this is shared since it should be a ref of a state
 ##also chain action may need to be careful of reusing the same data.
 var data := {}
-var action_data : Action_Data
+var action_data : Action_State
 
 var is_cancelable:bool = true
 

@@ -4,7 +4,7 @@ class_name A_Set_Player_Variables extends Base_Action
 ##NOTE: this need to have string keys
 @export var variables : Dictionary
 
-func run(data:Action_Data = null) -> bool:
+func _run(data:Action_State = null) -> bool:
 	var handler := Player
 	#if handler == null:
 	#	print_debug("handler is incorrect type")

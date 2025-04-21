@@ -1,4 +1,10 @@
 class_name Base_Conditional extends Resource
 
-func is_true(data:Action_Data = null) -> bool:
-	return true
+#NOTE: default is the default return value. There may be cases where
+#the logic is not handle and it will return the default as the result
+
+func is_true(data:Action_State = null, default:bool = true) -> bool:
+	return _is_true(data,default)
+
+func _is_true(data:Action_State = null, default:bool = true) -> bool:
+	return default

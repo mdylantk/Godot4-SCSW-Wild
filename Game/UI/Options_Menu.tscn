@@ -54,12 +54,12 @@ grow_horizontal = 2
 grow_vertical = 2
 columns = 3
 
-[node name="Label" type="Label" parent="GridContainer"]
+[node name="Music_Volume_Label" type="Label" parent="GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Music Volume"
+text = "MUSIC_VOLUME"
 
-[node name="VSeparator" type="VSeparator" parent="GridContainer"]
+[node name="Music_Volume_VSeparator" type="VSeparator" parent="GridContainer"]
 layout_mode = 2
 
 [node name="Music_Volume_Slider" type="HSlider" parent="GridContainer"]
@@ -68,5 +68,23 @@ layout_mode = 2
 size_flags_horizontal = 3
 value = 100.0
 
+[node name="Language_Label" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "LANGUAGE"
+
+[node name="Language_VSeparator" type="VSeparator" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Language_OptionButton" type="OptionButton" parent="GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "ENGLISH"
+popup/item_0/id = 0
+popup/item_1/text = "ESPAÑOL"
+popup/item_1/id = 1
+
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="value_changed" from="GridContainer/Music_Volume_Slider" to="." method="_on_music_volume_slider_value_changed"]
+[connection signal="item_selected" from="GridContainer/Language_OptionButton" to="." method="_on_language_option_button_item_selected"]

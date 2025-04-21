@@ -17,7 +17,7 @@ class_name A_Set_Dialog extends Base_Action
 #target/source for use with data since nested types would not work well
 #with the current system and it be easier to pass the data in the format call
 
-func run(data:Action_Data = null) -> bool:
+func _run(data:Action_State = null) -> bool:
 	var dialog_data : Dictionary
 	if data:
 		dialog_data = data.get_meta("dialog_data",{})

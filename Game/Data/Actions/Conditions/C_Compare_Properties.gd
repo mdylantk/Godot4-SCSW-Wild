@@ -13,7 +13,7 @@ class_name C_Compare_Properties extends Base_Conditional
 @export var values_to_compare : Array #will use an array since can not export variant
 #will be treated as an and comparison
 
-func is_true(data:Action_Data = null) -> bool:
+func _is_true(data:Action_State = null, default:bool=true) -> bool:
 	#if null, would return false
 	var value : Variant
 	var source : Variant

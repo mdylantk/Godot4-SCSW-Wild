@@ -16,7 +16,7 @@ class_name A_Level_Transfer extends Base_Action
 #the world probably should handle that
 
 
-func run(data:Action_Data = null) -> bool:
+func _run(data:Action_State = null) -> bool:
 	if level_uid != "":
 		#var handler : Node = data["handler"]
 		#var instigator : Node  = data["source"]

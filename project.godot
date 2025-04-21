@@ -151,6 +151,11 @@ Start={
 ]
 }
 
+[internationalization]
+
+locale/translation_remaps={}
+locale/translations=PackedStringArray("res://Game/Data/Assets/Localization/MainMenuTranslations.en.translation", "res://Game/Data/Assets/Localization/MainMenuTranslations.es.translation")
+
 [layer_names]
 
 2d_physics/layer_1="Physical"

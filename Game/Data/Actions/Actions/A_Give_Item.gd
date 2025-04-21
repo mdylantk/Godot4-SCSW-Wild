@@ -24,7 +24,7 @@ class_name A_Give_Item extends Base_Action
 ##where id alone is not enough info. 
 @export var target_index : int = 0
 
-func run(data:Action_Data = null) -> bool:
+func run(data:Action_State = null) -> bool:
 	#NOTE: interactive component the interactor is the owner.
 	#so giving to owner should be the default unless the action is targeting
 	#the one being interactive with

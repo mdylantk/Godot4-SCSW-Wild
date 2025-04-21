@@ -1,11 +1,10 @@
-##if no condition, then will run the false action
 class_name Action_If_Else extends Base_Action
 
 @export var condition : Base_Conditional
 @export var true_action : Base_Action
 @export var false_action : Base_Action
 
-func run(data:Action_Data = null) -> bool:
+func _run(data:Action_State = null) -> bool:
 	var is_true = false
 	if condition != null : 
 		is_true = condition.is_true(data)
