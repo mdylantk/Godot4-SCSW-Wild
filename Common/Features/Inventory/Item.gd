@@ -13,7 +13,11 @@ static var max_stack_size : int = 99 #note, this can not be override in export. 
 #ResourceLoader.get_resource_uid(path)
 #@export var type : Item_Type = Item_Type.new():
 
+#NOTE: most items will have their type set in code. Most things 
+#that give items would expect the item_type to be exported
+#since that the static data
 @export var type_uid : int = -1
+
 
 func set_type(new_type:Item_Type) -> void:
 	if new_type:
@@ -138,3 +142,5 @@ func increase_amount(new_amount:int) -> int:
 	#TODO check if this works
 	return remaining_amount
 	
+func _init(item_type: Item_Type = null) -> void:
+	set_type(item_type)

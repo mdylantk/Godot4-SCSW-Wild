@@ -17,6 +17,15 @@ func get_inventory()->Inventory:
 #and triggered by the attack call. interaction could work the same 
 
 func _ready()->void:
+	#NOTE: can load it, but some data is loss when switching scene (inventory)
+	#so state is not being saved at the right time nore loaded. signal issues may
+	#play a party to. Would need to remake the whole state system to not depend
+	#on the state of the exported state
+	#character_state = Data.load_resource("playerCharacterState",Data.default_path)
+	#if character_state:
+	#	pass
+	#else:
+	#	character_state = Character_State.new()
 	super()
 	movement_component.facing_change.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
@@ -37,6 +46,7 @@ func _ready()->void:
 	
 
 func on_state_saving():
+	print_debug("saving")
 	if inventory != null:
 		character_state.set_meta("inventory",inventory.inventory)
 	if World.get_level_id():
@@ -49,9 +59,19 @@ func on_state_saving():
 		character_state.set_location(position)#,World.get_level_id())
 	#character_state.set_location(position,get_path())
 	#TODO: give world handler a function to return level id
-	#
+
+func on_autosave(path : String = ""):
+	print_debug("autosaving 2")
+	if character_state != null:
+		on_state_saving()
+		Data.save_data(character_state,"playerCharacterState",path)
+
+func on_game_loaded(path : String = ""):
+	print_debug("MEOW@@@!!!!")
+	character_state = Data.load_resource("playerCharacterState",path)
 
 func on_state_loaded() -> void:
+	print_debug("loading")
 	if inventory != null and character_state != null:
 		if character_state.has_meta("inventory"):
 			inventory.inventory = character_state.get_meta("inventory",inventory.inventory)

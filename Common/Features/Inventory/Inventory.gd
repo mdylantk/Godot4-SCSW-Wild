@@ -26,18 +26,47 @@ signal slot_update(inventory, slot, old_item)
 #for a safer way, a item array would be needed and manually assign items
 #to an id.
 
-
+#NOTE get_savable_inventory and load_inventory are experimental way
+#of getting path free objects, but would be slower to save.
+#NOTE: of there more than one item base(like weapons), then items will
+#need an additional type base vairble to use that instead of item
+#may need to be item group or something
+#NOTE:may be ideal to use one item base. most of the weapon data will be static
+#which be in the item type. things like duriblity could be part of the item proprties
+#or as a meta element
+#TODO: test this and see if it is ideal
+func get_savable_inventory()->Array[Dictionary]:
+	var return_data:Array[Dictionary] = []
+	for item in inventory:
+		var item_data : Dictionary = {}
+		for property in item.get_property_list():
+			if property.name in item:
+				item_data[property.name] = item[property.name]
+		for meta_key in item.get_meta_keys():
+			item_data["_meta"] = {}
+			item_data["_meta"][meta_key] = item.get_meta(meta_key)
+		return_data.append(item_data)
+	return return_data
+func load_inventory(data:Array[Dictionary]) ->void:
+	inventory.clear()
+	for item in data:
+		var new_item = Item.new() 
+		for property in item:
+			if property == "_meta":
+				for meta_key in data[property]:
+					new_item.set_meta(meta_key,data[property][meta_key])
+			elif property in new_item:
+				new_item[property] = data[property]
+			pass
+		inventory.append(new_item)
 
 func add_to_inventory(new_item:Item, amount : int = 1) -> int:
 	var remaining_amount : int = amount
 	var trash_items : Array[Item]
 	if remaining_amount > 0:
-		#todo: may need to get the slot id for this
 		for item in inventory:
 			if item.is_similar_to(new_item):
 				remaining_amount = item.increase_amount(remaining_amount)
-				#if item.amount <= 0:
-				#	trash_items.append(item)
 				slot_update.emit(self,0,item)
 		for new_slot in range(100-inventory.size()):
 			if remaining_amount > 0:
@@ -62,26 +91,6 @@ func add_to_inventory(new_item:Item, amount : int = 1) -> int:
 			if item.is_similar_to(new_item):
 				remaining_amount = item.increase_amount(remaining_amount)
 				if item.amount <= 0:
-					#will remove directly since removing without looping directly
-					#should only rearrange the slots that was checked already
 					inventory.remove_at(slot)
 					slot_update.emit(self,slot,item)
-					#trash_items.append(item)
-		#if item.is_similar_to(new_item):
-			#fill up item amount to the max
-		#	remaining_amount = item.increase_amount(remaining_amount)
-	
-#	for item in trash_items:
-#		inventory.erase(item)
-	#if
-	#if there any amount left over, then add new items untill the amount is used up
-	#(meaning the amount in new item will be ignored/overridden)
 	return remaining_amount
-
-#TODO convert to use reource(Item) for items instead of dictionary now that it is known resources 
-#are not too hard to save with player state
-#TODO just need a way to add metadata. could add it directly or loop a dictionary
-#so a new item wont nessary need to be made to add to a stack, just use the pass resorce ref
-#and a dictionary of modifcations
-#this only issue is that there may already be a metadata in the ref(which is not really an issue)
-#so it may not be nessary. also maybe a new item is not too bad since the ref will be remove if it not stored

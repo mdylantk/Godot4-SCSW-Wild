@@ -10,6 +10,11 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
 ##This is for caculate velocity change and store varibles related to how it change
 @export var movement_component : Movement_Component_2D = Advance2DMovement.new()
+	#if the movement component ever need to store mutable data,  it need to
+	#be duplicate on set. for not it more of a static type for caculations
+	#while this and the character state will be used or mutable data
+	#controller also would have a state, but it acts as an interface to that state
+	#and well controller need to be shared
 
 
 #NOTE: the issue is that this can be saved. so this and the one in editor
@@ -92,7 +97,8 @@ func get_inventory()->Inventory:
 func character_state_loaded():
 	pass
 	
-func on_autosave():
+func on_autosave(path : String = ""):
+	print_debug("autosaving")
 	if character_state != null:
 		character_state.save_state()
 

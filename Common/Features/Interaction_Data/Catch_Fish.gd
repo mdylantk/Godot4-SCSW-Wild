@@ -64,16 +64,18 @@ func add_fish(fish_data:Dictionary):
 		print_debug(fish_data["type"])
 		data["fish_data"] = fish_data
 		var fish_name = "fish"
-		var new_fish_item = Item.new()
+		var new_fish_item = null
 		if fish_data["type"]["pick"] as Item_Type:
 			print_debug("MEOW IT IS A FISH!!!")
 			fish_name = fish_data["type"]["pick"].display_name
-			new_fish_item.set_type(fish_data["type"]["pick"])
+			#new_fish_item.set_type(fish_data["type"]["pick"])
+			new_fish_item  = Item.new(fish_data["type"]["pick"])
 			#new_fish_item.type = fish_data["type"]["pick"]
 		else:
 			fish_name = fish_data["type"]["pick"]
 		#var fish_item = fish_item_source.new_item(1,{"name":fish_name})
-			new_fish_item.set_type(fish_item_source)
+			new_fish_item  = Item.new(fish_item_source)
+			#new_fish_item.set_type(fish_item_source)
 			#new_fish_item.type = fish_item_source
 			new_fish_item.set_meta("unique_name",fish_name)
 		##NOTE: segment trying to add a test of the new item system

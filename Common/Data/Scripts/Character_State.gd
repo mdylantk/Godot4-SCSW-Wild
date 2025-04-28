@@ -6,7 +6,6 @@ class_name Character_State extends Savable_State
 		unique = value
 		is_unique = value
 
-
 ##this provides a way to get a save location or return the provided default
 ##if there is no saved location
 func get_location(default_location:Vector2=Vector2(),id:String="position") ->Vector2:

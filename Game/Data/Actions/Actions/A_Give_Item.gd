@@ -1,6 +1,7 @@
 class_name A_Give_Item extends Base_Action
 
-##the item info needed to create or add an item to give
+##the item info needed to create or add an item to give. 
+##NOTE May use only one item base to keep things simple. can expand on it as needed
 @export var item : Item
 @export var item_type : Item_Type
 ##seems the metadata feild do not appear on the item
@@ -57,8 +58,9 @@ func run(data:Action_State = null) -> bool:
 		print_debug("inventory is null")
 		return false
 	
-	var new_item = item.duplicate()
-	new_item.set_type(item_type)
+	#var new_item = item.duplicate()
+	#new_item.set_type(item_type)
+	var new_item = Item.new(item_type)
 	if item_meta.is_empty():
 		inventory.add_to_inventory(new_item,1)
 	else:
