@@ -1,5 +1,8 @@
 class_name Player_State extends Savable_State
 
+#TODO: see if this is still used or if it was moved to the game state
+#this still should be used as a profile state
+
 #func _init():
 	#metadata = {
 	#	"total_common_fish_caught":0,

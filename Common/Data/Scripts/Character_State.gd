@@ -6,15 +6,19 @@ class_name Character_State extends Savable_State
 		unique = value
 		is_unique = value
 
+@export var local_position : Vector2
+var level : Node #may be better as uid or name
+@export var inventory : Array[Item]
+
 ##this provides a way to get a save location or return the provided default
 ##if there is no saved location
-func get_location(default_location:Vector2=Vector2(),id:String="position") ->Vector2:
-	if has_meta("location"+id):
-		return get_meta("location"+id,default_location)
-	return default_location
+#func get_location(default_location:Vector2=Vector2(),id:String="position") ->Vector2:
+#	if has_meta("location"+id):
+#		return get_meta("location"+id,default_location)
+#	return default_location
 ##a helper func that make sure the location id is maintained
-func set_location(location:Vector2, id:String="position")->void:
-	set_meta("location"+id, location)
+#func set_location(location:Vector2, id:String="position")->void:
+#	set_meta("location"+id, location)
 
 #func on_load(data:Variant,id=String):
 #	super(data,id)

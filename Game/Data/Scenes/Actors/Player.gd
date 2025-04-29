@@ -2,92 +2,43 @@ extends Character2D
 
 #@export var interact_cast : ShapeCast2D
 
-#TODO: make a getter function and let the children assign some kind of inventory
-#to return. may be better to have the inventory more self contained though
-#having a getter that return some node with item getting and setting functionality
-#is still better
+#TODO: may remove inventory as a node so the save_state can store it
+#there no reason to have two copies of an item array. an inventory object
+#may still be used since the functions are needed and other stats like limits
+#also a node can still be useful for providing item drops or static loadouts
+#but any persistant/dynamic inventory would need to be redirected to the save state.
 @onready var inventory = $Inventory
 
 func get_inventory()->Inventory:
 	return $Inventory
 
-#NOTE attack may need to be realted to a node or something. attack dection 
-#mosty likly will change so one shapecast wont solve all the conditions.
-#so a cast or projectile would be used. the node will be responsible in singeling back hit results
-#and triggered by the attack call. interaction could work the same 
-
 func _ready()->void:
-	#NOTE: can load it, but some data is loss when switching scene (inventory)
-	#so state is not being saved at the right time nore loaded. signal issues may
-	#play a party to. Would need to remake the whole state system to not depend
-	#on the state of the exported state
-	#character_state = Data.load_resource("playerCharacterState",Data.default_path)
-	#if character_state:
-	#	pass
-	#else:
-	#	character_state = Character_State.new()
-	super()
+	on_game_loaded(Data.default_path)
 	movement_component.facing_change.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
-	#if character_state:
-	#	character_state.saving.connect(on_state_saving)
-	#	character_state_loaded() #handling it here since the setter may
-	#get called before it is ready
-	#TODO: have state loaded called on ready if state not null
-	#AND only have it called in setter if getr_tree == null
-	#then it should be unlikly to be called twice
+
 	%Shaped_Interactor.interaction.connect(on_interaction)
-	#NOTE: controller is most likly already assign, so would
-	#need to call the assign logic else none of the connections will be applied
+
 	if %Brain.controller:
 		on_controller_assigned(%Brain.controller)
 	%Brain.controller_assigned.connect(on_controller_assigned)
 	%Brain.controller_unassigned.connect(on_controller_unassigned)
-	
 
-func on_state_saving():
-	print_debug("saving")
-	if inventory != null:
-		character_state.set_meta("inventory",inventory.inventory)
-	if World.get_level_id():
-		#NOTE TODO: the level should assign its own id and the scene tree
-		#way is only used if they do not. by allowing them to set it,
-		#they can disable saving of location related to their name
-		#NOTE: can also have them set the level id to "instance" or something
-		#so the level id is shared or add a flag that will remove
-		#temp pos. ideally can just use location for temp points
-		character_state.set_location(position)#,World.get_level_id())
-	#character_state.set_location(position,get_path())
-	#TODO: give world handler a function to return level id
+
+func get_save_path()->String:
+	return "Characters"
 
 func on_autosave(path : String = ""):
-	print_debug("autosaving 2")
-	if character_state != null:
-		on_state_saving()
-		Data.save_data(character_state,"playerCharacterState",path)
+	if inventory != null:
+		save_state.inventory = inventory.inventory
+	save_state.local_position = position
+	super(path)
 
 func on_game_loaded(path : String = ""):
-	print_debug("MEOW@@@!!!!")
-	character_state = Data.load_resource("playerCharacterState",path)
-
-func on_state_loaded() -> void:
-	print_debug("loading")
-	if inventory != null and character_state != null:
-		if character_state.has_meta("inventory"):
-			inventory.inventory = character_state.get_meta("inventory",inventory.inventory)
-	#if World.get_level_id():
-		#NOTE: this is unrelible. old level stays too long and this get called before the
-		#swicth. 
-		#old system that let level assign location still works, so just add an exit data
-		#and have level assign locations as needed or let world act as the middle man
-		#and allow both to connect to signals and call a level ready signal
-		#print_debug(World.get_level_id()," meow ", character_state.get_location(position))
-		#position = character_state.get_location(position)#,World.get_level_id())
-	#character_state.get_location(position,get_path())
-#func character_state_loaded():
-#	if inventory != null and character_state != null:
-#		if character_state.has_meta("inventory"):
-#			inventory.inventory = character_state.get_meta("inventory",inventory.inventory)
+	super(path)
+	await get_tree().process_frame
+	if inventory != null and save_state != null:
+		inventory.inventory = save_state.inventory
 
 func on_movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2):
 	if direction.x < 0 :

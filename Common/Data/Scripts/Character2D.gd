@@ -10,69 +10,49 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
 ##This is for caculate velocity change and store varibles related to how it change
 @export var movement_component : Movement_Component_2D = Advance2DMovement.new()
-	#if the movement component ever need to store mutable data,  it need to
-	#be duplicate on set. for not it more of a static type for caculations
-	#while this and the character state will be used or mutable data
-	#controller also would have a state, but it acts as an interface to that state
-	#and well controller need to be shared
+
+var save_state : Character_State
+
+#NOTE: maybe i am overthinking this. name should be good enough. level may save 
+#the full state of all enemies on save and load likewise. can add them to a dir base on
+#ownership
+func get_save_path()->String:
+	#NOTE: may want to expose this and use a format. level and name is needed
+	#for dynamic types, but global types just need a name
+	var save_path : PackedStringArray = get_path().get_concatenated_names().split("root/")
+	if save_path.size() > 1:
+		return save_path[1].split("/"+name)[0]
+	return ""
 
 
-#NOTE: the issue is that this can be saved. so this and the one in editor
-#may be diffrent. might be better to have a save/load function in the state
-#so that the tres file ref can be updated from the saved one
-@export var character_state : Character_State :
-	set(value):
-		if value:
-			if value.is_unique:
-				#TODO: this may get saved and loaded in cases where a whole level
-				#needs to save. then the save_id need to be something that represent the 
-				#owner of the state.Idealy the level or owner would handle the save and load
-				#calls or at least the id to link them.
-				#for now the state will not have the load func called since 
-				#there is no save feature that need to save dynamic objects
-				handle_state_connections(character_state,true)
-				character_state = value.duplicate()
-				handle_state_connections(character_state,false)
-			else:
-				handle_state_connections(character_state,true)
-				character_state = value
-				handle_state_connections(character_state,false)
-				#value.load_state()
-			#NOTE the flag to use path still need to be used
-			#this will be set for all states that rep a scene object(node)
-			#but will only be used of the flag is set from the provided state
-			if is_inside_tree(): 
-				character_state.source_path = get_path()
-			character_state_loaded()
-			#value.load_state()
-		else:
-			handle_state_connections(character_state,true)
-			character_state = value
-			handle_state_connections(character_state,false)
-			
-func handle_state_connections(state: Character_State, is_disconnecting:bool = false):
-	if state:
-		if is_disconnecting:
-			state.saving.disconnect(on_state_saving)
-			state.loaded.disconnect(on_state_loaded)
-		else:
-			if !state.saving.is_connected(on_state_saving):
-				state.saving.connect(on_state_saving)
-			if !state.loaded.is_connected(on_state_loaded):
-				state.loaded.connect(on_state_loaded)
-				state.load_state() #if not connected, then it might not be loaded
-				#NOTE: shared states could cause multi load requests and thus 
-				#should try not to share states between characters unless they
-				#override this to ignore load_states and let a handler manage it
-				#such case is odd and unlikly, but load state need to be loaded
-				#when state changed and character states are handled by the character
-				#and thus that is their role
+func on_new_game(path:String = ""):
+	save_state = Character_State.new()
+	
+#TODO: try not to depend on data functions if possible. They are useful,
+#but should try to have this less dependent on things.
+#also ready using the data default path is iffy if trying to decoup this
+#could use a var for the default path and have the children pull from data
+#or could have it lightly depend on it with a resource for path info
+#but may need another path after the level loaded to load state
+func on_game_loaded(path:String = ""):
+	
+	var full_path = path + get_save_path() + "/" + name + ".tres"
+	if ResourceLoader.exists(full_path):
+		save_state = ResourceLoader.load(full_path,"",0)
+
+	if save_state == null:
+		on_new_game(path)
 		
- #TODO: this would need to be a ref
-#to a resource for the state. would need to make an new instance of it so it 
-#can be modified. can use setters for that. also the state could have id so it 
-#can be saved. the id can allow the state to be stored in templates instead of data
-#and data can handle the saving and loading of the state
+func on_autosave(path : String = ""):
+	
+	var full_path = path + get_save_path()
+	if !DirAccess.dir_exists_absolute(full_path):
+		DirAccess.make_dir_recursive_absolute(full_path)
+	full_path = full_path + "/" + name + ".tres"
+	ResourceSaver.save(save_state, full_path)
+	print_debug("autosaving")
+
+
 
 var movement_state : MovementStates = MovementStates.IDLE:
 	set(value):
@@ -96,11 +76,6 @@ func get_inventory()->Inventory:
 ##used to extract data from it that is handled outside the state
 func character_state_loaded():
 	pass
-	
-func on_autosave(path : String = ""):
-	print_debug("autosaving")
-	if character_state != null:
-		character_state.save_state()
 
 func attack()->void:
 	#NOTE: this will tell the character do the attack logic so the controller do not
@@ -162,29 +137,15 @@ func on_action_triggered(action:String, value:float)-> void:
 		interact()
 		pass
 
-func on_state_saving() -> void:
-	pass
 
-func on_state_loaded() -> void:
-	pass
-	
-func _ready() -> void:
-	if character_state:
-		character_state.source_path = get_path()
-		handle_state_connections(character_state)
-		on_state_loaded() #calling this here since the state may load on init
-		#thus calling before signal connections
+#Note: need a better way to update self or have a func called when level ready
+#or call load game for only level instances or just let the children handle 
+#acessing global varibles
+#func _ready() -> void:
+	#on_game_loaded(Data.default_path)
 		
 
 
 func _physics_process(delta: float) -> void:
 	move()
 	
-#func _enter_tree() -> void:
-#	print_debug("MEOW ENTERED TREE MEOOOW!")
-#	if character_state:
-		#update the path when enter tree. NOTE: this may be unrelible for saving
-		#by path if node switches parents a lot. current system is not built for that
-		#case (well except for save_id being a way to bypass it)
-#		character_state.source_path = get_path()
-#		print_debug("? ",character_state.source_path)

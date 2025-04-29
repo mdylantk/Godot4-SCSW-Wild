@@ -1,7 +1,6 @@
-[gd_scene load_steps=24 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=23 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" uid="uid://bp3atrikcfxmj" path="res://Game/Data/Scenes/Actors/Player.gd" id="1_07gio"]
-[ext_resource type="Resource" uid="uid://bahvgyp1vgeky" path="res://Game/Data/States/Strange_Cat_State.tres" id="2_in53k"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Common/Features/Inventory/Inventory.tscn" id="3_m3amk"]
 [ext_resource type="Script" uid="uid://ok522b0njxq0" path="res://Game/Data/Components/Shaped_Interactor.gd" id="4_qftw7"]
@@ -152,7 +151,6 @@ fill_to = Vector2(0.807692, 0.149573)
 collision_layer = 261
 collision_mask = 433
 script = ExtResource("1_07gio")
-character_state = ExtResource("2_in53k")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

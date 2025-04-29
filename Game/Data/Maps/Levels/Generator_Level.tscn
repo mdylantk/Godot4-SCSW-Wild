@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cldlaymbe77mn"]
+[gd_scene load_steps=8 format=3 uid="uid://cldlaymbe77mn"]
 
 [ext_resource type="Script" uid="uid://dc1yvgwellh6g" path="res://Common/Features/World_Levels_Data/Generator_Level.gd" id="1_a382x"]
 [ext_resource type="Resource" uid="uid://drg3ed6i36xt7" path="res://Common/Data/Resources/World_Environment_Data.tres" id="3_d5n0r"]
@@ -6,20 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Data/Scenes/Actors/Player.tscn" id="6_oks6f"]
 [ext_resource type="PackedScene" uid="uid://bruyakjvb8wwp" path="res://Game/Data/Scenes/Actors/Enemy_Test.tscn" id="7_hjtk7"]
 [ext_resource type="Script" uid="uid://krd8d8rl2p4u" path="res://Common/Features/Components/MovementComponent2D.gd" id="8_0krqb"]
-[ext_resource type="Script" uid="uid://bx4nr08h2u1kj" path="res://Common/Data/Scripts/Character_State.gd" id="10_soy8l"]
 
 [sub_resource type="Resource" id="Resource_1lsxs"]
 script = ExtResource("8_0krqb")
 base_speed = 64.0
 facing_dirction = Vector2(1, 0)
 sprint_modifier = 1.0
-
-[sub_resource type="Resource" id="Resource_d4elj"]
-script = ExtResource("10_soy8l")
-unique = true
-save_id = ""
-use_path_if_valid = false
-save_meta = true
 
 [node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]
 process_mode = 3
@@ -41,4 +33,3 @@ unique_name_in_owner = true
 [node name="EnemyTest" parent="." instance=ExtResource("7_hjtk7")]
 position = Vector2(-75, -76)
 movement_component = SubResource("Resource_1lsxs")
-character_state = SubResource("Resource_d4elj")
