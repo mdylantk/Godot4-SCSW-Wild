@@ -18,7 +18,13 @@ var instance = null #the instance the player is in. mostly for loading reasons.
 var instance_position : Vector2 #similar to world position, but used when loading into an instance
 #so set when saving or before loading into an instance from world. (but instance may override it coded that way)
 
-var scores : Dictionary = {}
+@export var scores : Dictionary = {}
+#positions is a placeholder. not sure where I want to hold it
+#it currently used to remeber entries on the world map so it can be return to
+#actual player local position on the time of the save may be stored in the player state
+#could use a save path to point to the player state to use (in the controller or elsewhere)
+#or could keep it here, but would be redundent
+@export var positions : Dictionary = {}
 
 #TODO: it is unlikly there be more than one location to store of the player state
 #and if there more than one "world" each can have a dedicted varible or the others
@@ -37,13 +43,15 @@ func get_score(id:String)->int:
 		return scores[id]
 	return 0
 	
-func on_load(data:Variant,id:String):
-	super(data,id)
-	if (data as ConfigFile):
-		if data.has_section_key(id,"scores"):
-			scores = data.get_value(id,"scores")
+#func on_load(data:Variant,id:String):
+#	return
+#	super(data,id)
+#	if (data as ConfigFile):
+#		if data.has_section_key(id,"scores"):
+#			scores = data.get_value(id,"scores")
 
-func on_save(data:Variant,id:String):
-	super(data,id)
-	if (data as ConfigFile):
-		data.set_value(id,"scores",scores)
+#func on_save(data:Variant,id:String):
+#	return
+#	super(data,id)
+#	if (data as ConfigFile):
+#		data.set_value(id,"scores",scores)

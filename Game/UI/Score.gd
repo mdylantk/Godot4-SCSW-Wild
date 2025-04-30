@@ -61,8 +61,8 @@ func on_save_state_ready()->void:
 #NOTE: using this again since the notify system broke on save change
 #not using fetch or store on the state, so only getting values from the properties
 #(maybe)
-#func _process(delta: float) -> void:
-#	update_score()
+func _process(delta: float) -> void:
+	update_score()
 	
 func _ready() -> void:
 	Data.save_state_change.connect(on_save_state_change)

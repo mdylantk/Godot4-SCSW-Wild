@@ -24,7 +24,12 @@ class_name Controller_Handler extends Node
 @export var controller : Controller
 #NOTE: may not add the remove logic. controllers should not be created dymanicly
 #remove may be added if game require the controller to change in the handler
-
+var save_state : Savable_State
+#NOTE: state will be handle diffrently. also this handler may be out of date?
+#or need to be check to make sure things are being used, ideally save functions
+#can be useful since this may have a state that need to be saved
+#NOTE: may not use get state as it was orginally design. indirectly using
+#resource with load tends to not work
 func get_state()->Savable_State:
 	return null
 
@@ -49,14 +54,37 @@ func on_level_changed(level:Base_Level, spawn_index: int = 0):
 func _ready() -> void:
 	World.level_changed.connect(on_level_changed)
 	
-func on_autosave(path : String = ""):
-	print_debug("autosaving")
-	var active_state = get_state()
-	if active_state != null:
-		active_state.save_state()
+#func on_autosave(path : String = ""):
+#	print_debug("autosaving")
+#	var active_state = get_state()
+#	if active_state != null:
+#		active_state.save_state()
 	
-func on_game_loaded(path : String = ""):
+#func on_game_loaded(path : String = ""):
+#	print_debug("loaded")
+#	var active_state = get_state()
+	#NOTE: need to recreate the self handling of the state like in character2d
+	#or depend on data handler to store values, but that should be reserver for
+	#globals
+#	if active_state:
+#		active_state.load_state()
+	
+	
+func on_new_game(path:String = ""):
+	save_state = Savable_State.new()
+	
+func on_game_loaded(path:String = ""):
 	print_debug("loaded")
-	var active_state = get_state()
-	if active_state != null:
-		active_state.load_state()
+	var full_path = path + "Controllers/" + name + ".tres"
+	if ResourceLoader.exists(full_path):
+		save_state = ResourceLoader.load(full_path,"",0)
+	if save_state == null:
+		on_new_game(path)
+		
+func on_autosave(path : String = ""):
+	var full_path = path + "Controllers/"
+	if !DirAccess.dir_exists_absolute(full_path):
+		DirAccess.make_dir_recursive_absolute(full_path)
+	full_path = full_path + "/" + name + ".tres"
+	ResourceSaver.save(save_state, full_path)
+	print_debug("autosaving")

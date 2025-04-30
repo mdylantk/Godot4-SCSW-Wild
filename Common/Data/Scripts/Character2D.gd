@@ -23,28 +23,18 @@ func get_save_path()->String:
 	if save_path.size() > 1:
 		return save_path[1].split("/"+name)[0]
 	return ""
-
-
+	
 func on_new_game(path:String = ""):
 	save_state = Character_State.new()
 	
-#TODO: try not to depend on data functions if possible. They are useful,
-#but should try to have this less dependent on things.
-#also ready using the data default path is iffy if trying to decoup this
-#could use a var for the default path and have the children pull from data
-#or could have it lightly depend on it with a resource for path info
-#but may need another path after the level loaded to load state
 func on_game_loaded(path:String = ""):
-	
 	var full_path = path + get_save_path() + "/" + name + ".tres"
 	if ResourceLoader.exists(full_path):
 		save_state = ResourceLoader.load(full_path,"",0)
-
 	if save_state == null:
 		on_new_game(path)
 		
 func on_autosave(path : String = ""):
-	
 	var full_path = path + get_save_path()
 	if !DirAccess.dir_exists_absolute(full_path):
 		DirAccess.make_dir_recursive_absolute(full_path)

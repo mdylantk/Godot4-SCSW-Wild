@@ -25,20 +25,20 @@ class_name Savedata_Helper extends Object
 #mostly for world position. should not be used for all locations, just ones that
 #contain dynamic entrances like random poi on the world map. 
 static func store_player_position(handler:Player_Handler,new_location:Vector2,id:StringName):
-	if Player.state:
-		Player.state.set_meta(id+"_location",new_location)
+	if Player.save_state:
+		Player.save_state.positions[id+"_location"] = new_location
 	else:
 		print_debug("MEOW?")
-		handler.state.store(id,new_location,"positions")
+		handler.save_state.store(id,new_location,"positions")
 	
 	
 static func fetch_player_position(handler:Player_Handler,id:StringName)->Vector2:
-	if Player.state:
-		if Player.state.has_meta(id+"_location"):
-			return Player.state.get_meta(id+"_location",Vector2())
+	if Player.save_state:
+		if Player.save_state.positions.has(id+"_location"):
+			return Player.save_state.positions[id+"_location"]
 	else:
 		print_debug("MEOW?")
-		var value = handler.state.fetch(id,"positions")
+		var value = handler.save_state.fetch(id,"positions")
 		if typeof(value) == TYPE_VECTOR2:
 			return value
 
@@ -46,19 +46,19 @@ static func fetch_player_position(handler:Player_Handler,id:StringName)->Vector2
 
 #Generic score set/get by an id. using a int since most score are counters
 static func store_player_score(handler:Player_Handler,new_score:int,id:StringName):
-	if Player.state:
-		Player.state.set_score(id, new_score)
+	if Player.save_state:
+		Player.save_state.set_score(id, new_score)
 	else:
 		print_debug("MEOW?")
-		handler.state.store(id,new_score,"scores")
+		handler.save_state.store(id,new_score,"scores")
 	
 static func fetch_player_score(handler:Player_Handler,id:StringName)->int:
-	if Player.state:
-		return Player.state.get_score(id)
+	if Player.save_state:
+		return Player.save_state.get_score(id)
 	else:
 		print_debug("MEOW?")
-		if handler.state != null:
-			var value = handler.state.fetch(id,"scores")
+		if handler.save_state != null:
+			var value = handler.save_state.fetch(id,"scores")
 			if typeof(value) == TYPE_INT:
 				return value
 	return 0
