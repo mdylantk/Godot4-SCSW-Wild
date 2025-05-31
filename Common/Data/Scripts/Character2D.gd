@@ -1,17 +1,41 @@
 class_name Character2D extends CharacterBody2D
 
+#NOTE: brain, controller, movement, and save state should stay
+#need to clean up and try finishing the base components
+#TODO: see if there a way to move movement states? or not
+#have an enum or depend on a enum in the base class
+
 #TODO: the parameters may need to change. could reduce to data or change the type (target to targets)
+#TODO: maybe not have these in the base class? They depend on areas or similar
 signal attacked(attacker, target, data)
 signal interacted(instigator, interactee, data)
 
+signal facing_changed(new_facing:Vector2, old_facing:Vector2)
 signal movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2)
+
+signal save_state_changed(old:Character_State, new:Character_State)
 
 enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
 ##This is for caculate velocity change and store varibles related to how it change
-@export var movement_component : Movement_Component_2D = Advance2DMovement.new()
+@export var movement_component : Movement_Component_2D = Advance2DMovement.new() :
+	set(value):
+		#This will make a copy incase a tres ref was used. The component may
+		#have some values that change such as the sprint strength.
+		movement_component = value.duplicate()
 
-var save_state : Character_State
+@export var facing_direction : Vector2 = Vector2.RIGHT :
+	set (value):
+		if facing_direction != value:
+			facing_changed.emit(value, facing_direction)
+			facing_direction = value
+
+var save_state : Character_State :
+	set(value):
+		var old_state = save_state
+		save_state = value
+		if old_state != save_state:
+			save_state_changed.emit(old_state,save_state)
 
 #NOTE: maybe i am overthinking this. name should be good enough. level may save 
 #the full state of all enemies on save and load likewise. can add them to a dir base on
@@ -36,18 +60,19 @@ func on_game_loaded(path:String = ""):
 		
 func on_autosave(path : String = ""):
 	var full_path = path + get_save_path()
-	if !DirAccess.dir_exists_absolute(full_path):
-		DirAccess.make_dir_recursive_absolute(full_path)
-	full_path = full_path + "/" + name + ".tres"
-	ResourceSaver.save(save_state, full_path)
-	print_debug("autosaving")
-
+	if save_state:
+		save_state.on_save()
+		if !DirAccess.dir_exists_absolute(full_path):
+			DirAccess.make_dir_recursive_absolute(full_path)
+		full_path = full_path + "/" + name + ".tres"
+		ResourceSaver.save(save_state, full_path)
+		print_debug("autosaving")
 
 
 var movement_state : MovementStates = MovementStates.IDLE:
 	set(value):
 		if movement_state != value:
-			movement_state_change.emit(value,movement_state,movement_component.facing_dirction)
+			movement_state_change.emit(value,movement_state,facing_direction)
 			movement_state = value
 			
 
@@ -89,11 +114,15 @@ func get_move_direction()->Vector2:
 func move():
 	var direction : Vector2 = get_move_direction()
 	##Note: this brain wont be use. make sure new logic is in get_movr_direction()
-	#if brain != null:
-	#	direction = brain.get_direction(position,velocity)
 	if movement_component != null:
-		if direction != movement_component.facing_dirction:
+		if direction != facing_direction:
 			movement_state = MovementStates.TURNING
+		#NOTE: facing_direction and direction are diffrent, but 
+		#for now facing_direction = direction since this is not an advance case
+		#TODO: break this into functions that can be overrided
+		#and rearange as needed. facing_direction, velocity, others
+		if  direction != Vector2.ZERO:
+			facing_direction = direction 
 		velocity = movement_component.update_velocity(velocity,direction)
 	if velocity != Vector2.ZERO:
 		move_and_slide()
@@ -117,24 +146,8 @@ func on_action_triggered(action:String, value:float)-> void:
 		pass
 	if action == "Interact":
 		print_debug("MEOOW?")
-		#TODO have player have it own interactor or similar
-		#this is an old system, so may just let the pawn handles it full
-		#NOTE: Player hander was listen to pawn for interactions. so will
-		#need to redirect that logic here and skip the listening part
-		#can pass Player hander as the handler and it should still work
-		#Player.pawns_interactor.interact(self)
-		print_debug("meow")
 		interact()
 		pass
-
-
-#Note: need a better way to update self or have a func called when level ready
-#or call load game for only level instances or just let the children handle 
-#acessing global varibles
-#func _ready() -> void:
-	#on_game_loaded(Data.default_path)
-		
-
 
 func _physics_process(delta: float) -> void:
 	move()

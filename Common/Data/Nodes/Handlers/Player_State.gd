@@ -36,7 +36,7 @@ func set_score(id:String, new_score: int)->void:
 	if id in scores:
 		old_score = scores[id]
 	scores[id] = new_score
-	property_changed.emit(id+"_score",new_score,old_score)
+	value_change.emit(id+"_score",new_score,old_score)
 	
 func get_score(id:String)->int:
 	if id in scores:

@@ -18,6 +18,18 @@ var action_data : Action_State
 
 var is_cancelable:bool = true
 
+var tts_enable: bool = true
+
+#TODO: decided if the voices should be catch and if so handles when language changes
+func speak_text(text: String = "", voice_id : int = 0):
+	if !tts_enable: 
+		return
+	DisplayServer.tts_stop()
+	if text == "": 
+		return
+	var voices = DisplayServer.tts_get_voices_for_language(TranslationServer.get_locale())
+	if voices.size() > 0 && voice_id < voices.size():
+		DisplayServer.tts_speak(text, voices[voice_id])
 
 func setup_speaker(display_name:String = "", icon:Texture2D = null):
 	$Name.text = "[center]"+display_name
@@ -45,6 +57,7 @@ func update_page_text(index:int = 0,end_dialog:bool = false):
 	#should display all text first
 	if index < split_text.size() and index >= 0:
 		$Text.text = split_text[index].format(data)
+		speak_text($Text.text)
 		print_debug(index)
 		page_index = index
 	elif !end_dialog:
@@ -74,6 +87,7 @@ func start(index:int = 0):
 
 func cancel():
 	print_debug("cancel")
+	speak_text()
 	UI.enable_player_input = true
 	visible = false
 	ended.emit(true)
@@ -81,6 +95,7 @@ func cancel():
 		cancel_action.run(action_data)
 	
 func finish():
+	speak_text()
 	UI.enable_player_input = true
 	print_debug("finished")
 	visible = false

@@ -10,7 +10,9 @@ func _run(data:Action_State = null) -> bool:
 	#	print_debug("handler is incorrect type")
 	#	return false
 	for key in variables.keys():
-		handler.state.set_meta(key,variables[key])
+		handler.save_state.set_value(key,variables[key])
+		#print_debug("MEOW! This is outdated and save_state may be used instead. also get/set value instead of meta")
+		#handler.state.set_meta(key,variables[key])
 		#handler.state.store(key, variables[key],group)
 	#else:
 	#	print_debug("no handler")

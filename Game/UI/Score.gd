@@ -56,7 +56,7 @@ func on_save_state_ready()->void:
 	if Data.save_state.has_section_key(state_section,state_key):
 		state = Data.save_state.get_value(state_section,state_key) as Savable_State
 	update_score()
-	Player.state.property_changed.connect(on_data_change)
+	Player.state.value_change.connect(on_data_change)
 
 #NOTE: using this again since the notify system broke on save change
 #not using fetch or store on the state, so only getting values from the properties

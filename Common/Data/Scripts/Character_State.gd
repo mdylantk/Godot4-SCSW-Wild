@@ -1,10 +1,10 @@
 class_name Character_State extends Savable_State
 
 #expose this to the resource editor so that some character states can be flagged off
-@export var unique : bool = true :
-	set(value):
-		unique = value
-		is_unique = value
+#@export var unique : bool = true :
+#	set(value):
+#		unique = value
+#		is_unique = value
 
 @export var local_position : Vector2
 var level : Node #may be better as uid or name

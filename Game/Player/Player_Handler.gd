@@ -65,7 +65,7 @@ func on_new_game(path:String = ""):
 	save_state = Player_State.new()
 
 func _ready():
-	on_game_loaded(Data.default_path)
+	#on_game_loaded(Data.default_path)
 	#super()
 	#this is to test the signal
 	#player_meta_changed.connect(player_meta_changed_test)

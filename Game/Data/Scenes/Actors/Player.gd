@@ -13,8 +13,12 @@ func get_inventory()->Inventory:
 	return $Inventory
 
 func _ready()->void:
+	#note: dynamic objects or objects that get recreated on scene change
+	#needs to load their state on ready if they have one since data_handler
+	#would not know when to call it. Another solution is to have a handler
+	#(like what spawn it) call on_game_loaded after spawning it
 	on_game_loaded(Data.default_path)
-	movement_component.facing_change.connect(on_facing_changed)
+	facing_changed.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
 
 	%Shaped_Interactor.interaction.connect(on_interaction)

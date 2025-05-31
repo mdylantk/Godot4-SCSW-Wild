@@ -1,6 +1,8 @@
 ##This is the base class for controllers. Player and AI controllers should extend from this
 class_name Controller_Handler extends Node
 
+signal save_state_changed(old:Savable_State, new:Savable_State)
+
 ##This is the default brain the controller will use to talk to its owning units
 ##controllers could use more than one brain, but usally one is all that is needed
 ##(note: the brain can contain slots for a behavor tree. controller just assignt varibles
@@ -24,7 +26,12 @@ class_name Controller_Handler extends Node
 @export var controller : Controller
 #NOTE: may not add the remove logic. controllers should not be created dymanicly
 #remove may be added if game require the controller to change in the handler
-var save_state : Savable_State
+var save_state : Savable_State:
+	set(value):
+		var old_state = save_state
+		save_state = value
+		if old_state != save_state:
+			save_state_changed.emit(old_state,save_state)
 #NOTE: state will be handle diffrently. also this handler may be out of date?
 #or need to be check to make sure things are being used, ideally save functions
 #can be useful since this may have a state that need to be saved
@@ -83,8 +90,10 @@ func on_game_loaded(path:String = ""):
 		
 func on_autosave(path : String = ""):
 	var full_path = path + "Controllers/"
-	if !DirAccess.dir_exists_absolute(full_path):
-		DirAccess.make_dir_recursive_absolute(full_path)
-	full_path = full_path + "/" + name + ".tres"
-	ResourceSaver.save(save_state, full_path)
-	print_debug("autosaving")
+	if save_state:
+		save_state.on_save()
+		if !DirAccess.dir_exists_absolute(full_path):
+			DirAccess.make_dir_recursive_absolute(full_path)
+		full_path = full_path + "/" + name + ".tres"
+		ResourceSaver.save(save_state, full_path)
+		print_debug("autosaving")

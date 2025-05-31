@@ -10,7 +10,6 @@
 [sub_resource type="Resource" id="Resource_1lsxs"]
 script = ExtResource("8_0krqb")
 base_speed = 64.0
-facing_dirction = Vector2(1, 0)
 sprint_modifier = 1.0
 
 [node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]
