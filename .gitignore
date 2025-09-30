@@ -22,6 +22,6 @@ mono_crash.*.json
 *~
 *.blend1
 
-# other
-.GDExtension/
-.bin/
+# Ignoring most things prefix with a period
+.*
+!.gitignore
