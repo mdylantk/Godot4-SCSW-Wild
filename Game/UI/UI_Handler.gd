@@ -15,6 +15,9 @@ signal ui_focus(disable_other_input:bool)
 			%Score.visible = !hide_hud
 			%Dialog.visible = !hide_hud
 			%Notify.visible = !hide_hud
+			
+@export var events : Events_UI = preload('uid://dkc6l4f8ve4t5')
+
 
 @onready var loading : bool = false :
 	set(value):
@@ -53,9 +56,14 @@ signal ui_focus(disable_other_input:bool)
 ##player contoller will nopt process the input
 @export var enable_player_input : bool = true
 
+func send_notifcation(message:String):
+	gui_notify.add_notify_message("[center]"+message)
 
 
 func _ready() -> void:
+	
+	events.send_notifcation.connect(send_notifcation)
+	
 	_on_menu_visibility_changed()
 	#TODO: try to let the game handler handle tree events such as pausing
 	#this could read the tree if needing to know if paused if needed

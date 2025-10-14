@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Event_UI" load_steps=2 format=3 uid="uid://dkc6l4f8ve4t5"]
+
+[ext_resource type="Script" uid="uid://dejg8a7ye1c0n" path="res://Common/Features/Events/Events_UI.gd" id="1_5sdhf"]
+
+[resource]
+script = ExtResource("1_5sdhf")
+metadata/_custom_type_script = "uid://dejg8a7ye1c0n"

@@ -3,6 +3,7 @@
 ##as well as connect to their signals so it can maintain the game loop
 class_name Game_Handler extends Node
 
+@export var game_events : Base_Events = preload("uid://by8b1l7earv1n")
 #NOTE:this should be listen to signals and triggering events
 #so signals are not nessary
 #signal event_update(event)
@@ -40,7 +41,19 @@ func handle_pausing():
 #	print(Engine.get_license_info)
 #	print(Engine.get_license_text())
 
+func on_event(id:String, data: Variant):
+	#call group if non of the id matches
+	#or pass the group id as a part of data
+	if id == 'group_call':
+		#Note: not sure how to pass args. may be better to have dedicated
+		#event objects instead of calling to group for this system
+		#in a sence a lot of handler may have a event resource or a state resource
+		#for that case. events are connections and states are stateful
+		get_tree().call_group(data['group'],data['methood'], data['data'])
+
 func _ready():
+	
+	game_events.event.connect(on_event)
 	#make sure pause logic is done base on the default state
 	#else something may be not sync correctly
 	handle_pausing()

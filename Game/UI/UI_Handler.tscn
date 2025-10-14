@@ -16,7 +16,7 @@
 atlas = ExtResource("6_nymfg")
 region = Rect2(697, 272, 16, 16)
 
-[node name="UI" type="Node" groups=["HUD"]]
+[node name="UI" type="Node" groups=["GUI", "HUD"]]
 process_mode = 3
 script = ExtResource("1_htxbl")
 

@@ -4,6 +4,3 @@
 
 [resource]
 script = ExtResource("1_omn7m")
-save_id = "Player_State"
-use_path_if_valid = false
-save_meta = true

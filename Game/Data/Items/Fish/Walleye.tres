@@ -13,4 +13,3 @@ display_name = "Walleye"
 discription = "This is a walleye"
 tooltip = "Smells fishy"
 icon = SubResource("AtlasTexture_juioi")
-item_entity = ""

@@ -9,6 +9,4 @@ metadata/_snap_enabled = true
 
 [resource]
 script = ExtResource("1_370ui")
-day_time = 0.0
-sun_rise = false
 environment_color = SubResource("Gradient_8dly7")

@@ -1,7 +1,21 @@
 class_name Catch_Fish extends Interactive_Data
 
+#signal catched(fish_data:Dictionary)
+#signal missed(vaild:bool) #return true if catch was in water, else false
+#signal canceled()
+#NOTE: this is data created and then pass to the fishing minigame
+#so it do not need the logic, but still need something to connect the two
+#could use a state and send a group message to the game or ui
+#or make a resource that handle the current data in use and signals and events for
+#both parties to listen to
+
 @export var random_table: Random_Table_Resource = Fish_Table.new()
 @export var fish_item_source : Item_Type = preload("uid://nrh8trhov6yk")
+
+#NOTE: this is here to test the event system, but most of the logic should be
+#part of the fishing game and this handles the data. a dedicated
+#event for the game may be made or the event_ui (or event game) will be used
+@export var ui_events : Events_UI = preload('uid://dkc6l4f8ve4t5')
 
 var fish_game
 #var fisher
@@ -19,6 +33,13 @@ func _start():
 	#TEST
 	#note: only one fish game per action...but only one should exist if not
 	#dynamicly added
+	#TODO:this seems backwards? this is a resource, but it depends on the fish game
+	#so either make a static resource of this type and give it to the ui element
+	#and the trigger. then emit the events here instead of connecting
+	#NOTE: we need acess to the scene tree to call group based events
+	#and the idea is to stop depending in global space
+	#this means this needs to be shared or the passed objects need to be pass
+	#by other means
 	if fish_game == null:
 		fish_game = UI.fishing_game
 		#fish_game.add_fish(Vector2i(24,24),fish_game.rare_fish_atlas_coords,2,
@@ -106,48 +127,12 @@ func add_fish(fish_data:Dictionary):
 		#number caught, biggest and smallest size caught, and such
 		
 		if fish_data["type"]["rarity"] < 3:
-			#var total_fish_caught = handler.state.fetch("total_common_fish_caught")
 			var total_fish_caught = Savedata_Helper.fetch_player_score(handler,"common_fish_caught")
-			
-			#if total_fish_caught != null:
-			#	handler.state.store("total_common_fish_caught", total_fish_caught + 1)
-			#else:
-			#	handler.state.store("total_common_fish_caught", 1)
 			Savedata_Helper.store_player_score(handler, total_fish_caught + 1, "common_fish_caught")
 			
 		else:
-			#var total_rare_fish_caught = handler.state.fetch("total_rare_fish_caught")
 			var total_rare_fish_caught = Savedata_Helper.fetch_player_score(handler,"rare_fish_caught")
-			#if total_rare_fish_caught != null:
-			#	handler.state.store("total_rare_fish_caught", total_rare_fish_caught + 1)
-			#else:
-			#	handler.state.store("total_rare_fish_caught", 1)
 			Savedata_Helper.store_player_score(handler, total_rare_fish_caught + 1, "rare_fish_caught")
-		
-		#protype fishlog
-		#Note: the proper system would use a log resource of fish resource
-		#with an entrie resource
-		#log_fish(handler, fish_name, fish_data["type"]["rarity"], {"count":1})
-		#print("fish log debug")
-		#print_debug(handler.state.data)
-
-#NOTE: new_handler is not needed since it should be set as handler
-#func log_fish(new_handler, name, rarity, new_fish_data):
-	#TODO: change or remove this. this is a prototype log.
-	#should add a statistics system
-	#var fish_data = new_handler.state.fetch(name, "fish_log_"+str(rarity))
-#	var fish_data = {}
-#	if Player.state.has_meta(fish_log_"+str(rarity)"):
-#		fish_data[name] 
-	#new_handler.state.fetch(name, "fish_log_"+str(rarity))
-#	if fish_data == null:
-#		new_handler.state.store(name,new_fish_data, "fish_log_"+str(rarity))
-#		return
-#	if new_fish_data.has("count"):
-#		if fish_data.has("count"):
-#			fish_data["count"] += new_fish_data["count"]
-#		else:
-#			fish_data["count"] = new_fish_data["count"]
 			
 func on_catch(fish_data:Dictionary):
 	add_fish(fish_data)
@@ -156,7 +141,8 @@ func on_catch(fish_data:Dictionary):
 
 func on_miss(vaild:bool = false):
 	if vaild == true:
-		General_Events.send_notifcation("Failed to catch a fish.")
+		ui_events.send_notifcation.emit("Failed to catch a fish.")
+		#General_Events.send_notifcation("Failed to catch a fish.")
 		end_game()
 
 func on_cancel():

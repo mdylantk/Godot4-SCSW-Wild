@@ -65,6 +65,7 @@ static func get_chunk_coords(chunk_id:int=0):
 #	)
 
 func _init():
+	print_debug('Meow i was called, so am i still in use?')
 	pass
 	#region_data.resize(region_size*region_size)
 	#so either test logic with null check or use a smaller pool size
@@ -115,4 +116,3 @@ func call_on_all_tiles_in_chunk(callable: Callable, chunk_id : int = 0):
 		#TODO: should verify if id are in range, but not too importaint
 		var region_coords=get_region_coords(tile_id,chunk_id)
 		callable.call(region_coords)
-

@@ -37,6 +37,8 @@ window/stretch/mode="viewport"
 [file_customization]
 
 folder_colors={
+"res://Common/Data/Scripts/Old/": "gray",
+"res://Common/Features/Tools/": "gray",
 "res://Game/": "green",
 "res://Game/Data/Components/": "blue",
 "res://Game/Data/Maps/": "blue",
@@ -49,6 +51,7 @@ Players="All loaded player handlers"
 Player_Pawns=""
 enemies="A test group for enemies"
 Savable="Nodes with the autosave function in this group will be called just before the autosave saves"
+GUI="For any node that needs to listen to the GUI events"
 
 [input]
 
