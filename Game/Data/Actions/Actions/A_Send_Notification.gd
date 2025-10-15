@@ -2,7 +2,7 @@ class_name A_Send_Notification extends Base_Action
 
 @export var message : String
 
-@export var ui_events : Events_UI = preload('uid://dkc6l4f8ve4t5')
+@export var ui_events : Events_UI = load('uid://dkc6l4f8ve4t5')
 
 func _run(data:Action_State = null) -> bool:
 	var format : Dictionary = {}

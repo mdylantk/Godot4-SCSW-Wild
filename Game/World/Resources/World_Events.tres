@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="world_events" load_steps=2 format=3 uid="uid://b047ftosxvj7p"]
+
+[ext_resource type="Script" uid="uid://c318wbx6jcgvn" path="res://Game/World/Resources/Events_World.gd" id="1_h2cbr"]
+
+[resource]
+script = ExtResource("1_h2cbr")
+metadata/_custom_type_script = "uid://c318wbx6jcgvn"

@@ -1,4 +1,10 @@
 class_name Fishing_Pond_Map extends TileMap
+
+#TODO: this whole system may need to be rebuilt. the logic is split between two
+#spots where this handles the ai, rendering, and input while the other kind of handles
+#the other parts. should have this self contain and if events needs to be listen too,
+#then have the state be pair with an event object/resource to listen too
+#or let state have it handle the events(either have the state static like or keep it dynamic)
 signal catched(fish_data:Dictionary)
 signal missed(vaild:bool) #return true if catch was in water, else false
 signal canceled()
@@ -46,6 +52,7 @@ func running_changed():
 		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	else:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	#TODO: handle player input diffrently either use a signal or something built in
 	UI.enable_player_input = !running
 	for layer_id in get_layers_count():
 		set_layer_enabled(layer_id,running)

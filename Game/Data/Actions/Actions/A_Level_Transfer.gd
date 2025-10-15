@@ -6,6 +6,9 @@ class_name A_Level_Transfer extends Base_Action
 @export var entry_point_id:StringName = "world"
 @export var spawn_index : int = 0
 
+@export var world_events : Events_World = load('uid://b047ftosxvj7p')
+@export var player_state : Player_State = load('uid://c67c2fehtuhni')
+
 #NOTE: need a better way to handle player position
 #could split the action. one to store position, then level switch(this logic), and
 #then relocate player. also could have this store and relocate, but need a way to handle
@@ -27,9 +30,11 @@ func _run(data:Action_State = null) -> bool:
 			
 			if store_entry_point:
 				var old_location : Vector2 = data.owner.global_position
+				player_state.positions[entry_point_id+"_location"] = old_location
 				Savedata_Helper.store_player_position(Player,old_location,entry_point_id)
 				#Player.state.store(entry_point_id,old_location,"positions")
 		else:
 			return false
-		var level_loaded : Base_Level = World.load_level(level_uid, spawn_index) #should return bool to see if it ran
+		world_events.load_level.emit(level_uid, spawn_index)
+		#var level_loaded : Base_Level = World.load_level(level_uid, spawn_index) #should return bool to see if it ran
 	return super(data)

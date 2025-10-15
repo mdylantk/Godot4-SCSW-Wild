@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://bdpv2nuo5qsqg"]
 
-[ext_resource type="Script" uid="uid://c8i3segi87cqh" path="res://Game/Player/Player_Handler.gd" id="1_d3v36"]
-[ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/Data/States/Player_State.tres" id="2_1q2o3"]
+[ext_resource type="Script" uid="uid://c8i3segi87cqh" path="res://Game/Player/Scenes/Player_Handler.gd" id="1_d3v36"]
+[ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/Player/Resources/Player_State.tres" id="2_1q2o3"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Data/Scenes/Actors/Player.tscn" id="2_vymv8"]
-[ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Common/Data/Resources/Player_Controller.tres" id="4_vte1q"]
+[ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Game/Game/Resources/Controllers/Player_Controller.tres" id="4_vte1q"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Common/Data/Nodes/Main_Camera.tscn" id="4_wnuel"]
 
 [node name="Player_Handler" type="Node2D" groups=["Autosave", "Player_Handlers", "Players", "Savable"]]

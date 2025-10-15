@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://b80ly070yrqgt"]
 
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_s5aiu"]
-[ext_resource type="Script" uid="uid://bww8bngq5a6h5" path="res://Game/UI/Credits_Menu.gd" id="1_tdwf1"]
+[ext_resource type="Script" uid="uid://bww8bngq5a6h5" path="res://Game/UI/Scenes/Credits_Menu.gd" id="1_tdwf1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trfd7"]
 atlas = ExtResource("1_s5aiu")

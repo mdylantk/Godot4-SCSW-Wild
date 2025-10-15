@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b0xxl3pylly7j"]
 
-[ext_resource type="Script" uid="uid://b7und3om1sk5e" path="res://Game/World/World_Handler.gd" id="1_57p0l"]
+[ext_resource type="Script" uid="uid://b7und3om1sk5e" path="res://Game/World/Scenes/World_Handler.gd" id="1_57p0l"]
 [ext_resource type="Resource" uid="uid://drg3ed6i36xt7" path="res://Common/Data/Resources/World_Environment_Data.tres" id="2_w7v0e"]
 
 [node name="World_Handler" type="Node" groups=["World_Handler"]]

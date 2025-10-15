@@ -36,6 +36,8 @@ signal request_unload_level(level:Base_Level)
 
 @export var world_enviroment : Environment_Data
 
+@export var events : Events_World = preload('uid://b047ftosxvj7p')
+
 ## a flag the level can set to true if it not ready after its ready function
 var level_loading : bool = false :
 	set(value):
@@ -114,6 +116,7 @@ func remove_unused_levels():
 var is_time_setting: bool = false
 	
 func _ready():
+	events.load_level.connect(load_level)
 	print_debug("I am ready")
 	if world_seed == 0:
 		world_seed = randi()

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://clfctvdo5gs0b"]
 
-[ext_resource type="Script" uid="uid://ccalcveh0bgq" path="res://Game/UI/Options_Menu.gd" id="1_8csky"]
+[ext_resource type="Script" uid="uid://ccalcveh0bgq" path="res://Game/UI/Scenes/Options_Menu.gd" id="1_8csky"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Data/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_v72jc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trfd7"]

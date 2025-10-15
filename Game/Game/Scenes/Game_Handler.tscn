@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://dvaxx0ke0p27m"]
 
-[ext_resource type="Script" uid="uid://dfe83mkcmeuy7" path="res://Game/Game/Game_Handler.gd" id="1_gpdo0"]
+[ext_resource type="Script" uid="uid://dfe83mkcmeuy7" path="res://Game/Game/Scenes/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="Script" uid="uid://bxmosod06brqx" path="res://Common/Data/Nodes/Handlers/AI_Handler.gd" id="3_8kfs5"]
-[ext_resource type="Resource" uid="uid://0jak16wccjq4" path="res://Common/Data/Resources/AI_Controller.tres" id="4_ounbx"]
+[ext_resource type="Resource" uid="uid://0jak16wccjq4" path="res://Game/Game/Resources/Controllers/AI_Controller.tres" id="4_ounbx"]
 [ext_resource type="Script" uid="uid://bh3h4moo6c3fn" path="res://Common/Data/Nodes/Handlers/Server_Handler.gd" id="7_clhfr"]
 
 [node name="Game_Handler" type="Node2D" groups=["Game_Handler"]]
