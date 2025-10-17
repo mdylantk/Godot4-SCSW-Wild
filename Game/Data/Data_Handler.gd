@@ -1,6 +1,9 @@
 ##This handles saving and loading as well as manage persistant state that
 ##do not have a owning persistant handler
-##this meant to replace resource handler since it goal is similar but with an easier name
+##this meant to replace resource handler since it goal is similar but with 
+##NOTE: This may handle setting up most of the states(resource) in the game
+##at runtime where needed. TODO have this listen to events/states instead
+##of expecting direct acess(from being autoload)
 class_name Data_Handler extends Node
 
 #TODO: add signals to listen to to monitor changes to save state
@@ -29,6 +32,13 @@ signal save_state_ready()
 ##save games should be stored in subdirectories in this path
 @export var default_path : String = "user://"
 
+##asset and mod path are dir that will be used for runtime loading/patching
+##This is the project path for data
+@export var data_path : String = "res://Game/Data/"
+##this is the user path for data. Note this is for pathcing/adding to
+##the project (if logic is added) and not a proper modding system
+@export var patch_path : String = "user://Data/"
+
 ##This is the default name for the save dir. For games that allow
 ##more than one save, this will be changed on new or save game ui events
 @export var save_name : String = "Default"
@@ -43,17 +53,36 @@ var client_state : ConfigFile
 
 ##The main use of this is to make sure there is a dir. This will create
 ##the dir pase on the path which will allow new saves to be created without an error
-func secure_path(path:String)->Error:
+static func secure_path(path:String)->Error:
 	if !DirAccess.dir_exists_absolute(path):
 		return DirAccess.make_dir_recursive_absolute(path)
 	return OK
-	
+
+##Get all files in a directory matching the extensions if given
+##for user patching and runtime loading of data.
+static func get_files(
+		paths:Array[String],vaild_extension:Array[String]=[]
+	) -> PackedStringArray:
+	var dir : DirAccess
+	var files := PackedStringArray()
+	for path in paths:
+		dir = DirAccess.open(path)
+		if (!dir): continue
+		for file_name in dir.get_files():
+			var file_ext := file_name.get_extension()
+			if (file_ext in vaild_extension || vaild_extension.is_empty()):
+				var file_path = path + '/' + file_name
+				#note: may or may not need to check for .remap
+				files.append(file_path)
+	return files
+
+
 ##This will try to save the provide object to disk
 func save_data(
 	state:Object,file_name:String="Save",path:String=default_path,encrypted:bool=false,key:String=default_key
 	)->Error:
 		var full_path = path+"/"+file_name
-		secure_path(path)
+		Data_Handler.secure_path(path)
 		if (state as ConfigFile) or (state as Save_File):
 			if encrypted:
 				return state.save_encrypted_pass(full_path+".save",key)
