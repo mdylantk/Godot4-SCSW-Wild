@@ -45,6 +45,7 @@ signal save_state_ready()
 #config files will be handle directly and will follow "type".cfg or
 #"type"_config.cfg. like client.cfg and game.cfg
 #@export var client_config: String = "client_config"
+@export var background_music_stream : AudioStreamRandomizer = preload('uid://bba37ge2fakbi')
 
 ##the default object for saving data realted to the current game save
 var save_state : ConfigFile
@@ -152,9 +153,41 @@ func add_to_save_state(section:String, key:String, value:Variant)->void:
 	save_state.set_value(section,key,value)
 	save_state_change.emit(section,key,value)
 
+func load_music():
+	var paths = Data_Handler.get_files(
+		[data_path + 'Assets/Music/Background',
+			patch_path + '/Music/Background'],
+		['ogg','mp3','wav']
+		)
+	#print_debug(paths)
+	for path in paths:
+		if path.begins_with('user'):
+			var file_ext := path.get_extension()
+			var file = FileAccess.open(path,FileAccess.READ)
+			if !file:
+				#print_debug('unable to open file')
+				continue
+						#Note handling as mp3, but should add the other types
+			var file_data = file.get_buffer(file.get_length())
+			file.close()
+			var audio_stream : AudioStream
+			if (file_ext == 'mp3'):
+				audio_stream = AudioStreamMP3.new()
+			elif (file_ext == 'wav'):
+				audio_stream = AudioStreamWAV.new()
+			elif (file_ext == 'ogg'):
+				audio_stream = AudioStreamOggVorbis.new()
+			audio_stream.data = file_data
+			background_music_stream .add_stream(-1,audio_stream)
+		else:
+			var loaded_stream = ResourceLoader.load(path)
+			background_music_stream .add_stream(-1,loaded_stream)
+		#print_debug(path,' | ', background_music_stream .streams_count)
+
 var test:Resource = null
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	load_music()
 	save_state = ConfigFile.new()
 	client_state = ConfigFile.new()
 	load_data(client_state,"settings",default_path,false)
@@ -175,6 +208,8 @@ func _ready() -> void:
 		test.set_meta("message", "meow")
 		test.set_meta("random", randf()*100)
 		test.amount = randi_range(1,100)
+		
+	
 
 #TODO: decided on a better group name or spit the group?
 
