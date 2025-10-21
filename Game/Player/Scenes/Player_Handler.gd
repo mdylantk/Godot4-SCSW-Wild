@@ -1,6 +1,6 @@
 class_name Player_Handler extends Controller_Handler
 
-@export var state : Player_State
+@export var state : Player_State = load('uid://c67c2fehtuhni')
 
 #@export_file("*.tscn") var default_pawn = "res://Data/Node/Actors/Player.tscn"
 @export var default_pawn : PackedScene = load("uid://bugclr6n3igb4")
@@ -62,7 +62,30 @@ func get_pawn(index:int=0)->Character2D:
 	return pawn
 	
 func on_new_game(path:String = ""):
+	#TODO: FIGURE out how to save the state without changing the path
+	#also so that all that use that path will get the correct resource
+	#and not the old one
+	#may or may not need to manually update the state.
 	save_state = Player_State.new()
+	
+func on_game_loaded(path:String = ""):
+	super(path)
+	if (save_state):
+		state.exit_data = save_state.get_value('exit_data',state.exit_data)
+		state.scores = save_state.get_value('scores',state.scores)
+		state.positions = save_state.get_value('positions',state.positions)
+		state.position = save_state.get_value('position', state.position)
+		state.facing = save_state.get_value('facing', state.facing)
+		
+func on_autosave(path : String = ""):
+	if save_state:
+		save_state.set_value('exit_data',state.exit_data)
+		save_state.set_value('scores',state.scores)
+		save_state.set_value('positions',state.positions)
+		save_state.set_value('position',state.position)
+		save_state.set_value('facing',state.facing)
+	super(path)
+	
 
 func _ready():
 	#on_game_loaded(Data.default_path)

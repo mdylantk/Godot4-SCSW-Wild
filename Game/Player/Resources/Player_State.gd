@@ -10,14 +10,7 @@ class_name Player_State extends Savable_State
 	#	"fish_caught":{},#rarity_name:amount or metadata. if metadata, could store addital data like turn in amount with current amount
 	#	"unquie_fish_locations":[], #world and local fish spawn
 	#} #placeholer that can store dynamic vars
-
-var pawn #NOTE: this should be the pawn class or a savable data struct for rebuilding the pawn
-var world_position : Vector2 #this should be set when traveling or saving. global_position should be used
-#for the actual position
-var instance = null #the instance the player is in. mostly for loading reasons. 
-var instance_position : Vector2 #similar to world position, but used when loading into an instance
-#so set when saving or before loading into an instance from world. (but instance may override it coded that way)
-
+	
 @export var scores : Dictionary = {}
 #positions is a placeholder. not sure where I want to hold it
 #it currently used to remeber entries on the world map so it can be return to
@@ -25,6 +18,26 @@ var instance_position : Vector2 #similar to world position, but used when loadin
 #could use a save path to point to the player state to use (in the controller or elsewhere)
 #or could keep it here, but would be redundent
 @export var positions : Dictionary = {}
+
+
+var pawn #NOTE: this should be the pawn class or a savable data struct for rebuilding the pawn
+var world_position : Vector2 #this should be set when traveling or saving. global_position should be used
+#for the actual position
+
+#NOTE: instance may not be used. exit_data should have the basic data for loading
+#the last level before exiting
+var instance = null #the instance the player is in. mostly for loading reasons. 
+#may use position instead
+var instance_position : Vector2 #similar to world position, but used when loading into an instance
+#so set when saving or before loading into an instance from world. (but instance may override it coded that way)
+
+#Exit data is used for loading last zone
+@export var exit_data : Exit_Data = Exit_Data.new()
+#these are the character last state to be saved
+#so they load in like how they load out
+@export var position : Vector2
+@export var facing : Vector2
+
 
 #TODO: it is unlikly there be more than one location to store of the player state
 #and if there more than one "world" each can have a dedicted varible or the others

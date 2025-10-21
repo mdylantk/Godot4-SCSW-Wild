@@ -117,6 +117,9 @@ func load_data(
 	state
 	:Object,file_name:String="Save",path:String=default_path,encrypted:bool=false,key:String=default_key
 	)->bool:
+		#NOTE: may need to manually update the existing state unless
+		#there is a way to patch it or override it
+		
 	var full_path = path+"/"+file_name
 	if (state as ConfigFile) or (state as Save_File):
 		if encrypted:

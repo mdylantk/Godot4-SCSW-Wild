@@ -21,7 +21,7 @@ class_name Base_Level extends Node
 
 ##this is a counter for the world handler to know if the level need to be culled
 ##the world handler will update it as needed (NOTE: also could store as a metadata)
-##DEPRECATED the would would not know this. only a single current level will be loaded
+##DEPRECATED the world would not know this. only a single current level will be loaded
 ##so it should be unload as it switches. levels could add such a feature with sublevels,
 ##but it could be handle better.
 var active_age : int = 1

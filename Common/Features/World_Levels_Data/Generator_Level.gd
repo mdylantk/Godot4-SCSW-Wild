@@ -2,6 +2,8 @@ class_name Generator_Level extends Base_Level
 
 @export var level_id := "world"
 
+@export var player_state : Player_State = load('uid://c67c2fehtuhni')
+
 #@export var use_game_seed: bool = true
 
 #TODO: make it so it will use all the generator instead of [0]
@@ -209,8 +211,10 @@ func _process(delta: float) -> void:
 	World.level_loading = is_ready
 
 func _ready() -> void:
-	#var player_pos = Player.state.fetch("world","positions")
-	var player_pos = Savedata_Helper.fetch_player_position(Player,"world")
+	var player_pos : Vector2
+	if (player_state.positions.has('world_location')):
+		player_pos = player_state.positions['world_location'] 
+	#var player_pos = Savedata_Helper.fetch_player_position(Player,"world")
 	if typeof(player_pos) == TYPE_VECTOR2:
 		pass
 		%Player.position = player_pos

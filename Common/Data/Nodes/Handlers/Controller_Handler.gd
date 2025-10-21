@@ -81,12 +81,12 @@ func on_new_game(path:String = ""):
 	save_state = Savable_State.new()
 	
 func on_game_loaded(path:String = ""):
-	print_debug("loaded")
 	var full_path = path + "Controllers/" + name + ".tres"
 	if ResourceLoader.exists(full_path):
 		save_state = ResourceLoader.load(full_path,"",0)
 	if save_state == null:
 		on_new_game(path)
+	print_debug("loaded",save_state)
 		
 func on_autosave(path : String = ""):
 	var full_path = path + "Controllers/"

@@ -1,7 +1,7 @@
 extends Character2D
 
 #@export var interact_cast : ShapeCast2D
-
+@export var player_state:Player_State = load('uid://c67c2fehtuhni')
 #TODO: may remove inventory as a node so the save_state can store it
 #there no reason to have two copies of an item array. an inventory object
 #may still be used since the functions are needed and other stats like limits
@@ -27,6 +27,12 @@ func _ready()->void:
 		on_controller_assigned(%Brain.controller)
 	%Brain.controller_assigned.connect(on_controller_assigned)
 	%Brain.controller_unassigned.connect(on_controller_unassigned)
+	
+	
+	#NOTE: direction in exitdata is more for spawning so it is for the
+	#level to process
+	facing_direction = player_state.exit_data.facing_direction
+	velocity = player_state.exit_data.entry_velocity
 
 
 func get_save_path()->String:

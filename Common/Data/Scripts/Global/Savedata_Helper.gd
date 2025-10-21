@@ -25,20 +25,25 @@ class_name Savedata_Helper extends Object
 #mostly for world position. should not be used for all locations, just ones that
 #contain dynamic entrances like random poi on the world map. 
 static func store_player_position(handler:Player_Handler,new_location:Vector2,id:StringName):
-	if Player.save_state:
-		Player.save_state.positions[id+"_location"] = new_location
-	else:
-		handler.save_state.store(id,new_location,"positions")
+	if Player.state:
+		Player.state.positions[id+"_location"] = new_location
+	#elif Player.save_state:
+	#	Player.save_state.positions[id+"_location"] = new_location
+	#else:
+	#	handler.save_state.store(id,new_location,"positions")
 	
 	
 static func fetch_player_position(handler:Player_Handler,id:StringName)->Vector2:
-	if Player.save_state:
-		if Player.save_state.positions.has(id+"_location"):
-			return Player.save_state.positions[id+"_location"]
-	else:
-		var value = handler.save_state.fetch(id,"positions")
-		if typeof(value) == TYPE_VECTOR2:
-			return value
+	if Player.state:
+		if Player.state.positions.has(id+"_location"):
+			return Player.state.positions[id+"_location"]
+	#elif Player.save_state:
+	#	if Player.save_state.positions.has(id+"_location"):
+	#		return Player.save_state.positions[id+"_location"]
+	#else:
+	#	var value = handler.save_state.fetch(id,"positions")
+	#	if typeof(value) == TYPE_VECTOR2:
+	#		return value
 
 	return Vector2()
 

@@ -6,7 +6,6 @@
 
 [sub_resource type="Resource" id="Resource_x6wjs"]
 script = ExtResource("1_cfx6n")
-group = "meta"
 variables = {
 "old_man_visted": true
 }
@@ -29,4 +28,3 @@ text = "Hello there little one. I have an inkling that you are not a typical cat
 /pIf you decide to go exploring these parts, then maybe you could do an old man a favor and keep an eye out for any kind of fish. 
 /pYou do not need to bring it back. As long as you find your way back here I am sure those fishes will start appearing."
 accept_action = SubResource("Resource_x6wjs")
-cancelable = true
