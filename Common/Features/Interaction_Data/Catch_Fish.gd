@@ -15,7 +15,8 @@ class_name Catch_Fish extends Interactive_Data
 #NOTE: this is here to test the event system, but most of the logic should be
 #part of the fishing game and this handles the data. a dedicated
 #event for the game may be made or the event_ui (or event game) will be used
-@export var ui_events : Events_UI = preload('uid://dkc6l4f8ve4t5')
+@export var ui_events : Events_UI = load('uid://dkc6l4f8ve4t5')
+@export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
 var fish_game
 #var fisher
@@ -127,12 +128,16 @@ func add_fish(fish_data:Dictionary):
 		#number caught, biggest and smallest size caught, and such
 		
 		if fish_data["type"]["rarity"] < 3:
-			var total_fish_caught = Savedata_Helper.fetch_player_score(handler,"common_fish_caught")
-			Savedata_Helper.store_player_score(handler, total_fish_caught + 1, "common_fish_caught")
+			#var total_fish_caught = Savedata_Helper.fetch_player_score(handler,"common_fish_caught")
+			var total_fish_caught = player_state.get_score("common_fish_caught")
+			player_state.set_score("common_fish_caught",total_fish_caught + 1)
+			#Savedata_Helper.store_player_score(handler, total_fish_caught + 1, "common_fish_caught")
 			
 		else:
-			var total_rare_fish_caught = Savedata_Helper.fetch_player_score(handler,"rare_fish_caught")
-			Savedata_Helper.store_player_score(handler, total_rare_fish_caught + 1, "rare_fish_caught")
+			var total_rare_fish_caught = player_state.get_score("rare_fish_caught")
+			player_state.set_score("rare_fish_caught",total_rare_fish_caught + 1)
+			#var total_rare_fish_caught = Savedata_Helper.fetch_player_score(handler,"rare_fish_caught")
+			#Savedata_Helper.store_player_score(handler, total_rare_fish_caught + 1, "rare_fish_caught")
 			
 func on_catch(fish_data:Dictionary):
 	add_fish(fish_data)

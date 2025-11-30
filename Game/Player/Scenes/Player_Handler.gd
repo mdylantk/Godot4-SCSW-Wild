@@ -56,7 +56,7 @@ var paused : bool = false:
 
 func get_state()->Savable_State:
 	print_debug("NOTE: this is not going to be supported")
-	return save_state
+	#return save_state
 	return state
 func get_pawn(index:int=0)->Character2D:
 	return pawn
@@ -66,7 +66,11 @@ func on_new_game(path:String = ""):
 	#also so that all that use that path will get the correct resource
 	#and not the old one
 	#may or may not need to manually update the state.
-	save_state = Player_State.new()
+	state.exit_data = Exit_Data.new()
+	state.scores = {}
+	state.positions = {}
+	state.position = Vector2.ZERO
+	state.facing = Vector2.ZERO
 	
 func on_game_loaded(path:String = ""):
 	super(path)
@@ -76,6 +80,8 @@ func on_game_loaded(path:String = ""):
 		state.positions = save_state.get_value('positions',state.positions)
 		state.position = save_state.get_value('position', state.position)
 		state.facing = save_state.get_value('facing', state.facing)
+		state.on_load()
+	print_debug("player state", state)
 		
 func on_autosave(path : String = ""):
 	if save_state:
@@ -88,16 +94,18 @@ func on_autosave(path : String = ""):
 	
 
 func _ready():
+	print_debug("player state", state)
+	pass
 	#on_game_loaded(Data.default_path)
 	#super()
 	#this is to test the signal
 	#player_meta_changed.connect(player_meta_changed_test)
-	if state == null :
-		state = Player_State.new()
+	#if state == null :
+	#	state = Player_State.new()
 		#TODO: should also add a player id to it once a system is added to handle it
 		#also for single player, player and game should be contain in a save folder so more than
 		#one save can be created
-		state.file_name = "player_state"
+	#	state.file_name = "player_state"
 		#this also could be where loading state happens if state is created when player 'joins'
 	#state.load_state()
 
