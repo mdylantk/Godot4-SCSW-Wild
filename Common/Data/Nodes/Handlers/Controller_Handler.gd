@@ -80,20 +80,27 @@ func _ready() -> void:
 func on_new_game(path:String = ""):
 	save_state = Savable_State.new()
 	
+#TODO: decide if the game handle should absorb these handlers
+#and move the bulk of the roles to the state. only reason to keep
+#them split is to keep the game handler smaller and the global space
+#less clutter. also some things can only be acesses as scene so having a 
+#scene base handler (either the game or a dedicated one) is idea
+#NOTE: may move most handlers as a child of the game handler to remove from
+#global space. Game may need to stay as an autoload so level loading do not reset it
 func on_game_loaded(path:String = ""):
-	var full_path = path + "Controllers/" + name + ".tres"
+	var full_path = path + "controllers/" + name + ".tres"
 	if ResourceLoader.exists(full_path):
 		save_state = ResourceLoader.load(full_path,"",0)
 	if save_state == null:
-		on_new_game(path)
-	print_debug("loaded",save_state)
+		on_new_game(full_path)
+	print_debug("loaded",save_state,' ',full_path)
 		
 func on_autosave(path : String = ""):
-	var full_path = path + "Controllers/"
+	var full_path = path + "controllers/"
 	if save_state:
 		save_state.on_save()
 		if !DirAccess.dir_exists_absolute(full_path):
 			DirAccess.make_dir_recursive_absolute(full_path)
-		full_path = full_path + "/" + name + ".tres"
+		full_path = full_path + name + ".tres"
 		ResourceSaver.save(save_state, full_path)
-		print_debug("autosaving")
+		print_debug("autosaving ", full_path)

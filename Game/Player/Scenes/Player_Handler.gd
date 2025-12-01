@@ -41,7 +41,6 @@ var paused : bool = false:
 	#else make sure something like this get enforce
 	set(value):
 		paused = value
-		
 		if !paused : return
 		#if pawn == null : return
 		#if controller_brain == null : return
@@ -66,6 +65,7 @@ func on_new_game(path:String = ""):
 	#also so that all that use that path will get the correct resource
 	#and not the old one
 	#may or may not need to manually update the state.
+	super(path)
 	state.exit_data = Exit_Data.new()
 	state.scores = {}
 	state.positions = {}

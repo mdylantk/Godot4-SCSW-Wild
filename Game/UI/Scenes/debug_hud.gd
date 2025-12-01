@@ -14,7 +14,8 @@ func _process(delta: float) -> void:
 		var debug_text = str(camera_global_position)
 		debug_text = debug_text + "\n" + "Game Paused: " + str(Game._pause_state) + "("+str(get_tree().paused)+")"
 		debug_text = debug_text + "\n" + "Level loading: " + str(World.level_loading)
-		debug_text = debug_text + "\n" + "player input: " + str(!Player.paused)
+		#TODO: If need, then have the game hander expose it or the player state
+		#debug_text = debug_text + "\n" + "player input: " + str(!Player.paused)
 			#NOTE: this need to change with the new item system. was added with the old to get it working
 		#NOTE: may need player or game connect these to signal instead of a direct ref
 		var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")

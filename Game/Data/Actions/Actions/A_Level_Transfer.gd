@@ -36,7 +36,7 @@ func _run(data:Action_State = null) -> bool:
 			return false
 		if data.owner as Node2D:
 			var old_location : Vector2 = data.owner.global_position
-			print_debug(player_state, Player.save_state, player_state == Player.save_state)
+			#print_debug(player_state, Player.save_state, player_state == Player.save_state)
 			if store_entry_point:
 				player_state.positions[entry_point_id+"_location"] = old_location
 				#Savedata_Helper.store_player_position(Player,old_location,entry_point_id)

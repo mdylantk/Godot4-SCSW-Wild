@@ -77,7 +77,8 @@ static func get_files(
 				files.append(file_path)
 	return files
 
-
+func get_save_path():
+	return default_path+"/"+save_name+"/"
 ##This will try to save the provide object to disk
 func save_data(
 	state:Object,file_name:String="Save",path:String=default_path,encrypted:bool=false,key:String=default_key
@@ -218,21 +219,27 @@ func _ready() -> void:
 
 ##Will notify all existing Savable group members that a new
 ##game is started
-func game_new(path:String = default_path) -> void:
+func game_new(id:String = save_name) -> void:
+	save_name = id
+	var save_path = get_save_path()
 	print_debug("new")
-	get_tree().call_group("Savable", "on_new_game",path)
+	get_tree().call_group("Savable", "on_new_game",save_path)
 
 ##Will notify all existing Savable group members that a game
 ##is loaded
-func game_loaded(path:String = default_path) -> void:
+func game_loaded(id:String = save_name) -> void:
+	save_name = id
+	var save_path = get_save_path()
 	print_debug("load")
-	get_tree().call_group("Savable", "on_game_loaded",path)
+	get_tree().call_group("Savable", "on_game_loaded",save_path)
 
 func _on_autosave_timer_timeout() -> void:
 	print_debug("(autosave) saving")
+	var save_path = get_save_path()
+	secure_path(save_path)
 	#this allow nodes to prepare there savable data for saving
 	#before the state gets saved
-	get_tree().call_group("Savable", "on_autosave",default_path)
-	save_data(save_state,"Data",default_path+"/"+save_name,false)
+	get_tree().call_group("Savable", "on_autosave",save_path)
+	save_data(save_state,"Data",save_path,false)
 	if test:
 		save_data(test,"test",default_path,false)

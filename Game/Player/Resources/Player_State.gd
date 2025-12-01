@@ -40,7 +40,7 @@ func set_score(id:String, new_score: int)->void:
 	#if old_score != new_score:
 	score_changed.emit(id,new_score)
 	value_change.emit(id+"_score",new_score,old_score)
-	print_debug("meow! set score of ", self)
+	print_debug("meow! set score of ", self, old_score, '->', new_score,' ', id)
 	
 func get_score(id:String)->int:
 	if id in scores:

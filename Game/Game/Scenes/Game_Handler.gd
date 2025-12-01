@@ -181,7 +181,7 @@ func on_ui_focus(pause_input:bool = true)->void:
 	print_debug(pause_input)
 	#TODO may need a better way. might just pause the game and have some system
 	#process. the issue is the character moves, so the direction set need to be reset
-	Player.paused = pause_input
+	%Player_Handler.paused = pause_input
 
 
 #MAIN MENU LISTENERS

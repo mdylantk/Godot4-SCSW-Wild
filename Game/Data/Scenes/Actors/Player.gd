@@ -17,7 +17,11 @@ func _ready()->void:
 	#needs to load their state on ready if they have one since data_handler
 	#would not know when to call it. Another solution is to have a handler
 	#(like what spawn it) call on_game_loaded after spawning it
-	on_game_loaded(Data.default_path)
+	#TODO: need to have a state for paths. could put it in the game state
+	#or have something like a instance state that do not get save, but hold 
+	#game data related to the current instance without needing to acess a autoload
+	#or static var
+	on_game_loaded(Data.get_save_path())
 	facing_changed.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
 
@@ -33,10 +37,24 @@ func _ready()->void:
 	#level to process
 	facing_direction = player_state.exit_data.facing_direction
 	velocity = player_state.exit_data.entry_velocity
+	
+	player_state.loaded.connect(on_load)
+	player_state.saving.connect(on_save)
+	on_load()
 
 
 func get_save_path()->String:
 	return "Characters"
+
+func on_save():
+	#player_state.set_value("inventory",inventory.inventory)
+	#player_state.set_value("local_position",position)
+	pass
+	
+func on_load():
+	#if player_state.has_value("inventory"):
+	#	inventory.inventory = player_state.get_value("inventory",[])
+	pass
 
 func on_autosave(path : String = ""):
 	if inventory != null:
@@ -46,7 +64,7 @@ func on_autosave(path : String = ""):
 
 func on_game_loaded(path : String = ""):
 	super(path)
-	await get_tree().process_frame
+	#await get_tree().process_frame
 	if inventory != null and save_state != null:
 		inventory.inventory = save_state.inventory
 
@@ -118,7 +136,10 @@ func interact():
 func on_interaction(source_pawn:Node, collider:Node, data:={}):
 	var interaction : Interactive_Component = collider as Interactive_Component
 	if interaction != null:
-		interaction.interact(Player,self,collider,data)
+		#TODO: change or remove. null was the player handler, but
+		#the player state will take over the role so if needed, then the state needs
+		#to be passed
+		interaction.interact(null,self,collider,data)
 
 func get_move_direction() -> Vector2:
 	return %Brain.get_move_direction(position,velocity)
