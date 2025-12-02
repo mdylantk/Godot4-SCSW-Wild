@@ -36,7 +36,7 @@ signal request_unload_level(level:Base_Level)
 
 @export var world_enviroment : Environment_Data
 
-@export var events : Events_World = preload('uid://b047ftosxvj7p')
+@export var events : World_State = preload('uid://b047ftosxvj7p')
 
 ## a flag the level can set to true if it not ready after its ready function
 var level_loading : bool = false :

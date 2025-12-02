@@ -1,4 +1,4 @@
-class_name Events_World extends Base_Events
+class_name World_State extends Base_Events
 
 signal load_level(uid:String, spawn_index : int)
 

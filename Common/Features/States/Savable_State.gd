@@ -41,28 +41,11 @@ func set_value(key: String, value: Variant) -> void:
 		value_change.emit(key,value, old_value)
 
 
-##this should be called before saving the state
-##it should emit saving so other objects can update
-##the state
-func on_save()->void:
+
+#old way. may be removed or kept
+func on_save(path:String= '')->void:
 	saving.emit()
 
-##This is called when load_save_data is ever called
-func on_load()->void:
+
+func on_load(path:String = '')->void:
 	loaded.emit()
-
-#NOTE will be removing this since the states will grab and set
-#what they save in a savable object (so this may be used for that or config
-#file. the state may inherite from a more simple state for filtering reasons)
-##This is to fetch a dictionary of savable data
-##for cases where one wants to use a diffrent save method
-##instead of resource saver
-func get_save_data()-> Dictionary:
-	return {"_data":_data}
-
-##This is to load the state form the provided data
-func load_save_data(data:Dictionary) -> void:
-	_data.clear()
-	if data.has("_data"):
-		_data = data["_data"]
-	on_load()

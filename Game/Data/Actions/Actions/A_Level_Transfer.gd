@@ -14,7 +14,7 @@ class_name A_Level_Transfer extends Base_Action
 #but may need to be pass to world so world wont need to acess player
 @export var spawn_index : int = 0
 
-@export var world_events : Events_World = load('uid://b047ftosxvj7p')
+@export var world_events : World_State = load('uid://b047ftosxvj7p')
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
 #NOTE: need a better way to handle player position

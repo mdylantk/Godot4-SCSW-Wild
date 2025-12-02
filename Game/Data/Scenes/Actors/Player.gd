@@ -39,7 +39,7 @@ func _ready()->void:
 	velocity = player_state.exit_data.entry_velocity
 	
 	player_state.loaded.connect(on_load)
-	player_state.saving.connect(on_save)
+	#player_state.saving.connect(on_save)
 	on_load()
 
 
