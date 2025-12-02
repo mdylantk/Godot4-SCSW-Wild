@@ -5,6 +5,14 @@ signal score_changed(id:String, new_value:int)
 
 @export var scores : Dictionary = {}
 
+#sets of bitflag ints instead of using
+#an array of bools. reserver for when data gets compress
+#otherwise data will be used
+@export var flags : Array[int] = [] 
+
+#quick way to store info by keys, but should not be used often
+@export var data : Dictionary = {}
+
 @export var positions : Dictionary = {}
 
 
@@ -46,3 +54,14 @@ func get_score(id:String)->int:
 	if id in scores:
 		return scores[id]
 	return 0
+
+func has_data(id:String) -> bool:
+	return data.has(id)
+
+func set_data(id:String, value: Variant):
+	data[id] = value
+	
+func get_data(id:String) -> Variant:
+	if data.has(id):
+		return data[id]
+	return null

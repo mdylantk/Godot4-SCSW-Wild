@@ -50,7 +50,10 @@ func on_save()->void:
 ##This is called when load_save_data is ever called
 func on_load()->void:
 	loaded.emit()
-	
+
+#NOTE will be removing this since the states will grab and set
+#what they save in a savable object (so this may be used for that or config
+#file. the state may inherite from a more simple state for filtering reasons)
 ##This is to fetch a dictionary of savable data
 ##for cases where one wants to use a diffrent save method
 ##instead of resource saver

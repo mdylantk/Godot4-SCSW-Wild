@@ -47,8 +47,10 @@ func _is_true(data:Action_State = null, default:bool=true) -> bool:
 			#TODO: check for state else do as below
 			pass
 		if source is Player_State:
-			if source.has_value(property_name):
-				value = source.get_value(property_name)
+			#if source.has_value(property_name):
+			#	value = source.get_value(property_name)
+			if source.has_data(property_name):
+				value = source.get_data(property_name)
 			#if source.state.has_meta(property_name):
 			#	value = source.state.get_meta(property_name)
 			#value = source.state.fetch(property_name)

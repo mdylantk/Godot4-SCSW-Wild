@@ -42,7 +42,8 @@ func _input(event: InputEvent) -> void:
 
 func _on_music_volume_slider_value_changed(value: float) -> void:
 	#Note: value*0.01 reduce the range to 0-1 so 100 is not 100 times loud
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value*0.01))
+	#NOTE: using 0.1 since 0.01 seem too soft. so it more of a 0-10 range
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value*0.1))
 	#config = Resources.get_settings(Resources.client_settings_file)
 	Data.client_state.set_value("sound","music_volume",value)
 	Data.save_settings()

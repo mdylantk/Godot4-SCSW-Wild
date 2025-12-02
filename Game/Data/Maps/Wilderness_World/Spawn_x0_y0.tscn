@@ -29,10 +29,7 @@ region = Rect2(17, 357, 16, 16)
 [sub_resource type="Resource" id="Resource_rdiom"]
 script = ExtResource("11_vcjrw")
 level_uid = "uid://lv4hypjjj08a"
-spawn_location = Vector2(0, 0)
 store_entry_point = true
-entry_point_id = &"world"
-spawn_index = 0
 
 [sub_resource type="Resource" id="Resource_wl3yv"]
 script = ExtResource("7_wppsf")
@@ -43,8 +40,6 @@ size = Vector2(16, 16)
 
 [sub_resource type="Resource" id="Resource_d6o4d"]
 script = ExtResource("12_pvsuw")
-type_uid = -1
-amount = 1
 
 [sub_resource type="Resource" id="Resource_7dgfp"]
 script = ExtResource("14_ujeav")
@@ -53,9 +48,6 @@ item_type = ExtResource("13_n5vac")
 item_meta = {
 "unique_name": "Test Fish"
 }
-give_to_owner = true
-target_id = "target"
-target_index = 0
 
 [sub_resource type="Resource" id="Resource_6kvcv"]
 script = ExtResource("7_wppsf")

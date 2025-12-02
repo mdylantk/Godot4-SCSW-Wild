@@ -14,7 +14,7 @@ func _run(data:Action_State = null) -> bool:
 		#NOTE: This is old and may need to change
 		#since the state may have fix varibles
 		#and this only covers the abstract ones
-		player_state.set_value(key,variables[key])
+		player_state.set_data(key,variables[key])
 		#handler.save_state.set_value(key,variables[key])
 		#print_debug("MEOW! This is outdated and save_state may be used instead. also get/set value instead of meta")
 		#handler.state.set_meta(key,variables[key])

@@ -71,6 +71,8 @@ func on_new_game(path:String = ""):
 	state.positions = {}
 	state.position = Vector2.ZERO
 	state.facing = Vector2.ZERO
+	state.data = {}
+	state.flags = []
 	
 func on_game_loaded(path:String = ""):
 	super(path)
@@ -80,6 +82,8 @@ func on_game_loaded(path:String = ""):
 		state.positions = save_state.get_value('positions',state.positions)
 		state.position = save_state.get_value('position', state.position)
 		state.facing = save_state.get_value('facing', state.facing)
+		state.data = save_state.get_value('data', state.data)
+		state.flags = save_state.get_value('flags', state.flags)
 		state.on_load()
 	print_debug("player state", state)
 		
@@ -90,6 +94,8 @@ func on_autosave(path : String = ""):
 		save_state.set_value('positions',state.positions)
 		save_state.set_value('position',state.position)
 		save_state.set_value('facing',state.facing)
+		save_state.set_value('data',state.data)
+		save_state.set_value('flags',state.flags)
 	super(path)
 	
 
