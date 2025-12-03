@@ -65,32 +65,27 @@ func _reset_state() -> void:
 	facing = Vector2.ZERO
 	flags = []
 	
-#keeping this to trigger save and load logic
-#save will tell all that it about to compress data into
-#something savable or when it self is going to be saved
-func get_save_data()->Dictionary:
+func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
-	set_value('exit_data',exit_data)
-	set_value('scores',scores)
-	set_value('positions',positions)
-	set_value('position',position)
-	set_value('facing',facing)
-	set_value('flags',flags)
-	return _data
+	var save_data : Dictionary[String,Variant]
+	save_data.set('exit_data',exit_data)
+	save_data.set('scores',scores)
+	save_data.set('positions',positions)
+	save_data.set('position',position)
+	save_data.set('facing',facing)
+	save_data.set('flags',flags)
+	save_data.set('data',_data)
+	return save_data
 	
 
 #and load will load the pass data (if changed) and then notify
 #all that it is ready(aka loaded)
-func load_data(data:Dictionary=_data)->void:
-	_data = data
-	#todo: add a function similar to get value, but for standard dictionary
-	#so there no need to have data in two places
-	#this is to work with the old system
-	#also same with save.
-	exit_data = get_value('exit_data',exit_data)
-	scores = get_value('scores',scores)
-	positions = get_value('positions',positions)
-	position = get_value('position', position)
-	facing = get_value('facing', facing)
-	flags = get_value('flags', flags)
+func load_data(data:Dictionary[String,Variant]={'data':_data})->void:
+	exit_data = data.get('exit_data',exit_data)
+	scores = data.get('scores',scores)
+	positions = data.get('positions',positions)
+	position = data.get('position', position)
+	facing = data.get('facing', facing)
+	flags = data.get('flags', flags)
+	_data = data.get('data', _data)
 	loaded.emit()

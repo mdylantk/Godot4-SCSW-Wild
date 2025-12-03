@@ -18,8 +18,9 @@ signal loaded()
 #due to this, data set in editor will not be saved and is used only
 #for saving to disk unless all that depend on resource saver is updated
 #to a new system that use custom text format or config files
-@export var _data : Dictionary = {}
+@export var _data : Dictionary[String,Variant] = {}
 
+	
 ##Check if there a variant value by the provided key
 func has_value(key:String)-> bool:
 	return _data.has(key)
@@ -30,9 +31,7 @@ func erase_value(key)->bool:
 
 ##Get a variant value in the state
 func get_value(key:String, default:Variant = null) -> Variant:
-	if _data.has(key):
-		return _data[key]
-	return default
+	return _data.get(key,default)
 
 ##Set a variant value in the state
 func set_value(key: String, value: Variant) -> void:
@@ -48,13 +47,13 @@ func _reset_state() -> void:
 #keeping this to trigger save and load logic
 #save will tell all that it about to compress data into
 #something savable or when it self is going to be saved
-func get_save_data()->Dictionary:
+func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
 	return _data
 	
 
 #and load will load the pass data (if changed) and then notify
 #all that it is ready(aka loaded)
-func load_data(data:Dictionary=_data)->void:
+func load_data(data:Dictionary[String,Variant]=_data)->void:
 	_data = data
 	loaded.emit()
