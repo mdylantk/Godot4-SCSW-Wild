@@ -15,8 +15,9 @@ signal loaded()
 
 
 #NOTE: only exported values will be saved (with ResourceSaver)
-##Variant Values data. A String keyed dictionary of Variants
-##Should be limited to types safe to save to tres/res files
+#due to this, data set in editor will not be saved and is used only
+#for saving to disk unless all that depend on resource saver is updated
+#to a new system that use custom text format or config files
 @export var _data : Dictionary = {}
 
 ##Check if there a variant value by the provided key
@@ -41,11 +42,19 @@ func set_value(key: String, value: Variant) -> void:
 		value_change.emit(key,value, old_value)
 
 
-
-#old way. may be removed or kept
-func on_save(path:String= '')->void:
+func _reset_state() -> void:
+	_data.clear()
+	
+#keeping this to trigger save and load logic
+#save will tell all that it about to compress data into
+#something savable or when it self is going to be saved
+func get_save_data()->Dictionary:
 	saving.emit()
+	return _data
+	
 
-
-func on_load(path:String = '')->void:
+#and load will load the pass data (if changed) and then notify
+#all that it is ready(aka loaded)
+func load_data(data:Dictionary=_data)->void:
+	_data = data
 	loaded.emit()

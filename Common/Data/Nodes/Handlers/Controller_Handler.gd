@@ -98,7 +98,11 @@ func on_game_loaded(path:String = ""):
 func on_autosave(path : String = ""):
 	var full_path = path + "controllers/"
 	if save_state:
-		save_state.on_save()
+		#TODO: This use to save, but now call the saving path and
+		#returns a dictionary of data to be saved
+		#the current save_state should be handle as a state and update
+		#from a file if it exists
+		save_state.get_save_data()
 		if !DirAccess.dir_exists_absolute(full_path):
 			DirAccess.make_dir_recursive_absolute(full_path)
 		full_path = full_path + name + ".tres"

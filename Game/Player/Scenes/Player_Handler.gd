@@ -66,36 +66,17 @@ func on_new_game(path:String = ""):
 	#and not the old one
 	#may or may not need to manually update the state.
 	super(path)
-	state.exit_data = Exit_Data.new()
-	state.scores = {}
-	state.positions = {}
-	state.position = Vector2.ZERO
-	state.facing = Vector2.ZERO
-	state._data.clear()
-	state.flags = []
+	state.reset_state()
 	
 func on_game_loaded(path:String = ""):
 	super(path)
 	if (save_state):
-		state.exit_data = save_state.get_value('exit_data',state.exit_data)
-		state.scores = save_state.get_value('scores',state.scores)
-		state.positions = save_state.get_value('positions',state.positions)
-		state.position = save_state.get_value('position', state.position)
-		state.facing = save_state.get_value('facing', state.facing)
-		state._data = save_state.get_value('data', state._data)
-		state.flags = save_state.get_value('flags', state.flags)
-		state.on_load()
+		state.load_data(save_state._data)
 	print_debug("player state", state)
 		
 func on_autosave(path : String = ""):
 	if save_state:
-		save_state.set_value('exit_data',state.exit_data)
-		save_state.set_value('scores',state.scores)
-		save_state.set_value('positions',state.positions)
-		save_state.set_value('position',state.position)
-		save_state.set_value('facing',state.facing)
-		save_state.set_value('data',state._data)
-		save_state.set_value('flags',state.flags)
+		save_state._data = state.get_save_data()
 	super(path)
 	
 

@@ -56,6 +56,10 @@ func on_load():
 	#	inventory.inventory = player_state.get_value("inventory",[])
 	pass
 
+#TODO: add a default inventory and such as well
+#as an on_new_game that correctly handles this
+#latter may be solved by a game state flag that state
+#to not load any data
 func on_autosave(path : String = ""):
 	if inventory != null:
 		save_state.inventory = inventory.inventory
