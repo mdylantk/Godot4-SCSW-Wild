@@ -53,48 +53,43 @@ var paused : bool = false:
 #or try to listen for changes that may cause it to be deleted
 @onready var controller_camera : Camera2D = %Camera2D
 
-func get_state()->Savable_State:
+func get_state()->State:
 	print_debug("NOTE: this is not going to be supported")
 	#return save_state
 	return state
+	
 func get_pawn(index:int=0)->Character2D:
 	return pawn
 	
 func on_new_game(path:String = ""):
-	#TODO: FIGURE out how to save the state without changing the path
-	#also so that all that use that path will get the correct resource
-	#and not the old one
-	#may or may not need to manually update the state.
-	super(path)
 	state.reset_state()
 	
+#NOTE: may not depend on controller handler
+#since handler may act diffrently and are more one of a kind
+#and some logic flow are harder to break up and have things not easy
+#to break depencies
 func on_game_loaded(path:String = ""):
-	super(path)
-	if (save_state):
-		state.load_data(save_state._data)
+	var full_path = path + "controllers/" + name + ".tres"
+	var loaded_save : Savable_State
+	if ResourceLoader.exists(full_path):
+		loaded_save = ResourceLoader.load(full_path,"",0)
+	print_debug("loaded",loaded_save,' ',full_path)
+	if (loaded_save):
+		state.load_data(loaded_save.data)
 	print_debug("player state", state)
 		
 func on_autosave(path : String = ""):
-	if save_state:
-		save_state._data = state.get_save_data()
-	super(path)
+	var new_save_state : Savable_State = Savable_State.new(state.get_save_data())
+	var full_path = path + "controllers/"
+	if !DirAccess.dir_exists_absolute(full_path):
+		DirAccess.make_dir_recursive_absolute(full_path)
+	full_path = full_path + name + ".tres"
+	ResourceSaver.save(new_save_state, full_path)
+	print_debug("autosaving ", full_path)
 	
 
 func _ready():
 	print_debug("player state", state)
-	pass
-	#on_game_loaded(Data.default_path)
-	#super()
-	#this is to test the signal
-	#player_meta_changed.connect(player_meta_changed_test)
-	#if state == null :
-	#	state = Player_State.new()
-		#TODO: should also add a player id to it once a system is added to handle it
-		#also for single player, player and game should be contain in a save folder so more than
-		#one save can be created
-	#	state.file_name = "player_state"
-		#this also could be where loading state happens if state is created when player 'joins'
-	#state.load_state()
 
 	
 

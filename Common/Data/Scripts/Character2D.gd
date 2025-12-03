@@ -62,10 +62,11 @@ func on_game_loaded(path:String = ""):
 func on_autosave(path : String = ""):
 	var full_path = path + get_save_path()
 	if save_state:
-		#NOTE: old: should handle setting the data from 
-		#tp a file directly. the value return should be used
-		#used in the file in some way or another
-		save_state.get_save_data()
+		#NOTE: due to using character state only for saving
+		#there is little reason to call get_save_data
+		#savable_state was the old way of saving the state
+		#now it just need something to save to
+		save_state.fetch_save_data()
 		if !DirAccess.dir_exists_absolute(full_path):
 			DirAccess.make_dir_recursive_absolute(full_path)
 		full_path = full_path + "/" + name + ".tres"

@@ -49,8 +49,8 @@ func _is_true(data:Action_State = null, default:bool=true) -> bool:
 		#note: need dedicated way to acess the states
 		#since they are moving to a more typed storage
 		if source is Player_State:
-			if source.has_value(property_name):
-				value = source.get_value(property_name)
+			if source.has_meta(property_name):
+				value = source.get_meta(property_name)
 			#if source.has_data(property_name):
 			#	value = source.get_data(property_name)
 			#if source.state.has_meta(property_name):

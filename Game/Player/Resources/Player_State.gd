@@ -1,4 +1,8 @@
-class_name Player_State extends Savable_State
+class_name Player_State extends State
+#NOTE: this is still depenent on data from savable state
+#one the few varibles that depends on it is moved to their deicated
+#properties (or a none exportable data is added and hook up), then it can be
+#transfered
 
 signal score_changed(id:String, new_value:int)
 
@@ -9,9 +13,6 @@ signal score_changed(id:String, new_value:int)
 #an array of bools. reserver for when data gets compress
 #otherwise data will be used
 @export var flags : Array[int] = [] 
-
-#quick way to store info by keys, but should not be used often
-@export var data : Dictionary = {}
 
 @export var positions : Dictionary = {}
 
@@ -47,7 +48,7 @@ func set_score(id:String, new_score: int)->void:
 	scores[id] = new_score
 	#if old_score != new_score:
 	score_changed.emit(id,new_score)
-	value_change.emit(id+"_score",new_score,old_score)
+	value_changed.emit(id+"_score",new_score,old_score)
 	print_debug("meow! set score of ", self, old_score, '->', new_score,' ', id)
 	
 func get_score(id:String)->int:
@@ -57,7 +58,7 @@ func get_score(id:String)->int:
 
 
 func _reset_state() -> void:
-	_data.clear()
+	#data.clear()
 	exit_data = Exit_Data.new()
 	scores = {}
 	positions = {}
@@ -74,18 +75,19 @@ func get_save_data()->Dictionary[String,Variant]:
 	save_data.set('position',position)
 	save_data.set('facing',facing)
 	save_data.set('flags',flags)
-	save_data.set('data',_data)
+	save_data.set('data',get_metadata())
 	return save_data
 	
 
 #and load will load the pass data (if changed) and then notify
 #all that it is ready(aka loaded)
-func load_data(data:Dictionary[String,Variant]={'data':_data})->void:
-	exit_data = data.get('exit_data',exit_data)
-	scores = data.get('scores',scores)
-	positions = data.get('positions',positions)
-	position = data.get('position', position)
-	facing = data.get('facing', facing)
-	flags = data.get('flags', flags)
-	_data = data.get('data', _data)
+func load_data(new_data:Dictionary[String,Variant]={})->void:
+	exit_data = new_data.get('exit_data',exit_data)
+	scores = new_data.get('scores',scores)
+	positions = new_data.get('positions',positions)
+	position = new_data.get('position', position)
+	facing = new_data.get('facing', facing)
+	flags = new_data.get('flags', flags)
+	set_metadata(new_data.get('data', get_metadata()))
+	#data = new_data.get('data', data)
 	loaded.emit()

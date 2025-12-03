@@ -95,6 +95,9 @@ func start_game(is_new:bool = true, save_name:String="Default"):
 	else:
 		randomize()
 		world_seed = randi()
+		#TODO: move the state saving, loading, and handling here
+		#data will eventually merge with game except for external resource
+		#loading and patching(maybe)
 		Data.save_state.set_value("Game","world_seed",world_seed)
 		
 	#load the maps and assign the seeds. could have a dedicated system

@@ -56,26 +56,15 @@ func on_load():
 	#	inventory.inventory = player_state.get_value("inventory",[])
 	pass
 	
-#NOTE: using the new system so should keep the state as is
-#and use another object to load and save.
-#also state export should be the default used to reset
-#and the modified ones should be stores elsewhere. a little redundent
-#but i am not sure if it can be reloaded from disk
-#NOTE: normally the state is the state used and the save state
-#is that which is used to save to user side. save state do not need
-#to exist at class level and the only reason it is, is because of the old way
-#func on_new_game(path:String = ""):
-#	save_state.reset_state()
-
-#TODO: add a default inventory and such as well
-#as an on_new_game that correctly handles this
-#latter may be solved by a game state flag that state
-#to not load any data
+#NOTE: may need a class level save object so the data can be extracted
+#or saved. could also split the saving and loading into functions
+#and then call it to get acess the the instance or give the instance
 func on_autosave(path : String = ""):
 	if inventory != null:
 		save_state.inventory = inventory.inventory
 	save_state.local_position = position
 	super(path)
+	
 
 func on_game_loaded(path : String = ""):
 	super(path)

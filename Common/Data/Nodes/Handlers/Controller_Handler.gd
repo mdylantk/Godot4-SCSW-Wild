@@ -1,7 +1,7 @@
 ##This is the base class for controllers. Player and AI controllers should extend from this
 class_name Controller_Handler extends Node
 
-signal save_state_changed(old:Savable_State, new:Savable_State)
+signal save_state_changed(old:State, new:State)
 
 ##This is the default brain the controller will use to talk to its owning units
 ##controllers could use more than one brain, but usally one is all that is needed
@@ -37,7 +37,7 @@ var save_state : Savable_State:
 #can be useful since this may have a state that need to be saved
 #NOTE: may not use get state as it was orginally design. indirectly using
 #resource with load tends to not work
-func get_state()->Savable_State:
+func get_state()->State:
 	return null
 
 ##returns a node the controller is controlling. index is used if the controll 
@@ -87,6 +87,7 @@ func on_new_game(path:String = ""):
 #scene base handler (either the game or a dedicated one) is idea
 #NOTE: may move most handlers as a child of the game handler to remove from
 #global space. Game may need to stay as an autoload so level loading do not reset it
+
 func on_game_loaded(path:String = ""):
 	var full_path = path + "controllers/" + name + ".tres"
 	if ResourceLoader.exists(full_path):
@@ -95,14 +96,11 @@ func on_game_loaded(path:String = ""):
 		on_new_game(full_path)
 	print_debug("loaded",save_state,' ',full_path)
 		
+
 func on_autosave(path : String = ""):
 	var full_path = path + "controllers/"
 	if save_state:
-		#TODO: This use to save, but now call the saving path and
-		#returns a dictionary of data to be saved
-		#the current save_state should be handle as a state and update
-		#from a file if it exists
-		save_state.get_save_data()
+		save_state.fetch_save_data()
 		if !DirAccess.dir_exists_absolute(full_path):
 			DirAccess.make_dir_recursive_absolute(full_path)
 		full_path = full_path + name + ".tres"
