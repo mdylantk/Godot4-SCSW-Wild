@@ -31,6 +31,11 @@ var _pause_state : Pause_States = Pause_States.UNPAUSED:
 		_pause_state = value
 		handle_pausing()
 		
+static func secure_path(path:String)->Error:
+	if !DirAccess.dir_exists_absolute(path):
+		return DirAccess.make_dir_recursive_absolute(path)
+	return OK
+		
 ##sets the pause state based on the _pause_state value at the time of it being
 ##called. This allow the pause logic to run when the setter is not called
 ##such as the start of the game, this should be called in the _ready
@@ -85,7 +90,7 @@ func _ready():
 func start_game(is_new:bool = true, save_name:String="default"):
 	
 	#set up the save state, either make sure it new or load from file
-	Data.init_save(save_name,!is_new)
+	#Data.init_save(save_name,!is_new)
 	#NOTE setting new_game here may be redundent.
 	#may be safe to use the parameter, but for now
 	#setting it untill tests can be ran
@@ -116,6 +121,7 @@ func start_game(is_new:bool = true, save_name:String="default"):
 	variation_map.seed = world_seed
 	
 	change_level("uid://cldlaymbe77mn")
+	%Autosave_Timer.start()
 
 
 func end_game(full_quit:bool = false):
@@ -229,11 +235,17 @@ func on_load(path:String = ""):
 		state.load_data(loaded_save.data)
 	print_debug("game state", state)
 		
-func on_autosave(path : String = ""):
+func on_save(path : String = ""):
 	var new_save_state : Savable_State = Savable_State.new(state.get_save_data())
 	var full_path = path + "controllers/"
-	if !DirAccess.dir_exists_absolute(full_path):
-		DirAccess.make_dir_recursive_absolute(full_path)
+	secure_path(full_path)
+	#if !DirAccess.dir_exists_absolute(full_path):
+	#	DirAccess.make_dir_recursive_absolute(full_path)
 	full_path = full_path + "game_state.tres"
 	ResourceSaver.save(new_save_state, full_path)
 	print_debug("autosaving ", full_path)
+
+
+func _on_autosave_timer_timeout() -> void:
+	on_save(state.get_save_path())
+	state.save_event.emit(state.get_save_path())

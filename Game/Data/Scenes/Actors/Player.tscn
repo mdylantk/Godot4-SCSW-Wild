@@ -148,7 +148,7 @@ fill = 1
 fill_from = Vector2(0.504274, 0.512821)
 fill_to = Vector2(0.807692, 0.149573)
 
-[node name="Player" type="CharacterBody2D" groups=["Autosave", "Player_Pawns", "Savable"]]
+[node name="Player" type="CharacterBody2D" groups=["Player_Pawns"]]
 collision_layer = 261
 collision_mask = 433
 script = ExtResource("1_07gio")

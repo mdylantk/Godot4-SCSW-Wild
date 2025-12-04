@@ -2,6 +2,7 @@ extends Character2D
 
 #@export var interact_cast : ShapeCast2D
 @export var player_state:Player_State = load('uid://c67c2fehtuhni')
+@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
 #TODO: may remove inventory as a node so the save_state can store it
 #there no reason to have two copies of an item array. an inventory object
 #may still be used since the functions are needed and other stats like limits
@@ -21,7 +22,7 @@ func _ready()->void:
 	#or have something like a instance state that do not get save, but hold 
 	#game data related to the current instance without needing to acess a autoload
 	#or static var
-	on_game_loaded(Data.get_save_path())
+	#on_game_loaded(Data.get_save_path())
 	facing_changed.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
 
@@ -40,6 +41,10 @@ func _ready()->void:
 	
 	player_state.loaded.connect(on_load)
 	#player_state.saving.connect(on_save)
+	
+	game_state.save_event.connect(on_autosave)
+	game_state.load_event.connect(on_game_loaded)
+	on_game_loaded(game_state.get_save_path())
 	on_load()
 
 

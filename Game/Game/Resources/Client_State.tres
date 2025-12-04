@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Client_State" load_steps=2 format=3 uid="uid://bnvrjjacwa30l"]
+
+[ext_resource type="Script" uid="uid://dv88gki1p2s4t" path="res://Game/Game/Resources/Client_State.gd" id="1_wpmnv"]
+
+[resource]
+script = ExtResource("1_wpmnv")
+metadata/_custom_type_script = "uid://k6enk3eukf8t"

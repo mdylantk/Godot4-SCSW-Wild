@@ -17,6 +17,9 @@ signal save_state_changed(old:Character_State, new:Character_State)
 
 enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
+#NOTE: Moving game state ref to characters that save or need it
+#might be good to think about ways to have saving slotable.
+
 ##This is for caculate velocity change and store varibles related to how it change
 @export var movement_component : Movement_Component_2D = Advance2DMovement.new() :
 	set(value):

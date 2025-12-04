@@ -2,6 +2,8 @@ extends CanvasLayer
 signal close(node:Node)
 
 @export var default_focus : Control
+@export var client_state : Client_State= load('uid://bnvrjjacwa30l')
+
 
 #May not be ideal to ref it here, but for now keeping it here for testing and easy refactoring
 #var config : ConfigFile #= Resources.get_settings(Resources.client_settings_file
@@ -19,8 +21,8 @@ func load_settings() -> void:
 	var sound_volume = 30
 	var language : String = OS.get_locale_language()
 	var language_index : int = -1
-	sound_volume = Data.client_state.get_value("sound","music_volume",sound_volume)
-	language = Data.client_state.get_value("general","language",language)
+	sound_volume = client_state.config_file.get_value("sound","music_volume",sound_volume)
+	language = client_state.config_file.get_value("general","language",language)
 	if language_keys.has(language):
 		language_index = language_keys.find(language)
 	%Music_Volume_Slider.value = sound_volume
@@ -45,8 +47,8 @@ func _on_music_volume_slider_value_changed(value: float) -> void:
 	#NOTE: using 0.1 since 0.01 seem too soft. so it more of a 0-10 range
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(value*0.1))
 	#config = Resources.get_settings(Resources.client_settings_file)
-	Data.client_state.set_value("sound","music_volume",value)
-	Data.save_settings()
+	client_state.config_file.set_value("sound","music_volume",value)
+	client_state.updated.emit()
 	#Resources.save_settings(Resources.client_settings_file)
 	#config.save(Resources.client_settings_file)
 	#TODO: add a delay. like add this as a callable var if null and run it latter, nulling and saving the config
@@ -55,7 +57,10 @@ func _on_music_volume_slider_value_changed(value: float) -> void:
 func _on_visibility_changed() -> void:
 	if visible and default_focus != null:
 		default_focus.grab_focus()
+		#NOTE this is here since the ready order is not correct
+		#should try to add a signal path for notifing that it been loaded
+		load_settings()
 
 func _on_language_option_button_item_selected(index: int) -> void:
-	Data.client_state.set_value("general","language",set_language(index))
-	Data.save_settings()
+	client_state.config_file.set_value("general","language",set_language(index))
+	client_state.updated.emit()

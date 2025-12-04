@@ -1,6 +1,7 @@
 class_name Player_Handler extends Controller_Handler
 
 @export var state : Player_State = load('uid://c67c2fehtuhni')
+@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
 
 #@export_file("*.tscn") var default_pawn = "res://Data/Node/Actors/Player.tscn"
 @export var default_pawn : PackedScene = load("uid://bugclr6n3igb4")
@@ -90,6 +91,8 @@ func on_autosave(path : String = ""):
 
 func _ready():
 	print_debug("player state", state)
+	game_state.save_event.connect(on_autosave)
+	game_state.load_event.connect(on_game_loaded)
 
 	
 

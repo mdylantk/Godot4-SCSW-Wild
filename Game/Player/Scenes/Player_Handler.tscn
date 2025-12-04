@@ -6,7 +6,7 @@
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Game/Game/Resources/Controllers/Player_Controller.tres" id="4_vte1q"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Common/Data/Nodes/Main_Camera.tscn" id="4_wnuel"]
 
-[node name="Player_Handler" type="Node2D" groups=["Autosave", "Player_Handlers", "Players", "Savable"]]
+[node name="Player_Handler" type="Node2D" groups=["Player_Handlers", "Players"]]
 process_mode = 3
 y_sort_enabled = true
 script = ExtResource("1_d3v36")
