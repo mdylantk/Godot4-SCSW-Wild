@@ -4,6 +4,7 @@
 class_name Game_Handler extends Node
 
 @export var game_events : Base_Events = preload("uid://by8b1l7earv1n")
+@export var state : Game_State = load('uid://cnbeqfpaumxj3')
 #NOTE:this should be listen to signals and triggering events
 #so signals are not nessary
 #signal event_update(event)
@@ -73,32 +74,37 @@ func _ready():
 	#Connect to Main Menu to game related triggers
 	UI.main_menu.pause.connect(on_menu_pause)
 	UI.main_menu.resume.connect(on_menu_resume)
-	UI.main_menu.new_game.connect(on_new_game)
-	UI.main_menu.load_game.connect(on_load_game)
-	UI.main_menu.end_game.connect(on_end_game)
+	UI.main_menu.new_game.connect(on_menu_new_game)
+	UI.main_menu.load_game.connect(on_menu_load_game)
+	UI.main_menu.end_game.connect(on_menu_end_game)
 	
 
 
 
 @rpc("any_peer","call_local")
-func start_game(is_new:bool = true, save_name:String="Default"):
+func start_game(is_new:bool = true, save_name:String="default"):
 	
 	#set up the save state, either make sure it new or load from file
 	Data.init_save(save_name,!is_new)
+	#NOTE setting new_game here may be redundent.
+	#may be safe to use the parameter, but for now
+	#setting it untill tests can be ran
+	state.new_game = is_new
+	state.save_name = save_name
 	
 	#set up at least one persistant seed to use in generators
 	#World seed is to help keep the world gen similar or the same between sessions
 	var world_seed : int
-	if Data.save_state.has_section_key("Game","world_seed"):
-		world_seed = Data.save_state.get_value("Game","world_seed",0)
-		seed(world_seed)
-	else:
+	if state.new_game:
 		randomize()
-		world_seed = randi()
-		#TODO: move the state saving, loading, and handling here
-		#data will eventually merge with game except for external resource
-		#loading and patching(maybe)
-		Data.save_state.set_value("Game","world_seed",world_seed)
+		state.random_seed = randi()
+		#NOTE: may need to set this to false
+		#after some time or change it to an int to state
+		#the game creation state
+		state.new_game = false
+	else:
+		seed(state.random_seed)
+	world_seed = state.random_seed
 		
 	#load the maps and assign the seeds. could have a dedicated system
 	#to handle this or let the world (or level using world tools) handle it
@@ -195,15 +201,39 @@ func on_menu_pause()->void:
 func on_menu_resume()->void:
 	_pause_state &= ~Pause_States.USER_PAUSED
 	
-func on_new_game(id:String="Default")->void:
+func on_menu_new_game(id:String="default")->void:
 	start_game(true, id)
+	state.new_game_event.emit(state.get_save_path())
 	_pause_state &= ~Pause_States.USER_PAUSED
 
-func on_load_game(id:String="Default")->void:
+func on_menu_load_game(id:String="default")->void:
 	start_game(false, id)
+	on_load(state.get_save_path())
+	state.load_event.emit(state.get_save_path())
 	_pause_state &= ~Pause_States.USER_PAUSED
 	
-func on_end_game()->void:
+func on_menu_end_game()->void:
 	#TODO the bool is to quit out completly. either have the menu pass a flag/bool
 	#or handle the check here
 	end_game(true)
+
+#TODO: rename these since the game will handle this directly
+#since it will trigger the events
+func on_load(path:String = ""):
+	var full_path = path + "controllers/game_state.tres"
+	var loaded_save : Savable_State
+	if ResourceLoader.exists(full_path):
+		loaded_save = ResourceLoader.load(full_path,"",0)
+	print_debug("loaded",loaded_save,' ',full_path)
+	if (loaded_save):
+		state.load_data(loaded_save.data)
+	print_debug("game state", state)
+		
+func on_autosave(path : String = ""):
+	var new_save_state : Savable_State = Savable_State.new(state.get_save_data())
+	var full_path = path + "controllers/"
+	if !DirAccess.dir_exists_absolute(full_path):
+		DirAccess.make_dir_recursive_absolute(full_path)
+	full_path = full_path + "game_state.tres"
+	ResourceSaver.save(new_save_state, full_path)
+	print_debug("autosaving ", full_path)

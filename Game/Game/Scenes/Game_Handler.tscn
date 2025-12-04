@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bdpv2nuo5qsqg" path="res://Game/Player/Scenes/Player_Handler.tscn" id="5_amjxa"]
 [ext_resource type="Script" uid="uid://bh3h4moo6c3fn" path="res://Common/Data/Nodes/Handlers/Server_Handler.gd" id="7_clhfr"]
 
-[node name="Game_Handler" type="Node2D" groups=["Game_Handler"]]
+[node name="Game_Handler" type="Node2D" groups=["Game_Handler", "Savable"]]
 y_sort_enabled = true
 script = ExtResource("1_gpdo0")
 

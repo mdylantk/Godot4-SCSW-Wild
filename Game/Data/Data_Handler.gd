@@ -47,8 +47,13 @@ signal save_state_ready()
 #@export var client_config: String = "client_config"
 @export var background_music_stream : AudioStreamRandomizer = preload('uid://bba37ge2fakbi')
 
+#will use the game state for path info
+#and will try to move save and load and stuff there as well
+#data my stay for patching
+@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
+
 ##the default object for saving data realted to the current game save
-var save_state : ConfigFile
+#var save_state : ConfigFile
 ##The object for storing settings
 var client_state : ConfigFile
 
@@ -78,7 +83,8 @@ static func get_files(
 	return files
 
 func get_save_path():
-	return default_path+"/"+save_name+"/"
+	return game_state.get_save_path()
+	#return default_path+"/"+save_name+"/"
 ##This will try to save the provide object to disk
 func save_data(
 	state:Object,file_name:String="Save",path:String=default_path,encrypted:bool=false,key:String=default_key
@@ -144,18 +150,18 @@ func save_settings():
 func init_save(save_id:String=save_name,load_save:bool=false):
 	save_name = save_id
 	if load_save:
-		load_data(save_state,"Data",default_path+"/"+save_name,false)
+		#load_data(save_state,"Data",default_path+"/"+save_name,false)
 		game_loaded()
 	else:
-		save_state = ConfigFile.new()
+		#save_state = ConfigFile.new()
 		game_new()
 	save_state_ready.emit()
 
 ##allow the save_state_change to be called on setting a value
-func add_to_save_state(section:String, key:String, value:Variant)->void:
-	print_debug("Meow:", section, "key:", key, " value:",value)
-	save_state.set_value(section,key,value)
-	save_state_change.emit(section,key,value)
+#func add_to_save_state(section:String, key:String, value:Variant)->void:
+#	print_debug("Meow:", section, "key:", key, " value:",value)
+#	save_state.set_value(section,key,value)
+#	save_state_change.emit(section,key,value)
 
 func load_music():
 	var paths = Data_Handler.get_files(
@@ -192,7 +198,10 @@ var test:Resource = null
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	load_music()
-	save_state = ConfigFile.new()
+	#TODO: save state may not be used
+	#also may use a dedicated state for client state, but
+	#save like the other
+	#save_state = ConfigFile.new()
 	client_state = ConfigFile.new()
 	load_data(client_state,"settings",default_path,false)
 	print_debug("ready")
@@ -220,7 +229,7 @@ func _ready() -> void:
 ##Will notify all existing Savable group members that a new
 ##game is started
 func game_new(id:String = save_name) -> void:
-	save_name = id
+	game_state.save_name = id
 	var save_path = get_save_path()
 	print_debug("new")
 	get_tree().call_group("Savable", "on_new_game",save_path)
@@ -237,9 +246,10 @@ func _on_autosave_timer_timeout() -> void:
 	print_debug("(autosave) saving")
 	var save_path = get_save_path()
 	secure_path(save_path)
+	game_state.save_event.emit(save_path)
 	#this allow nodes to prepare there savable data for saving
 	#before the state gets saved
 	get_tree().call_group("Savable", "on_autosave",save_path)
-	save_data(save_state,"Data",save_path,false)
-	if test:
-		save_data(test,"test",default_path,false)
+	#save_data(save_state,"Data",save_path,false)
+	#if test:
+	#	save_data(test,"test",default_path,false)
