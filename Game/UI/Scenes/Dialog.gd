@@ -2,6 +2,7 @@ class_name Dialog_Handler extends CanvasLayer
 signal started()
 signal ended(canceled)
 
+@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
 ##action to run if about to end dialog
 var cancel_action : Base_Action
 ##acttion to run if about to finish dialog
@@ -81,14 +82,14 @@ func update_page_text(index:int = 0,end_dialog:bool = false):
 		print_debug("this probably being called since the dialog can not be canceled")
 
 func start(index:int = 0):
-	UI.enable_player_input = false
+	ui_state.enable_player_input = false
 	update_page_text(index)
 	visible = true
 
 func cancel():
 	print_debug("cancel")
 	speak_text()
-	UI.enable_player_input = true
+	ui_state.enable_player_input = true
 	visible = false
 	ended.emit(true)
 	if cancel_action != null:
@@ -96,7 +97,7 @@ func cancel():
 	
 func finish():
 	speak_text()
-	UI.enable_player_input = true
+	ui_state.enable_player_input = true
 	print_debug("finished")
 	visible = false
 	ended.emit(false)

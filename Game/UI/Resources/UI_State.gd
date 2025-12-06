@@ -1,5 +1,6 @@
-class_name Events_UI extends Base_Events
-
+class_name UI_State extends State
+#TODO: maybe convert to a state and relocate some
+#stateful general ui stuff here
 signal send_notifcation(message : String)
 
 #NOTE: the id base calls only will work if ui supports it
@@ -15,6 +16,13 @@ signal show(id:String)
 #to hid a element
 signal hide(id:String)
 
+#NOTE: not sure if this is used or from the old pause system
+var enable_player_input :bool = true
 #func send_notifcation(message : String):
 #	event.emit('send_notifcation',"[center]"+message)
 	#UI.gui_notify.add_notify_message("[center]"+message)
+
+#this is a temp solution to acess the fishing ui
+#should have its own state
+var fishing_game = null
+var dialog = null

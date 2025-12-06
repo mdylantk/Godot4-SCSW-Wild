@@ -4,6 +4,7 @@ class_name Generator_Level extends Base_Level
 
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
+@export var world_state :World_State = load('uid://b047ftosxvj7p')
 #@export var use_game_seed: bool = true
 
 #TODO: make it so it will use all the generator instead of [0]
@@ -208,7 +209,7 @@ func caculate_active_regions(world_coord:Vector2):
 func _process(delta: float) -> void:
 	
 	caculate_active_regions(get_viewport().get_camera_2d().global_position)
-	World.level_loading = is_ready
+	world_state.is_level_loading = is_ready
 
 func _ready() -> void:
 	var player_pos : Vector2

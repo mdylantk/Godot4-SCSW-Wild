@@ -21,9 +21,6 @@ general/text_to_speech=true
 
 [autoload]
 
-UI="*res://Game/UI/Scenes/UI_Handler.tscn"
-World="*res://Game/World/Scenes/World_Handler.tscn"
-Audio="*res://Game/Audio/Audio_Handler.tscn"
 Game="*res://Game/Game/Scenes/Game_Handler.tscn"
 
 [display]

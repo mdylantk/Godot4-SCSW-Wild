@@ -3,12 +3,24 @@
 ##as well as connect to their signals so it can maintain the game loop
 class_name Game_Handler extends Node
 
+#TODO: moving game events as part of game state. so need to see how 
+#it is used and move/update it. quite sure game events was a test so
+#not a lot use it except maybe world.
 @export var game_events : Base_Events = preload("uid://by8b1l7earv1n")
 @export var state : Game_State = load('uid://cnbeqfpaumxj3')
+@export var world_state : World_State = load('uid://b047ftosxvj7p')
 #NOTE:this should be listen to signals and triggering events
 #so signals are not nessary
 #signal event_update(event)
 #signal player_created(handler:Node, index : int)
+
+#this is a placeholder untill ui is move as a part of the game
+#might make a dedicated state, but not sure since minor states may
+#be use as a bridge
+@onready var ui : UI_Handler = %UI
+#world may be acess via state instead of handler
+#but using this to move depenices from the autoload to this point
+#@onready var world : World_Handler = %World_Handler
 
 #server may need to be it own handler or a component of this
 #this depends if anything but the game will ever need to comunicate with it
@@ -29,6 +41,7 @@ const PAUSE_LEVEL : int = Pause_States.GAME_PAUSED
 var _pause_state : Pause_States = Pause_States.UNPAUSED:
 	set(value):
 		_pause_state = value
+		state.pause_state = value
 		handle_pausing()
 		
 static func secure_path(path:String)->Error:
@@ -66,24 +79,26 @@ func _ready():
 	
 	#NOTE: connect to other handler signals to maintain game flow
 	#since game handler should know all, but none should directly acess it
-	World.level_ready.connect(on_level_ready) #level is ready for game logic
-	World.level_busy.connect(on_level_busy) #level is still loading up
+	world_state.level_ready.connect(on_level_ready) #level is ready for game logic
+	world_state.level_busy.connect(on_level_busy) #level is still loading up
 	
 	
 	#world connecting is a redirect of that logic so
 	#the game do not need to be told to change level. instead the world
 	#can call trigger it
-	World.level_changing.connect(change_level) #level is about tpo change
+	world_state.load_level.connect(change_level)
+	#NOTE: need to see the call order related to this
+	#world.level_changing.connect(change_level) #level is about tpo change
 	
-	UI.ui_focus.connect(on_ui_focus)
+	ui.ui_focus.connect(on_ui_focus)
 	#Connect to Main Menu to game related triggers
-	UI.main_menu.pause.connect(on_menu_pause)
-	UI.main_menu.resume.connect(on_menu_resume)
-	UI.main_menu.new_game.connect(on_menu_new_game)
-	UI.main_menu.load_game.connect(on_menu_load_game)
-	UI.main_menu.end_game.connect(on_menu_end_game)
+	ui.main_menu.pause.connect(on_menu_pause)
+	ui.main_menu.resume.connect(on_menu_resume)
+	ui.main_menu.new_game.connect(on_menu_new_game)
+	ui.main_menu.load_game.connect(on_menu_load_game)
+	ui.main_menu.end_game.connect(on_menu_end_game)
 	
-
+	
 
 
 @rpc("any_peer","call_local")
@@ -122,6 +137,11 @@ func start_game(is_new:bool = true, save_name:String="default"):
 	
 	change_level("uid://cldlaymbe77mn")
 	%Autosave_Timer.start()
+	
+	#test to force music playing
+	#may need to move music here unless
+	#the need to orginize is needed
+	$Audio_Handler/AudioStreamPlayer.play()
 
 
 func end_game(full_quit:bool = false):
@@ -132,13 +152,15 @@ func end_game(full_quit:bool = false):
 	#and then either shut down or go to mode_selection
 	
 #Below is the new game change logic
-func change_level(uid):
+#NOTE: decide if spawn index is needed. may be able to use
+#player state exit data instead
+func change_level(uid,spawn_index : int = 0):
 	if OK == get_tree().change_scene_to_file(uid):
 		
 		if !get_tree().tree_changed.is_connected(on_tree_changed):
 			get_tree().tree_changed.connect(on_tree_changed)
 		#tell GUI and controllers that the gamplay is loading(disable imput and such)
-		World.level_loading = true
+		world_state.is_level_loading = true
 	else:
 		print_debug("Error, unable to load scene")
 
@@ -148,7 +170,7 @@ func on_tree_changed():
 		get_tree().tree_changed.disconnect(on_tree_changed)
 		level_changed(level)
 		#get_tree().call_group("Players", "reparent_pawn", level)
-		World.level_loading = false
+		world_state.is_level_loading = false
 		#tell GUI and controllers that the gamplay is may be loaded
 		#though the world may need to pass another signal
 		#like level_ready. the issue is that there no relibale way
@@ -164,12 +186,12 @@ func on_tree_changed():
 ##should only be called once per level load unless a busy func is added for
 ##dynamic loading
 func on_level_ready():
-	UI.loading = false
+	ui.loading = false
 	_pause_state &= ~Pause_States.WORLD_PAUSED
 	pass
 ##called when level is loading something and need gameplay pause
 func on_level_busy():
-	UI.loading = true
+	ui.loading = true
 	_pause_state |= Pause_States.WORLD_PAUSED
 	pass
 	

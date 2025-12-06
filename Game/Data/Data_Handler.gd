@@ -130,9 +130,14 @@ func load_data(
 
 ##Save the client settings so autosave would not be needed for settings
 func save_settings():
+	#just here since this trigger the save event
+	#which may be needed
+	client_state.fetch_save_data()
 	save_data(client_state.config_file,"settings",default_path,false)
+	
 
 func load_music():
+	print_debug('loading music?')
 	var paths = Data_Handler.get_files(
 		[data_path + 'Assets/Music/Background',
 			patch_path + '/Music/Background'],
@@ -157,10 +162,10 @@ func load_music():
 			elif (file_ext == 'ogg'):
 				audio_stream = AudioStreamOggVorbis.new()
 			audio_stream.data = file_data
-			background_music_stream .add_stream(-1,audio_stream)
+			background_music_stream.add_stream(-1,audio_stream)
 		else:
 			var loaded_stream = ResourceLoader.load(path)
-			background_music_stream .add_stream(-1,loaded_stream)
+			background_music_stream.add_stream(-1,loaded_stream)
 		#print_debug(path,' | ', background_music_stream .streams_count)
 
 #var test:Resource = null
@@ -175,5 +180,10 @@ func _ready() -> void:
 	#since it should turn into a proper state
 	#client_state = ConfigFile.new()
 	load_data(client_state.config_file,"settings",default_path,false)
+	#new state have a load and save logic path. a lot of notifcations is handle
+	#from these events or their tiggers(like load_data). since data is stored as
+	#a config file in the state, no data is nessary for setting or getting for this
+	#state
+	client_state.load_data()
 	print_debug("ready")
 	client_state.updated.connect(save_settings)

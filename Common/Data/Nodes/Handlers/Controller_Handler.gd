@@ -59,7 +59,10 @@ func on_level_changed(level:Base_Level, spawn_index: int = 0):
 	pass
 	
 func _ready() -> void:
-	World.level_changed.connect(on_level_changed)
+	#TODO: use the world state instead if this is needed
+	load('uid://b047ftosxvj7p').level_loaded.connect(on_level_changed)
+	#Game.world.level_changed.connect(on_level_changed)
+	pass
 	
 #func on_autosave(path : String = ""):
 #	print_debug("autosaving")

@@ -15,7 +15,7 @@ class_name Catch_Fish extends Interactive_Data
 #NOTE: this is here to test the event system, but most of the logic should be
 #part of the fishing game and this handles the data. a dedicated
 #event for the game may be made or the event_ui (or event game) will be used
-@export var ui_events : Events_UI = load('uid://dkc6l4f8ve4t5')
+@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
 var fish_game
@@ -42,7 +42,9 @@ func _start():
 	#this means this needs to be shared or the passed objects need to be pass
 	#by other means
 	if fish_game == null:
-		fish_game = UI.fishing_game
+		#TODO: need a state for this so it can comunicate
+		#for now will add to ui_state, but it should be its own system
+		fish_game = ui_state.fishing_game
 		#fish_game.add_fish(Vector2i(24,24),fish_game.rare_fish_atlas_coords,2,
 		#	{"move_rate":randf_range(.5,1),"type":"rare fish"}
 		#)
@@ -122,7 +124,8 @@ func add_fish(fish_data:Dictionary):
 		var remaining_amount = inventory.add_to_inventory(new_fish_item,1)
 		#InventoryHandler.add_item(handler,interactor,new_fish_item)
 		#TODO: let the inventory handle notify? or check if the item was added
-		UI.gui_notify.add_notify_message("[center]"+"Acquired "+ fish_name )
+		#UI.gui_notify.add_notify_message("[center]"+"Acquired "+ fish_name )
+		ui_state.send_notifcation.emit("[center]"+"Acquired "+ fish_name)
 		#var remaning_amount = Item_Events.acquire_item(interactor,fish_item,handler,"Caught")
 		#TODO: need a way to log caught fish. this just statisitic like
 		#number caught, biggest and smallest size caught, and such
@@ -146,7 +149,7 @@ func on_catch(fish_data:Dictionary):
 
 func on_miss(vaild:bool = false):
 	if vaild == true:
-		ui_events.send_notifcation.emit("Failed to catch a fish.")
+		ui_state.send_notifcation.emit("Failed to catch a fish.")
 		#General_Events.send_notifcation("Failed to catch a fish.")
 		end_game()
 

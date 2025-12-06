@@ -30,9 +30,11 @@ func _is_true(data:Action_State = null, default:bool=true) -> bool:
 			return false
 		source = data.get_meta(property_source)
 	elif property_source == "game":
-		source = Game
+		#NOTE: using state instead of handler so
+		#lots of these need to be updated
+		source = load('uid://cnbeqfpaumxj3')
 	elif property_source == "world":
-		source = World
+		source = load('uid://b047ftosxvj7p')
 	elif property_source == "player":
 		#pass #Note: need to use the player state
 		source = load('uid://c67c2fehtuhni')

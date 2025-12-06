@@ -26,13 +26,18 @@ func load_settings() -> void:
 	if language_keys.has(language):
 		language_index = language_keys.find(language)
 	%Music_Volume_Slider.value = sound_volume
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(sound_volume*0.01))
+	#AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(sound_volume*0.01))
 	%Language_OptionButton.select(language_index)
-	set_language(language_index)
-	
+	#set_language(language_index)
+
+func on_state_loaded():
+	print_debug('meow client state loaded')
+	load_settings()
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	load_settings()
+	#load_settings()
+	client_state.loaded.connect(on_state_loaded)
 	print_debug("ready")
 
 func _input(event: InputEvent) -> void:
@@ -59,7 +64,7 @@ func _on_visibility_changed() -> void:
 		default_focus.grab_focus()
 		#NOTE this is here since the ready order is not correct
 		#should try to add a signal path for notifing that it been loaded
-		load_settings()
+		#load_settings()
 
 func _on_language_option_button_item_selected(index: int) -> void:
 	client_state.config_file.set_value("general","language",set_language(index))

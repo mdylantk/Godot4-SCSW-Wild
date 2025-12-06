@@ -36,13 +36,15 @@ signal request_unload_level(level:Base_Level)
 
 @export var world_enviroment : Environment_Data
 
-@export var events : World_State = preload('uid://b047ftosxvj7p')
+@export var state : World_State = load('uid://b047ftosxvj7p')
 
 ## a flag the level can set to true if it not ready after its ready function
+#DEPRECATED
 var level_loading : bool = false :
 	set(value):
 		if value != level_loading:
 			level_loading = value
+			state.is_level_loading = value
 			if level_loading:
 				level_busy.emit()
 			else:
@@ -61,6 +63,7 @@ var loaded_levels := {}
 var loaded_level : Base_Level
 ##load level by uid. the main handler(game) should listen to these signals
 ##so it can load and unload the level withit being directly ref
+#DEPRECATED
 func load_level(uid:String, spawn_index : int = 0) -> Base_Level:
 	level_busy.emit()
 	level_changing.emit(uid)
@@ -116,7 +119,7 @@ func remove_unused_levels():
 var is_time_setting: bool = false
 	
 func _ready():
-	events.load_level.connect(load_level)
+	state.load_level.connect(load_level)
 	print_debug("I am ready")
 	if world_seed == 0:
 		world_seed = randi()

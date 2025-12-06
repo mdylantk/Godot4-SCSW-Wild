@@ -13,6 +13,11 @@ var random_seed : int = 0
 var new_game : bool = true
 var save_name : String = 'default'
 
+#this is expose here so that debug can check the value
+#might move it here if needed and it may
+var pause_state : int
+
+
 func get_save_path()->String:
 	return default_path + '/' + save_name + '/'
 

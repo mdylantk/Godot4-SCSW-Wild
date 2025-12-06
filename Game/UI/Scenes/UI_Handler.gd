@@ -16,8 +16,9 @@ signal ui_focus(disable_other_input:bool)
 			%Dialog.visible = !hide_hud
 			%Notify.visible = !hide_hud
 			
-@export var events : Events_UI = preload('uid://dkc6l4f8ve4t5')
+@export var state : UI_State = load('uid://dkc6l4f8ve4t5')
 
+#@export var world_state : World_State = load('uid://b047ftosxvj7p')
 
 @onready var loading : bool = false :
 	set(value):
@@ -62,7 +63,9 @@ func send_notifcation(message:String):
 
 func _ready() -> void:
 	
-	events.send_notifcation.connect(send_notifcation)
+	state.send_notifcation.connect(send_notifcation)
+	state.fishing_game = fishing_game
+	state.dialog = gui_dialog
 	
 	_on_menu_visibility_changed()
 	#TODO: try to let the game handler handle tree events such as pausing

@@ -3,3 +3,4 @@
 [resource]
 playback_mode = 1
 random_pitch = 1.5
+random_volume_offset_db = 2.7

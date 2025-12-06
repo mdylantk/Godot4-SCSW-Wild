@@ -2,6 +2,8 @@ extends CanvasLayer
 
 @export var enable_debug : bool = true
 
+@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
+@export var world_state : World_State = load('uid://b047ftosxvj7p')
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -12,8 +14,8 @@ func _process(delta: float) -> void:
 
 	if enable_debug:
 		var debug_text = str(camera_global_position)
-		debug_text = debug_text + "\n" + "Game Paused: " + str(Game._pause_state) + "("+str(get_tree().paused)+")"
-		debug_text = debug_text + "\n" + "Level loading: " + str(World.level_loading)
+		debug_text = debug_text + "\n" + "Game Paused: " + str(game_state.pause_state) + "("+str(get_tree().paused)+")"
+		debug_text = debug_text + "\n" + "Level loading: " + str(world_state.is_level_loading)
 		#TODO: If need, then have the game hander expose it or the player state
 		#debug_text = debug_text + "\n" + "player input: " + str(!Player.paused)
 			#NOTE: this need to change with the new item system. was added with the old to get it working

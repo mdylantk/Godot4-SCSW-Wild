@@ -22,7 +22,10 @@ signal canceled()
 
 @export var fishing_distance : float = 6
 
+@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
+
 @onready var cursor = %Cursor
+
 
 #NOTE: dose not always disable collsion on load.
 #either attach to a diffrent viewport or have it run a similar logic flow
@@ -53,7 +56,7 @@ func running_changed():
 	else:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	#TODO: handle player input diffrently either use a signal or something built in
-	UI.enable_player_input = !running
+	ui_state.enable_player_input = !running
 	for layer_id in get_layers_count():
 		set_layer_enabled(layer_id,running)
 	visible = running
