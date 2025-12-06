@@ -7,14 +7,14 @@ class_name Player_State extends State
 signal score_changed(id:String, new_value:int)
 
 
-@export var scores : Dictionary = {}
+var scores : Dictionary = {}
 
 #sets of bitflag ints instead of using
 #an array of bools. reserver for when data gets compress
 #otherwise data will be used
-@export var flags : Array[int] = [] 
+var flags : Array[int] = [] 
 
-@export var positions : Dictionary = {}
+var positions : Dictionary = {}
 
 
 var pawn #NOTE: this should be the pawn class or a savable data struct for rebuilding the pawn

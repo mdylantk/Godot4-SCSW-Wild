@@ -2,7 +2,7 @@ class_name A_Send_Notification extends Base_Action
 
 @export var message : String
 
-@export var ui_events : Events_UI = load('uid://dkc6l4f8ve4t5')
+@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
 
 func _run(data:Action_State = null) -> bool:
 	var format : Dictionary = {}
@@ -10,6 +10,6 @@ func _run(data:Action_State = null) -> bool:
 		format = data.get_meta("format",{})
 	#TODO: Either a event resource or the game_state could have
 	#a way to communiate up to a node to emit a message
-	ui_events.send_notifcation.emit(message.format(format))
+	ui_state.send_notifcation.emit(message.format(format))
 	#General_Events.send_notifcation(message.format(format))
 	return super(data)
