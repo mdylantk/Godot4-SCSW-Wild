@@ -7,17 +7,19 @@ class_name Player_State extends State
 signal score_changed(id:String, new_value:int)
 
 
-var scores : Dictionary = {}
+var scores : Dictionary[String,int] = {}
 
 #sets of bitflag ints instead of using
 #an array of bools. reserver for when data gets compress
 #otherwise data will be used
 var flags : Array[int] = [] 
 
-var positions : Dictionary = {}
+var positions : Dictionary[String,Vector2] = {}
 
-
+#TODO: look into inventory to see how uid or path is extracted
+#or fine a way to extracted.
 var pawn #NOTE: this should be the pawn class or a savable data struct for rebuilding the pawn
+#could store this in positions 
 var world_position : Vector2 #this should be set when traveling or saving. global_position should be used
 #for the actual position
 
@@ -29,9 +31,15 @@ var instance_position : Vector2 #similar to world position, but used when loadin
 #so set when saving or before loading into an instance from world. (but instance may override it coded that way)
 
 #Exit data is used for loading last zone
+#NOTE: may need to rethink this. may embed it in here
+#so another resource is not used. should try using basic types
+#over object when possible or have a stringify function for them
+#and vice versa
 @export var exit_data : Exit_Data = Exit_Data.new()
 #these are the character last state to be saved
 #so they load in like how they load out
+#also could change positions to handle thesem but facing be odd
+#could also have an object that handles it
 @export var position : Vector2
 @export var facing : Vector2
 

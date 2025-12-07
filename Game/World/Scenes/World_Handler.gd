@@ -39,98 +39,20 @@ signal request_unload_level(level:Base_Level)
 @export var state : World_State = load('uid://b047ftosxvj7p')
 
 ## a flag the level can set to true if it not ready after its ready function
-#DEPRECATED
-var level_loading : bool = false :
-	set(value):
-		if value != level_loading:
-			level_loading = value
-			state.is_level_loading = value
-			if level_loading:
-				level_busy.emit()
-			else:
-				level_ready.emit()
 
 func get_level_id()->String:
 	if get_tree().current_scene:
 		return get_tree().current_scene.name
 	return String()
 
-#DEPRECATED
-var loaded_levels := {}
-#this just store the current level. only one per client unless viewport is used to solve
-#the issue of being ine the same World2d
-#DEPRECATED: do not ref directly, level will be the current scene
-var loaded_level : Base_Level
-##load level by uid. the main handler(game) should listen to these signals
-##so it can load and unload the level withit being directly ref
-#DEPRECATED
-func load_level(uid:String, spawn_index : int = 0) -> Base_Level:
-	level_busy.emit()
-	level_changing.emit(uid)
-	#level_changed kind of pointless here. the game should trigger it
-	#when it is loaded in
-	level_changed.emit(get_tree().current_scene, spawn_index)
-	#NOTE: current scene most likly will be null. would need to await
-	#or something. returning a scene really not nessary. 
-	return get_tree().current_scene
-	
-	print_debug("meow")
-	if !loaded_levels.has(uid):
-		var new_level = (load(uid) as PackedScene).instantiate()
-		if new_level != null:
-			loaded_levels[uid] = new_level
-			add_child(new_level)
-			unload_level(loaded_level)
-			loaded_level = new_level
-	else:
-		add_child(loaded_levels[uid])
-		unload_level(loaded_level)
-		loaded_level = loaded_levels[uid]
-	if loaded_level != null: #just a check, but usally should not happen unless
-		#loaded_level.load_level()
-		if loaded_level.environment_data == null:
-			%CanvasModulate.color = Color(1,1,1,1)
-	else:
-		%CanvasModulate.color = Color(1,1,1,1)
-	level_changed.emit(loaded_level, spawn_index)
-	remove_unused_levels()
-	return loaded_level
-
-		
-#will unload from scene, but not remove from memory
-#DEPRECATED
-func unload_level(level:Base_Level):
-	if loaded_level != null:
-		remove_child(loaded_level)
-		
-#DEPRECATED
-func remove_unused_levels():
-	for level_uid in loaded_levels.keys():
-		var level : Base_Level = loaded_levels[level_uid]
-		if level == loaded_level:
-			level.active_age = 1
-		elif level.active_age >= max_levels_stored:
-			#level.unload_level()
-			loaded_levels.erase(level_uid)
-			level.call_deferred("queue_free")
-		else:
-			level.active_age += 1
 
 var is_time_setting: bool = false
 	
 func _ready():
-	state.load_level.connect(load_level)
+	#state.load_level.connect(load_level)
 	print_debug("I am ready")
 	if world_seed == 0:
 		world_seed = randi()
-
-
-#TODO: change name to: is_loaded_at or is_ready_at unless chunk end up sounding better
-#DEPRECATED
-func is_chunk_loaded(location):
-	if loaded_level != null:
-		return loaded_level.is_level_loaded(location)
-	return true
 
 
 #NOTE: can get world location from HUD, but getting it here may be a bit odd

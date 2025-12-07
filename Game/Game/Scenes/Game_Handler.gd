@@ -135,7 +135,12 @@ func start_game(is_new:bool = true, save_name:String="default"):
 	height_map.seed = world_seed
 	variation_map.seed = world_seed
 	
-	change_level("uid://cldlaymbe77mn")
+	#moving level change to the new/load game
+	#since level used is depenent on the state
+	#but this set the save/load location
+	#change_level("uid://cldlaymbe77mn")
+	#change_level(world_state.default_level_uid)
+	#change_level(world_state.level_uid)
 	%Autosave_Timer.start()
 	
 	#test to force music playing
@@ -156,11 +161,12 @@ func end_game(full_quit:bool = false):
 #player state exit data instead
 func change_level(uid,spawn_index : int = 0):
 	if OK == get_tree().change_scene_to_file(uid):
-		
+		world_state.level_uid = uid
+		world_state.is_level_loading = true
 		if !get_tree().tree_changed.is_connected(on_tree_changed):
 			get_tree().tree_changed.connect(on_tree_changed)
 		#tell GUI and controllers that the gamplay is loading(disable imput and such)
-		world_state.is_level_loading = true
+		
 	else:
 		print_debug("Error, unable to load scene")
 
@@ -232,12 +238,14 @@ func on_menu_resume()->void:
 func on_menu_new_game(id:String="default")->void:
 	start_game(true, id)
 	state.new_game_event.emit(state.get_save_path())
+	change_level(world_state.level_uid)
 	_pause_state &= ~Pause_States.USER_PAUSED
 
 func on_menu_load_game(id:String="default")->void:
 	start_game(false, id)
 	on_load(state.get_save_path())
 	state.load_event.emit(state.get_save_path())
+	change_level(world_state.level_uid)
 	_pause_state &= ~Pause_States.USER_PAUSED
 	
 func on_menu_end_game()->void:
@@ -254,13 +262,16 @@ func on_load(path:String = ""):
 		loaded_save = ResourceLoader.load(full_path,"",0)
 	print_debug("loaded",loaded_save,' ',full_path)
 	if (loaded_save):
-		state.load_data(loaded_save.data)
+		state.load_data(loaded_save.data.get('game_state',{}))
+		world_state.load_data(loaded_save.data.get('world_state',{}))
 	print_debug("game state", state)
 		
 func on_save(path : String = ""):
-	var new_save_state : Savable_State = Savable_State.new(state.get_save_data())
+	var new_save_state : Savable_State = Savable_State.new()
 	var full_path = path + "controllers/"
 	secure_path(full_path)
+	new_save_state.data.set('game_state',state.get_save_data())
+	new_save_state.data.set('world_state',world_state.get_save_data())
 	#if !DirAccess.dir_exists_absolute(full_path):
 	#	DirAccess.make_dir_recursive_absolute(full_path)
 	full_path = full_path + "game_state.tres"

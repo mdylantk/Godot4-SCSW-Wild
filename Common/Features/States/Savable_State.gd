@@ -6,7 +6,9 @@ class_name Savable_State extends State
 
 @export var data : Dictionary[String,Variant] = {}
 
-	
+#TODO: all bit set_value is unnessaru since dicts has their own way
+#set is to allow notifications of change. also not deleting atm
+#since things may still be calling it
 ##Check if there a variant value by the provided key
 func has_value(key:String)-> bool:
 	return data.has(key)
