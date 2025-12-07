@@ -1,0 +1,57 @@
+[gd_scene load_steps=7 format=3 uid="uid://bh5qglvs6rygh"]
+
+[ext_resource type="Script" uid="uid://b0j2wvhl078hw" path="res://Game/UI/Score.gd" id="1_xhj6g"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_cdi6i"]
+[ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/States/Player_State.tres" id="2_cw3fs"]
+[ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Game/Assets/Main_Theme.tres" id="3_vjhty"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yh7fh"]
+atlas = ExtResource("2_cdi6i")
+region = Rect2(799, 136, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5p3lt"]
+atlas = ExtResource("2_cdi6i")
+region = Rect2(561, 289, 16, 16)
+
+[node name="Score" type="CanvasLayer"]
+script = ExtResource("1_xhj6g")
+state = ExtResource("2_cw3fs")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 256.0
+offset_bottom = 64.0
+texture = SubResource("AtlasTexture_yh7fh")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 56.0
+offset_bottom = 56.0
+texture = SubResource("AtlasTexture_5p3lt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 64.0
+offset_top = 16.0
+offset_right = 251.0
+offset_bottom = 58.0
+theme_override_constants/separation = 0
+
+[node name="Score_0" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_vjhty")
+text = "Common : 0"
+horizontal_alignment = 1
+
+[node name="Score_1" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_vjhty")
+text = "Rare : 0"
+horizontal_alignment = 1

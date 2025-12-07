@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c3vqnafptavcg" path="res://Common/Data/Scripts/One_Bit_Tilemap.gd" id="1_pxaw0"]
 [ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Common/Data/Resources/World_Foilage_Generator.tres" id="2_adtg8"]
-[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Game/Data/Assets/low_Bit_Tileset.tres" id="3_s2now"]
+[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Game/Assets/low_Bit_Tileset.tres" id="3_s2now"]
 
 [node name="TileMap" type="Node2D" node_paths=PackedStringArray("foilage_layer", "tilemap_layers")]
 y_sort_enabled = true

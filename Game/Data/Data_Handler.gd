@@ -19,7 +19,7 @@ signal save_state_ready()
 
 ##asset and mod path are dir that will be used for runtime loading/patching
 ##This is the project path for data
-@export var data_path : String = "res://Game/Data/"
+@export var data_path : String = "res://Game/"
 ##this is the user path for data. Note this is for pathcing/adding to
 ##the project (if logic is added) and not a proper modding system
 @export var patch_path : String = "user://Data/"
@@ -77,7 +77,7 @@ func save_data(
 	)->Error:
 		var full_path = path+"/"+file_name
 		Data_Handler.secure_path(path)
-		if (state as ConfigFile) or (state as Save_File):
+		if (state as ConfigFile):
 			if encrypted:
 				return state.save_encrypted_pass(full_path+".save",key)
 			else:
@@ -114,7 +114,7 @@ func load_data(
 		#there is a way to patch it or override it
 		
 	var full_path = path+"/"+file_name
-	if (state as ConfigFile) or (state as Save_File):
+	if (state as ConfigFile):
 		if encrypted:
 			if FileAccess.file_exists(full_path+".save"):
 				state.load_encrypted_pass(full_path+".save",key)

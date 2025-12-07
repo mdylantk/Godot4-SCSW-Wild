@@ -7,82 +7,35 @@ NOTE on folder colors:
 
 
 The game flow is being reworked to follow a more simple approch:
-	-Game Hander will act as an extention to the main game logic. It 
-	role is setting up listerns to other handlers and regulating the program flow.
-	Note: it should be treated as hidden to other system
+	-Game or Game handler will handle most of the persistant states. 
+	Its children or other subsystem/plugins will handle others
+	-cross comunication will be done with the persistant states or other
+	resources that share a loaded path. This only applies to things that Godot
+	do not provide by its included nodes or servers (onless that approch is slower).
+	-The game scene should always be active to regulate the game so it will be an
+	autoload or attach to the root at the app start.
+	-events are handled by the states instead of a dedicated event object since
+	most events tend to affect the state and would require more hookups to split 
+	them.
+	-Action system will be kept to add logic block via the editor. It will be simplified
+	to expect only the source and its targets and additonal data to be assumed by
+	those nodes groups and metadata as well as conditions of exicutions (for example:
+	interactions are limited to player character when expecting a player character.
+	should try to use groups to verify source or target is a player or the active
+	player)
+	-Beside the custom system, most things should try to work with the way godot
+	editor is set up to be used. main level or active scene being the current 
+	scene using godot ways of loading and unloading it. The use of groups for 
+	grouping up nodes. 
 	
-	*Below are self contain (global) handlers. They should worry only about their children
-	but other nodes can acess them. The child nodes of the handler do not nessary need to
-	follow this rule.
-	
-	-UI Handler: regulate and host the persistent UI node. It meant to be a shared
-	UI for all systems instead of having to relaod the UI all the times and reloading
-	its state.
-	
-	-Player Handler: the owning player controller in other words. Handles input config
-	replated to pawn control and may ref controlled units. Also may extend logic to the active
-	camera.
-	
-	-World Handler: The middle man that help with world transition as well as other
-	logic realted to the world state that indivitual level do not need to worry about
-	(unless they need to modify or listen to it).
-	Note: this should not hold  the active level. this help with the presistant state
-	of the world.
-	
-	-Data Handler: this handles savinga and loading as well as other file system
-	logic dealing with acessing or handling data. Most of the game states will be 
-	stored here unless a system want to handle it directly, then it can request it
-	from the data handler so it do not need to know the directory format.
-	
-	*Other handler may be added/used, but above are the current the main ones.
-	
-	-The level will be the game main scene. so it will use the root current scene.
-	this allow the game to work better with godot and allow levels to do what ever they want.
-	in other words any node can be a level, but active system may not work or act incorrectly
-	if not handle correcly before the switch (example is ui elemets unrealted to the level
-	may render if not hidden or unloaded on level switch)
-	Note: level can be 2d, 3d, control, or a mix of these, but there should only be one
-	active level. A handler can be made to handler paralle levels if needed, but the level should
-	try to handle that itself without exposing it globally.
-	
-	-acess to nodes outside it scope should be done via groups, traces, signals, or by handler.
-	acessing the root or scene tree (out side of the game handler) to get a node ref should be avoided
-	getting the current scene may be an exception, but may be better to have the world
-	directly store it and the game set and unset it. Also may be best if the level
-	is not know to other systems that do not handle it. Ideally the world, data, or another handler
-	should hold the data publicly avaible to the game.
-	
-	TODO: make sure scripts follow this pattern (since the old system was somewhat
-	the opposite of the new) and remove unused scripts and files since there a few old 
-	concept files laying about still.
-	
-	Note: try to have the game handler assign a pawn to the ui or split the logic
-	related to the player handler into a child node of the UI. Later be ideal moreso if
-	the UI handler do not know the exact details of the logic via script (aka stored as a node
-	or some upper class that do not contail the handler acessing logic). This more of a failsafe
-	incase godot do not abtract it enough. It shouldnt be an issue normally, but to prevent accidental
-	circular depencies. If UI acess Player, but player never acess UI, then it very likly nothing
-	bad will happen.
-	
-	
-	File structure:
-		TODO:
-			-Main_Game:
-				this contains files unique to the game and should also try to mirror
-				the game scene tree at runtime. Any resuable files most likly be stored
-				under data
-				
-			-Common:
-				contain the base classes, reosurces and scenes used by game and engin.
-				
-			-Engine:
-				stores files related only for the engine. so engine tools and such
-				
-			
-			
-	Save System:
-		the current system saves anything savable added to it. It uses 'static' resource
-		(resources 'loaded' in) so changes source changes to 'static' export values are maintain
-		but if the dir it is in, any data that use it will break. So either make sure dir path is
-		perment solution or build a system to locate the file (or figure out how to use force uid)
-		
+Note on the save system:
+	Originally I was going to save and load the state, but managing the
+	conections and ref after attemping to take over the path made it more trouble
+	that I would like. Instead loading and saving expects a dictionary to convert
+	to a string either by adding it to a config file, a resource with an exported
+	dictionary, or directly into a string (like json). Also, if possible, could 
+	make it into some binary format or somthing as long as a dictionary can be
+	converted too and from it.
+	NOTE: this also allow save data to be compress into a single file if desired.
+	The plain is to do that with most of the persitant states and only save
+	character and level state in their own files (or compressed in a diffrent one.)

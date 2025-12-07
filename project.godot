@@ -21,7 +21,7 @@ general/text_to_speech=true
 
 [autoload]
 
-Game="*res://Game/Game/Scenes/Game_Handler.tscn"
+Game="*res://Game/Game_Handler.tscn"
 
 [display]
 
@@ -161,7 +161,7 @@ Debug={
 [internationalization]
 
 locale/translation_remaps={}
-locale/translations=PackedStringArray("res://Game/Data/Assets/Localization/MainMenuTranslations.en.translation", "res://Game/Data/Assets/Localization/MainMenuTranslations.es.translation")
+locale/translations=PackedStringArray("res://Game/Assets/Localization/MainMenuTranslations.en.translation", "res://Game/Assets/Localization/MainMenuTranslations.es.translation")
 
 [layer_names]
 

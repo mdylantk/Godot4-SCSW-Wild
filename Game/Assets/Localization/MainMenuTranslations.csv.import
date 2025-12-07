@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dkuvtcvgm54mr"
+
+[deps]
+
+files=["res://Game/Assets/Localization/MainMenuTranslations.en.translation", "res://Game/Assets/Localization/MainMenuTranslations.es.translation"]
+
+source_file="res://Game/Assets/Localization/MainMenuTranslations.csv"
+dest_files=["res://Game/Assets/Localization/MainMenuTranslations.en.translation", "res://Game/Assets/Localization/MainMenuTranslations.es.translation"]
+
+[params]
+
+compress=true
+delimiter=0

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Action_If_Else" load_steps=7 format=3 uid="uid://bax1gyeyncjmp"]
 
 [ext_resource type="Script" uid="uid://cbxbd7k6cl4pc" path="res://Common/Features/Action_System/Action_If_Else.gd" id="1_1tgue"]
-[ext_resource type="Script" uid="uid://75pct074im8w" path="res://Game/Data/Actions/Conditions/C_Compare_Properties.gd" id="1_u88dc"]
+[ext_resource type="Script" uid="uid://75pct074im8w" path="res://Game/Actions/Conditions/C_Compare_Properties.gd" id="1_u88dc"]
 [ext_resource type="Resource" uid="uid://du2h4y80euyrw" path="res://Game/Data/Resources/Old_Man_Intro_Dialog.tres" id="2_twdrw"]
 [ext_resource type="Resource" uid="uid://be5snvrbt8c0c" path="res://Game/Data/Resources/Old_Man_Random_Dialog.tres" id="4_gi6kf"]
 

@@ -1,6 +1,9 @@
 class_name State extends Resource
 
+##A generic event that notify any listerners
+signal notify(type:String, message:Variant)
 ##Called when a Variant value or certain properties are changed
+##TODO: add types and decided if the name is fine since value feels more number like
 signal value_changed(property, new_value, old_value)
 ##Called before the a saving so data can be updated.
 signal saving()
