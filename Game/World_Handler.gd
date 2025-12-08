@@ -1,13 +1,12 @@
-#TODO: rename this world or chunk level or something and remove from autoload
-#and then create a new world handler that just store infor about the world state
-#and share data for all level
-#this also means that the game would need to handle level change diffrently
-#since the new world handler would not have acess to that ability ( or
-#it could with signals)
-#NOTE:TODO: can change the function to call a signal and have the level
-#listen to it. this would allow the logic to split without breaking everything
-#but the solution would be temporary. tne chunk handler should probably handle loading itself
-
+#TODO: moving most of this to the world state and manage by the game handler
+#or maybe all. 
+#NOTE: world time currently updating an evioment object
+#but could use a global shader and expose the timeout/time to
+#the world state. a level evioment could update on process
+#if it dynamic though. it is only one thing and should not cost much
+#could also listen to the world clock update, but not sure if it be better
+#to update time in the game process(issue is if pausing causes issues, then
+#the timer be better)
 class_name World_Handler extends Node
 
 #NOTE: the new level loading/unloading should use the godot current scene feature

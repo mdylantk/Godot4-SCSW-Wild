@@ -4,7 +4,7 @@
 
 [sub_resource type="Gradient" id="Gradient_8dly7"]
 offsets = PackedFloat32Array(0, 0.2, 0.8)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0.000156136, 0.0698416, 0.32485, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 8.375503e-06, 0.0041275052, 0.057205983, 1)
 metadata/_snap_enabled = true
 
 [resource]
