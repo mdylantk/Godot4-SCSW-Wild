@@ -16,6 +16,8 @@ func _process(delta: float) -> void:
 		var debug_text = str(camera_global_position)
 		debug_text = debug_text + "\n" + "Game Paused: " + str(game_state.pause_state) + "("+str(get_tree().paused)+")"
 		debug_text = debug_text + "\n" + "Level loading: " + str(world_state.is_level_loading)
+		debug_text = debug_text + "\n" + "time: " + str(game_state.game_time)
+		debug_text = debug_text + "\n" + "day percent: " +  String.num(fmod(game_state.game_time/game_state.time_in_day,1.0)*100,2)
 		#TODO: If need, then have the game hander expose it or the player state
 		#debug_text = debug_text + "\n" + "player input: " + str(!Player.paused)
 			#NOTE: this need to change with the new item system. was added with the old to get it working

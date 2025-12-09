@@ -1,13 +1,8 @@
 [gd_resource type="Resource" script_class="Environment_Data" load_steps=3 format=3 uid="uid://drg3ed6i36xt7"]
 
+[ext_resource type="Gradient" uid="uid://cnotvdiw4vtvo" path="res://Game/Assets/day_night_gradient.tres" id="1_06nm7"]
 [ext_resource type="Script" uid="uid://b6eecrobkgsc2" path="res://Common/Features/World_Levels_Data/Environment_Data.gd" id="1_370ui"]
-
-[sub_resource type="Gradient" id="Gradient_8dly7"]
-offsets = PackedFloat32Array(0, 0.35, 0.4, 0.45, 0.5, 0.55, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0.0031708889, 0.0073428843, 0.028059583, 1, 0.06239313, 0.11115765, 0.23305428, 1, 0.4778257, 0.34267405, 0.41598287, 1, 0.5921569, 0.5529412, 0.36862746, 1, 0.90981424, 0.9800883, 0.9999998, 1, 1, 1, 1, 1)
-metadata/_snap_enabled = true
-metadata/_snap_count = 20
 
 [resource]
 script = ExtResource("1_370ui")
-environment_color = SubResource("Gradient_8dly7")
+environment_color = ExtResource("1_06nm7")

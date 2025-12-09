@@ -3,8 +3,10 @@ class_name Generator_Level extends Base_Level
 @export var level_id := "world"
 
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
-
+@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
 @export var world_state :World_State = load('uid://b047ftosxvj7p')
+
+@export var light_color_curve : Gradient = load('uid://cnotvdiw4vtvo')
 #@export var use_game_seed: bool = true
 
 #TODO: make it so it will use all the generator instead of [0]
@@ -210,6 +212,10 @@ func _process(delta: float) -> void:
 	
 	caculate_active_regions(get_viewport().get_camera_2d().global_position)
 	world_state.is_level_loading = is_ready
+	#var time : float = fmod(game_state.game_time,100.0)
+	var time : float = fmod(game_state.game_time/game_state.time_in_day,1.0)
+	%CanvasModulate.color = light_color_curve.sample(time)
+	
 
 func _ready() -> void:
 	var player_pos : Vector2

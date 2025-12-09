@@ -3,29 +3,12 @@
 ##as well as connect to their signals so it can maintain the game loop
 class_name Game_Handler extends Node
 
-#TODO: moving game events as part of game state. so need to see how 
-#it is used and move/update it. quite sure game events was a test so
-#not a lot use it except maybe world.
-#@export var game_events : Base_Events = preload("uid://by8b1l7earv1n")
 @export var state : Game_State = load('uid://cnbeqfpaumxj3')
 @export var world_state : World_State = load('uid://b047ftosxvj7p')
-#NOTE:this should be listen to signals and triggering events
-#so signals are not nessary
-#signal event_update(event)
-#signal player_created(handler:Node, index : int)
 
-#this is a placeholder untill ui is move as a part of the game
-#might make a dedicated state, but not sure since minor states may
-#be use as a bridge
+#use the ui child, but this could stay
 @onready var ui : UI_Handler = %UI
-#world may be acess via state instead of handler
-#but using this to move depenices from the autoload to this point
-#@onready var world : World_Handler = %World_Handler
 
-#server may need to be it own handler or a component of this
-#this depends if anything but the game will ever need to comunicate with it
-#NOTE: can just acess it with % when needed. 
-#@onready var server : Node = %Server_Handler
 
 #Note: mostly a concept to allow various pause situaltion stored in one var
 #After a certain value, the tree would pause, else only certain systems will be 
@@ -60,16 +43,6 @@ func handle_pausing():
 #	print(Engine.get_license_info)
 #	print(Engine.get_license_text())
 
-func on_event(id:String, data: Variant):
-	#call group if non of the id matches
-	#or pass the group id as a part of data
-	if id == 'group_call':
-		#Note: not sure how to pass args. may be better to have dedicated
-		#event objects instead of calling to group for this system
-		#in a sence a lot of handler may have a event resource or a state resource
-		#for that case. events are connections and states are stateful
-		get_tree().call_group(data['group'],data['methood'], data['data'])
-
 func _ready():
 	
 	#game_events.event.connect(on_event)
@@ -97,7 +70,6 @@ func _ready():
 	ui.main_menu.new_game.connect(on_menu_new_game)
 	ui.main_menu.load_game.connect(on_menu_load_game)
 	ui.main_menu.end_game.connect(on_menu_end_game)
-	
 	
 
 
@@ -142,11 +114,12 @@ func start_game(is_new:bool = true, save_name:String="default"):
 	#change_level(world_state.default_level_uid)
 	#change_level(world_state.level_uid)
 	%Autosave_Timer.start()
+	%World_Clock.start()
+	#NOTE: Background music do not need to be here
+	#levels, menus, and such could add their own
+	#but for now this is handling it
+	%BackgroundMusic.play()
 	
-	#test to force music playing
-	#may need to move music here unless
-	#the need to orginize is needed
-	$Audio_Handler/AudioStreamPlayer.play()
 
 
 func end_game(full_quit:bool = false):
@@ -282,3 +255,10 @@ func on_save(path : String = ""):
 func _on_autosave_timer_timeout() -> void:
 	on_save(state.get_save_path())
 	state.save_event.emit(state.get_save_path())
+
+
+func _on_world_clock_timeout() -> void:
+	#NOTE: this is fine only if time increase at a fixed rate
+	#also time should pause when the game is paused
+	state.game_time += 1
+	pass # Replace with function body.

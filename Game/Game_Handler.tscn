@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://dfe83mkcmeuy7" path="res://Game/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="PackedScene" uid="uid://cc1hxktnb4a1k" path="res://Game/UI/UI_Handler.tscn" id="2_2spbq"]
-[ext_resource type="PackedScene" uid="uid://bqxswmb21wrqe" path="res://Game/Audio/Audio_Handler.tscn" id="2_jdsrb"]
 [ext_resource type="PackedScene" uid="uid://cg6lsqeuo87mb" path="res://Game/Data/Data_Handler.tscn" id="2_s3n5n"]
 [ext_resource type="Script" uid="uid://bxmosod06brqx" path="res://Common/Data/Nodes/Handlers/AI_Handler.gd" id="3_8kfs5"]
 [ext_resource type="Resource" uid="uid://0jak16wccjq4" path="res://Game/Controllers/AI_Controller.tres" id="4_ounbx"]
 [ext_resource type="PackedScene" uid="uid://bdpv2nuo5qsqg" path="res://Game/Player_Handler.tscn" id="5_amjxa"]
 [ext_resource type="Script" uid="uid://bh3h4moo6c3fn" path="res://Common/Data/Nodes/Handlers/Server_Handler.gd" id="7_clhfr"]
-[ext_resource type="PackedScene" uid="uid://b0xxl3pylly7j" path="res://Game/World_Handler.tscn" id="8_iov54"]
+[ext_resource type="AudioStream" uid="uid://bba37ge2fakbi" path="res://Game/Audio/Background_Stream.tres" id="9_4tkt8"]
+[ext_resource type="Script" uid="uid://dlecb755vv3wq" path="res://Game/Audio/RepeatAudioStreamPlayer.gd" id="10_upx7b"]
 
 [node name="Game_Handler" type="Node2D" groups=["Game_Handler", "Savable"]]
 y_sort_enabled = true
@@ -16,8 +16,6 @@ script = ExtResource("1_gpdo0")
 
 [node name="UI" parent="." instance=ExtResource("2_2spbq")]
 unique_name_in_owner = true
-
-[node name="Audio_Handler" parent="." instance=ExtResource("2_jdsrb")]
 
 [node name="DataHandler" parent="." instance=ExtResource("2_s3n5n")]
 
@@ -33,13 +31,25 @@ script = ExtResource("7_clhfr")
 [node name="Player_Handler" parent="." instance=ExtResource("5_amjxa")]
 unique_name_in_owner = true
 
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+process_mode = 3
+stream = ExtResource("9_4tkt8")
+volume_db = -20.654
+pitch_scale = 0.75
+autoplay = true
+mix_target = 1
+script = ExtResource("10_upx7b")
+
 [node name="Autosave_Timer" type="Timer" parent="."]
 unique_name_in_owner = true
 wait_time = 5.0
 
-[node name="World_Handler" parent="." instance=ExtResource("8_iov54")]
+[node name="World_Clock" type="Timer" parent="."]
 unique_name_in_owner = true
+process_mode = 1
+wait_time = 0.1
 
+[connection signal="finished" from="BackgroundMusic" to="BackgroundMusic" method="_on_finished"]
 [connection signal="timeout" from="Autosave_Timer" to="." method="_on_autosave_timer_timeout"]
-
-[editable path="Audio_Handler"]
+[connection signal="timeout" from="World_Clock" to="." method="_on_world_clock_timeout"]

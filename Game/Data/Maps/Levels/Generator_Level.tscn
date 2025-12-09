@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cldlaymbe77mn"]
+[gd_scene load_steps=9 format=3 uid="uid://cldlaymbe77mn"]
 
 [ext_resource type="Script" uid="uid://dc1yvgwellh6g" path="res://Common/Features/World_Levels_Data/Generator_Level.gd" id="1_a382x"]
+[ext_resource type="Gradient" uid="uid://cnotvdiw4vtvo" path="res://Game/Assets/day_night_gradient.tres" id="2_s6iyt"]
 [ext_resource type="Resource" uid="uid://drg3ed6i36xt7" path="res://Common/Data/Resources/World_Environment_Data.tres" id="3_d5n0r"]
 [ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Game/Data/Resources/Noise_Maps/World_Detail_Map.tres" id="3_qg0pl"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Data/Scenes/Actors/Player.tscn" id="6_oks6f"]
@@ -9,13 +10,12 @@
 
 [sub_resource type="Resource" id="Resource_1lsxs"]
 script = ExtResource("8_0krqb")
-base_speed = 64.0
-sprint_modifier = 1.0
 
 [node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]
 process_mode = 3
 y_sort_enabled = true
 script = ExtResource("1_a382x")
+light_color_curve = ExtResource("2_s6iyt")
 static_chunks = {
 Vector2(0, 0): "uid://blyxjt47otoln"
 }
@@ -25,6 +25,7 @@ environment_data = ExtResource("3_d5n0r")
 environment_color = NodePath("CanvasModulate")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
+unique_name_in_owner = true
 
 [node name="Player" parent="." instance=ExtResource("6_oks6f")]
 unique_name_in_owner = true
