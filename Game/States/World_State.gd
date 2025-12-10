@@ -14,6 +14,12 @@ signal level_ready()
 
 var level_uid : String = default_level_uid
 
+#TODO:decide if it should be is_level_ready(inverted bool) or not
+#also the signals might not be reliable
+#may be better to handle as an int? but that would require the level
+#to set it if not used unless the game have a period where if the value
+#is not changed, it will mark it as ready else it would leave it to the level
+#to change it.
 var is_level_loading : bool = false :
 	set(value):
 		if value != is_level_loading:

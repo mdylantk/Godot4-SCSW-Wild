@@ -1,13 +1,19 @@
+#this is a way to check the ui status or listen to it indirectly
+#but certain (more independent) ui should have their own state like
+#object. 
 class_name UI_State extends State
-#TODO: maybe convert to a state and relocate some
-#stateful general ui stuff here
+
+#NOTE: the main point of this state is the notify system
+#the game state tend to handle what cause pausing and the
+#other stuff could be gain by giving them their own state
+#so this is more a placeholder untill each system is built up more
 signal send_notifcation(message : String)
 
 #NOTE: the id base calls only will work if ui supports it
-#NOTE TODO : may use an enum and compress them into a single signal to set the state
-#maybe call it change_window_state(id, state) or update_window
-#open is a general ui element. data usally a object/resource or dictionary 
-#and may not be needed depending on the design
+#NOTE TODO : these are old and an abstract way to interact with the ui
+#they might be kept or changed, but the state may need a var for the
+#ui element that is in focus or an indentifier for advance cases
+#though I probably should not depend on it. 
 signal open(id:String, data:Variant)
 #close will end it or unload it or clear that element
 signal close(id:String)
