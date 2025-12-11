@@ -32,8 +32,8 @@ func on_finished(canceled:bool,data):
 	
 #NOTE: interactee will be self. interact data can have an override or use
 #interactee.owner if it wants more data
-func interact(handler, interactor, interactee = self, data = {}):
+func interact(interactor, interactee = self, data = {}):
 	if interactive_data != null:
-		if interactive_data.interact(handler, interactor, interactee, data):
+		if interactive_data.interact(interactor, interactee, data):
 			started.emit(interactive_data)
 			return interactive_data

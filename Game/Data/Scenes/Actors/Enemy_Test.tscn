@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bruyakjvb8wwp"]
+[gd_scene load_steps=8 format=3 uid="uid://bruyakjvb8wwp"]
 
 [ext_resource type="Script" uid="uid://7mmtqfis4ple" path="res://Common/Data/Scripts/Enemy_Test.gd" id="1_sxhnx"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_1i0dm"]
 [ext_resource type="Script" uid="uid://5khicdu88ftq" path="res://Game/Data/Scenes/Actors/AI_Brain.gd" id="4_1t4af"]
-[ext_resource type="Script" uid="uid://fhjjjbbj3dp1" path="res://Game/Data/Components/Base_Hurtbox.gd" id="4_kh8ca"]
 [ext_resource type="Resource" uid="uid://0jak16wccjq4" path="res://Game/Controllers/AI_Controller.tres" id="5_v6ko2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uhyft"]
@@ -33,7 +32,6 @@ texture = SubResource("AtlasTexture_o64lb")
 [node name="Hurtbox" type="Area2D" parent="."]
 collision_layer = 4
 collision_mask = 0
-script = ExtResource("4_kh8ca")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("RectangleShape2D_0xekb")

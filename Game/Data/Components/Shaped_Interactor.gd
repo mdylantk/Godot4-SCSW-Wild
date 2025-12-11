@@ -1,6 +1,23 @@
-class_name Shaped_Interactor extends Interactor_Base
-
+class_name Shaped_Interactor extends Node
+signal interaction(interactor, collider,data)
 @export var shape_cast : ShapeCast2D
+
+#TODO: See how this is working
+#if not being used, then remove in favor
+#of direct cast control
+#NOTE: Look like it is still being used
+#wont be easy to have a drag and drop approch
+#so may need to add the logic to each character
+#or the characer2D. issue is there are two type of casts
+#generally it get trigger, do a force update, and then 
+#parce the results
+#NOTE: could use area 2d to do this too
+#may be able to use an action that trigger interaction logic
+#then all the character need to do is trigger the interaction 
+#component on keypress. issue is the data pass might be a bit odd
+#so a dedicated componet to triggering may be more ideal
+#NOTE: using shapecast instead of area2d for hit order
+#also can use a line trace as a provide shape
 
 func interact(interactor:Node = owner):
 	if shape_cast != null :

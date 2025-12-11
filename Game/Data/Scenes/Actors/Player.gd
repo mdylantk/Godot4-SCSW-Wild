@@ -39,27 +39,15 @@ func _ready()->void:
 	facing_direction = player_state.exit_data.facing_direction
 	velocity = player_state.exit_data.entry_velocity
 	
-	player_state.loaded.connect(on_load)
-	#player_state.saving.connect(on_save)
 	
 	game_state.save_event.connect(on_autosave)
 	game_state.load_event.connect(on_game_loaded)
 	on_game_loaded(game_state.get_save_path())
-	on_load()
 
 
 func get_save_path()->String:
 	return "Characters"
 
-func on_save():
-	#player_state.set_value("inventory",inventory.inventory)
-	#player_state.set_value("local_position",position)
-	pass
-	
-func on_load():
-	#if player_state.has_value("inventory"):
-	#	inventory.inventory = player_state.get_value("inventory",[])
-	pass
 	
 #NOTE: may need a class level save object so the data can be extracted
 #or saved. could also split the saving and loading into functions
@@ -148,7 +136,7 @@ func on_interaction(source_pawn:Node, collider:Node, data:={}):
 		#TODO: change or remove. null was the player handler, but
 		#the player state will take over the role so if needed, then the state needs
 		#to be passed
-		interaction.interact(null,self,collider,data)
+		interaction.interact(self,collider,data)
 
 func get_move_direction() -> Vector2:
 	return %Brain.get_move_direction(position,velocity)

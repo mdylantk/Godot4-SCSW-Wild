@@ -32,7 +32,6 @@ window/stretch/mode="viewport"
 [file_customization]
 
 folder_colors={
-"res://Common/Data/Scripts/Old/": "gray",
 "res://Common/Features/Tools/": "gray",
 "res://Game/": "green",
 "res://Game/Data/Components/": "blue",

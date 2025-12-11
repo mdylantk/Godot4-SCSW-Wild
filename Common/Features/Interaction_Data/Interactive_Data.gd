@@ -50,11 +50,10 @@ var _update_rate : int
 #the main trigger. children should override the functions with _
 #and only override this if they want to completly override the logic
 #TODO: have most children not override this, but _run() instead. 
-func interact(new_handler, new_interactor, new_interactee, new_data):
+func interact(new_interactor, new_interactee, new_data):
 	if _is_active:
 		print_debug("interaction is already active")
 		return false
-	handler = new_handler
 	interactor = new_interactor
 	interactee = new_interactee
 	data = new_data

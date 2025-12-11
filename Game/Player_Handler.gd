@@ -4,6 +4,8 @@ class_name Player_Handler extends Controller_Handler
 @export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
 
 #@export_file("*.tscn") var default_pawn = "res://Data/Node/Actors/Player.tscn"
+#think pawn will be handled by level and their connection base
+#on their group ans assigned controller
 @export var default_pawn : PackedScene = load("uid://bugclr6n3igb4")
 
 #TODO: try to handle input with the brain. can send input or handle t directly inside it
@@ -27,7 +29,7 @@ class_name Player_Handler extends Controller_Handler
 var pawn:Character2D #pawn may be move around, so a direct ref will be used to track it
 var uid:int = 0 #may or may not be needed if there a built in way to get a user id\
 
-var pawns_interactor:Interactor_Base
+var pawns_interactor:Shaped_Interactor
 
 #TODO decide to add a input_enable flag to handle disabling player input
 #or see if godot have a way to stop sending input here
@@ -62,7 +64,7 @@ func get_state()->State:
 func get_pawn(index:int=0)->Character2D:
 	return pawn
 	
-func on_new_game(path:String = ""):
+func on_new_game(path:String = "")->void:
 	state.reset_state()
 	
 #NOTE: may not depend on controller handler
@@ -94,63 +96,6 @@ func _ready():
 	game_state.save_event.connect(on_autosave)
 	game_state.load_event.connect(on_game_loaded)
 
-	
-
-
-func possess_pawn(new_pawn: Node):
-	print_debug("this should not be used anymore")
-	return
-	if pawn != null:
-		pawn.remove_from_group("player_controlled")
-		handle_pawns_connections(pawn,true)
-		#pawn.interacted.disconnect(on_pawn_interaction)
-		#pawn.tree_exited.disconnect(on_pawn_exited_tree) 
-	pawn = new_pawn
-	new_pawn.add_to_group("player_controlled")
-	handle_pawns_connections(new_pawn)
-	#new_pawn.interacted.connect(on_pawn_interaction)
-	#new_pawn.tree_exited.connect(on_pawn_exited_tree) 
-	#NOTE: decide on how the camera works. can get a ref from the
-	#viewport so the camera owner can change without keeping track of
-	#the camera
-	controller_camera.reparent(new_pawn)
-	
-	#NOTE  below should be handle diffrently
-	#just here because debugging
-	await get_tree().process_frame
-	pawn.inventory.slot_update.connect(on_item_gain)
-	#var test_inv = state.fetch("inventory", "pawn")
-	#print_debug(test_inv)
-	#print_debug(state.fetch("pawn","inventory"))
-	#if test_inv != null:
-	#	pawn.inventory.inventory = test_inv
-	
-func on_pawn_exited_tree():
-	print_debug("this should not be used anymore")
-	#an attempt to save the camera from being freed
-	if pawn.is_queued_for_deletion():
-		controller_camera.reparent(self)
-
-func handle_pawns_connections(target_pawn:Node, remove:bool = false):
-	print_debug("this should be change. should not directly handle pawns anymore")
-	var interactor:Interactor_Base = Interactor_Base.find_vaild_child(pawn)
-	if remove:
-		if interactor != null:
-			interactor.interaction.disconnect(on_pawn_interaction)
-		target_pawn.tree_exited.disconnect(on_pawn_exited_tree) 
-		pawns_interactor = null
-	else:
-		if interactor != null:
-			interactor.interaction.connect(on_pawn_interaction)
-		target_pawn.tree_exited.connect(on_pawn_exited_tree)
-		pawns_interactor = interactor
-
-#NOTE this should be the new system. allow pawn to controll how the data is fetched
-func on_pawn_interaction(source_pawn:Node, collider:Node, data:={}):
-	print_debug("this should be change. should not directly handle pawns anymore")
-	var interaction : Interactive_Component = collider as Interactive_Component
-	if interaction != null:
-		interaction.interact(self,source_pawn,collider,data)
 
 
 func _unhandled_input(event:InputEvent):

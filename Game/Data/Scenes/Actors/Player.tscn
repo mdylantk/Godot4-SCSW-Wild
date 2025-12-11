@@ -1,11 +1,10 @@
-[gd_scene load_steps=24 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=23 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" uid="uid://bp3atrikcfxmj" path="res://Game/Data/Scenes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/States/Player_State.tres" id="2_ubr6l"]
 [ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Common/Features/Inventory/Inventory.tscn" id="3_m3amk"]
 [ext_resource type="Script" uid="uid://ok522b0njxq0" path="res://Game/Data/Components/Shaped_Interactor.gd" id="4_qftw7"]
-[ext_resource type="Script" uid="uid://fhjjjbbj3dp1" path="res://Game/Data/Components/Base_Hurtbox.gd" id="6_3jdhg"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Common/Data/Nodes/Main_Camera.tscn" id="7_b7ptm"]
 [ext_resource type="Script" uid="uid://bgqgcg12is206" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Common/Data/Player_Controller.tres" id="9_dfeth"]
@@ -154,7 +153,7 @@ collision_mask = 433
 script = ExtResource("1_07gio")
 player_state = ExtResource("2_ubr6l")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Collsion" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_fb00q")
 
@@ -172,12 +171,12 @@ libraries = {
 
 [node name="Shaped_Interactor" type="Node2D" parent="." node_paths=PackedStringArray("shape_cast")]
 unique_name_in_owner = true
-visible = false
 position = Vector2(0, 3)
 script = ExtResource("4_qftw7")
 shape_cast = NodePath("ShapeCast2D")
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="Shaped_Interactor"]
+visible = false
 enabled = false
 shape = SubResource("RectangleShape2D_ifpql")
 target_position = Vector2(24, 0)
@@ -193,9 +192,8 @@ texture = SubResource("AtlasTexture_21snw")
 [node name="Hurtbox" type="Area2D" parent="."]
 collision_layer = 4
 collision_mask = 0
-script = ExtResource("6_3jdhg")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+[node name="Hitbox" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("RectangleShape2D_ovqcn")
 debug_color = Color(0.972549, 0, 0, 0.419608)
 
