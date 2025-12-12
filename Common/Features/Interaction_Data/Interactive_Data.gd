@@ -1,35 +1,30 @@
 class_name Interactive_Data extends Resource
 
-#NOTE: signals wont resturn self or data. listerners should know where to get the data
-#but the component node that relay the signal will pass the reffrence since it handling the object
-#and if connecting to those signals, the other may not know how to get the data correctly
-#also allow for multi interaction instance if the componenet allows it
+#NOTE: the owner may handle the action lifecycle or just store ref
+#to it. most action would be one-shots. extended ones would lack a
+#dedicated system and will act like one instead. these are not ideal
+#but this is set up in a way to handle those cases(atm not impumented
+#since no case needs it)
 signal started(data:Interactive_Data)
 signal updated(data:Interactive_Data)
 signal finished(canceled : bool,data:Interactive_Data)
-#this is the base class for anything interative. 
-#it should hold place holder functions and 
-#data that may display on interact. the children will have most of the 
-#unquie data and such.
 
-#NOTE emit_changed just incase if these values are changed, a listerner can be notified
-#if nessary. any of these four could break some logic since these are not normally meant
-#to change untill finished.
-var handler:
-	set(new_value):
-		if handler != new_value:
-			handler = new_value
-			emit_changed()
-var interactor:
+#A node of a scene that assume to be a character2d in this project
+var interactor : Node :
 	set(new_value):
 		if interactor != new_value:
 			interactor = new_value
 			emit_changed()
+
+#A node of a body that is assume to be an interactive component in this project
 var interactee:
 	set(new_value):
 		if interactee != new_value:
 			interactee = new_value
 			emit_changed()
+
+#metadata related to this action. could use object metadata, but 
+#not sure if that is safe to save
 var data : Dictionary:
 	set(new_value):
 		if data != new_value:
@@ -43,13 +38,6 @@ var _is_active : bool
 #may have an override @export varible to controll the rate
 var _update_rate : int
 
-#NOTE: Local to scene is needed else reource is shared
-
-#TODO: maybe make it so the node with this resource handle single or multiple interations
-
-#the main trigger. children should override the functions with _
-#and only override this if they want to completly override the logic
-#TODO: have most children not override this, but _run() instead. 
 func interact(new_interactor, new_interactee, new_data):
 	if _is_active:
 		print_debug("interaction is already active")
@@ -64,19 +52,13 @@ func interact(new_interactor, new_interactee, new_data):
 func end_interact(canceled:bool = false):
 	_end(canceled)
 	finished.emit(canceled,self)
-	#NOTE: probably should not clear it untill a new interaction
-	#is_active can be the dirty flag
-	#handler = null
-	#instigator = null
-	#interactee = null
-	#data = {}
 	_is_active = false
 
 #the default run logic. will call all the steps with an update cycle if vaild
 func _run():
 	_start()
 	started.emit(self)
-	print_debug(str(interactor) + " interact with " +str(interactee) + " from(handler) " +  str(handler))
+	#print_debug(str(interactor) + " interact with " +str(interactee) + " from(handler) " +  str(handler))
 	while _update_rate and _is_active:
 		#NOTE: this class ment to be generic. it should not have these function
 		#but it can be useful. So base godot logic should only be here (or just declartion)
@@ -84,9 +66,6 @@ func _run():
 		_update()
 		updated.emit(self)
 	end_interact()
-	#NOTE: connected need to disconnect itself
-	#_owner will be who owns this. since the owner will be linking it, then it cna pass it self
-	#_data is a placeholder for any extra data for now
 
 
 #call on the start

@@ -53,11 +53,6 @@ func _is_true(data:Action_State = null, default:bool=true) -> bool:
 		if source is Player_State:
 			if source.has_meta(property_name):
 				value = source.get_meta(property_name)
-			#if source.has_data(property_name):
-			#	value = source.get_data(property_name)
-			#if source.state.has_meta(property_name):
-			#	value = source.state.get_meta(property_name)
-			#value = source.state.fetch(property_name)
 	if comparison > 1:
 		if value == null: return false
 	for compare_value in values_to_compare:

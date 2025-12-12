@@ -4,8 +4,8 @@ class_name Action_On_Interact extends Interactive_Data
 
 func _run():
 	if action != null:
-		data["handler"] = handler
-		data["source"] = interactor
-		data["target"] = interactee
-		action.run(Action_State.new(interactor,interactee))
+		var action_state = Action_State.new(interactor,interactee)
+		data["action"] = action
+		data["action_state"] = action_state
+		action.run(action_state)
 	end_interact()

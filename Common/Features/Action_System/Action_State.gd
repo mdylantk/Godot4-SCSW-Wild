@@ -3,18 +3,17 @@
 ##or by using the metadata. The approch depends on what the system design to use
 class_name Action_State extends RefCounted
 
-##the one that calls the actions
+##the one that calls the actions. most likly character2d
 var owner : Node
 
-##the one the action effects. May default to owner if null
+##the one the action effects. most likly interaction component or
+##null. maybe a character2d or some other node in odd cases
 var target : Node
 
-##This is a ref of the action this belongs to.
-##It is stored here incase the action state needs to last more than one cycle.
-##without worry about lossing the action reference
-##otherwise this would not be nessary. data.get_action.run(data)
-##may seem odd though so I am not sure if I will keep it or
-##have the tasks be stored in a object/array (though that sounds redundent) 
+
+#NOTE: the action state might not be used for extended action
+#other systems would keep track of the action.
+#this is here incase it is still being used
 var _action : Base_Action
 
 func get_action() -> Base_Action:

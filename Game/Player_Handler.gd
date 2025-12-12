@@ -26,16 +26,16 @@ class_name Player_Handler extends Controller_Handler
 #				#could also try to free it
 #		controller_brain = value
 
-var pawn:Character2D #pawn may be move around, so a direct ref will be used to track it
+#var pawn:Character2D #pawn may be move around, so a direct ref will be used to track it
 var uid:int = 0 #may or may not be needed if there a built in way to get a user id\
 
-var pawns_interactor:Shaped_Interactor
+#var pawns_interactor:Shaped_Interactor
 
 #TODO decide to add a input_enable flag to handle disabling player input
 #or see if godot have a way to stop sending input here
 
 #catch the movement since the pawn moves every frame. 
-var movement_input: Vector2
+#var movement_input: Vector2
 
 var paused : bool = false:
 	#this stop input when this paused is true
@@ -56,13 +56,13 @@ var paused : bool = false:
 #or try to listen for changes that may cause it to be deleted
 @onready var controller_camera : Camera2D = %Camera2D
 
-func get_state()->State:
-	print_debug("NOTE: this is not going to be supported")
+#func get_state()->State:
+#	print_debug("NOTE: this is not going to be supported")
 	#return save_state
-	return state
+#	return state
 	
-func get_pawn(index:int=0)->Character2D:
-	return pawn
+#func get_pawn(index:int=0)->Character2D:
+#	return pawn
 	
 func on_new_game(path:String = "")->void:
 	state.reset_state()
@@ -105,20 +105,10 @@ func _unhandled_input(event:InputEvent):
 		if controller != null:
 			controller.trigger_action("Sprint",event.get_action_strength("Sprint"))
 			get_viewport().set_input_as_handled()
-		#
-		#if controller_brain != null:
-		#	controller_brain.action_triggered.emit("Sprint",event.get_action_strength("Sprint"))
-		#pawn.movement_component.sprint_strength = event.get_action_strength("Sprint")
-			get_viewport().set_input_as_handled()
+
 	if event.is_action_pressed("Accept"):
 		if controller != null:
 			controller.trigger_action("Interact",1)
-			get_viewport().set_input_as_handled()
-		#
-		#if controller_brain != null:
-		#	controller_brain.action_triggered.emit("Interact",1)
-		#if pawns_interactor != null:
-			#pawns_interactor.interact(pawn)
 			get_viewport().set_input_as_handled()
 
 		#	if result["collider"] is TileMap :
@@ -151,24 +141,3 @@ func _unhandled_input(event:InputEvent):
 		#		Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
 		#	).normalized())
 		#	get_viewport().set_input_as_handled()
-
-
-
-
-
-#Region Listerners
-func on_item_gain(inventory, slot, old_item):
-	#could leave this and just properly connect/disconnect on pawn change
-	#the could check the new slot data
-	#and if diffrent, run some logic like check if have fish name and of what
-	#issue if the fish name is not added to item, the the fish logic would need to 
-	#interact with the handler(like it kind of doing now) to do the check
-	#NOTE: Big issue is that score is update when unable to store fish
-	#but a check with the return value should fix that
-	#print("inv: "+ str(inventory))
-	#print("slot: "+ str(slot))
-	#print("old: "+ str(old_item))
-	#state.store("inventory", inventory.items, "pawn")
-	#state.store("inventory", inventory.inventory, "pawn")
-	#print_debug(state.data)
-	pass

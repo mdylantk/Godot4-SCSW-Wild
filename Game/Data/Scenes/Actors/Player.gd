@@ -14,15 +14,6 @@ func get_inventory()->Inventory:
 	return $Inventory
 
 func _ready()->void:
-	#note: dynamic objects or objects that get recreated on scene change
-	#needs to load their state on ready if they have one since data_handler
-	#would not know when to call it. Another solution is to have a handler
-	#(like what spawn it) call on_game_loaded after spawning it
-	#TODO: need to have a state for paths. could put it in the game state
-	#or have something like a instance state that do not get save, but hold 
-	#game data related to the current instance without needing to acess a autoload
-	#or static var
-	#on_game_loaded(Data.get_save_path())
 	facing_changed.connect(on_facing_changed)
 	movement_state_change.connect(on_movement_state_change)
 
@@ -133,18 +124,14 @@ func interact():
 func on_interaction(source_pawn:Node, collider:Node, data:={}):
 	var interaction : Interactive_Component = collider as Interactive_Component
 	if interaction != null:
-		#TODO: change or remove. null was the player handler, but
-		#the player state will take over the role so if needed, then the state needs
-		#to be passed
+		#NOTE: will keep the old way, but may add it to base
+		#character? a few interactions types like attack, use, cast
+		#then have the shape or settings used declared in the child
 		interaction.interact(self,collider,data)
 
 func get_move_direction() -> Vector2:
 	return %Brain.get_move_direction(position,velocity)
-#func _on_shaped_interactor_interaction(interactor: Node, interactee: Node, data: Dictionary) -> void:
-#	interacted.emit(interactor, interactee,data)
 
-#temp connections. brain should handle this more directly, but is here untill
-#a character brain is created.
 func on_controller_assigned(controller:Controller)->void:
 	controller.action_triggered.connect(on_action_triggered)
 
