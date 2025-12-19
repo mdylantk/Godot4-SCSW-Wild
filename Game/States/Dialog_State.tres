@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Dialog_State" load_steps=2 format=3 uid="uid://ckldc286fg63p"]
+
+[ext_resource type="Script" uid="uid://dh8tikfd25jl8" path="res://Game/States/Dialog_State.gd" id="1_uwnit"]
+
+[resource]
+script = ExtResource("1_uwnit")
+metadata/_custom_type_script = "uid://dh8tikfd25jl8"
