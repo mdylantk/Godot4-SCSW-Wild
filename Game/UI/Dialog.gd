@@ -1,6 +1,16 @@
 class_name Dialog_Handler extends CanvasLayer
 signal started()
 signal ended(canceled)
+
+#TODO: should use tts_pause() and resume, but need to be notified
+#that the game is paused
+#due to menu may use tts, then this may need to have a way to store
+#the state of the tts text it is handling. It may be better to have a pause
+#dialog independent of the game pause menu or just add a replay tts
+#button to repeat
+#also could treat tts similar to the button action and use a callable
+#though this is more useful for voice over instead of tts
+
 #TODO: move most of this to a dialog state and have this listen and update
 #it. generally a single state is all that needed so I might not handle 
 #swapping it out at run time (though that is a possibilty, but extra work)
@@ -39,46 +49,39 @@ var is_cancelable:bool = true
 var tts_enable: bool = true
 
 #TODO: decided if the voices should be catch and if so handles when language changes
-func speak_text(text: String = "", voice_id : int = 0):
+#TODO: see about storing the speak data in the state
+#such if it is speaking, is a new speaker(and require an intro),
+#or other stuff
+func speak_text(
+		text: String = "", 
+		voice_id : int = state.tts_voice_id, 
+		pitch : float=state.tts_voice_pitch):
 	if !tts_enable: 
 		return
+	#TODO: may need a way to know if this is in focus
+	#and is currently speaking something. should not stop other
+	#tts sources. they should clean up themselves so it wouldn't matter
+	#except making some bug easier to find.
 	DisplayServer.tts_stop()
-	if text == "": 
+	#NOTE: needed to check visiblity else it was playing when
+	#not active due to the change in the system moving most of the
+	#display changes to the on_update
+	#TODO: add a way to speak the speaker name and a flag to control
+	#when to use this feature. also figure out the best way to combine it
+	#like maybe use a diffrence voice for pure narriation?
+	if text == "" || !visible: 
 		return
 	var voices = DisplayServer.tts_get_voices_for_language(TranslationServer.get_locale())
 	if voices.size() > 0 && voice_id < voices.size():
-		DisplayServer.tts_speak(text, voices[voice_id])
-
-func setup_speaker(display_name:String = "", icon:Texture2D = null):
-	$Name.text = "[center]"+display_name
-	$Icon.texture = icon
-
-func setup_text(
-		text:String, accept:Base_Action = null, cancel:Base_Action = null,
-		start_dialog:bool = true, cancelable: bool = true
-	):
-	#split_text = text.split("/p")
-	#state.text_pages = text.split("/p")
-	accept_action = accept
-	cancel_action = cancel
-	
-	#is_cancelable=cancelable
-	state.show_cancel=cancelable
-	
-	if start_dialog:
-		#this will trigger the dialog so a seprate action wont need to start it
-		#only apply if dialog not started.
-		#Note: could have gui or UI handle it, or signal up and have the action
-		#call these
-		start()
+		DisplayServer.tts_speak(text, voices[voice_id],50,pitch)
 
 func update_page_text(index:int = 0,end_dialog:bool = false):
 	#todo: if typewrite effect is used, forwarding (probably happen before this is calles)
 	#should display all text first
 	if index < state.text_pages.size() and index >= 0:
 		state.display_text = state.text_pages[index].format(state.format_data)
-		$Text.text = state.display_text
-		speak_text($Text.text)
+		#$Text.text = state.display_text
+		#speak_text($Text.text)
 		print_debug(index)
 		state.page_index = index
 	elif !end_dialog:
@@ -90,46 +93,25 @@ func update_page_text(index:int = 0,end_dialog:bool = false):
 		#NOTE: may need a flag to diable this so some dialogs can not be canceled
 		#but only finished. an action could do that as well. all it dose is keep this viable
 		cancel()
+		speak_text()
 		#NOTE: is_cancelable will disable cancel action
 		#mostly to prevent it from repeating. if a action is needed
 		#then faking the canel blocking via action be ideal
 	elif index >= state.text_pages.size():
 		print_debug("end")
 		finish()
+		speak_text()
 		
 	else:
 		print_debug("this probably being called since the dialog can not be canceled")
 
-	return
-	#if index < split_text.size() and index >= 0:
-	#	$Text.text = split_text[index].format(data)
-	#	speak_text($Text.text)
-	#	print_debug(index)
-	#	page_index = index
-	#elif !end_dialog:
-	#	print_debug("is at dialog end, but action disallow dialog to end")
-	#	return
-	#elif index < 0 and is_cancelable:
-	#	print_debug("start")
-		#note: will disable dialog. action can restart it afterwards
-		#NOTE: may need a flag to diable this so some dialogs can not be canceled
-		#but only finished. an action could do that as well. all it dose is keep this viable
-	#	cancel()
-		#NOTE: is_cancelable will disable cancel action
-		#mostly to prevent it from repeating. if a action is needed
-		#then faking the canel blocking via action be ideal
-		
-	#elif index >= split_text.size():
-	#	print_debug("end")
-	#	finish()
-		
-	#else:
-	#	print_debug("this probably being called since the dialog can not be canceled")
 
 func start(index:int = 0):
 	ui_state.enable_player_input = false
 	update_page_text(index)
 	visible = true
+	on_update()
+	speak_text($Text.text)
 	state.started.emit()
 
 func cancel():
@@ -162,6 +144,7 @@ func on_update():
 	$Name.text = "[center]"+state.speaker_name
 	$Icon.texture = state.speaker_image
 	$Text.text = state.display_text
+	
 	#Note: need to handle how tts will handle the change.
 	#could pass more data in update or have it treated
 	#as a force change. also could not handle it and expect
@@ -169,10 +152,12 @@ func on_update():
 	#so another signal may be needed for that
 
 func _process(_delta):
-	#may need to have this on a timer that can be pasued
-	#also may be best to pause movement instead of waiting for change
-	#NOTE: dedicate keys to forward or reverse text. cancel to cancel and accept as a second forward
-	#as well as not a forward when an input request is active
+	#NOTE: this is old and probably unused
+	#the speaker or action might handle this
+	#or maybe callables should be used to update itself
+	#odd but a update callable that update dynamic varibles
+	#or just treat format data as a callable that returns a dictionary
+	#that may be better
 	if visible:
 		if data.has("target"):
 			var target_pos:Vector2 = data["target"].global_position
@@ -191,15 +176,22 @@ func _input(event: InputEvent) -> void:
 	if !visible : return
 	if event.is_action_pressed("Right"):
 		update_page_text(state.page_index+1)
+		on_update()
+		speak_text($Text.text)
 		get_viewport().set_input_as_handled()
 	if event.is_action_pressed("Left"):
 		update_page_text(state.page_index-1)
+		on_update()
+		speak_text($Text.text)
 		get_viewport().set_input_as_handled()
 	if event.is_action_pressed("Accept"):
 		update_page_text(state.page_index+1,true)
+		on_update()
+		speak_text($Text.text)
 		get_viewport().set_input_as_handled()
 	if event.is_action_pressed("Cancel"):
 		cancel()
+		speak_text()
 		get_viewport().set_input_as_handled()
 
 func _ready() -> void:

@@ -65,7 +65,7 @@ func _ready() -> void:
 	
 	state.send_notifcation.connect(send_notifcation)
 	state.fishing_game = fishing_game
-	state.dialog = gui_dialog
+	#state.dialog = gui_dialog
 	
 	_on_menu_visibility_changed()
 	#TODO: try to let the game handler handle tree events such as pausing

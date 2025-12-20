@@ -73,7 +73,7 @@ func _run(data:Action_State = null) -> bool:
 	#when the page updates
 	dialog_state.start.emit()
 	
-	dialog_state.update.emit()
+	#dialog_state.update.emit()
 	
 	
 	#ui_state.dialog.data = dialog_data

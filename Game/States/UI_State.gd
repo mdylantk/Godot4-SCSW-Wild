@@ -31,4 +31,4 @@ var enable_player_input :bool = true
 #this is a temp solution to acess the fishing ui
 #should have its own state
 var fishing_game = null
-var dialog = null
+#var dialog = null

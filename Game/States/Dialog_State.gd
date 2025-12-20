@@ -51,9 +51,32 @@ var format_data : Dictionary
 var speaker_name : String
 var speaker_image : Texture2D
 
+var tts_voice_id : int = 0
+var tts_voice_pitch : float = 1.0
+
 #will allow this to hold ref to action
 #as callables. options and input would also
 #be handled, but as other var
 var cancel_task : Callable
 
 var accept_task : Callable
+
+func clear_tasks() -> void:
+	cancel_task = func():pass
+	accept_task = func():pass
+#Note not sure if this should be in reset state
+#also not sure how reset state will treat defaults
+#or if it will event touch properties
+#so using clear_state for now untill I feel like testing it
+func clear_state() -> void:
+	show_cancel = true
+	source_text = ''
+	display_text = ''
+	text_pages.clear()
+	page_index = 0
+	format_data.clear()
+	speaker_name = ''
+	speaker_image = null
+	tts_voice_id = 0
+	tts_voice_pitch = 1.0
+	clear_tasks()
