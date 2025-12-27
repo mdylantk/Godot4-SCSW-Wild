@@ -1,10 +1,11 @@
-[gd_scene load_steps=23 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene load_steps=24 format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" uid="uid://bp3atrikcfxmj" path="res://Game/Data/Scenes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/States/Player_State.tres" id="2_ubr6l"]
 [ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Common/Features/Inventory/Inventory.tscn" id="3_m3amk"]
 [ext_resource type="Script" uid="uid://ok522b0njxq0" path="res://Game/Data/Components/Shaped_Interactor.gd" id="4_qftw7"]
+[ext_resource type="Texture2D" uid="uid://bm67u18sl77a1" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/Characters.png" id="4_ubr6l"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Common/Data/Nodes/Main_Camera.tscn" id="7_b7ptm"]
 [ext_resource type="Script" uid="uid://bgqgcg12is206" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Common/Data/Player_Controller.tres" id="9_dfeth"]
@@ -12,19 +13,19 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
 size = Vector2(14, 6)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_r33os"]
-atlas = ExtResource("2_ps8hu")
-region = Rect2(493, 119, 16, 16)
+[sub_resource type="AtlasTexture" id="AtlasTexture_d6ua0"]
+atlas = ExtResource("4_ubr6l")
+region = Rect2(80, 112, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dh3mb"]
-atlas = ExtResource("2_ps8hu")
-region = Rect2(510, 119, 16, 16)
+[sub_resource type="AtlasTexture" id="AtlasTexture_l2wt0"]
+atlas = ExtResource("4_ubr6l")
+region = Rect2(96, 112, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_aymj4"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_r33os")
+"texture": SubResource("AtlasTexture_d6ua0")
 }],
 "loop": true,
 "name": &"default",
@@ -32,7 +33,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dh3mb")
+"texture": SubResource("AtlasTexture_l2wt0")
 }],
 "loop": true,
 "name": &"sit",
