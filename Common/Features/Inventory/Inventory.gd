@@ -59,10 +59,20 @@ func load_inventory(data:Array[Dictionary]) ->void:
 				new_item[property] = data[property]
 			pass
 		inventory.append(new_item)
-
+#TODO: may be better to make this a static function for the new system
+#so that various objects can make use of this as longs as the input are vaild
+#also may need to also add a converter unless we go back to the old way and 
+#handle them more like dictionaries than resources(though working as a resource
+#then convert to dictionary in the state may be more ideal so it faster in used
+#but easier to save when set in the state).
+#NOTE: also may move the static one to the item resource
+#since we may end up handling the amount there as well as most item functions
+#just only can move the stuff that modify amount. the inventory stucture may be odd
+#to add to the item so that may need to be declared per used or an inventory static 
+#object get used instead
 func add_to_inventory(new_item:Item, amount : int = 1) -> int:
 	var remaining_amount : int = amount
-	var trash_items : Array[Item]
+	#var trash_items : Array[Item]
 	if remaining_amount > 0:
 		for item in inventory:
 			if item.is_similar_to(new_item):

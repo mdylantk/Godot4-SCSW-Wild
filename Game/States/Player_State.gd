@@ -23,6 +23,19 @@ var pawn #NOTE: this should be the pawn class or a savable data struct for rebui
 var world_position : Vector2 #this should be set when traveling or saving. global_position should be used
 #for the actual position
 
+#items will be player owned inventory
+#cargo will be specail items owned by the player
+#such as trade goods, dynamic items, or gear and will have its own limits
+#it probababy store it in a easier to save (do not depend on an object)
+#and anything that display it should parse that data into the proper item object
+#NOTE: this means the version here should convert all object ref to a dict of its state
+#or uid string ref.
+#stash (if added) will be a mix of the two or just the latter
+#for a protective storage
+##an dictionary of iten uid(for linking display info) and quanities of that item
+var standard_inventory : Dictionary[String,int]
+var advance_inventory : Array[Dictionary]
+
 #NOTE: instance may not be used. exit_data should have the basic data for loading
 #the last level before exiting
 var instance = null #the instance the player is in. mostly for loading reasons. 
@@ -64,6 +77,46 @@ func get_score(id:String)->int:
 		return scores[id]
 	return 0
 
+#Note: item pass amount will be changed based on what is taken from it
+#so it will have an amount of 0 unless not all of the item was used up
+#so it may be better to pass a dupicate of the item if the item amount need
+#to stay fixed (aka was not created per task but pulled from a tres or export)
+func add_item(item:Item)->void:
+	if item == null:
+		return
+	var item_type : Item_Type = item.get_type()
+	if item_type == null:
+		return
+	if item_type.is_unique:
+		var remaining_amount : int = item.amount
+		#NOTE: look like this may need to convert the item dict
+		#into an item if using the old system approch to check similarities
+		#so may need to do that
+		#TODO: Move the add item logic here or something
+		#also see if it is possible to extract nessary data 
+		#from the resource(like export values) or use a dedicated
+		#function that convert save data into an object and back
+		#(since this should store easier to save types
+		#but not sure if dictionaries inside of dictionaries will be converted
+		#correctly for things like json)
+		#NOTE: the issue is the old way handles adding and subtraction base on the
+		#amount passed. also adding and removing slots. probably could copy paste
+		#with some modifications
+		pass
+	else:
+		#would need to store the non object ref to make saving/loading easier
+		var old_amount : int = standard_inventory.get(item.type_uid,0)
+		var new_amount : int = clamp(old_amount + item.amount,0,item_type.max_stack_size)
+		item.amount -= new_amount
+		
+		standard_inventory.set(item.type_uid,new_amount)
+		#NOTE: decide if it should return a value representing
+		#what is left over
+	#TODO: check item is unique to see if it is stored as a 
+	#stardard(false) item or advance(true)
+	#make sure that item has an amount, else make sure to add amount as a parameter
+	#if advance, make sure to convert to a dictionary that do not hold any ref to object.
+	pass
 
 func _reset_state() -> void:
 	#data.clear()
@@ -73,6 +126,8 @@ func _reset_state() -> void:
 	position = Vector2.ZERO
 	facing = Vector2.ZERO
 	flags = []
+	standard_inventory.clear()
+	advance_inventory.clear()
 	
 func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
@@ -83,7 +138,12 @@ func get_save_data()->Dictionary[String,Variant]:
 	save_data.set('position',position)
 	save_data.set('facing',facing)
 	save_data.set('flags',flags)
+	
+	save_data.set('standard_inventory',standard_inventory)
+	save_data.set('advance_inventory',advance_inventory)
+	
 	save_data.set('data',get_metadata())
+	
 	return save_data
 	
 
@@ -96,6 +156,10 @@ func load_data(new_data:Dictionary[String,Variant]={})->void:
 	position = new_data.get('position', position)
 	facing = new_data.get('facing', facing)
 	flags = new_data.get('flags', flags)
+	
+	standard_inventory = new_data.get('standard_inventory', standard_inventory)
+	advance_inventory = new_data.get('advance_inventory', advance_inventory)
+	
 	set_metadata(new_data.get('data', get_metadata()))
 	#data = new_data.get('data', data)
 	loaded.emit()

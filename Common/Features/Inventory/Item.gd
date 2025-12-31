@@ -3,11 +3,15 @@
 ##Static info like name and discription will be held in the Item_Data
 class_name Item extends Resource
 
+#NOTE: signals might not be used here, but that depends since this dose act as the
+#item state so it may be best to declare signals as long as they can be correctly
+#emitted
 signal amount_depleted()
 #signal amount_overflow(excess:int)
 #TODO: try the static approch that just treats an item stack as a dictionary
 #also inventory node would be a componet that will have an resource, array, or dictionary
 #of owned items
+#NOTE: maybe the item type should have this since it is a fixed value 
 static var max_stack_size : int = 99 #note, this can not be override in export. need to override the scrip
 
 #ResourceLoader.get_resource_uid(path)
@@ -17,6 +21,7 @@ static var max_stack_size : int = 99 #note, this can not be override in export. 
 #that give items would expect the item_type to be exported
 #since that the static data
 @export var type_uid : int = -1
+
 
 
 func set_type(new_type:Item_Type) -> void:
