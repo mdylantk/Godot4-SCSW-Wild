@@ -121,7 +121,15 @@ func add_fish(fish_data:Dictionary):
 					break
 		if inventory == null:
 			print_debug("dose not have inventory")
-		var remaining_amount = inventory.add_to_inventory(new_fish_item,1)
+		#NOTE: new system store items in player states
+		#but character may have their own inventory in other projects
+		#so it may be ideal to find a way to support that
+		#yet this system is not nessary to be made reusable
+		#also may be better to run action on catch so other events can
+		#happen instead of catching a fish
+		#var remaining_amount = inventory.add_to_inventory(new_fish_item,1)
+		
+		player_state.add_item(new_fish_item)
 		#InventoryHandler.add_item(handler,interactor,new_fish_item)
 		#TODO: let the inventory handle notify? or check if the item was added
 		#UI.gui_notify.add_notify_message("[center]"+"Acquired "+ fish_name )

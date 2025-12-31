@@ -4,6 +4,7 @@ extends CanvasLayer
 
 @export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
 @export var world_state : World_State = load('uid://b047ftosxvj7p')
+@export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -44,4 +45,17 @@ func _process(delta: float) -> void:
 							"("+str(item_type.display_name)+"):" + 
 						str(item.amount)
 						)
+			debug_text = debug_text + "\n" + 'New Inventory:'
+			for item_data in player_state.advance_inventory:
+				var item = Item.new()
+				item.load_from_dict(item_data)
+				var item_type = item.get_type()
+				if item_type == null:
+					continue
+				debug_text = (
+					debug_text + "\n" + 
+					str(item.get_meta("unique_name",str(item_type.display_name))) +
+						"("+str(item_type.display_name)+"):" + 
+					str(item.amount)
+					)
 		debug.text = debug_text

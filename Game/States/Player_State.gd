@@ -81,35 +81,64 @@ func get_score(id:String)->int:
 #so it will have an amount of 0 unless not all of the item was used up
 #so it may be better to pass a dupicate of the item if the item amount need
 #to stay fixed (aka was not created per task but pulled from a tres or export)
-func add_item(item:Item)->void:
-	if item == null:
+func add_item(new_item:Item)->void:
+	if new_item == null:
 		return
-	var item_type : Item_Type = item.get_type()
+	var item_type : Item_Type = new_item.get_type()
 	if item_type == null:
 		return
 	if item_type.is_unique:
-		var remaining_amount : int = item.amount
-		#NOTE: look like this may need to convert the item dict
-		#into an item if using the old system approch to check similarities
-		#so may need to do that
-		#TODO: Move the add item logic here or something
-		#also see if it is possible to extract nessary data 
-		#from the resource(like export values) or use a dedicated
-		#function that convert save data into an object and back
-		#(since this should store easier to save types
-		#but not sure if dictionaries inside of dictionaries will be converted
-		#correctly for things like json)
-		#NOTE: the issue is the old way handles adding and subtraction base on the
-		#amount passed. also adding and removing slots. probably could copy paste
-		#with some modifications
-		pass
+		var remaining_amount : int = new_item.amount
+		if remaining_amount > 0:
+			for item_data in advance_inventory:
+				var item : Item = Item.new()
+				item.load_from_dict(item_data)
+				if item.is_similar_to(new_item):
+					remaining_amount = item.increase_amount(remaining_amount)
+					#might be able to set amount directly, but
+					#this is safer if it works since wont depend on a
+					#string identifier outside of item
+					item_data.assign(item.convert_to_dict())
+					#slot_update.emit(self,0,item)
+			#TODO: change 100 to a max inventory value
+			for new_slot in range(100-advance_inventory.size()):
+				if remaining_amount > 0:
+					var new_item_stack : Item = new_item.duplicate()
+					var new_amount = remaining_amount
+					if remaining_amount > item_type.max_stack_size:
+						new_amount = item_type.max_stack_size
+						remaining_amount = remaining_amount - new_item_stack.max_stack_size
+					else:
+						new_amount = remaining_amount
+						remaining_amount = 0
+					new_item_stack.amount = new_amount
+					advance_inventory.append(new_item_stack.convert_to_dict())
+					#inventory.append(new_item_stack)
+					#slot_update.emit(self,inventory.size()-1,new_item_stack)
+				else:
+					break
+		elif remaining_amount < 0:
+			var orignal_size = advance_inventory.size()
+			for i in range(orignal_size):
+				var slot = orignal_size - (i+1)
+				var item_data = advance_inventory.get(slot)
+				var item = null
+				if item_data:
+					item = Item.new()
+					item.load_from_dict(item_data)
+				if item.is_similar_to(new_item):
+					remaining_amount = item.increase_amount(remaining_amount)
+					if item.amount <= 0:
+						advance_inventory.remove_at(slot)
+						#slot_update.emit(self,slot,item)
+
 	else:
 		#would need to store the non object ref to make saving/loading easier
-		var old_amount : int = standard_inventory.get(item.type_uid,0)
-		var new_amount : int = clamp(old_amount + item.amount,0,item_type.max_stack_size)
-		item.amount -= new_amount
+		var old_amount : int = standard_inventory.get(new_item.type_uid,0)
+		var new_amount : int = clamp(old_amount + new_item.amount,0,item_type.max_stack_size)
+		new_item.amount -= new_amount
 		
-		standard_inventory.set(item.type_uid,new_amount)
+		standard_inventory.set(new_item.type_uid,new_amount)
 		#NOTE: decide if it should return a value representing
 		#what is left over
 	#TODO: check item is unique to see if it is stored as a 

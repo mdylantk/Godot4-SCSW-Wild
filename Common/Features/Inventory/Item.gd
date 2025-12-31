@@ -12,6 +12,7 @@ signal amount_depleted()
 #also inventory node would be a componet that will have an resource, array, or dictionary
 #of owned items
 #NOTE: maybe the item type should have this since it is a fixed value 
+#DEPRECATED moved to item type
 static var max_stack_size : int = 99 #note, this can not be override in export. need to override the scrip
 
 #ResourceLoader.get_resource_uid(path)
@@ -22,7 +23,12 @@ static var max_stack_size : int = 99 #note, this can not be override in export. 
 #since that the static data
 @export var type_uid : int = -1
 
-
+#NOTE: may use this instead of dictionaries.
+#just need to keep the old static functions(maybe comment out) just incase 
+#dictinary end up being better. 
+#NOTE: if use this, can cast to child types to get access to additional var
+#like durabulity or quality. the base item will share common item function and varibles
+@export var amount:int = 1
 
 func set_type(new_type:Item_Type) -> void:
 	if new_type:
@@ -43,12 +49,7 @@ func get_type() -> Item_Type:
 #but that may not always be wanted(also a meta tag could override this
 #@export_file("*.tscn") var item_entity : String
 
-#NOTE: may use this instead of dictionaries.
-#just need to keep the old static functions(maybe comment out) just incase 
-#dictinary end up being better. 
-#NOTE: if use this, can cast to child types to get access to additional var
-#like durabulity or quality. the base item will share common item function and varibles
-@export var amount:int = 1
+
 #NOTE: metadata might not be needed since it may exist for objects? so using the built
 #in may be better
 #var metadata := {}
@@ -64,31 +65,9 @@ func get_type() -> Item_Type:
 ##this check if the exported values are the same so that other items types
 ##can add their own checks(and should else diffrent items may stack)
 func is_same_item(other_item:Item)->bool:
-	#print_debug("name: "+str(display_name) + " vs " + str(other_item.display_name))
-	#print_debug("discription: "+str(discription) + " vs " + str(other_item.discription))
-	#print_debug("tooltip: "+str(tooltip) + " vs " + str(other_item.tooltip))
-	#print_debug("icon: "+str(icon) + " vs " + str(other_item.icon))
-	
-	#testing uid comparison:
-	#print_debug("icon: "+str(icon.get_rid()) + " vs " + str(other_item.icon.get_rid()))
-	#var test:Resource
-	#test.get_rid()
+	#may be able to compare uid instead so load is not used
+	#return type_uid == other_item.type_uid
 	return get_type() == other_item.get_type()
-	#return type == other_item.type
-	
-	#if (display_name == other_item.display_name and
-	#	discription == other_item.discription and 
-	#	tooltip == other_item.tooltip and 
-	#	icon.get_rid() == other_item.icon.get_rid()
-		#NOTE: icon, being a resource, may be impoperly ref
-		#which will make the item be diffrent. need a better way to identify it
-		#or not compare icon.
-		#in short, rid check would be nessary when storing resource. 
-		#THIS means metadata check need to add a way to check if value
-		#is a resource and run the rid check instead of ==
-	#):
-	#	return true
-	return false
 
 #This may be kept in the inventory handler as a static function
 func is_similar_to(other_item:Item)->bool:
@@ -99,7 +78,7 @@ func is_similar_to(other_item:Item)->bool:
 		if get_meta_list().is_empty() and other_item.get_meta_list().is_empty():
 			return true
 		elif get_meta_list().size() != other_item.get_meta_list().size():
-			#print_debug("metadata sizes are diffrent")
+			#print_debug("metadata sizes are diffrent ", get_meta_list(), ' ', other_item.get_meta_list())
 			return false
 		else:
 			for key in get_meta_list():
@@ -127,15 +106,16 @@ func is_equal_to(other_item:Item) -> bool :
 		if amount == other_item.amount:
 			return true
 	return false
-	
+# this is currently in use. 
 func increase_amount(new_amount:int) -> int:
 	var total_amount : int = amount + new_amount
 	var remaining_amount : int = new_amount
+	var item_type = get_type()
 	if new_amount == 0:
 		return 0
 	elif new_amount > 0:
-		remaining_amount = max(total_amount-max_stack_size,0)
-		amount = min(total_amount, max_stack_size)
+		remaining_amount = max(total_amount-item_type.max_stack_size,0)
+		amount = min(total_amount, item_type.max_stack_size)
 		#if amount > max_stack_size:
 			#amount_overflow.emit(remaining_amount)
 	else:
@@ -146,6 +126,23 @@ func increase_amount(new_amount:int) -> int:
 			
 	#TODO check if this works
 	return remaining_amount
+
+func convert_to_dict()->Dictionary[String,Variant]:
+	var data : Dictionary[String,Variant] = {
+		'amount':amount,
+		'type_uid':type_uid
+	}
+	for meta in get_meta_list():
+		data['meta_'+meta] = get_meta(meta)
+	return data 
 	
+func load_from_dict(data:Dictionary[String,Variant]):
+	amount = data.get('amount',amount)
+	type_uid = data.get('type_uid',type_uid)
+	for meta_id:String in data.keys():
+		if meta_id.begins_with('meta_'):
+			var meta : String = meta_id.trim_prefix('meta_')
+			set_meta(meta, data[meta_id])
+
 func _init(item_type: Item_Type = null) -> void:
 	set_type(item_type)
