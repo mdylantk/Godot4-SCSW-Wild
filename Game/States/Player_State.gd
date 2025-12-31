@@ -131,6 +131,11 @@ func add_item(new_item:Item)->void:
 					if item.amount <= 0:
 						advance_inventory.remove_at(slot)
 						#slot_update.emit(self,slot,item)
+		#TODO:make sure this is correct
+		#that all cases above will set the remaining amount base on use
+		#should be 0 if used up, but positive is some is left over
+		#or negative if not enoigh was taken away.
+		new_item.amount = remaining_amount
 
 	else:
 		#would need to store the non object ref to make saving/loading easier
