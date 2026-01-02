@@ -13,61 +13,64 @@ signal amount_depleted()
 #of owned items
 #NOTE: maybe the item type should have this since it is a fixed value 
 #DEPRECATED moved to item type
-static var max_stack_size : int = 99 #note, this can not be override in export. need to override the scrip
+#static var max_stack_size : int = 99 #note, this can not be override in export. need to override the scrip
 
 #ResourceLoader.get_resource_uid(path)
 #@export var type : Item_Type = Item_Type.new():
 
-#NOTE: most items will have their type set in code. Most things 
-#that give items would expect the item_type to be exported
-#since that the static data
-@export var type_uid : int = -1
-
+#TODO: Since we are now converting savable info into a dictionary for the
+#state, there no need to use the old get and set type.
+#since we wont be saving this object directly
+##item_type need to be an Item_Type with a uid
+##in other words, the item needs a declared .tres file
+##NOTE: Not sure if a uid should be generated for item types
+##created in the editor. Item types are meant to be reusable item info
+@export var item_type : Item_Type :
+	set(value):
+		item_type = value
+		if item_type:
+			type_uid = ResourceLoader.get_resource_uid(item_type.resource_path)
+		else:
+			type_uid = -1
 #NOTE: may use this instead of dictionaries.
 #just need to keep the old static functions(maybe comment out) just incase 
 #dictinary end up being better. 
 #NOTE: if use this, can cast to child types to get access to additional var
 #like durabulity or quality. the base item will share common item function and varibles
 @export var amount:int = 1
+#NOTE: will use this or other array/dictionaries for
+#extra optional data and perhaps even store child data
+#instead so item types can be switch with little impact except
+#(NOTE: switching item type with diffrent stack size could be an issue
+#and such cases would need to be handle if item_type switching become common)
+#NOTE: should store ref as uid or uid plus data like dictionary
+#may need a var to hold the loaded values and a system to load and update it
+#such cases also could use an array of a uid number and a data dictionary
+#or can be only an array if the structure is finalized
+@export var metadata : Dictionary[String,Variant]
 
-func set_type(new_type:Item_Type) -> void:
-	if new_type:
-		type_uid = ResourceLoader.get_resource_uid(new_type.resource_path)
-	else:
-		type_uid = -1
-func get_type() -> Item_Type:
-	if ResourceUID.has_id(type_uid):
-		return load(ResourceUID.get_id_path(type_uid))
-	else:
-		print_debug("WARNING: Returning new Item_Type for Item")
-		return Item_Type.new()
-#@export var display_name : String = "Item"
-#@export var discription : String = "This is an item"
-#@export var tooltip : String = "tooltip of item"
-#@export var icon : Texture
-#the object to spawn if item can be drop or spawn in world. most likly will be a use a share item entity
-#but that may not always be wanted(also a meta tag could override this
-#@export_file("*.tscn") var item_entity : String
+var type_uid : int = -1 #: 
+	#NOTE: items created in editor do not have the setters called
+	#so need to have a check to make sure the uid is set if there is a item_type
+	#but uid is -1
+	#get():
+	#	if type_uid == -1 and item_type:
+	#		type_uid = ResourceLoader.get_resource_uid(item_type.resource_path)
+	#	return type_uid
 
+##returns a new item base on the Item_Type
+static func create_item(type:Item_Type)->Item:
+	return Item.new(type)
+	#new_item.item_type = type
 
-#NOTE: metadata might not be needed since it may exist for objects? so using the built
-#in may be better
-#var metadata := {}
-
-#this check if two items are similar (meaning if they can stack)
-#this could be a lot of checks if the item have a lot of data
-#and may be better with a get type or get class override, but require more work
-#to make sure the types are correctly set
-
-
-#NOTE: should call super and use it return value to see if the base values are same
-#Note: inventory handler should not have this since it ment to be overriden
-##this check if the exported values are the same so that other items types
-##can add their own checks(and should else diffrent items may stack)
+##returns a new item from the provided data
+static func load_item(data:Dictionary[String,Variant]):
+	return Item.new(null, data)
+	
 func is_same_item(other_item:Item)->bool:
 	#may be able to compare uid instead so load is not used
 	#return type_uid == other_item.type_uid
-	return get_type() == other_item.get_type()
+	return item_type == other_item.item_type
 
 #This may be kept in the inventory handler as a static function
 func is_similar_to(other_item:Item)->bool:
@@ -75,26 +78,32 @@ func is_similar_to(other_item:Item)->bool:
 		#print_debug("item is null")
 		return false
 	if (is_same_item(other_item)):
-		if get_meta_list().is_empty() and other_item.get_meta_list().is_empty():
+		if metadata.is_empty() and other_item.metadata.is_empty():
 			return true
-		elif get_meta_list().size() != other_item.get_meta_list().size():
+		elif metadata.size() != other_item.metadata.size():
 			#print_debug("metadata sizes are diffrent ", get_meta_list(), ' ', other_item.get_meta_list())
 			return false
 		else:
-			for key in get_meta_list():
+			#NOTE: this might work, but should try to figure out
+			#a depth limit
+			if metadata.recursive_equal(other_item.metadata,10):
+				return true
+			else:
+				return false
+			#for key in get_meta_list():
 					#NOTE: resources might break this so it may be best to
 					#either not use resources/object or stress test it with 
 					#a resource case
-				var self_value = get_meta(key)
-				var other_value = other_item.get_meta(key)
-				if typeof(self_value) == typeof(other_value):
-					if get_meta(key) != other_item.get_meta(key):
+			#	var self_value = get_meta(key)
+			#	var other_value = other_item.get_meta(key)
+			#	if typeof(self_value) == typeof(other_value):
+			#		if get_meta(key) != other_item.get_meta(key):
 						#print_debug(str(key) + " = diffrent key")
-						return false
-				else:
+			#			return false
+			#	else:
 					#print_debug(str(key) + " = diffrent value: " +str(self_value)+" vs "+str(other_value))
-					return false
-			return true
+			#		return false
+			#return true
 	#print_debug("is not same item")
 	return false
 
@@ -110,7 +119,8 @@ func is_equal_to(other_item:Item) -> bool :
 func increase_amount(new_amount:int) -> int:
 	var total_amount : int = amount + new_amount
 	var remaining_amount : int = new_amount
-	var item_type = get_type()
+	#print_debug('MEOW: ', amount, '+', new_amount, '=', total_amount )
+	#var item_type = get_type()
 	if new_amount == 0:
 		return 0
 	elif new_amount > 0:
@@ -130,19 +140,29 @@ func increase_amount(new_amount:int) -> int:
 func convert_to_dict()->Dictionary[String,Variant]:
 	var data : Dictionary[String,Variant] = {
 		'amount':amount,
-		'type_uid':type_uid
+		'type_uid':type_uid,
+		'metadata':metadata
 	}
-	for meta in get_meta_list():
-		data['meta_'+meta] = get_meta(meta)
+	#for meta in get_meta_list():
+	#	data['meta_'+meta] = get_meta(meta)
 	return data 
 	
 func load_from_dict(data:Dictionary[String,Variant]):
 	amount = data.get('amount',amount)
 	type_uid = data.get('type_uid',type_uid)
-	for meta_id:String in data.keys():
-		if meta_id.begins_with('meta_'):
-			var meta : String = meta_id.trim_prefix('meta_')
-			set_meta(meta, data[meta_id])
-
-func _init(item_type: Item_Type = null) -> void:
-	set_type(item_type)
+	metadata = data.get('metadata',metadata)
+	#	TODO: remove meta before update or use custum meta to easly modify/load/convert
+	if ResourceUID.has_id(type_uid):
+		item_type = load(ResourceUID.get_id_path(type_uid))
+	#for meta_id:String in data.keys():
+	#	if meta_id.begins_with('meta_'):
+	#		var meta : String = meta_id.trim_prefix('meta_')
+	#		set_meta(meta, data[meta_id])
+##Either pass item_type or item data as a dictionary.
+##otherwise data will override item_type 
+##Item.create_item and Item.load_item are the dedicated way to make a new item
+func _init(_item_type: Item_Type = item_type, data:Dictionary[String,Variant] = {} ) -> void:
+	if data.is_empty():
+		item_type = _item_type
+	else:
+		load_from_dict(data)

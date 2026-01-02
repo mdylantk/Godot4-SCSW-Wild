@@ -36,7 +36,7 @@ func _process(delta: float) -> void:
 				debug_text = debug_text + "\n" + "Inventory:"
 				for item in player_inventory:
 					#debug_text = debug_text + "\n" + str(item)
-					var item_type = item.get_type()
+					var item_type = item.item_type
 					if item_type == null:
 						continue
 					debug_text = (
@@ -49,7 +49,7 @@ func _process(delta: float) -> void:
 			for item_data in player_state.advance_inventory:
 				var item = Item.new()
 				item.load_from_dict(item_data)
-				var item_type = item.get_type()
+				var item_type = item.item_type
 				if item_type == null:
 					continue
 				debug_text = (

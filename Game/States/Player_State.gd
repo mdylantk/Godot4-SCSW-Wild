@@ -35,7 +35,7 @@ var world_position : Vector2 #this should be set when traveling or saving. globa
 ##an dictionary of iten uid(for linking display info) and quanities of that item
 var standard_inventory : Dictionary[String,int]
 var advance_inventory : Array[Dictionary]
-
+var advance_inventory_size : int = 100
 #NOTE: instance may not be used. exit_data should have the basic data for loading
 #the last level before exiting
 var instance = null #the instance the player is in. mostly for loading reasons. 
@@ -84,15 +84,15 @@ func get_score(id:String)->int:
 func add_item(new_item:Item)->void:
 	if new_item == null:
 		return
-	var item_type : Item_Type = new_item.get_type()
+	var item_type : Item_Type = new_item.item_type
 	if item_type == null:
 		return
 	if item_type.is_unique:
 		var remaining_amount : int = new_item.amount
 		if remaining_amount > 0:
 			for item_data in advance_inventory:
-				var item : Item = Item.new()
-				item.load_from_dict(item_data)
+				var item : Item = Item.load_item(item_data)
+				#item.load_from_dict(item_data)
 				if item.is_similar_to(new_item):
 					remaining_amount = item.increase_amount(remaining_amount)
 					#might be able to set amount directly, but
@@ -101,13 +101,13 @@ func add_item(new_item:Item)->void:
 					item_data.assign(item.convert_to_dict())
 					#slot_update.emit(self,0,item)
 			#TODO: change 100 to a max inventory value
-			for new_slot in range(100-advance_inventory.size()):
+			for new_slot in range(advance_inventory_size-advance_inventory.size()):
 				if remaining_amount > 0:
-					var new_item_stack : Item = new_item.duplicate()
+					var new_item_stack : Item = Item.new(new_item.item_type)
 					var new_amount = remaining_amount
 					if remaining_amount > item_type.max_stack_size:
 						new_amount = item_type.max_stack_size
-						remaining_amount = remaining_amount - new_item_stack.max_stack_size
+						remaining_amount = remaining_amount - new_item_stack.item_type.max_stack_size
 					else:
 						new_amount = remaining_amount
 						remaining_amount = 0
@@ -124,13 +124,15 @@ func add_item(new_item:Item)->void:
 				var item_data = advance_inventory.get(slot)
 				var item = null
 				if item_data:
-					item = Item.new()
-					item.load_from_dict(item_data)
+					item = Item.load_item(item_data)
+					#item.load_from_dict(item_data)
 				if item.is_similar_to(new_item):
 					remaining_amount = item.increase_amount(remaining_amount)
 					if item.amount <= 0:
 						advance_inventory.remove_at(slot)
 						#slot_update.emit(self,slot,item)
+					else:
+						item_data.assign(item.convert_to_dict())
 		#TODO:make sure this is correct
 		#that all cases above will set the remaining amount base on use
 		#should be 0 if used up, but positive is some is left over

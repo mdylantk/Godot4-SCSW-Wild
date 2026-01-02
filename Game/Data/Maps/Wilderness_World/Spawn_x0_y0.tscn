@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=4 uid="uid://blyxjt47otoln"]
+[gd_scene load_steps=27 format=4 uid="uid://blyxjt47otoln"]
 
 [ext_resource type="Script" uid="uid://c3vqnafptavcg" path="res://Common/Data/Scripts/One_Bit_Tilemap.gd" id="1_d51xb"]
 [ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Common/Data/Resources/World_Foilage_Generator.tres" id="2_dmssl"]
@@ -11,8 +11,8 @@
 [ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Game/Data/Scenes/Actors/Interactive_Body2d.tscn" id="9_02qev"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="10_terbv"]
 [ext_resource type="Script" uid="uid://cxhenjxcqrr8u" path="res://Game/Actions/Actions/A_Level_Transfer.gd" id="11_vcjrw"]
+[ext_resource type="Resource" uid="uid://tv0nok4shwhw" path="res://Game/Data/Items/Fish/King_Walleye.tres" id="12_kha4h"]
 [ext_resource type="Script" uid="uid://dpcfqu6pi0uwi" path="res://Common/Features/Inventory/Item.gd" id="12_pvsuw"]
-[ext_resource type="Resource" uid="uid://byav5our3f61f" path="res://Game/Data/Items/Fish/Carp.tres" id="13_n5vac"]
 [ext_resource type="Script" uid="uid://duo75yc6pgaxj" path="res://Game/Actions/Actions/A_Give_Item.gd" id="14_ujeav"]
 
 [sub_resource type="Resource" id="Resource_u6lsk"]
@@ -40,18 +40,30 @@ size = Vector2(16, 16)
 
 [sub_resource type="Resource" id="Resource_d6o4d"]
 script = ExtResource("12_pvsuw")
+item_type = ExtResource("12_kha4h")
+amount = 999
 
 [sub_resource type="Resource" id="Resource_7dgfp"]
 script = ExtResource("14_ujeav")
 item = SubResource("Resource_d6o4d")
-item_type = ExtResource("13_n5vac")
-item_meta = {
-"unique_name": "Test Fish"
-}
+use_copy = false
 
 [sub_resource type="Resource" id="Resource_6kvcv"]
 script = ExtResource("7_wppsf")
 action = SubResource("Resource_7dgfp")
+
+[sub_resource type="Resource" id="Resource_n5vac"]
+script = ExtResource("12_pvsuw")
+item_type = ExtResource("12_kha4h")
+amount = -99
+
+[sub_resource type="Resource" id="Resource_kha4h"]
+script = ExtResource("14_ujeav")
+item = SubResource("Resource_n5vac")
+
+[sub_resource type="Resource" id="Resource_f54ym"]
+script = ExtResource("7_wppsf")
+action = SubResource("Resource_kha4h")
 
 [node name="TileMap" type="Node2D" node_paths=PackedStringArray("foilage_layer")]
 y_sort_enabled = true
@@ -111,6 +123,14 @@ position = Vector2(88, 120)
 interactive_data = SubResource("Resource_6kvcv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interact_Component"]
+shape = SubResource("RectangleShape2D_m2me0")
+
+[node name="Interact_Component2" parent="." instance=ExtResource("5_ks348")]
+position = Vector2(88, 120)
+interactive_data = SubResource("Resource_f54ym")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interact_Component2"]
+position = Vector2(-40, 0)
 shape = SubResource("RectangleShape2D_m2me0")
 
 [editable path="NCP"]
