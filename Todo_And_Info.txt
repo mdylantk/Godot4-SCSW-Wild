@@ -39,3 +39,28 @@ Note on the save system:
 	NOTE: this also allow save data to be compress into a single file if desired.
 	The plain is to do that with most of the persitant states and only save
 	character and level state in their own files (or compressed in a diffrent one.)
+	
+Note on items:
+	-There will be two types of storage for basic and advance items. Basic is
+	a standard table of the item_type uid and the amount where advance will be
+	a slot base inventory(an array of dictionaries). For saving reasons, the 
+	advance items will be stored (long term) as a dictionary instead of the item
+	object. The item object is reserver for modifing an item in editor and for
+	system to load it as such for type safe use. This is to try to make it support
+	non-resource base save formats where one may not want the item script to be an
+	editable field. (Note: uid is stored and may be a problem, but I think that 
+	requires modding the game to add uid to external resources so converting to a
+	non-resource saving system should prevent such issue as long as modding and hacking
+	is not a consern)
+	-NOTE: item types (like for extended item types) may end up using a base
+	class and use a text file to populate it in the future depending how large 
+	the item database get for similar items (for the fish for example). This would
+	set the item metadata to what in these text files to override the item info.
+	It will allow remove items not to be an issue, but also means that remove items
+	would also be kept. This could be a problem for scores and status that depends
+	on certain info (such as name), but could be solved by reserving this meta for
+	special item and use the item type name instead (example: Walleye is an item_type.tres
+	and King Walleye is a variantion of Walleye. the player fish log will treat it
+	as a Walleye. This would mean rare fish would be a subgroup of the fish type in
+	the log and metadata would be used to state where the subgroup if walleye is
+	rare or not)

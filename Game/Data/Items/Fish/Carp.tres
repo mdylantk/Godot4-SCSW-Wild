@@ -1,14 +1,14 @@
-[gd_resource type="Resource" script_class="Item_Type" load_steps=4 format=3 uid="uid://byav5our3f61f"]
+[gd_resource type="Resource" script_class="Extended_Item_Type" load_steps=4 format=3 uid="uid://byav5our3f61f"]
 
 [ext_resource type="Texture2D" uid="uid://bd5euihgbdggx" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/monochrome-transparent.png" id="1_ns7kc"]
-[ext_resource type="Script" uid="uid://ifsjklmddyjn" path="res://Common/Features/Inventory/Item_Type.gd" id="2_7qlqg"]
+[ext_resource type="Script" uid="uid://b27c0lnktiva0" path="res://Common/Features/Inventory/Extended_Item_Type.gd" id="2_3428u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_juioi"]
 atlas = ExtResource("1_ns7kc")
 region = Rect2(561, 289, 17, 17)
 
 [resource]
-script = ExtResource("2_7qlqg")
+script = ExtResource("2_3428u")
 display_name = "Carp"
 discription = "This is a carp"
 tooltip = "Smells fishy"

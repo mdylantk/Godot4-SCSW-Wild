@@ -87,7 +87,8 @@ func add_item(new_item:Item)->void:
 	var item_type : Item_Type = new_item.item_type
 	if item_type == null:
 		return
-	if item_type.is_unique:
+	if item_type as Extended_Item_Type:
+	#if item_type.is_unique:
 		var remaining_amount : int = new_item.amount
 		if remaining_amount > 0:
 			for item_data in advance_inventory:

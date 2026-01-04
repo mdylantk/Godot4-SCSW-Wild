@@ -13,7 +13,7 @@
 [ext_resource type="Script" uid="uid://cxhenjxcqrr8u" path="res://Game/Actions/Actions/A_Level_Transfer.gd" id="11_vcjrw"]
 [ext_resource type="Resource" uid="uid://tv0nok4shwhw" path="res://Game/Data/Items/Fish/King_Walleye.tres" id="12_kha4h"]
 [ext_resource type="Script" uid="uid://dpcfqu6pi0uwi" path="res://Common/Features/Inventory/Item.gd" id="12_pvsuw"]
-[ext_resource type="Script" uid="uid://duo75yc6pgaxj" path="res://Game/Actions/Actions/A_Give_Item.gd" id="14_ujeav"]
+[ext_resource type="Script" uid="uid://duo75yc6pgaxj" path="res://Game/Actions/Actions/A_Give_Item_To_Player.gd" id="14_ujeav"]
 
 [sub_resource type="Resource" id="Resource_u6lsk"]
 script = ExtResource("7_wppsf")

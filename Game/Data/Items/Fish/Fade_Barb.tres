@@ -1,14 +1,14 @@
-[gd_resource type="Resource" script_class="Item_Type" load_steps=4 format=3 uid="uid://c8jkdwheu6a73"]
+[gd_resource type="Resource" script_class="Extended_Item_Type" load_steps=4 format=3 uid="uid://c8jkdwheu6a73"]
 
 [ext_resource type="Texture2D" uid="uid://bd5euihgbdggx" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/monochrome-transparent.png" id="1_esedw"]
-[ext_resource type="Script" uid="uid://ifsjklmddyjn" path="res://Common/Features/Inventory/Item_Type.gd" id="2_l5djj"]
+[ext_resource type="Script" uid="uid://b27c0lnktiva0" path="res://Common/Features/Inventory/Extended_Item_Type.gd" id="2_iwxh6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_juioi"]
 atlas = ExtResource("1_esedw")
 region = Rect2(561, 289, 17, 17)
 
 [resource]
-script = ExtResource("2_l5djj")
+script = ExtResource("2_iwxh6")
 display_name = "Fade_Barb"
 discription = "This is a fade barb"
 tooltip = "Smells fishy"
