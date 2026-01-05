@@ -23,39 +23,7 @@ func _process(delta: float) -> void:
 		#debug_text = debug_text + "\n" + "player input: " + str(!Player.paused)
 			#NOTE: this need to change with the new item system. was added with the old to get it working
 		#NOTE: may need player or game connect these to signal instead of a direct ref
-		var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")
-		if players.size() > 0:
-			var player_inventory = players[0].inventory.inventory
-		#if Player.state != null and Player.pawn != null:
-			#TODO: have an inventory assign here or grab from state/data
-			#since acess to a pawn my be removed
-			#var player_old_inventory = Player.state.fetch("inventory", "pawn")
-			#var player_inventory = Player.pawn.inventory.inventory
-			
-			if player_inventory != null:
-				debug_text = debug_text + "\n" + "Inventory:"
-				for item in player_inventory:
-					#debug_text = debug_text + "\n" + str(item)
-					var item_type = item.item_type
-					if item_type == null:
-						continue
-					debug_text = (
-						debug_text + "\n" + 
-						str(item.get_meta("unique_name",str(item_type.display_name))) +
-							"("+str(item_type.display_name)+"):" + 
-						str(item.amount)
-						)
-			debug_text = debug_text + "\n" + 'New Inventory:'
-			for item_data in player_state.advance_inventory:
-				var item = Item.new()
-				item.load_from_dict(item_data)
-				var item_type = item.item_type
-				if item_type == null:
-					continue
-				debug_text = (
-					debug_text + "\n" + 
-					str(item.get_meta("unique_name",str(item_type.display_name))) +
-						"("+str(item_type.display_name)+"):" + 
-					str(item.amount)
-					)
+		#var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")
+
+
 		debug.text = debug_text

@@ -6,6 +6,8 @@ class_name Player_State extends State
 
 signal score_changed(id:String, new_value:int)
 
+signal advance_inventory_changed()
+signal standard_inventory_changed()
 
 var scores : Dictionary[String,int] = {}
 
@@ -87,6 +89,7 @@ func add_item(new_item:Item)->void:
 	var item_type : Item_Type = new_item.item_type
 	if item_type == null:
 		return
+	var inventory_modified: bool = false
 	if item_type as Extended_Item_Type:
 	#if item_type.is_unique:
 		var remaining_amount : int = new_item.amount
@@ -96,12 +99,9 @@ func add_item(new_item:Item)->void:
 				#item.load_from_dict(item_data)
 				if item.is_similar_to(new_item):
 					remaining_amount = item.increase_amount(remaining_amount)
-					#might be able to set amount directly, but
-					#this is safer if it works since wont depend on a
-					#string identifier outside of item
 					item_data.assign(item.convert_to_dict())
+					inventory_modified = true
 					#slot_update.emit(self,0,item)
-			#TODO: change 100 to a max inventory value
 			for new_slot in range(advance_inventory_size-advance_inventory.size()):
 				if remaining_amount > 0:
 					var new_item_stack : Item = Item.new(new_item.item_type)
@@ -115,6 +115,7 @@ func add_item(new_item:Item)->void:
 					new_item_stack.amount = new_amount
 					advance_inventory.append(new_item_stack.convert_to_dict())
 					#inventory.append(new_item_stack)
+					inventory_modified = true
 					#slot_update.emit(self,inventory.size()-1,new_item_stack)
 				else:
 					break
@@ -131,6 +132,7 @@ func add_item(new_item:Item)->void:
 					remaining_amount = item.increase_amount(remaining_amount)
 					if item.amount <= 0:
 						advance_inventory.remove_at(slot)
+						inventory_modified = true
 						#slot_update.emit(self,slot,item)
 					else:
 						item_data.assign(item.convert_to_dict())
@@ -139,14 +141,22 @@ func add_item(new_item:Item)->void:
 		#should be 0 if used up, but positive is some is left over
 		#or negative if not enoigh was taken away.
 		new_item.amount = remaining_amount
-
+		if inventory_modified:
+			advance_inventory_changed.emit()
 	else:
 		#would need to store the non object ref to make saving/loading easier
 		var old_amount : int = standard_inventory.get(new_item.type_uid,0)
 		var new_amount : int = clamp(old_amount + new_item.amount,0,item_type.max_stack_size)
 		new_item.amount -= new_amount
-		
+		#TODO: Decided if the path should be stored instead of id
+		#id may cause issues if change(should not normally) also may
+		#be easier to track down the item type with a path
+		#the issue with paths is that it could change
+		#so having something that states where it is located
+		#would help
 		standard_inventory.set(new_item.type_uid,new_amount)
+		if old_amount != new_amount:
+			standard_inventory_changed.emit()
 		#NOTE: decide if it should return a value representing
 		#what is left over
 	#TODO: check item is unique to see if it is stored as a 
@@ -200,3 +210,6 @@ func load_data(new_data:Dictionary[String,Variant]={})->void:
 	set_metadata(new_data.get('data', get_metadata()))
 	#data = new_data.get('data', data)
 	loaded.emit()
+	
+	advance_inventory_changed.emit()
+	standard_inventory_changed.emit()

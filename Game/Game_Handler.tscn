@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dfe83mkcmeuy7" path="res://Game/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="PackedScene" uid="uid://cc1hxktnb4a1k" path="res://Game/UI/UI_Handler.tscn" id="2_2spbq"]
-[ext_resource type="PackedScene" uid="uid://cg6lsqeuo87mb" path="res://Game/Data/Data_Handler.tscn" id="2_s3n5n"]
+[ext_resource type="PackedScene" uid="uid://cg6lsqeuo87mb" path="res://Game/Data_Handler.tscn" id="2_s3n5n"]
 [ext_resource type="Script" uid="uid://bxmosod06brqx" path="res://Common/Data/Nodes/Handlers/AI_Handler.gd" id="3_8kfs5"]
 [ext_resource type="Resource" uid="uid://0jak16wccjq4" path="res://Game/Controllers/AI_Controller.tres" id="4_ounbx"]
 [ext_resource type="PackedScene" uid="uid://bdpv2nuo5qsqg" path="res://Game/Player_Handler.tscn" id="5_amjxa"]

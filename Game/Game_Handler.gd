@@ -71,7 +71,7 @@ func _ready():
 	ui.main_menu.load_game.connect(on_menu_load_game)
 	ui.main_menu.end_game.connect(on_menu_end_game)
 	
-
+	
 
 @rpc("any_peer","call_local")
 func start_game(is_new:bool = true, save_name:String="default"):

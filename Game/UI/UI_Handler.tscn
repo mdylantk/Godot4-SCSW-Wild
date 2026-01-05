@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cc1hxktnb4a1k"]
+[gd_scene load_steps=15 format=3 uid="uid://cc1hxktnb4a1k"]
 
 [ext_resource type="Script" uid="uid://c8ibq8bm58xd0" path="res://Game/UI/UI_Handler.gd" id="1_htxbl"]
 [ext_resource type="PackedScene" uid="uid://ctvmde4ov5w2x" path="res://Game/UI/Dialog.tscn" id="2_0wofj"]
@@ -11,6 +11,8 @@
 [ext_resource type="PackedScene" uid="uid://b80ly070yrqgt" path="res://Game/UI/Credits_Menu.tscn" id="9_6enyp"]
 [ext_resource type="PackedScene" uid="uid://clfctvdo5gs0b" path="res://Game/UI/Options_Menu.tscn" id="11_3jetq"]
 [ext_resource type="PackedScene" uid="uid://bsvm8im8i0rac" path="res://Game/UI/Debug_Hud.tscn" id="11_r8uiu"]
+[ext_resource type="Script" uid="uid://cdu5jt55kdeb0" path="res://Game/UI/Cargo.gd" id="12_3gslv"]
+[ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Game/Assets/Main_Theme.tres" id="13_3gslv"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wsma3"]
 atlas = ExtResource("6_nymfg")
@@ -78,7 +80,52 @@ layer = 30
 
 [node name="DebugHUD" parent="." instance=ExtResource("11_r8uiu")]
 
-[node name="SubViewport" type="SubViewport" parent="."]
+[node name="Cargo" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("12_3gslv")
+
+[node name="ItemList" type="ItemList" parent="Cargo"]
+unique_name_in_owner = true
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -277.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("13_3gslv")
+allow_reselect = true
+max_columns = 4
+same_column_width = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Cargo"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -118.0
+offset_top = -286.0
+offset_right = 116.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("13_3gslv")
+
+[node name="Name" type="Label" parent="Cargo/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Discription" type="Label" parent="Cargo/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Meta" type="ItemList" parent="Cargo/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+allow_search = false
 
 [connection signal="visibility_changed" from="HUD/Dialog" to="." method="_on_menu_visibility_changed"]
 [connection signal="visibility_changed" from="HUD/LoadingScreen" to="." method="_on_menu_visibility_changed"]
@@ -89,3 +136,5 @@ layer = 30
 [connection signal="visibility_changed" from="Credits_Menu" to="." method="_on_menu_visibility_changed"]
 [connection signal="close" from="Options_Menu" to="." method="_on_submenu_close"]
 [connection signal="visibility_changed" from="Options_Menu" to="." method="_on_menu_visibility_changed"]
+[connection signal="visibility_changed" from="Cargo" to="Cargo" method="_on_visibility_changed"]
+[connection signal="item_selected" from="Cargo/ItemList" to="Cargo" method="_on_item_list_item_selected"]
