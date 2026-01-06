@@ -3,10 +3,18 @@
 ##Static info like name and discription will be held in the Item_Data
 class_name Item extends Resource
 
-#NOTE: signals might not be used here, but that depends since this dose act as the
-#item state so it may be best to declare signals as long as they can be correctly
-#emitted
+
 signal amount_depleted()
+#decide if a removed/deleted/null/depleted is needed
+#item may be pass mostly by functions and signals, so there
+#might not be a needed. amount depleted may still have uses though
+signal amount_changed(item:Item)
+signal type_changed(item:Item)
+##NOTE: key as an empty string should be treated
+##as the whole metadata was changed.
+##TODO: decided if empty string should not be vaild
+##metadata key.
+signal metadata_changed(item:Item, key:String)
 #signal amount_overflow(excess:int)
 #TODO: try the static approch that just treats an item stack as a dictionary
 #also inventory node would be a componet that will have an resource, array, or dictionary
@@ -27,17 +35,37 @@ signal amount_depleted()
 ##created in the editor. Item types are meant to be reusable item info
 @export var item_type : Item_Type :
 	set(value):
+		var old_value: Item_Type = item_type
+		if old_value == value:
+			return
 		item_type = value
 		if item_type:
 			type_uid = ResourceLoader.get_resource_uid(item_type.resource_path)
+			data.set('type_uid', type_uid)
 		else:
 			type_uid = -1
+			data.set('type_uid', -1)
+		type_changed.emit(self)
+	#get:
+	#	if item_type == null:
+	#		if ResourceUID.has_id(type_uid):
+	#			item_type = load(ResourceUID.get_id_path(type_uid))
+	#	return item_type
 #NOTE: may use this instead of dictionaries.
 #just need to keep the old static functions(maybe comment out) just incase 
 #dictinary end up being better. 
 #NOTE: if use this, can cast to child types to get access to additional var
 #like durabulity or quality. the base item will share common item function and varibles
-@export var amount:int = 1
+@export var amount:int = 1 :
+	set(value):
+		var old_value: int = amount
+		if old_value == value:
+			return
+		data.set('amount', value)
+		amount = value
+		amount_changed.emit(self)
+	get:
+		return data.get('amount', amount)
 #NOTE: will use this or other array/dictionaries for
 #extra optional data and perhaps even store child data
 #instead so item types can be switch with little impact except
@@ -47,9 +75,33 @@ signal amount_depleted()
 #may need a var to hold the loaded values and a system to load and update it
 #such cases also could use an array of a uid number and a data dictionary
 #or can be only an array if the structure is finalized
-@export var metadata : Dictionary[String,Variant]
-
-var type_uid : int = -1 #: 
+@export var metadata : Dictionary[String,Variant]:
+	set(value):
+		#NOTE: this metadata is for editor setting
+		#should provide ways to set and get metadata
+		#and manually handle cases that modify it in bulk
+		#and make sure to emit the signal to notify of changes
+		metadata = value
+		data.set('metadata',metadata)
+		#calling this just incase it is changed, but will be called anytime
+		#it get set. it should not happen often
+		metadata_changed.emit(self,'')
+	get:
+		return data.get('metadata',{} as Dictionary[String,Variant])
+#the main data of the item. the items should act as an interface to 
+#this data since the data may exist elsewhere and items are normally
+#short lived objects used to catch item resources while needed
+var data : Dictionary[String,Variant] :
+	set(value):
+		data = value
+		if ResourceUID.has_id(type_uid):
+			item_type = load(ResourceUID.get_id_path(type_uid))
+#this may be removed since it will exist in metadata. 
+#it may stay for a bit with a getter
+#since a few functions depends on this
+var type_uid : int = -1 : 
+	get:
+		return data.get('type_uid',type_uid)
 	#NOTE: items created in editor do not have the setters called
 	#so need to have a check to make sure the uid is set if there is a item_type
 	#but uid is -1
@@ -58,14 +110,19 @@ var type_uid : int = -1 #:
 	#		type_uid = ResourceLoader.get_resource_uid(item_type.resource_path)
 	#	return type_uid
 
+#TODO: Decide if _init should take only data
+#and provide a static function to populate it
+#since data may be used to create it if not 
+#created by a resource(item_type is needed to create
+#an item so that is needed in at least one way)
 ##returns a new item base on the Item_Type
 static func create_item(type:Item_Type)->Item:
 	return Item.new(type)
 	#new_item.item_type = type
 
 ##returns a new item from the provided data
-static func load_item(data:Dictionary[String,Variant]):
-	return Item.new(null, data)
+static func load_item(new_data:Dictionary[String,Variant]):
+	return Item.new(null, new_data)
 	
 func is_same_item(other_item:Item)->bool:
 	#may be able to compare uid instead so load is not used
@@ -90,27 +147,13 @@ func is_similar_to(other_item:Item)->bool:
 				return true
 			else:
 				return false
-			#for key in get_meta_list():
-					#NOTE: resources might break this so it may be best to
-					#either not use resources/object or stress test it with 
-					#a resource case
-			#	var self_value = get_meta(key)
-			#	var other_value = other_item.get_meta(key)
-			#	if typeof(self_value) == typeof(other_value):
-			#		if get_meta(key) != other_item.get_meta(key):
-						#print_debug(str(key) + " = diffrent key")
-			#			return false
-			#	else:
-					#print_debug(str(key) + " = diffrent value: " +str(self_value)+" vs "+str(other_value))
-			#		return false
-			#return true
-	#print_debug("is not same item")
 	return false
 
 ##this check if the item is exactly the same
 ##for usages dealing with quests. Thought it best to check the amount
 ##instead, but this will be here as another option where both items need to be ther same
 func is_equal_to(other_item:Item) -> bool :
+	#if data is kept as is, then could compare the two
 	if is_similar_to(other_item):
 		if amount == other_item.amount:
 			return true
@@ -137,23 +180,20 @@ func increase_amount(new_amount:int) -> int:
 	#TODO check if this works
 	return remaining_amount
 
-func convert_to_dict()->Dictionary[String,Variant]:
-	var data : Dictionary[String,Variant] = {
-		'amount':amount,
-		'type_uid':type_uid,
-		'metadata':metadata
-	}
-	#for meta in get_meta_list():
-	#	data['meta_'+meta] = get_meta(meta)
-	return data 
+#might not need a get_metadata
+#set is to trigger metadata change signal so
+#ui can update itself
+func set_metadata(key:String,value:Variant)->void:
+	metadata.set(key,value)
+	metadata_changed.emit(self,key)
+
+#func convert_to_dict()->Dictionary[String,Variant]:
+#	return data 
 	
-func load_from_dict(data:Dictionary[String,Variant]):
-	amount = data.get('amount',amount)
-	type_uid = data.get('type_uid',type_uid)
-	metadata = data.get('metadata',metadata)
-	#	TODO: remove meta before update or use custum meta to easly modify/load/convert
-	if ResourceUID.has_id(type_uid):
-		item_type = load(ResourceUID.get_id_path(type_uid))
+#func load_from_dict(new_data:Dictionary[String,Variant]):
+#	data = new_data
+	#if ResourceUID.has_id(type_uid):
+	#	item_type = load(ResourceUID.get_id_path(type_uid))
 	#for meta_id:String in data.keys():
 	#	if meta_id.begins_with('meta_'):
 	#		var meta : String = meta_id.trim_prefix('meta_')
@@ -161,8 +201,9 @@ func load_from_dict(data:Dictionary[String,Variant]):
 ##Either pass item_type or item data as a dictionary.
 ##otherwise data will override item_type 
 ##Item.create_item and Item.load_item are the dedicated way to make a new item
-func _init(_item_type: Item_Type = item_type, data:Dictionary[String,Variant] = {} ) -> void:
-	if data.is_empty():
+func _init(_item_type: Item_Type = item_type, new_data:Dictionary[String,Variant] = {} ) -> void:
+	if new_data.is_empty():
 		item_type = _item_type
 	else:
-		load_from_dict(data)
+		data = new_data
+		#load_from_dict(new_data)
