@@ -6,7 +6,12 @@ class_name Player_State extends State
 
 signal score_changed(id:String, new_value:int)
 
+#emits when the inventory structure changes
+#such as items being added, removed, or changed
 signal advance_inventory_changed(index:int)
+#(should) emits when the amount changes. unlike advance,
+#it lacks an object that represents the item state
+#since only the amount is importaint.
 signal standard_inventory_changed(id:String)
 
 var scores : Dictionary[String,int] = {}
@@ -111,7 +116,7 @@ func add_item(new_item:Item)->void:
 					remaining_amount = item.increase_amount(remaining_amount)
 					#item_data.assign(item.convert_to_dict())
 					#inventory_modified = true
-					advance_inventory_changed.emit(item_slot)
+					#advance_inventory_changed.emit(item_slot)
 					#slot_update.emit(self,0,item)
 			for new_slot in range(advance_inventory_size-advance_inventory.size()):
 				if remaining_amount > 0:
@@ -120,7 +125,7 @@ func add_item(new_item:Item)->void:
 					if remaining_amount > item_type.max_stack_size:
 						new_amount = item_type.max_stack_size
 						remaining_amount = remaining_amount - new_item_stack.item_type.max_stack_size
-						advance_inventory_changed.emit(new_slot)
+						#advance_inventory_changed.emit(new_slot)
 					else:
 						new_amount = remaining_amount
 						remaining_amount = 0
@@ -154,7 +159,7 @@ func add_item(new_item:Item)->void:
 						#that holds extra info
 						advance_inventory_changed.emit(slot)
 						#slot_update.emit(self,slot,item)
-					advance_inventory_changed.emit(slot)
+					#advance_inventory_changed.emit(slot)
 					#else:
 					#	item_data.assign(item.convert_to_dict())
 		#TODO:make sure this is correct

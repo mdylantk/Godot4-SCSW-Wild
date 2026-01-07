@@ -2,84 +2,174 @@ extends CanvasLayer
 
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
-#NOTE: since items are stored as a dictionary, it be best to
-#store the items here so a new instance is not needed when reading it
+#need to keep track of them so they can be disconnected
+#could probably disconnectif called and not in inventory
+#but this be more reliable
 var items : Array
 
+#may need to call this item selected or something
 var last_item_selected:int = -1
 
-#TODO Add signals to the item and use that to update the item
-#and make it so that only slot changes are notified on the inventory
-#that would reduce duplicate calls and allow each fields to have
-#their own call
-#NOTE TODO: if an item is removed not from the end,
-#the array structure changes. so need to
-#make sure all item past the index of the removed item is updated
-func update_item_slot(index:int)->void:
-	#%ItemList.set_item_icon()
-	var updated_item:Item 
-	if player_state.advance_inventory.size() > index:
-		updated_item = player_state.advance_inventory.get(index)
-	if updated_item:
-		if %ItemList.item_count > index:
-			%ItemList.set_item_icon(index,updated_item.item_type.icon)
-			if updated_item.amount > 1:
-				%ItemList.set_item_text(index,updated_item.item_type.display_name + '(' + str(updated_item.amount) + ')')
-			else:
-				%ItemList.set_item_text(index,updated_item.item_type.display_name)
-		else:
-			if updated_item.amount > 1:
-				%ItemList.add_item(
-					updated_item.item_type.display_name + '(' + str(updated_item.amount) + ')',
-					updated_item.item_type.icon
-				)
-			else:
-				%ItemList.add_item(updated_item.item_type.display_name, updated_item.item_type.icon)
-	elif %ItemList.item_count > index:
-		%ItemList.remove_item(index)
-		#NOTE: This could cause issues
-		#need to redesign this to have better flow
-		#full update when an item is removed and
-		#selective update when item signals are emited
-		#could also just do a full update when slot changes
-		if index != -1:
-			on_advance_inventory_changed(-1)
-	pass
-#could change each element. but need to track the inventory index
-#and pass the data. 
-#NOTE: may need to give the state a get item that returns an item
-#this will return an item which the state can manage which may allow
-#items to emit signals without instance issues
-func on_advance_inventory_changed(index:int=-1) -> void:
-	if index >= 0:
-		update_item_slot(index)
-		_on_item_list_item_selected(-1)
-		#return so below dose not run
-		return
-	%ItemList.clear()
-	items.clear()
-	for item in player_state.advance_inventory:
-		#var item : Item = Item.new()
-		#item.load_from_dict(item_data)
-		var item_type = item.item_type
-		if item.amount > 1:
-			%ItemList.add_item(
-				item_type.display_name + '(' + str(item.amount) + ')',
-				item_type.icon
+var refresh_flagged:bool = false
+var update_flagged:bool = false
+
+func get_item(index)->Item:
+	if player_state.advance_inventory.size() > index && index >= 0:
+		return player_state.advance_inventory.get(index)
+	return null
+	
+##Check to see if there an item in list at the index.
+func item_is_in_list(index)->bool:
+	return %ItemList.item_count > index
+	
+func get_item_display_name(item:Item)->String:
+	if item:
+		if item.amount > 1 :
+			return '{0}({1})'.format(
+				[item.item_type.display_name,item.amount]
 			)
 		else:
-			%ItemList.add_item(item_type.display_name, item_type.icon)
-		items.append(item)
-	#TODO: when switching to a per item update,
-	#this should only reset it if the item selected changed or removed
-	_on_item_list_item_selected(-1)
-		
+			return item.item_type.display_name
+	return ''
 
+#add a new item at the end of the list
+func add_item(item:Item)->void:
+	if item:
+		%ItemList.add_item(
+			get_item_display_name(item),
+			item.item_type.icon
+		)
+		item.changed.connect(_on_item_changed)
+		items.append(item)
+	else:
+		%ItemList.add_item('null')
+
+func update_info(item:Item)->void:
+	if item == null:
+		clear_info()
+		return
+	%Name.text = item.item_type.display_name
+	%Discription.text = item.item_type.discription
+	%Meta.clear()
+	%Meta.add_item(str('amount:',item.amount,'/',item.item_type.max_stack_size))
+	%Meta.add_item(str('weight:',item.amount*item.item_type.base_weight))
+	#NOTE: meta display is mostly for debugging. some meta would need to
+	#be displayed or used to replace existing info, but for now
+	#this will display as much meta that will fit
+	for key in item.metadata.keys():
+		%Meta.add_item(str(key,': ', item.metadata[key]))
+	%Meta.visible = true
+	
+func clear_info()->void:
+	%Name.text = ''
+	%Discription.text = ''
+	%Meta.clear()
+	%Meta.visible = false
+
+func deselect_item(index:int)->void:
+	if index >= 0 && item_is_in_list(index):
+		%ItemList.deselect(index)
+	clear_info()
+	last_item_selected = -1
+
+func select_item(index):
+	if index >= 0 && item_is_in_list(index):
+		%ItemList.select(index)
+		update_info(get_item(index))
+		last_item_selected = index
+	else:
+		deselect_item(index)
+
+func clear()->void:
+	for item :Item in items:
+		if item.changed.is_connected(_on_item_changed):
+			item.changed.disconnect(_on_item_changed)
+	%ItemList.clear()
+
+func update_item(index:int,item:Item)->void:
+	if item_is_in_list(index):
+		if item:
+			%ItemList.set_item_icon(index,item.item_type.icon)
+			%ItemList.set_item_text(index,get_item_display_name(item))
+		else:
+			#todo: clear the icon
+			%ItemList.set_item_text = 'null'
+		#if the items are diffrent. disconnect from the olf
+		#and update it. items array is for keeping track of connections
+		#also if this accure, then should deselect the item since it is diffrent
+		var old_item: Item = items.get(index)
+		if !item.is_similar_to(old_item):
+			if old_item:
+				old_item.changed.disconnect(_on_item_changed)
+			items.set(index,item)
+			#deselect the changed value
+			if index == last_item_selected:
+				deselect_item(index)
+
+func update_items()->void:
+	update_flagged = false
+	if refresh_flagged:
+		return
+	for i in range(%ItemList.item_count):
+		var item : Item = get_item(i)
+		if item:
+			update_item(i,item)
+
+func refresh_item_list()->void:
+	clear()
+	refresh_flagged = false
+	update_flagged = false
+	items.clear()
+	for item in player_state.advance_inventory:
+		add_item(item)
+	select_item(last_item_selected)
+
+func on_advance_inventory_changed(index:int=-1) -> void:
+	if refresh_flagged:
+		return
+	if player_state.advance_inventory.size() != %ItemList.item_count && !refresh_flagged:
+		refresh_flagged = true
+		call_deferred('refresh_item_list')
+		return
+	#if index >= 0 && item_is_in_list(index):
+	#	%ItemList.deselect(index)
+	if update_flagged:
+		return
+	var item : Item = get_item(index)
+	if item:
+		update_item(index,item)
+	return
+	
+func _on_item_list_item_selected(index: int) -> void:
+	var item : Item
+	if index >= 0:
+		if index == last_item_selected :
+			deselect_item(index)
+			index = -1
+		item = get_item(index)
+	
+	if item:
+		update_info(item)
+		last_item_selected = index
+	else:
+		clear_info()
+		last_item_selected = -1
+
+
+func _on_item_changed()->void:
+	if !update_flagged:
+		update_flagged = true
+		call_deferred('update_items')
+#a test
+func _on_button_pressed() -> void:
+	on_advance_inventory_changed()
+	
 func _on_visibility_changed() -> void:
 	if visible:
 		pass
 	else:
-		_on_item_list_item_selected(-1)
+		if last_item_selected >= 0 && item_is_in_list(last_item_selected):
+			%ItemList.deselect(last_item_selected)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed('Inventory'):
@@ -87,48 +177,3 @@ func _input(event: InputEvent) -> void:
 
 func _ready() -> void:
 	player_state.advance_inventory_changed.connect(on_advance_inventory_changed)
-
-
-func _on_item_list_item_selected(index: int) -> void:
-	var item : Item
-	if index >= 0:
-		if index == last_item_selected :
-			%ItemList.deselect(index)
-			index = -1
-		elif player_state.advance_inventory.size() > index:
-			item = player_state.advance_inventory.get(index)
-			#item = items.get(index)
-	if item:
-		%Name.text = item.item_type.display_name
-		%Discription.text = item.item_type.discription
-		%Meta.clear()
-		%Meta.add_item(str('amount:',item.amount,'/',item.item_type.max_stack_size))
-		%Meta.add_item(str('weight:',item.amount*item.item_type.base_weight))
-		#NOTE: meta display is mostly for debugging. some meta would need to
-		#be displayed or used to replace existing info, but for now
-		#this will display as much meta that will fit
-		for key in item.metadata.keys():
-			%Meta.add_item(str(key,': ', item.metadata[key]))
-		last_item_selected = index
-		%Meta.visible = true
-	else:
-		%Name.text = ''
-		%Discription.text = ''
-		%Meta.clear()
-		last_item_selected = -1
-		%Meta.visible = false
-
-#a test
-func _on_button_pressed() -> void:
-	on_advance_inventory_changed()
-	#the ref seems correct, just need to be careful about signals
-	#item might not have signals except for when data change
-	#so the state may need to provide ways to notify change or
-	#catch item to reduce item data sharing between two objects
-	#var test_item = player_state.advance_inventory.get(0)
-	#var amount = test_item.get('amount',0)
-	#print_debug('mew1: ', amount )
-	#test_item.set('amount',amount + 1)
-	#print_debug('mew2: ', test_item.get('amount',0), ' vs ', items.get(0).amount)
-	
-	pass # Replace with function body.

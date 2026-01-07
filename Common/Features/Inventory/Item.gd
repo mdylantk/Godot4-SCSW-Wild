@@ -3,6 +3,9 @@
 ##Static info like name and discription will be held in the Item_Data
 class_name Item extends Resource
 
+#NOTE: resource comes with a changed signal
+#try to call it when the item changed since
+#inventory ui may listen to it
 
 signal amount_depleted()
 #decide if a removed/deleted/null/depleted is needed
@@ -46,6 +49,7 @@ signal metadata_changed(item:Item, key:String)
 			type_uid = -1
 			data.set('type_uid', -1)
 		type_changed.emit(self)
+		changed.emit()
 	#get:
 	#	if item_type == null:
 	#		if ResourceUID.has_id(type_uid):
@@ -64,6 +68,7 @@ signal metadata_changed(item:Item, key:String)
 		data.set('amount', value)
 		amount = value
 		amount_changed.emit(self)
+		changed.emit()
 	get:
 		return data.get('amount', amount)
 #NOTE: will use this or other array/dictionaries for
@@ -86,6 +91,7 @@ signal metadata_changed(item:Item, key:String)
 		#calling this just incase it is changed, but will be called anytime
 		#it get set. it should not happen often
 		metadata_changed.emit(self,'')
+		changed.emit()
 	get:
 		return data.get('metadata',{} as Dictionary[String,Variant])
 #the main data of the item. the items should act as an interface to 
@@ -96,6 +102,7 @@ var data : Dictionary[String,Variant] :
 		data = value
 		if ResourceUID.has_id(type_uid):
 			item_type = load(ResourceUID.get_id_path(type_uid))
+		changed.emit()
 #this may be removed since it will exist in metadata. 
 #it may stay for a bit with a getter
 #since a few functions depends on this
@@ -186,6 +193,7 @@ func increase_amount(new_amount:int) -> int:
 func set_metadata(key:String,value:Variant)->void:
 	metadata.set(key,value)
 	metadata_changed.emit(self,key)
+	changed.emit()
 
 #func convert_to_dict()->Dictionary[String,Variant]:
 #	return data 
