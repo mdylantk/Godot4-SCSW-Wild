@@ -162,7 +162,8 @@ func _on_item_changed()->void:
 		call_deferred('update_items')
 #a test
 func _on_button_pressed() -> void:
-	on_advance_inventory_changed()
+	var item_type = load('uid://db8k4softx2h4')
+	player_state.set_item(Item.new(item_type),1)
 	
 func _on_visibility_changed() -> void:
 	if visible:

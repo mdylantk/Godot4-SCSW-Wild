@@ -6,6 +6,7 @@ class_name Player_State extends State
 
 signal score_changed(id:String, new_value:int)
 
+signal vector_changed(id:String, new_value:Variant)
 #emits when the inventory structure changes
 #such as items being added, removed, or changed
 signal advance_inventory_changed(index:int)
@@ -14,20 +15,47 @@ signal advance_inventory_changed(index:int)
 #since only the amount is importaint.
 signal standard_inventory_changed(id:String)
 
-var scores : Dictionary[String,int] = {}
+#NOTE: _scores could be added to numbers
+#but it be easier to get all scores this way
+#score may get merge with numbers if that is not expected to be common
+#NOTE: might move data to state and not depend on metadata.
+#but keep the functions just incase
+##The savable data will be saved here
+var _data : Dictionary[String,Variant] = {
+	'_scores':{},
+	'_vars':{},
+	'_numbers':{},
+	'_vectors':{}
+}
+
+#var scores : Dictionary[String,int] = {}
 
 #sets of bitflag ints instead of using
 #an array of bools. reserver for when data gets compress
 #otherwise data will be used
-var flags : Array[int] = [] 
+#var flags : Array[int] = [] 
 
-var positions : Dictionary[String,Vector2] = {}
+#NOTE: could use a data object and save directly to it,
+#but there less worry about the data format being incorrect
+#also could convert to exports and add to data, but
+#that would not allow correct typing and could be a pain.
+#can extend player state and add its own way to export
+#defaults for testing or gamemodes
+
+##Savable variable object reserver for string types
+#var _vars : Dictionary[String,String] = {}
+
+##Savable variable object reserver for numbers types
+#var _number_vars : Dictionary[String,Variant] = {}
+
+##Savable variable object reserver for vector like arrays
+#var _vector_vars : Dictionary[String,Array] = {}
 
 #TODO: look into inventory to see how uid or path is extracted
 #or fine a way to extracted.
-var pawn #NOTE: this should be the pawn class or a savable data struct for rebuilding the pawn
+#var pawn #NOTE: this should be the pawn class or a savable data struct for rebuilding the pawn
 #could store this in positions 
-var world_position : Vector2 #this should be set when traveling or saving. global_position should be used
+#var world_position : Vector2 #this should be set when traveling or saving. global_position should be used
 #for the actual position
 
 #items will be player owned inventory
@@ -41,59 +69,72 @@ var world_position : Vector2 #this should be set when traveling or saving. globa
 #for a protective storage
 ##an dictionary of iten uid(for linking display info) and quanities of that item
 var standard_inventory : Dictionary[String,int]
-#var advance_inventory : Array[Dictionary]
+
 var advance_inventory : Array[Item]
-var advance_inventory_size : int = 100
-#NOTE: instance may not be used. exit_data should have the basic data for loading
-#the last level before exiting
-var instance = null #the instance the player is in. mostly for loading reasons. 
-#may use position instead
-var instance_position : Vector2 #similar to world position, but used when loading into an instance
-#so set when saving or before loading into an instance from world. (but instance may override it coded that way)
 
-#Exit data is used for loading last zone
-#NOTE: may need to rethink this. may embed it in here
-#so another resource is not used. should try using basic types
-#over object when possible or have a stringify function for them
-#and vice versa
+var advance_inventory_size : int = 100 :
+	set(value):
+		advance_inventory_size = value
+		_data['_numbers'].set('_base_cargo_size',value)
+	get:
+		#Should use a function that add all the modifiers (when they are added)
+		#so like number of magic hands, party memeber slots, transport slots
+		return _data['_numbers'].get('_base_cargo_size',advance_inventory_size)
+
 @export var exit_data : Exit_Data = Exit_Data.new()
-#these are the character last state to be saved
-#so they load in like how they load out
-#also could change positions to handle thesem but facing be odd
-#could also have an object that handles it
-@export var position : Vector2
-@export var facing : Vector2
 
 
-#TODO: it is unlikly there be more than one location to store of the player state
-#and if there more than one "world" each can have a dedicted varible or the others
-#can be added as a meta
-#var world_location : Vector2
+func has_score(id:String)->bool:
+	return _data['_scores'].has(id)
 
 func set_score(id:String, new_score: int)->void:
-	var old_score = 0
-	if id in scores:
-		old_score = scores[id]
-	scores[id] = new_score
-	#if old_score != new_score:
-	score_changed.emit(id,new_score)
-	value_changed.emit(id+"_score",new_score,old_score)
-	print_debug("meow! set score of ", self, old_score, '->', new_score,' ', id)
+	var old_score = _data['_scores'].get(id,0)
+	if old_score != new_score:
+		_data['_scores'].set(id,new_score)
+		score_changed.emit(id,new_score)
+		value_changed.emit(id+"_score",new_score,old_score)
+		print_debug("meow! set score of ", self, old_score, '->', new_score,' ', id)
 	
 func get_score(id:String)->int:
-	if id in scores:
-		return scores[id]
-	return 0
+	return _data['_scores'].get(id,0)
 
+func has_vector(id:String)->bool:
+	return _data['_vectors'].has(id)
+
+func get_vector(id:String, type : int = 0, as_int : bool = false)->Variant:
+	return array_to_vector(_data['_vectors'].get(id,[]),type, as_int)
+
+func set_vector(id:String, vector:Variant)->void:
+	var old_vector : Array = _data['_vectors'].get(id,[])
+	var new_vector : Array = vector_to_array(vector)
+	_data['_vectors'].set(id,vector_to_array(vector))
+	if old_vector != new_vector:
+		vector_changed.emit(id,vector)
+		
 ##index only applies to advance inventory
-#func set_item(item:Item,index:int = 0)->void:
-#	if item.item_type as Extended_Item_Type:
-#		if item.amount > 0:
-#			advance_inventory[index] = item.data
-#		else:
-#			advance_inventory[index] = {}
-#	else:
-#		standard_inventory.set(item.type_uid,item.amount)
+##TODO: limit amount to max stack size.
+##NOTE: this can create half filled stack and might not be desired
+##so either checks and fillers are needed or this is reserve for
+##cases where checks are done before hand or when the desire approch
+##is not wanted.
+func set_item(item:Item,index:int = 0)->void:
+	if item.item_type as Extended_Item_Type:
+		var item_copy : Item = Item.load_item(item.data)
+		if advance_inventory.size() > index && index >= 0:
+			if item_copy.amount > 0:
+				advance_inventory[index] = item_copy
+			else:
+				advance_inventory.remove_at(index)
+		elif item_copy.amount > 0 && advance_inventory.size() == index:
+			advance_inventory.append(item_copy)
+		else:
+			print_debug('Index for set_item is out of bounds')
+			return
+		advance_inventory_changed.emit(index)
+		return
+	else:
+		standard_inventory.set(item.type_uid,item.amount)
+		standard_inventory_changed.emit(item.type_uid)
 #Note: item pass amount will be changed based on what is taken from it
 #so it will have an amount of 0 unless not all of the item was used up
 #so it may be better to pass a dupicate of the item if the item amount need
@@ -120,7 +161,7 @@ func add_item(new_item:Item)->void:
 					#slot_update.emit(self,0,item)
 			for new_slot in range(advance_inventory_size-advance_inventory.size()):
 				if remaining_amount > 0:
-					var new_item_stack : Item = Item.new(new_item.item_type)
+					var new_item_stack : Item = Item.load_item(new_item.data)#Item.new(new_item.item_type)
 					var new_amount = remaining_amount
 					if remaining_amount > item_type.max_stack_size:
 						new_amount = item_type.max_stack_size
@@ -194,26 +235,20 @@ func add_item(new_item:Item)->void:
 	
 
 func _reset_state() -> void:
-	#data.clear()
-	exit_data = Exit_Data.new()
-	scores = {}
-	positions = {}
-	position = Vector2.ZERO
-	facing = Vector2.ZERO
-	flags = []
+	_data.clear()
+	_data['_scores']={}
+	_data['_vars']={}
+	_data['_numbers']={}
+	_data['_vectors']={}
+	
+	exit_data.data.clear()
 	standard_inventory.clear()
 	advance_inventory.clear()
 	
 func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
-	var save_data : Dictionary[String,Variant]
-	save_data.set('exit_data',exit_data)
-	save_data.set('scores',scores)
-	save_data.set('positions',positions)
-	save_data.set('position',position)
-	save_data.set('facing',facing)
-	save_data.set('flags',flags)
-	
+	var save_data : Dictionary[String,Variant] = _data
+	save_data.set('exit_data',exit_data.data)
 	save_data.set('standard_inventory',standard_inventory)
 	var temp_adv_inv : Array[Dictionary]
 	for item in advance_inventory:
@@ -231,13 +266,8 @@ func get_save_data()->Dictionary[String,Variant]:
 #and load will load the pass data (if changed) and then notify
 #all that it is ready(aka loaded)
 func load_data(new_data:Dictionary[String,Variant]={})->void:
-	exit_data = new_data.get('exit_data',exit_data)
-	scores = new_data.get('scores',scores)
-	positions = new_data.get('positions',positions)
-	position = new_data.get('position', position)
-	facing = new_data.get('facing', facing)
-	flags = new_data.get('flags', flags)
-	
+	_data = new_data
+	exit_data.data = new_data.get('exit_data',exit_data.data)
 	standard_inventory = new_data.get('standard_inventory', standard_inventory)
 	var temp_adv_inv : Array[Dictionary] = new_data.get('advance_inventory', [] as Array[Dictionary])
 	for item_data in temp_adv_inv:

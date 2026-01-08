@@ -25,7 +25,8 @@ func _run(data:Action_State = null) -> bool:
 	if data.owner as Node2D:
 		var old_location : Vector2 = data.owner.global_position
 		if store_entry_point:
-			player_state.positions[entry_point_id+"_location"] = old_location
+			player_state.set_vector(entry_point_id+"_location",old_location)
+			#player_state.positions[entry_point_id+"_location"] = old_location
 		if (data.owner as Character2D):
 			player_state.exit_data.facing_direction = data.owner.facing_direction
 			player_state.exit_data.entry_velocity = data.owner.velocity

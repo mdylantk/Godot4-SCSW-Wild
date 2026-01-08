@@ -10,6 +10,64 @@ signal saving()
 ##called when data is finished being loaded.
 signal loaded()
 
+##Atempts to convert the pass array into a vector. Type represent the desire vector
+##where 0 or less will use the array size to guess it and 5 and above will return
+##the vector as a shallow copy. 1 will return it as a float or int base on the as_int
+##flag. as_int is used to consider if it a vectori or not. type 2 = Vector2,
+##type 3 = Vector3, type 4 = Vector4
+static func array_to_vector(vector_array:Array, type:int = 0, as_int:bool = false)->Variant:
+	var array = vector_array.duplicate()
+	if !array.is_empty():
+		if type <= 0:
+			type = array.size()
+		#make sure the array is the proper size for the next steps
+		#and replace all nulls with 0 for all cases of vector conversions
+		if array.size() < type:
+			for i in range(array.size()):
+				if array[i] == null:
+					if as_int:
+						array[i] = 0
+					else:
+						array[i] = 0.0
+		if type == 0:
+			return []
+		elif type == 1:
+			if as_int:
+				return float(array[0])
+			return int(array[0])
+		elif type == 2:
+			if as_int:
+				return Vector2i(array[0], array[1])
+			return Vector2(array[0], array[1])
+		elif type == 3:
+			if as_int:
+				return Vector3i(array[0], array[1],array[2])
+			return Vector3(array[0], array[1], array[2])
+		elif type == 4:
+			if as_int:
+				return Vector4i(array[0], array[1], array[2], array[3])
+			return Vector4(array[0], array[1], array[2], array[3])
+		else:
+			return array
+	return []
+	
+##Attemps to convert the vector into an array. It supports non-packed
+##vector types, int, float, and array(will return a shallow copy).
+static func vector_to_array(vector:Variant)->Array:
+	if typeof(vector) == TYPE_VECTOR2 || typeof(vector) == TYPE_VECTOR2I:
+		return [vector.x, vector.y]
+	if typeof(vector) == TYPE_VECTOR3 || typeof(vector) == TYPE_VECTOR3I:
+		return [vector.x, vector.y,vector.z]
+	if typeof(vector) == TYPE_VECTOR4 || typeof(vector) == TYPE_VECTOR4I:
+		return [vector.x, vector.y, vector.z, vector.w]
+	if typeof(vector) == TYPE_ARRAY:
+		#NOTE: this do not check the type
+		return vector.duplicate()
+	if typeof(vector) == TYPE_FLOAT || typeof(vector) == TYPE_INT:
+		return [vector]
+	return []
+
+
 ##this will set an id in metadata while also notifing it was changed
 func set_data(key: String, value: Variant) -> void:
 	var old_value = null
@@ -18,6 +76,11 @@ func set_data(key: String, value: Variant) -> void:
 	if old_value != value:
 		set_meta(key,value)
 		value_changed.emit(key, value, old_value)
+
+#NOTE: object meta could be used for the state, but
+#the state should handle it in a diffrent way.
+#The base stare has this as a way to be used
+#without extending it
 
 func is_meta_key_public(id:Variant)->bool:
 	if !(id.begins_with("_") || id.begins_with(".")):

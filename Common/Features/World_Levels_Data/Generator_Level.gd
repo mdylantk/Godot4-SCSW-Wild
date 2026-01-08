@@ -219,11 +219,11 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	var player_pos : Vector2
-	if (player_state.positions.has('world_location')):
-		player_pos = player_state.positions['world_location'] 
+	
+	if (player_state.has_vector('world_location')):
+		player_pos = player_state.get_vector('world_location',2,false)
+	#	player_pos = player_state.positions['world_location'] 
 	#var player_pos = Savedata_Helper.fetch_player_position(Player,"world")
-	if typeof(player_pos) == TYPE_VECTOR2:
-		pass
 		%Player.position = player_pos
 		#NOTE: Character state can store pos, but this one most likly will override it
 		#that is fine(if always the case) but this should be moved to a dedicated
