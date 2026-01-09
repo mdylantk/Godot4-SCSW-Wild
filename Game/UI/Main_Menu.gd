@@ -13,21 +13,37 @@ signal end_game()
 
 @export var default_focus : Array[Control]
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("Start"):
-		if visible && %Resume_Button.visible:
-			visible = false
-			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-			resume.emit()
+
+func escape()->void:
+	if visible && %Resume_Button.visible:
+		visible = false
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+		resume.emit()
 			#get_tree().paused = false
-			get_viewport().set_input_as_handled()
 			
-		else:
-			visible = true
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			pause.emit()
+	else:
+		visible = true
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		pause.emit()
 			#get_tree().paused = true
-			get_viewport().set_input_as_handled()
+
+#TODO: see about moving input to ui so
+#this can be more independent from the game setup
+#func _input(event: InputEvent) -> void:
+#	if event.is_action_pressed("Start"):
+#		if visible && %Resume_Button.visible:
+#			visible = false
+#			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+#			resume.emit()
+#			#get_tree().paused = false
+#			get_viewport().set_input_as_handled()
+#			
+#		else:
+#			visible = true
+#			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+#			pause.emit()
+#			#get_tree().paused = true
+#			get_viewport().set_input_as_handled()
 
 func _on_resume_button_pressed() -> void:
 	visible = false
@@ -85,6 +101,22 @@ func _ready() -> void:
 	_on_visibility_changed()
 
 func _on_visibility_changed() -> void:
+#	if visible:
+#		if %Resume_Button.visible:
+#			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+#			resume.emit()
+#			#NOTE: need to be false else a loop may happen
+#			#also can use resume to have the ui/game handle the visiblity
+#			visible = false
+#		if !default_focus.is_empty():
+#			for focus_object in default_focus:
+#				if focus_object.visible:
+#					focus_object.grab_focus()
+#					break
+#	else:
+#		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+#		pause.emit()
+		
 	if visible and !default_focus.is_empty():
 		for focus_object in default_focus:
 			if focus_object.visible:

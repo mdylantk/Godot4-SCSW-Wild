@@ -1,3 +1,4 @@
+##this is a test inventory for advance item and structure may change
 extends CanvasLayer
 
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
@@ -167,14 +168,15 @@ func _on_button_pressed() -> void:
 	
 func _on_visibility_changed() -> void:
 	if visible:
-		pass
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	else:
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 		if last_item_selected >= 0 && item_is_in_list(last_item_selected):
 			%ItemList.deselect(last_item_selected)
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed('Inventory'):
-		visible = !visible
+#func _input(event: InputEvent) -> void:
+#	if event.is_action_pressed('Inventory'):
+#		visible = !visible
 
 func _ready() -> void:
 	player_state.advance_inventory_changed.connect(on_advance_inventory_changed)
