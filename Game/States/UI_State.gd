@@ -27,6 +27,20 @@ signal show(id:String)
 #to hid a element
 signal hide(id:String)
 
+
+##The default mouse mode for interactive gui elements
+##Used to reset focus_mouse_mode if being manually overrided
+var default_mouse_mode:Input.MouseMode = Input.MOUSE_MODE_VISIBLE
+
+##The mouse mode for when the gui is not in focus.
+##The game should set this depending on the input type
+##also game should have a way to restore it to default.
+var unfocus_mouse_mode:Input.MouseMode = Input.MOUSE_MODE_HIDDEN
+
+##The mouse mode when the gui is in focus
+var focus_mouse_mode:Input.MouseMode = Input.MOUSE_MODE_VISIBLE
+
+
 ##states if the ui is in focus at all
 var ui_in_focus : bool = false
 #NOTE: not sure if this is used or from the old pause system
@@ -39,3 +53,13 @@ var enable_player_input :bool = true
 #should have its own state
 var fishing_game = null
 #var dialog = null
+
+##this will make sure the mouse mode is update
+##after changing unfocus_mouse_mode or focus_mouse_mode
+##NOTE: focus_mouse_mode is not meant to be change often
+##and may lead to undesire resualts if gui elements switch mouse modes
+func update_mouse_mode()->void:
+	if ui_in_focus:
+		Input.mouse_mode = focus_mouse_mode
+	else:
+		Input.mouse_mode = unfocus_mouse_mode

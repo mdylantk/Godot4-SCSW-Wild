@@ -1,5 +1,5 @@
 ##this is a test inventory for advance item and structure may change
-extends CanvasLayer
+extends Canvas_Menu
 
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
@@ -165,14 +165,25 @@ func _on_item_changed()->void:
 func _on_button_pressed() -> void:
 	var item_type = load('uid://db8k4softx2h4')
 	player_state.set_item(Item.new(item_type),1)
-	
+
+
+#func open()->void:
+#	super()
+	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+func close()->void:
+	super()
+	if last_item_selected >= 0 && item_is_in_list(last_item_selected):
+		%ItemList.deselect(last_item_selected)
+
 func _on_visibility_changed() -> void:
-	if visible:
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	else:
-		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-		if last_item_selected >= 0 && item_is_in_list(last_item_selected):
-			%ItemList.deselect(last_item_selected)
+	pass
+	#if visible:
+	#	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	#else:
+	#	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	#	if last_item_selected >= 0 && item_is_in_list(last_item_selected):
+	#		%ItemList.deselect(last_item_selected)
 
 #func _input(event: InputEvent) -> void:
 #	if event.is_action_pressed('Inventory'):

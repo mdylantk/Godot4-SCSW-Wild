@@ -66,7 +66,6 @@ visible = false
 unique_name_in_owner = true
 process_mode = 3
 layer = 20
-visible = false
 
 [node name="Credits_Menu" parent="." instance=ExtResource("9_6enyp")]
 unique_name_in_owner = true
@@ -85,10 +84,3 @@ unique_name_in_owner = true
 [connection signal="visibility_changed" from="HUD/Dialog" to="." method="_on_menu_visibility_changed"]
 [connection signal="visibility_changed" from="HUD/LoadingScreen" to="." method="_on_menu_visibility_changed"]
 [connection signal="visibility_changed" from="HUD/FishingPondMap" to="." method="_on_menu_visibility_changed"]
-[connection signal="request_focus_change" from="Main_Menu" to="." method="_on_main_menu_request_focus_change"]
-[connection signal="visibility_changed" from="Main_Menu" to="." method="_on_menu_visibility_changed"]
-[connection signal="close" from="Credits_Menu" to="." method="_on_submenu_close"]
-[connection signal="visibility_changed" from="Credits_Menu" to="." method="_on_menu_visibility_changed"]
-[connection signal="close" from="Options_Menu" to="." method="_on_submenu_close"]
-[connection signal="visibility_changed" from="Options_Menu" to="." method="_on_menu_visibility_changed"]
-[connection signal="visibility_changed" from="Cargo" to="." method="_on_menu_visibility_changed"]

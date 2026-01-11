@@ -6,6 +6,8 @@ extends CanvasLayer
 @export var world_state : World_State = load('uid://b047ftosxvj7p')
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
+var ui_message : String
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var debug := %Debug
@@ -24,6 +26,6 @@ func _process(delta: float) -> void:
 			#NOTE: this need to change with the new item system. was added with the old to get it working
 		#NOTE: may need player or game connect these to signal instead of a direct ref
 		#var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")
-
+		debug_text = debug_text + "\n" + ui_message
 
 		debug.text = debug_text

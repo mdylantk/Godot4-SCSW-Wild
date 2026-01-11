@@ -1,5 +1,5 @@
-extends CanvasLayer
-signal close(node:Node)
+extends Canvas_Menu
+#signal close(node:Node)
 
 @export var default_focus : Control
 @export var client_state : Client_State= load('uid://bnvrjjacwa30l')
@@ -43,7 +43,8 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if visible:
 		if event.is_action_pressed("Start") or event.is_action_pressed("Cancel"):
-			close.emit(self)
+			#close.emit(self)
+			close()
 			get_viewport().set_input_as_handled()
 
 
@@ -58,10 +59,17 @@ func _on_music_volume_slider_value_changed(value: float) -> void:
 	#config.save(Resources.client_settings_file)
 	#TODO: add a delay. like add this as a callable var if null and run it latter, nulling and saving the config
 		#Resources.save_settings(Resources.client_settings, Resources.client_settings_path)
-		
-func _on_visibility_changed() -> void:
-	if visible and default_focus != null:
+
+func open()->void:
+	super()
+	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if default_focus != null:
 		default_focus.grab_focus()
+
+func _on_visibility_changed() -> void:
+	pass
+	#if visible and default_focus != null:
+	#	default_focus.grab_focus()
 		#NOTE this is here since the ready order is not correct
 		#should try to add a signal path for notifing that it been loaded
 		#load_settings()

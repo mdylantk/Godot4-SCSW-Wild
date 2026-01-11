@@ -1,11 +1,16 @@
-class_name Main_Menu extends CanvasLayer
+class_name Main_Menu extends Canvas_Menu
 signal request_focus_change(id:String)
 
+#game signals
 signal resume()
 signal pause()
 signal new_game(id:String)
 signal load_game(id:String)
 signal end_game()
+
+#ui signals(for displaying submenus)
+signal options_pressed()
+signal credits_pressed()
 
 
 #@export var options_menu : Node
@@ -13,41 +18,33 @@ signal end_game()
 
 @export var default_focus : Array[Control]
 
-
-func escape()->void:
-	if visible && %Resume_Button.visible:
-		visible = false
-		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-		resume.emit()
-			#get_tree().paused = false
+#func escape()->void:
+#	if visible && %Resume_Button.visible:
+#		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+#		resume.emit()
 			
-	else:
-		visible = true
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		pause.emit()
-			#get_tree().paused = true
+func open()->void:
+	super()
+	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	pause.emit()
+	
+func close()->void:
+	super()
+	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	resume.emit()
 
-#TODO: see about moving input to ui so
-#this can be more independent from the game setup
-#func _input(event: InputEvent) -> void:
-#	if event.is_action_pressed("Start"):
-#		if visible && %Resume_Button.visible:
-#			visible = false
-#			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-#			resume.emit()
-#			#get_tree().paused = false
-#			get_viewport().set_input_as_handled()
-#			
-#		else:
-#			visible = true
-#			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-#			pause.emit()
-#			#get_tree().paused = true
-#			get_viewport().set_input_as_handled()
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("Start"):
+		if visible && %Resume_Button.visible:
+			close()
+			get_viewport().set_input_as_handled()
+
 
 func _on_resume_button_pressed() -> void:
 	visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	close()
 	resume.emit()
 	#get_tree().paused = false
 	print_debug("resume pressed")
@@ -65,12 +62,14 @@ func _on_new_game_button_pressed() -> void:
 	%New_Game_Button.visible = false
 	%Continue_Button.visible = false
 	#%HomePoint.visible = true
-	
+	close()
 	new_game.emit()
 
 func _on_options_button_pressed() -> void:
 	print_debug("options pressed")
-	request_focus_change.emit("options")
+	#request_focus_change.emit("options")
+	close()
+	options_pressed.emit()
 	#options_menu.visible = true
 
 
@@ -82,7 +81,9 @@ func _on_exit_button_pressed() -> void:
 
 func _on_credits_button_pressed() -> void:
 	print_debug("credits pressed")
-	request_focus_change.emit("credits")
+	#request_focus_change.emit("credits")
+	close()
+	credits_pressed.emit()
 	#credits_menu.visible = true
 
 
@@ -95,6 +96,7 @@ func _on_continue_button_pressed() -> void:
 	%Resume_Button.visible = true
 	%Continue_Button.visible = false
 	%New_Game_Button.visible = false
+	close()
 	load_game.emit("Default")
 
 func _ready() -> void:

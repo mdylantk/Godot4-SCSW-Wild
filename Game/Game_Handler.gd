@@ -208,6 +208,7 @@ func on_menu_pause()->void:
 func on_menu_resume()->void:
 	_pause_state &= ~Pause_States.USER_PAUSED
 	
+	
 func on_menu_new_game(id:String="default")->void:
 	start_game(true, id)
 	state.new_game_event.emit(state.get_save_path())

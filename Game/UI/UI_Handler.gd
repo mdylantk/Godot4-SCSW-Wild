@@ -62,29 +62,66 @@ signal ui_focus(disable_other_input:bool)
 ##player contoller will nopt process the input
 @export var enable_player_input : bool = true
 
+var focus_menu : Canvas_Menu 
+
 func send_notifcation(message:String):
 	gui_notify.add_notify_message("[center]"+message)
 
-#NOTE: this fine if menu is ment to be reused, but also
-#the main menu may be better if it have the other memebers as children
-#and just signal up if need UI to do somothing that can not be handled
-#by watching main menu visibilty
-func _on_main_menu_request_focus_change(id: String) -> void:
-	%Main_Menu.visible = false
-	match id:
-		"options":
-			%Options_Menu.visible = true
-		"credits":
-			%Credits_Menu.visible = true
+func change_menu(new_menu:CanvasLayer):
+	var old_menu : Canvas_Menu = focus_menu
+	if old_menu == new_menu:
+		return
+	focus_menu = new_menu
+	if old_menu:
+		old_menu.close()
+	if new_menu:
+		new_menu.open()
+		state.ui_in_focus = true
+		#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	else:
+		state.ui_in_focus = false
+		#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	state.update_mouse_mode()
 
+#this is a failsafe since the current system require a certain call order
+#and this will get the menu that is visible base on importaince
+#so call order would not be as importaint as long as this is called
+#instead
+#NOTE: this may be useful instead of calling null
+#since it allow it to check if any menu is still visible
+func get_visible_menu()->Node:
+	if %Main_Menu.visible:
+		return %Main_Menu
+	if %Cargo.visible:
+		return %Cargo
+	if %Options_Menu.visible:
+		return %Options_Menu
+	if %Credits_Menu.visible:
+		return %Credits_Menu
+	return null
+		
+func _on_main_menu_close() -> void:
+	#if focus_menu == %Main_Menu:
+	#	change_menu(null)
+	change_menu(get_visible_menu())
 
+func _on_submenu_close() -> void:
+	change_menu(%Main_Menu)
+	#change_menu(get_visible_menu())
 
-func _on_submenu_close(node: Node) -> void:
-	%Main_Menu.visible = true
-	node.visible = false
+func _on_options_pressed()->void:
+	change_menu(%Options_Menu)
+
+func _on_credits_pressed()->void:
+	change_menu(%Credits_Menu)
 
 ##called when a menu(that overrides player input) visibilty change.
 func _on_menu_visibility_changed() -> void:
+	#NOTE: This is still needed for
+	#the fishing and dialog.
+	#dialog could use the logic from menu_layer
+	#but fishing is its own thing. so need to decided 
+	#on how to handle fishing for the new set up
 	state.ui_in_focus = (
 		%Dialog.visible or
 		%FishingPondMap.visible or 
@@ -99,60 +136,47 @@ func _on_menu_visibility_changed() -> void:
 		#changed all at once. That would allow they check only need to check
 		#dyanmic elements(fishing and dialog), menu, and loading screen
 
+
 func _ready() -> void:
 	
 	state.send_notifcation.connect(send_notifcation)
 	state.fishing_game = fishing_game
 	#state.dialog = gui_dialog
 	
-	_on_menu_visibility_changed()
-	#TODO: try to let the game handler handle tree events such as pausing
-	#this could read the tree if needing to know if paused if needed
-	#the current scene should handle the UI state for cases where the UI dirves
-	#the gameloop (aka start menu. main menu deviation should happpen because of
-	#the start scene instead of solving it in the UI
-	#get_tree().paused = true
-	%Main_Menu.visible = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	pass
-	
+	#_on_menu_visibility_changed()
+	change_menu(%Main_Menu)
+	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	%Main_Menu.options_pressed.connect(_on_options_pressed)
+	%Main_Menu.credits_pressed.connect(_on_credits_pressed)
+	%Main_Menu.closed.connect(_on_main_menu_close)
+	%Credits_Menu.closed.connect(_on_submenu_close)
+	%Options_Menu.closed.connect(_on_submenu_close)
 
 func _input(event: InputEvent) -> void:
-	#NOTE: need to try to have input shortcut and other
-	#menu triggers someplace here if only one can be in focus
-	#so if inventory is open, menu can open above it.
-	#this might be desired, but also one might want to close
-	#the inventory when the menu is open (also would allow esc
-	#to close the inventory since esc is reserve for the menu)
-	#NOTE: it be bad to use _on_menu_visibility_changed() to force close
-	#ui that is connected to it. so it be better if it communicate up when
-	#it want to close or open. _on_menu_visibility_changed() can be kept
-	#to make sure the focus state is correct, but need to not depend on visiblty
-	#signal for deciding of other menus should be visible (or at least not in 
-	#this class)
+	
 	if event.is_action_pressed('Inventory'):
 		if state.ui_in_focus and %Cargo.visible:
-			%Cargo.visible = false
+			#change_menu(null)
+			#doing this way since it is closing it
+			#it a bit extra, but could help if it ever allowed
+			#to lay over another menu(unlikly ik)
+			#NOTE: the menu should close itself and this input
+			#should be for opening it in most cases
+			%Cargo.close()
+			change_menu(get_visible_menu())
 			get_viewport().set_input_as_handled()
 		elif !state.ui_in_focus:
-			%Cargo.visible = true
+			change_menu(%Cargo)
 			get_viewport().set_input_as_handled()
+			
 	if event.is_action_pressed("Start"):
-		if (state.ui_in_focus and %Main_Menu.visible) or !state.ui_in_focus:
-			#TODO: need a var for menus that allow main menu to upen
-			#But that may be unessary. can handle escape in those menus
-			#as a way to pause if needed. could give then a signal
-			#so they can talk up and ask for the menu.
-			#TODO: should try to handle mouse visiblity in ui or game and
-			#not child or at least they should not hide it when not visible
-			#the game should capture the mouse state before ui gain focus
-			#Then use that capture to restore the mouse.
-			%Main_Menu.escape()
+		if !state.ui_in_focus:
+			change_menu(%Main_Menu)
 			get_viewport().set_input_as_handled()
-		elif (state.ui_in_focus and %Cargo.visible) or !state.ui_in_focus:
-			#%Cargo.escape()
-			%Cargo.visible = false
-			get_viewport().set_input_as_handled()
+		#elif state.ui_in_focus and %Main_Menu.visible:
+		#	focus_menu = null
+		#	get_viewport().set_input_as_handled()
+
 
 #TODO: try not to ref handler in UI. currenly only for tests and debug
 #if need to ref an handler, can move the logic to a child ideally one that
@@ -176,3 +200,7 @@ func _process(_delta):
 			#but then there need signals or direct calls to set that and world loading
 			#not as simple
 			#NOTE: by checking four corner point, boader loading cases could be solved
+	if focus_menu:
+		$DebugHUD.ui_message = 'focus: ' + focus_menu.name + ' : ' + str(state.ui_in_focus)
+	else:
+		$DebugHUD.ui_message = 'focus: ' + str(focus_menu) + str(state.ui_in_focus)
