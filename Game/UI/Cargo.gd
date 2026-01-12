@@ -167,11 +167,11 @@ func _on_button_pressed() -> void:
 	player_state.set_item(Item.new(item_type),1)
 
 
-#func open()->void:
+#func start()->void:
 #	super()
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-func close()->void:
+func end()->void:
 	super()
 	if last_item_selected >= 0 && item_is_in_list(last_item_selected):
 		%ItemList.deselect(last_item_selected)

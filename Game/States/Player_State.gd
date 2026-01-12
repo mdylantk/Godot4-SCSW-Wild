@@ -159,9 +159,10 @@ func add_item(new_item:Item)->void:
 					#inventory_modified = true
 					#advance_inventory_changed.emit(item_slot)
 					#slot_update.emit(self,0,item)
+					print_debug('MEOW1 remaining: ', item.amount,' ', advance_inventory.get(item_slot).amount)
 			for new_slot in range(advance_inventory_size-advance_inventory.size()):
 				if remaining_amount > 0:
-					var new_item_stack : Item = Item.load_item(new_item.data)#Item.new(new_item.item_type)
+					var new_item_stack : Item = Item.load_item(new_item.data,true)
 					var new_amount = remaining_amount
 					if remaining_amount > item_type.max_stack_size:
 						new_amount = item_type.max_stack_size
@@ -177,6 +178,7 @@ func add_item(new_item:Item)->void:
 					#inventory_modified = true
 					advance_inventory_changed.emit(advance_inventory.size()-1)
 					#slot_update.emit(self,inventory.size()-1,new_item_stack)
+					print_debug('MEOW2 amount: ', new_item_stack.amount,' ',advance_inventory.get(advance_inventory.size()-1).amount)
 				else:
 					break
 		elif remaining_amount < 0:
@@ -210,6 +212,7 @@ func add_item(new_item:Item)->void:
 		new_item.amount = remaining_amount
 		#if inventory_modified:
 		#	advance_inventory_changed.emit()
+		print_debug('MEOW3 remaining: ', new_item.amount)
 	else:
 		#would need to store the non object ref to make saving/loading easier
 		var old_amount : int = standard_inventory.get(new_item.type_uid,0)

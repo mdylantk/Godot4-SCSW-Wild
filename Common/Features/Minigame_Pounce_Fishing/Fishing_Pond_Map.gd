@@ -1,4 +1,4 @@
-class_name Fishing_Pond_Map extends TileMap
+class_name Fishing_Pond_Map extends Canvas_Scene
 
 #TODO: this whole system may need to be rebuilt. the logic is split between two
 #spots where this handles the ai, rendering, and input while the other kind of handles
@@ -57,8 +57,16 @@ func running_changed():
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	#TODO: handle player input diffrently either use a signal or something built in
 	ui_state.enable_player_input = !running
-	for layer_id in get_layers_count():
-		set_layer_enabled(layer_id,running)
+	#for layer_id in get_layers_count():
+		
+	#	set_layer_enabled(layer_id,running)
+	%Ground.enabled = running
+	%"Common Fish".enabled = running
+	%"Uncommon Fish".enabled = running
+	%"Rare Fish".enabled = running
+	#TODO: try to use open() and close() from canvas_scene
+	#this would make it easier to listen to without guessing
+	#why visiblity was changed
 	visible = running
 
 func pause():
@@ -75,7 +83,9 @@ func resume():
 #TODO: look to see how to make start and resume to be diffrent
 #func start():
 #	fish_update()
-	
+
+#NOTE: This is overriding canvas scene end(). could add super()
+#but will need to make sure it wont break it
 func end():
 	clear_fish()
 	mouse_state = -1
@@ -85,7 +95,8 @@ func cancel():
 	end()
 
 func get_water_coords() -> Array[Vector2i]:
-	return get_used_cells_by_id(0, -1, water_atlas_coords)
+	return %Ground.get_used_cells_by_id(-1, water_atlas_coords)
+	#return get_used_cells_by_id(0, -1, water_atlas_coords)
 
 func fish_update():
 	if running : return #this should only one once
@@ -104,19 +115,32 @@ func fish_update():
 		#await Timers.sleep(fish_update_rate)
 		await get_tree().create_timer(fish_update_rate,false).timeout
 
+func get_tilemap_layer(index:int)->TileMapLayer:
+	match index:
+		0:
+			return %Ground
+		1:
+			return %"Common Fish"
+		2: 
+			return %"Uncommon Fish"
+		3:
+			return %"Rare Fish"
+	return null
+
 func move_fish(fish_data:Dictionary):
 	if fish_data["move_rate"] >= randf():
 		var coords = fish_data["coords"]
 		var atlas_coords = fish_data["atlas_coords"]
 		var layer = fish_data["layer"]
-		var nearby_tiles = get_surrounding_cells(coords)
+		var nearby_tiles = %Ground.get_surrounding_cells(coords)
 		nearby_tiles.shuffle()
 		while !nearby_tiles.is_empty():
 			var picked_coord = nearby_tiles.pop_back()
-			var picked_tile = get_cell_atlas_coords(0, picked_coord)
+			var picked_tile = %Ground.get_cell_atlas_coords(picked_coord)
 			if picked_tile == water_atlas_coords:
-				set_cell(layer,coords,-1)
-				set_cell(layer,picked_coord, 0, atlas_coords)
+				var tilemap_layer := get_tilemap_layer(layer)
+				tilemap_layer.set_cell(coords,-1)
+				tilemap_layer.set_cell(picked_coord, 0, atlas_coords)
 				fish_data["coords"] = picked_coord
 				return
 				
@@ -125,6 +149,7 @@ func move_fish(fish_data:Dictionary):
 func add_fish(coords:Vector2i, atlas_coords:Vector2i = default_fish_atlas_coords,
 	layer:int = 1, data:Dictionary = {}
 	):
+	
 	var fish_data = {
 		"coords":coords,
 		"atlas_coords":atlas_coords,
@@ -137,13 +162,15 @@ func add_fish(coords:Vector2i, atlas_coords:Vector2i = default_fish_atlas_coords
 		fish_data[key] = data[key]
 		
 	active_fish.append(fish_data)
-	set_cell(fish_data["layer"],fish_data["coords"], 0, fish_data["atlas_coords"])
+	var tilemap_layer := get_tilemap_layer(fish_data["layer"])
+	tilemap_layer.set_cell(fish_data["coords"], 0, fish_data["atlas_coords"])
 
 func clear_fish():
 	for fish in active_fish:
 		var coords = fish["coords"]
 		var layer = fish["layer"]
-		set_cell(layer,coords,-1)
+		var tilemap_layer := get_tilemap_layer(layer)
+		tilemap_layer.set_cell(coords,-1)
 	active_fish.clear()
 	running = false
 
@@ -196,11 +223,12 @@ func catch_fish(coords:Vector2i):
 	for index in range(vaild_coords.size()):
 		#print(index)
 		var picked_coords = coords + vaild_coords[index]
-		var picked_tile = get_cell_atlas_coords(0, picked_coords)
+		var picked_tile = %Ground.get_cell_atlas_coords(picked_coords)
 		if picked_tile == water_atlas_coords:
-			for layer in get_layers_count():
+			for layer in range(4):
+				var tilemap_layer := get_tilemap_layer(layer)
 				if layer > 0:
-					var fish = get_cell_atlas_coords(layer, picked_coords)
+					var fish = tilemap_layer.get_cell_atlas_coords(picked_coords)
 				#TODO: could look for fish and check it. then if fish cought
 				#loop the active fish untill vaild fish is found
 					if fish != Vector2i(-1,-1):
@@ -242,7 +270,7 @@ func _input(event:InputEvent):
 				get_viewport().set_input_as_handled()
 			elif event.is_released() and mouse_state == 2:
 				mouse_state = 3
-				catch_fish(local_to_map(cursor.position))
+				catch_fish(%Ground.local_to_map(cursor.position))
 				get_viewport().set_input_as_handled()
 				cursor.value = 0#cursor.min_value
 			elif event.is_released() and mouse_state < 0:
@@ -260,7 +288,7 @@ func _input(event:InputEvent):
 			#cursor.position = cursor_coord
 
 func update_cursor_position(new_position : Vector2):
-	var local_player_coords = map_to_local(player_coords)
+	var local_player_coords = %Ground.map_to_local(player_coords)
 	var vector_from_player: Vector2 = new_position - local_player_coords
 	var max_length = fishing_distance*16
 			

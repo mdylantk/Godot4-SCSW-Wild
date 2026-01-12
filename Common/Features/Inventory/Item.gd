@@ -128,8 +128,15 @@ static func create_item(type:Item_Type)->Item:
 	#new_item.item_type = type
 
 ##returns a new item from the provided data
-static func load_item(new_data:Dictionary[String,Variant]):
-	return Item.new(null, new_data)
+##if is copy, then the data pass will be duplicated
+##(as well as other things that would make it a proper copy)
+static func load_item(new_data:Dictionary[String,Variant],is_copy:bool = false):
+	var new_item = Item.new()
+	if is_copy:
+		new_item.data = new_data.duplicate(true)
+	else:
+		new_item.data = new_data
+	return new_item
 	
 func is_same_item(other_item:Item)->bool:
 	#may be able to compare uid instead so load is not used
@@ -206,12 +213,7 @@ func set_metadata(key:String,value:Variant)->void:
 	#	if meta_id.begins_with('meta_'):
 	#		var meta : String = meta_id.trim_prefix('meta_')
 	#		set_meta(meta, data[meta_id])
-##Either pass item_type or item data as a dictionary.
-##otherwise data will override item_type 
-##Item.create_item and Item.load_item are the dedicated way to make a new item
-func _init(_item_type: Item_Type = item_type, new_data:Dictionary[String,Variant] = {} ) -> void:
-	if new_data.is_empty():
+
+
+func _init(_item_type: Item_Type = item_type) -> void:
 		item_type = _item_type
-	else:
-		data = new_data
-		#load_from_dict(new_data)

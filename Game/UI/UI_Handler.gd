@@ -73,15 +73,16 @@ func change_menu(new_menu:Canvas_Scene ):
 		return
 	focus_menu = new_menu
 	if old_menu:
-		old_menu.close()
+		old_menu.end()
 	if new_menu:
-		new_menu.open()
+		new_menu.start()
 		state.ui_in_focus = true
 		#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	else:
 		state.ui_in_focus = false
 		#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	state.update_mouse_mode()
+	ui_focus.emit(state.ui_in_focus)
 
 #this is a failsafe since the current system require a certain call order
 #and this will get the menu that is visible base on importaince
@@ -99,7 +100,7 @@ func get_visible_menu()->Node:
 	if %Credits_Menu.visible:
 		return %Credits_Menu
 	return null
-		
+	
 func _on_main_menu_close() -> void:
 	#if focus_menu == %Main_Menu:
 	#	change_menu(null)
@@ -148,15 +149,15 @@ func _ready() -> void:
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	%Main_Menu.options_pressed.connect(_on_options_pressed)
 	%Main_Menu.credits_pressed.connect(_on_credits_pressed)
-	%Main_Menu.closed.connect(_on_main_menu_close)
-	%Credits_Menu.closed.connect(_on_submenu_close)
-	%Options_Menu.closed.connect(_on_submenu_close)
+	%Main_Menu.ended.connect(_on_main_menu_close)
+	%Credits_Menu.ended.connect(_on_submenu_close)
+	%Options_Menu.ended.connect(_on_submenu_close)
 
 func _input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed('Inventory'):
 		if state.ui_in_focus and %Cargo.visible:
-			%Cargo.close()
+			%Cargo.end()
 			change_menu(get_visible_menu())
 			get_viewport().set_input_as_handled()
 		elif !state.ui_in_focus:

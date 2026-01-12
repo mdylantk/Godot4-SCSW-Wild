@@ -25,10 +25,6 @@ script = ExtResource("1_htxbl")
 editor_description = "This is just a container for all the gui. The main goal is to keep elemets scale to the window."
 layer = 10
 
-[node name="Dialog" parent="HUD" instance=ExtResource("2_0wofj")]
-unique_name_in_owner = true
-visible = false
-
 [node name="Score" parent="HUD" instance=ExtResource("3_qtng4")]
 unique_name_in_owner = true
 visible = false
@@ -57,7 +53,13 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("AtlasTexture_wsma3")
 
-[node name="FishingPondMap" parent="HUD" instance=ExtResource("7_531g0")]
+[node name="Widgets" type="CanvasLayer" parent="."]
+
+[node name="Dialog" parent="Widgets" instance=ExtResource("2_0wofj")]
+unique_name_in_owner = true
+visible = false
+
+[node name="FishingPondMap" parent="Widgets" instance=ExtResource("7_531g0")]
 unique_name_in_owner = true
 process_mode = 1
 visible = false
@@ -80,6 +82,6 @@ process_mode = 3
 unique_name_in_owner = true
 process_mode = 3
 
-[connection signal="visibility_changed" from="HUD/Dialog" to="." method="_on_menu_visibility_changed"]
 [connection signal="visibility_changed" from="HUD/LoadingScreen" to="." method="_on_menu_visibility_changed"]
-[connection signal="visibility_changed" from="HUD/FishingPondMap" to="." method="_on_menu_visibility_changed"]
+[connection signal="visibility_changed" from="Widgets/Dialog" to="." method="_on_menu_visibility_changed"]
+[connection signal="visibility_changed" from="Widgets/FishingPondMap" to="." method="_on_menu_visibility_changed"]

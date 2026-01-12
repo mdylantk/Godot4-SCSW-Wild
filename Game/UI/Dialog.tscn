@@ -16,11 +16,19 @@ region = Rect2(816, 255, 16, 16)
 atlas = ExtResource("2_xduuh")
 region = Rect2(442, 170, 16, 16)
 
-[node name="Dialog" type="CanvasLayer"]
+[node name="Dialog" type="Control"]
 process_mode = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_le745")
+metadata/_custom_type_script = "uid://coh1abp5m41eo"
 
 [node name="NinePatchRect2" type="NinePatchRect" parent="."]
+layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -38,6 +46,7 @@ patch_margin_right = 8
 patch_margin_bottom = 8
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -55,6 +64,7 @@ patch_margin_right = 4
 patch_margin_bottom = 4
 
 [node name="Name" type="RichTextLabel" parent="."]
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -70,6 +80,7 @@ fit_content = true
 autowrap_mode = 0
 
 [node name="Text" type="RichTextLabel" parent="."]
+layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -85,6 +96,7 @@ bbcode_enabled = true
 text = "test"
 
 [node name="Icon" type="TextureRect" parent="."]
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0

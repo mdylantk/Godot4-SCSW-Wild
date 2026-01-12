@@ -23,7 +23,7 @@ signal credits_pressed()
 #		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 #		resume.emit()
 			
-func open()->void:
+func start()->void:
 	super()
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	pause.emit()
@@ -33,7 +33,7 @@ func open()->void:
 				focus_object.grab_focus()
 				break
 	
-func close()->void:
+func end()->void:
 	super()
 	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	resume.emit()
@@ -42,14 +42,14 @@ func close()->void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Start"):
 		if visible && %Resume_Button.visible:
-			close()
+			end()
 			get_viewport().set_input_as_handled()
 
 
 func _on_resume_button_pressed() -> void:
 	visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	close()
+	end()
 	resume.emit()
 	#get_tree().paused = false
 	print_debug("resume pressed")
@@ -67,13 +67,13 @@ func _on_new_game_button_pressed() -> void:
 	%New_Game_Button.visible = false
 	%Continue_Button.visible = false
 	#%HomePoint.visible = true
-	close()
+	end()
 	new_game.emit()
 
 func _on_options_button_pressed() -> void:
 	print_debug("options pressed")
 	#request_focus_change.emit("options")
-	close()
+	end()
 	options_pressed.emit()
 	#options_menu.visible = true
 
@@ -87,7 +87,7 @@ func _on_exit_button_pressed() -> void:
 func _on_credits_button_pressed() -> void:
 	print_debug("credits pressed")
 	#request_focus_change.emit("credits")
-	close()
+	end()
 	credits_pressed.emit()
 	#credits_menu.visible = true
 
@@ -101,5 +101,5 @@ func _on_continue_button_pressed() -> void:
 	%Resume_Button.visible = true
 	%Continue_Button.visible = false
 	%New_Game_Button.visible = false
-	close()
+	end()
 	load_game.emit("Default")

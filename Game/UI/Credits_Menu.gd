@@ -23,7 +23,7 @@ func _input(event: InputEvent) -> void:
 	if visible:
 		if event.is_action_pressed("Start") or event.is_action_pressed("Cancel"):
 			#close.emit()
-			close()
+			end()
 			get_viewport().set_input_as_handled()
 
 
@@ -36,14 +36,14 @@ func _process(_delta: float) -> void:
 		current_line = mini(maxi(int(current_line + scroll_amount),0),%Credits_Text.get_line_count())
 		%Credits_Text.scroll_to_line(current_line)
 
-func open()->void:
+func start()->void:
 	load_text()
 	super()
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	%Credits_Text.grab_focus()
 	set_process(true)
 
-func close()->void:
+func end()->void:
 	current_line = 0
 	%Credits_Text.scroll_to_line(current_line)
 	super()

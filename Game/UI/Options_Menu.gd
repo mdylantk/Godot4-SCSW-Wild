@@ -44,7 +44,7 @@ func _input(event: InputEvent) -> void:
 	if visible:
 		if event.is_action_pressed("Start") or event.is_action_pressed("Cancel"):
 			#close.emit(self)
-			close()
+			end()
 			get_viewport().set_input_as_handled()
 
 
@@ -60,7 +60,7 @@ func _on_music_volume_slider_value_changed(value: float) -> void:
 	#TODO: add a delay. like add this as a callable var if null and run it latter, nulling and saving the config
 		#Resources.save_settings(Resources.client_settings, Resources.client_settings_path)
 
-func open()->void:
+func start()->void:
 	super()
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if default_focus != null:

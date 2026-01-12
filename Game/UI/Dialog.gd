@@ -1,28 +1,11 @@
-class_name Dialog_Handler extends CanvasLayer
-signal started()
-signal ended(canceled)
+class_name Dialog_Handler extends Canvas_Scene
 
-#TODO: should use tts_pause() and resume, but need to be notified
-#that the game is paused
-#due to menu may use tts, then this may need to have a way to store
-#the state of the tts text it is handling. It may be better to have a pause
-#dialog independent of the game pause menu or just add a replay tts
-#button to repeat
-#also could treat tts similar to the button action and use a callable
-#though this is more useful for voice over instead of tts
+#signal started()
+#signal ended(canceled)
 
-#TODO: move most of this to a dialog state and have this listen and update
-#it. generally a single state is all that needed so I might not handle 
-#swapping it out at run time (though that is a possibilty, but extra work)
 @export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
 @export var state : Dialog_State = load('uid://ckldc286fg63p')
-#NOTE: TODO: should try to not have the dialog ui/handler nor
-#the dialog state depend on the action system
-#should try to push another system like the interactive componet
-#that will keep it active as longs as the conditions are correct
-#(but if only the interaction system, bugs can happen. so need to make
-#sure end conditions are managed and it get forced cleared if source is
-#being freed from memory
+
 ##action to run if about to end dialog
 var cancel_action : Base_Action
 ##acttion to run if about to finish dialog
@@ -119,7 +102,7 @@ func cancel():
 	speak_text()
 	ui_state.enable_player_input = true
 	visible = false
-	ended.emit(true)
+#	ended.emit(true)
 	#NOTE: there is a canceled signal in state
 	#that is reserved for the button press case
 	#that should be handled by the listerner
@@ -134,7 +117,7 @@ func finish():
 	ui_state.enable_player_input = true
 	print_debug("finished")
 	visible = false
-	ended.emit(false)
+#	ended.emit(false)
 	state.ended.emit(false)
 	state.accept_task.call()
 	#if accept_action != null:

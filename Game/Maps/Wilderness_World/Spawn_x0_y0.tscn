@@ -46,7 +46,6 @@ amount = 999
 [sub_resource type="Resource" id="Resource_7dgfp"]
 script = ExtResource("14_gnhg2")
 item = SubResource("Resource_d6o4d")
-use_copy = false
 
 [sub_resource type="Resource" id="Resource_6kvcv"]
 script = ExtResource("7_qdaw7")
