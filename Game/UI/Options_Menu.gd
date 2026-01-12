@@ -1,4 +1,4 @@
-extends Canvas_Menu
+extends Canvas_Scene
 #signal close(node:Node)
 
 @export var default_focus : Control

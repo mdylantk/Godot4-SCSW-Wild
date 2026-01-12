@@ -62,24 +62,23 @@ unique_name_in_owner = true
 process_mode = 1
 visible = false
 
-[node name="Main_Menu" parent="." instance=ExtResource("8_ufq3w")]
-unique_name_in_owner = true
-process_mode = 3
-layer = 20
-
-[node name="Credits_Menu" parent="." instance=ExtResource("9_6enyp")]
-unique_name_in_owner = true
-layer = 30
-
-[node name="Options_Menu" parent="." instance=ExtResource("11_3jetq")]
-unique_name_in_owner = true
-process_mode = 3
-layer = 30
-
 [node name="DebugHUD" parent="." instance=ExtResource("11_r8uiu")]
 
-[node name="Cargo" parent="." instance=ExtResource("12_ify41")]
+[node name="Menus" type="CanvasLayer" parent="."]
+
+[node name="Cargo" parent="Menus" instance=ExtResource("12_ify41")]
 unique_name_in_owner = true
+
+[node name="Credits_Menu" parent="Menus" instance=ExtResource("9_6enyp")]
+unique_name_in_owner = true
+
+[node name="Options_Menu" parent="Menus" instance=ExtResource("11_3jetq")]
+unique_name_in_owner = true
+process_mode = 3
+
+[node name="Main_Menu" parent="Menus" instance=ExtResource("8_ufq3w")]
+unique_name_in_owner = true
+process_mode = 3
 
 [connection signal="visibility_changed" from="HUD/Dialog" to="." method="_on_menu_visibility_changed"]
 [connection signal="visibility_changed" from="HUD/LoadingScreen" to="." method="_on_menu_visibility_changed"]

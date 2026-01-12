@@ -1,4 +1,4 @@
-class_name Main_Menu extends Canvas_Menu
+class_name Main_Menu extends Canvas_Scene
 signal request_focus_change(id:String)
 
 #game signals
@@ -27,6 +27,11 @@ func open()->void:
 	super()
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	pause.emit()
+	if visible and !default_focus.is_empty():
+		for focus_object in default_focus:
+			if focus_object.visible:
+				focus_object.grab_focus()
+				break
 	
 func close()->void:
 	super()
@@ -98,29 +103,3 @@ func _on_continue_button_pressed() -> void:
 	%New_Game_Button.visible = false
 	close()
 	load_game.emit("Default")
-
-func _ready() -> void:
-	_on_visibility_changed()
-
-func _on_visibility_changed() -> void:
-#	if visible:
-#		if %Resume_Button.visible:
-#			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-#			resume.emit()
-#			#NOTE: need to be false else a loop may happen
-#			#also can use resume to have the ui/game handle the visiblity
-#			visible = false
-#		if !default_focus.is_empty():
-#			for focus_object in default_focus:
-#				if focus_object.visible:
-#					focus_object.grab_focus()
-#					break
-#	else:
-#		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-#		pause.emit()
-		
-	if visible and !default_focus.is_empty():
-		for focus_object in default_focus:
-			if focus_object.visible:
-				focus_object.grab_focus()
-				break

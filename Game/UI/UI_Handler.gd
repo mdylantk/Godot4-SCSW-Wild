@@ -62,13 +62,13 @@ signal ui_focus(disable_other_input:bool)
 ##player contoller will nopt process the input
 @export var enable_player_input : bool = true
 
-var focus_menu : Canvas_Menu 
+var focus_menu : Canvas_Scene 
 
 func send_notifcation(message:String):
 	gui_notify.add_notify_message("[center]"+message)
 
-func change_menu(new_menu:CanvasLayer):
-	var old_menu : Canvas_Menu = focus_menu
+func change_menu(new_menu:Canvas_Scene ):
+	var old_menu : Canvas_Scene = focus_menu
 	if old_menu == new_menu:
 		return
 	focus_menu = new_menu
@@ -156,12 +156,6 @@ func _input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed('Inventory'):
 		if state.ui_in_focus and %Cargo.visible:
-			#change_menu(null)
-			#doing this way since it is closing it
-			#it a bit extra, but could help if it ever allowed
-			#to lay over another menu(unlikly ik)
-			#NOTE: the menu should close itself and this input
-			#should be for opening it in most cases
 			%Cargo.close()
 			change_menu(get_visible_menu())
 			get_viewport().set_input_as_handled()
@@ -173,9 +167,6 @@ func _input(event: InputEvent) -> void:
 		if !state.ui_in_focus:
 			change_menu(%Main_Menu)
 			get_viewport().set_input_as_handled()
-		#elif state.ui_in_focus and %Main_Menu.visible:
-		#	focus_menu = null
-		#	get_viewport().set_input_as_handled()
 
 
 #TODO: try not to ref handler in UI. currenly only for tests and debug

@@ -1,5 +1,5 @@
 ##this is a test inventory for advance item and structure may change
-extends Canvas_Menu
+extends Canvas_Scene
 
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 

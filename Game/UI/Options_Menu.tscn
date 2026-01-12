@@ -7,13 +7,19 @@
 atlas = ExtResource("1_v72jc")
 region = Rect2(816, 357, 16, 16)
 
-[node name="Options_Menu" type="CanvasLayer" node_paths=PackedStringArray("default_focus")]
-layer = 11
+[node name="Options_Menu" type="Control" node_paths=PackedStringArray("default_focus")]
 visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_8csky")
 default_focus = NodePath("GridContainer/Music_Volume_Slider")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -26,6 +32,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -42,6 +49,7 @@ patch_margin_right = 8
 patch_margin_bottom = 8
 
 [node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
 anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5

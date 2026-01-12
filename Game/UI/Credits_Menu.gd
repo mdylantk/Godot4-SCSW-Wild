@@ -1,4 +1,4 @@
-extends Canvas_Menu
+extends Canvas_Scene
 #signal close(node:Node)
 
 var current_line : int = 0 

@@ -8,12 +8,19 @@
 atlas = ExtResource("1_dlif6")
 region = Rect2(816, 357, 16, 16)
 
-[node name="Main_Menu" type="CanvasLayer" node_paths=PackedStringArray("default_focus")]
-layer = 10
+[node name="Main_Menu" type="Control" node_paths=PackedStringArray("default_focus")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_d5n68")
 default_focus = [NodePath("MenuVBoxContainer/Resume_Button"), NodePath("MenuVBoxContainer/Continue_Button"), NodePath("MenuVBoxContainer/New_Game_Button")]
 
 [node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -22,6 +29,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.784314)
 
 [node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -38,6 +46,7 @@ patch_margin_right = 8
 patch_margin_bottom = 8
 
 [node name="MenuVBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
 anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
@@ -91,6 +100,7 @@ theme = ExtResource("2_b0gn2")
 text = "EXIT"
 
 [node name="Credits_Button" type="Button" parent="."]
+layout_mode = 0
 offset_left = 650.0
 offset_top = 557.0
 offset_right = 785.0
