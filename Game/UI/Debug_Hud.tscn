@@ -12,9 +12,9 @@ anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -176.0
-offset_top = 13.0
+offset_top = 40.0
 offset_right = -16.0
-offset_bottom = 102.0
+offset_bottom = 129.0
 grow_horizontal = 0
 
 [node name="ColorRect" type="ColorRect" parent="PanelContainer"]

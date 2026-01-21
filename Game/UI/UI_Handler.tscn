@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://cc1hxktnb4a1k"]
+[gd_scene load_steps=15 format=3 uid="uid://cc1hxktnb4a1k"]
 
 [ext_resource type="Script" uid="uid://c8ibq8bm58xd0" path="res://Game/UI/UI_Handler.gd" id="1_htxbl"]
 [ext_resource type="PackedScene" uid="uid://ctvmde4ov5w2x" path="res://Game/UI/Dialog.tscn" id="2_0wofj"]
 [ext_resource type="PackedScene" uid="uid://bh5qglvs6rygh" path="res://Game/UI/score.tscn" id="3_qtng4"]
 [ext_resource type="PackedScene" uid="uid://df500lm7ih60h" path="res://Game/UI/Notify.tscn" id="4_m1dom"]
 [ext_resource type="PackedScene" uid="uid://c6qkqs4t14j5w" path="res://Game/UI/Loading_Screen.tscn" id="5_t52tc"]
+[ext_resource type="PackedScene" uid="uid://da7l5mwu2x5w2" path="res://Game/UI/touch_ui.tscn" id="6_3gslv"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="6_nymfg"]
 [ext_resource type="PackedScene" uid="uid://brre7crunbrjj" path="res://Common/Features/Minigame_Pounce_Fishing/Fishing_Pond_Map.tscn" id="7_531g0"]
 [ext_resource type="PackedScene" uid="uid://b8gbuuqjxib" path="res://Game/UI/Main_Menu.tscn" id="8_ufq3w"]
@@ -52,6 +53,9 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("AtlasTexture_wsma3")
+
+[node name="Touch_UI" parent="." instance=ExtResource("6_3gslv")]
+visible = false
 
 [node name="Widgets" type="CanvasLayer" parent="."]
 

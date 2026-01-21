@@ -1,0 +1,126 @@
+[gd_scene load_steps=10 format=3 uid="uid://da7l5mwu2x5w2"]
+
+[ext_resource type="Script" uid="uid://p3kkvhtbs06w" path="res://Game/UI/touch_ui.gd" id="1_x78kw"]
+[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_1hg6i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ify41"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(560, 254, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6n6d"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(798, 85, 17, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xl6m"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(476, 340, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bxr1p"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(527, 340, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wdvgc"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(493, 340, 17, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v6c2k"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(510, 340, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x78kw"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(663, 221, 16, 16)
+
+[node name="Touch_UI" type="CanvasLayer"]
+layer = 110
+script = ExtResource("1_x78kw")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -176.0
+offset_top = 16.0
+offset_right = -8.0
+offset_bottom = 40.0
+grow_horizontal = 0
+alignment = 1
+
+[node name="Main_Menu_Button" type="TextureButton" parent="HBoxContainer"]
+process_mode = 3
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_ify41")
+
+[node name="Cargo_Button" type="TextureButton" parent="HBoxContainer"]
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_f6n6d")
+
+[node name="Directions" type="VBoxContainer" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -104.0
+offset_right = 72.0
+offset_bottom = -47.0
+grow_vertical = 0
+scale = Vector2(1.5, 1.5)
+
+[node name="Up" type="TextureButton" parent="Directions"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = SubResource("AtlasTexture_2xl6m")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Directions"]
+layout_mode = 2
+alignment = 1
+
+[node name="Left" type="TextureButton" parent="Directions/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+texture_normal = SubResource("AtlasTexture_bxr1p")
+
+[node name="Right" type="TextureButton" parent="Directions/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+texture_normal = SubResource("AtlasTexture_wdvgc")
+
+[node name="Down" type="TextureButton" parent="Directions"]
+layout_mode = 2
+size_flags_horizontal = 4
+texture_normal = SubResource("AtlasTexture_v6c2k")
+
+[node name="Actions" type="HBoxContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="TextureButton" type="TextureButton" parent="Actions"]
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_x78kw")
+
+[node name="TextureButton_2" type="TextureButton" parent="Actions"]
+layout_mode = 2
+
+[node name="Debug_Curser" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(1, 0, 1, 1)
+
+[connection signal="pressed" from="HBoxContainer/Main_Menu_Button" to="." method="_on_main_menu_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Cargo_Button" to="." method="_on_cargo_button_pressed"]
+[connection signal="button_down" from="Directions/Up" to="." method="_on_up_button_down"]
+[connection signal="button_up" from="Directions/Up" to="." method="_on_up_button_up"]
+[connection signal="button_down" from="Directions/HBoxContainer/Left" to="." method="_on_left_button_down"]
+[connection signal="button_up" from="Directions/HBoxContainer/Left" to="." method="_on_left_button_up"]
+[connection signal="button_down" from="Directions/HBoxContainer/Right" to="." method="_on_right_button_down"]
+[connection signal="button_up" from="Directions/HBoxContainer/Right" to="." method="_on_right_button_up"]
+[connection signal="button_down" from="Directions/Down" to="." method="_on_down_button_down"]
+[connection signal="button_up" from="Directions/Down" to="." method="_on_down_button_up"]
