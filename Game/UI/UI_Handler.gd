@@ -83,7 +83,19 @@ func change_menu(new_menu:Canvas_Scene ):
 		#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	state.update_mouse_mode()
 	ui_focus.emit(state.ui_in_focus)
+	on_focus_change()
 
+func on_focus_change():
+	if state.ui_in_focus:
+		if $DebugHUD.enable_debug:
+			$DebugHUD.visible = false
+		if state.is_touch_enable:
+			$Touch_UI.visible = false
+	else:
+		if $DebugHUD.enable_debug:
+			$DebugHUD.visible = true
+		if state.is_touch_enable:
+			$Touch_UI.visible = true
 #this is a failsafe since the current system require a certain call order
 #and this will get the menu that is visible base on importaince
 #so call order would not be as importaint as long as this is called
@@ -101,7 +113,7 @@ func get_visible_menu()->Node:
 		return %Credits_Menu
 	return null
 	
-func _on_main_menu_close() -> void:
+func _on_menu_close() -> void:
 	#if focus_menu == %Main_Menu:
 	#	change_menu(null)
 	change_menu(get_visible_menu())
@@ -133,10 +145,16 @@ func _on_menu_visibility_changed() -> void:
 		%Cargo.visible
 	)
 	ui_focus.emit(state.ui_in_focus)
+	on_focus_change()
 		#TODO: have menu objects in one major scene so the lot can have their visibilty
 		#changed all at once. That would allow they check only need to check
 		#dyanmic elements(fishing and dialog), menu, and loading screen
 
+func _on_touch_ui_changed()->void:
+	if state.is_touch_enable and !state.ui_in_focus:
+		$Touch_UI.visible = true
+	else:
+		$Touch_UI.visible = false
 
 func _ready() -> void:
 	
@@ -149,9 +167,14 @@ func _ready() -> void:
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	%Main_Menu.options_pressed.connect(_on_options_pressed)
 	%Main_Menu.credits_pressed.connect(_on_credits_pressed)
-	%Main_Menu.ended.connect(_on_main_menu_close)
+	%Main_Menu.ended.connect(_on_menu_close)
 	%Credits_Menu.ended.connect(_on_submenu_close)
 	%Options_Menu.ended.connect(_on_submenu_close)
+	%Cargo.ended.connect(_on_menu_close)
+	
+	#calling to set the state if it changed before it was connected
+	_on_touch_ui_changed()
+	state.touch_enable.connect(_on_touch_ui_changed)
 
 func _input(event: InputEvent) -> void:
 	

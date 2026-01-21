@@ -55,7 +55,6 @@ grow_vertical = 2
 texture = SubResource("AtlasTexture_wsma3")
 
 [node name="Touch_UI" parent="." instance=ExtResource("6_3gslv")]
-visible = false
 
 [node name="Widgets" type="CanvasLayer" parent="."]
 
@@ -74,13 +73,16 @@ visible = false
 
 [node name="Cargo" parent="Menus" instance=ExtResource("12_ify41")]
 unique_name_in_owner = true
+visible = false
 
 [node name="Credits_Menu" parent="Menus" instance=ExtResource("9_6enyp")]
 unique_name_in_owner = true
+visible = false
 
 [node name="Options_Menu" parent="Menus" instance=ExtResource("11_3jetq")]
 unique_name_in_owner = true
 process_mode = 3
+visible = false
 
 [node name="Main_Menu" parent="Menus" instance=ExtResource("8_ufq3w")]
 unique_name_in_owner = true

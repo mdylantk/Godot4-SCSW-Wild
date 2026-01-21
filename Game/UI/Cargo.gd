@@ -191,3 +191,6 @@ func _on_visibility_changed() -> void:
 
 func _ready() -> void:
 	player_state.advance_inventory_changed.connect(on_advance_inventory_changed)
+
+func _on_exit_pressed() -> void:
+	end()

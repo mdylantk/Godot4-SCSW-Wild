@@ -58,3 +58,7 @@ func _on_visibility_changed() -> void:
 	#else:
 	#	set_process(false)
 	#	current_line = 0
+
+
+func _on_exit_pressed() -> void:
+	end()

@@ -3,6 +3,7 @@ extends Canvas_Scene
 
 @export var default_focus : Control
 @export var client_state : Client_State= load('uid://bnvrjjacwa30l')
+@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
 
 
 #May not be ideal to ref it here, but for now keeping it here for testing and easy refactoring
@@ -21,6 +22,7 @@ func load_settings() -> void:
 	var sound_volume = 30
 	var language : String = OS.get_locale_language()
 	var language_index : int = -1
+	var touch_ui : bool = DisplayServer.is_touchscreen_available()
 	sound_volume = client_state.config_file.get_value("sound","music_volume",sound_volume)
 	language = client_state.config_file.get_value("general","language",language)
 	if language_keys.has(language):
@@ -29,6 +31,16 @@ func load_settings() -> void:
 	#AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(sound_volume*0.01))
 	%Language_OptionButton.select(language_index)
 	#set_language(language_index)
+	if client_state.config_file.has_section_key("general","touch_ui"):
+		touch_ui = client_state.config_file.get_value("general","touch_ui",touch_ui)
+		if touch_ui:
+			%OptionButton.select(1)
+		else:
+			%OptionButton.select(2)
+	else:
+		%OptionButton.select(0)
+	ui_state.is_touch_enable = touch_ui
+	
 
 func on_state_loaded():
 	print_debug('meow client state loaded')
@@ -77,3 +89,22 @@ func _on_visibility_changed() -> void:
 func _on_language_option_button_item_selected(index: int) -> void:
 	client_state.config_file.set_value("general","language",set_language(index))
 	client_state.updated.emit()
+
+func _on_option_button_item_selected(index: int) -> void:
+	match index:
+		0:
+			if client_state.config_file.has_section_key("general","touch_ui"):
+				client_state.config_file.erase_section_key("general","touch_ui")
+			ui_state.is_touch_enable = DisplayServer.is_touchscreen_available()
+		1:
+			client_state.config_file.set_value("general","touch_ui",true)
+			ui_state.is_touch_enable = true
+		2:
+			client_state.config_file.set_value("general","touch_ui",false)
+			ui_state.is_touch_enable = false
+	client_state.updated.emit()
+	pass # Replace with function body.
+
+
+func _on_exit_pressed() -> void:
+	end()

@@ -52,8 +52,10 @@ var mouse_mode: bool = true
 #will be moved here instead of running setter
 func running_changed():
 	if running:
+		#Input.mouse_mode = ui_state.unfocus_mouse_mode
 		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	else:
+		#Input.mouse_mode = ui_state.focus_mouse_mode
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	#TODO: handle player input diffrently either use a signal or something built in
 	ui_state.enable_player_input = !running
@@ -210,7 +212,8 @@ func _process(_delta):
 			mouse_state = 0
 			
 func catch_fish(coords:Vector2i):
-
+	if coords == Vector2i(24,25):
+		cancel()
 	var vaild_coords :Array[Vector2i] = [Vector2i(1,0),Vector2i(1,1),
 	Vector2i(0,1), Vector2i(-1,1), Vector2i(-1,0),Vector2i(-1,-1), 
 	Vector2i(0,-1), Vector2i(1,-1)
@@ -255,7 +258,7 @@ func catch_fish(coords:Vector2i):
 	missed.emit(true)
 
 
-func _input(event:InputEvent):
+func _input(event: InputEvent) -> void:
 	if running:
 		if event.is_action("Cancel"):
 			cancel()
@@ -298,3 +301,7 @@ func update_cursor_position(new_position : Vector2):
 	
 func _ready() -> void:
 	running_changed()
+
+
+func _on_texture_button_pressed() -> void:
+	cancel()

@@ -63,6 +63,32 @@ func _on_left_button_down() -> void:
 func _on_left_button_up() -> void:
 	call_input_event("Left",false)
 	pass # Replace with function body.
-	
-func _process(delta: float) -> void:
-	%Debug_Curser.position = get_viewport().get_mouse_position() + Vector2(8,8)
+
+func _on_accept_button_down() -> void:
+	call_input_event("Accept")
+	pass # Replace with function body.
+
+
+func _on_accept_button_up() -> void:
+	call_input_event("Accept",false)
+	pass # Replace with function body.
+
+
+func _on_cancel_button_down() -> void:
+	call_input_event("Cancel")
+	pass # Replace with function body.
+
+
+func _on_cancel_button_up() -> void:
+	call_input_event("Cancel",false)
+	pass # Replace with function body.
+
+
+func _on_sprint_button_down() -> void:
+	call_input_event("Sprint")
+	pass # Replace with function body.
+
+
+func _on_sprint_button_up() -> void:
+	call_input_event("Sprint", false)
+	pass # Replace with function body.

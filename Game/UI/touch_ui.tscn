@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://da7l5mwu2x5w2"]
+[gd_scene load_steps=12 format=3 uid="uid://da7l5mwu2x5w2"]
 
 [ext_resource type="Script" uid="uid://p3kkvhtbs06w" path="res://Game/UI/touch_ui.gd" id="1_x78kw"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_1hg6i"]
@@ -27,9 +27,17 @@ region = Rect2(493, 340, 17, 16)
 atlas = ExtResource("2_1hg6i")
 region = Rect2(510, 340, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_7jdwk"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(680, 0, 16, 16)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_x78kw"]
 atlas = ExtResource("2_1hg6i")
 region = Rect2(663, 221, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1hg6i"]
+atlas = ExtResource("2_1hg6i")
+region = Rect2(680, 221, 16, 16)
 
 [node name="Touch_UI" type="CanvasLayer"]
 layer = 110
@@ -59,10 +67,10 @@ texture_normal = SubResource("AtlasTexture_f6n6d")
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = -104.0
-offset_right = 72.0
-offset_bottom = -47.0
+offset_left = 56.0
+offset_top = -111.99997
+offset_right = 112.0
+offset_bottom = -55.0
 grow_vertical = 0
 scale = Vector2(1.5, 1.5)
 
@@ -96,23 +104,26 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -40.0
-offset_top = -40.0
+offset_left = -136.0
+offset_top = -72.0
+offset_right = -96.0
+offset_bottom = -56.0
 grow_horizontal = 0
 grow_vertical = 0
+scale = Vector2(2, 2)
+alignment = 1
 
-[node name="TextureButton" type="TextureButton" parent="Actions"]
+[node name="Sprint" type="TextureButton" parent="Actions"]
+layout_mode = 2
+texture_normal = SubResource("AtlasTexture_7jdwk")
+
+[node name="Accept" type="TextureButton" parent="Actions"]
 layout_mode = 2
 texture_normal = SubResource("AtlasTexture_x78kw")
 
-[node name="TextureButton_2" type="TextureButton" parent="Actions"]
+[node name="Cancel" type="TextureButton" parent="Actions"]
 layout_mode = 2
-
-[node name="Debug_Curser" type="ColorRect" parent="."]
-unique_name_in_owner = true
-offset_right = 8.0
-offset_bottom = 8.0
-color = Color(1, 0, 1, 1)
+texture_normal = SubResource("AtlasTexture_1hg6i")
 
 [connection signal="pressed" from="HBoxContainer/Main_Menu_Button" to="." method="_on_main_menu_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Cargo_Button" to="." method="_on_cargo_button_pressed"]
@@ -124,3 +135,9 @@ color = Color(1, 0, 1, 1)
 [connection signal="button_up" from="Directions/HBoxContainer/Right" to="." method="_on_right_button_up"]
 [connection signal="button_down" from="Directions/Down" to="." method="_on_down_button_down"]
 [connection signal="button_up" from="Directions/Down" to="." method="_on_down_button_up"]
+[connection signal="button_down" from="Actions/Sprint" to="." method="_on_sprint_button_down"]
+[connection signal="button_up" from="Actions/Sprint" to="." method="_on_sprint_button_up"]
+[connection signal="button_down" from="Actions/Accept" to="." method="_on_accept_button_down"]
+[connection signal="button_up" from="Actions/Accept" to="." method="_on_accept_button_up"]
+[connection signal="button_down" from="Actions/Cancel" to="." method="_on_cancel_button_down"]
+[connection signal="button_up" from="Actions/Cancel" to="." method="_on_cancel_button_up"]

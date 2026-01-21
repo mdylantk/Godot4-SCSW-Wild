@@ -27,6 +27,17 @@ signal show(id:String)
 #to hid a element
 signal hide(id:String)
 
+signal touch_enable()
+
+var is_touch_enable : bool :
+	set(value):
+		if is_touch_enable != value:
+			is_touch_enable = value
+			if is_touch_enable:
+				unfocus_mouse_mode = Input.MOUSE_MODE_VISIBLE
+			else:
+				unfocus_mouse_mode = Input.MOUSE_MODE_HIDDEN
+			touch_enable.emit()
 
 ##The default mouse mode for interactive gui elements
 ##Used to reset focus_mouse_mode if being manually overrided

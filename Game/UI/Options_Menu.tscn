@@ -1,14 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://clfctvdo5gs0b"]
+[gd_scene load_steps=5 format=3 uid="uid://clfctvdo5gs0b"]
 
 [ext_resource type="Script" uid="uid://ccalcveh0bgq" path="res://Game/UI/Options_Menu.gd" id="1_8csky"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_v72jc"]
+[ext_resource type="PackedScene" uid="uid://c0ygb7le6picm" path="res://Game/Scenes/Exit_Button.tscn" id="2_da26x"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trfd7"]
 atlas = ExtResource("1_v72jc")
 region = Rect2(816, 357, 16, 16)
 
 [node name="Options_Menu" type="Control" node_paths=PackedStringArray("default_focus")]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,6 +17,18 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_8csky")
 default_focus = NodePath("GridContainer/Music_Volume_Slider")
+
+[node name="Exit" parent="." instance=ExtResource("2_da26x")]
+top_level = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -32.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 32.0
+grow_horizontal = 0
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -93,6 +105,27 @@ popup/item_0/id = 0
 popup/item_1/text = "ESPAÑOL"
 popup/item_1/id = 1
 
+[node name="Touch_Label" type="Label" parent="GridContainer"]
+layout_mode = 2
+text = "TOUCH_UI"
+
+[node name="Touch_VSeparator" type="VSeparator" parent="GridContainer"]
+layout_mode = 2
+
+[node name="OptionButton" type="OptionButton" parent="GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "AUTO"
+popup/item_0/id = 0
+popup/item_1/text = "ENABLE"
+popup/item_1/id = 1
+popup/item_2/text = "DISABLE"
+popup/item_2/id = 2
+
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
 [connection signal="value_changed" from="GridContainer/Music_Volume_Slider" to="." method="_on_music_volume_slider_value_changed"]
 [connection signal="item_selected" from="GridContainer/Language_OptionButton" to="." method="_on_language_option_button_item_selected"]
+[connection signal="item_selected" from="GridContainer/OptionButton" to="." method="_on_option_button_item_selected"]
