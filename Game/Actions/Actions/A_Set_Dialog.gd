@@ -20,10 +20,10 @@ class_name A_Set_Dialog extends Base_Action
 #target/source for use with data since nested types would not work well
 #with the current system and it be easier to pass the data in the format call
 
-func _run(data:Action_State = null) -> bool:
+func _run(action_state:Action_State) -> bool:
 	var dialog_data : Dictionary
-	if data:
-		dialog_data = data.get_meta("dialog_data",{})
+	if action_state:
+		dialog_data = action_state.get_data("dialog_data",{})
 	#NOTE: old(well current) dialog uses data, but also run actions for the caller
 	#could just use action data (or call it host action data) since it should also have
 	#dialog data. also could have exports to decided if an action data is created
@@ -43,15 +43,18 @@ func _run(data:Action_State = null) -> bool:
 	#and its ref maintain here or for the lifetime of the callables/actions
 	#NOTE: if not, then changes between actions wont be maintain if
 	#handled by the passed data
+	#TODO: decided if the data should be duplicated or not or 
+	#add a flag to decide that. generally if not duplicatedm the
+	#owner can keep tabs on the state changes
 	if accept_action != null:
 		dialog_state.accept_task = func():
-			accept_action.run(data)
+			accept_action.run(action_state)
 	else:
 		dialog_state.accept_task = func():pass
 		
 	if cancel_action != null:
 		dialog_state.cancel_task = func():
-			cancel_action.run(data)
+			cancel_action.run(action_state)
 	else:
 		dialog_state.cancel_task = func():pass
 	
@@ -83,4 +86,4 @@ func _run(data:Action_State = null) -> bool:
 	#NOTE: should the data be set here? could isolate it and add a flag stating
 	#on merging or overriding it. 
 	#could have a set text that just do not override the data
-	return super(data)
+	return super(action_state)

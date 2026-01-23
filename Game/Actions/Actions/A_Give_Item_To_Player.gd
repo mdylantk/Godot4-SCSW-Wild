@@ -22,21 +22,24 @@ class_name A_Give_Item_To_Player extends Base_Action
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 @export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
 
-func run(data:Action_State = null) -> bool:
+func run(data:Action_State) -> bool:
 	var item_starting_amount : int
 	var amount_used: int 
 	if item == null:
 		return false
 	item_starting_amount = item.amount
+	#TODO: decide on a name for the item that is left over
 	if use_copy:
 		var item_copy : Item = item.duplicate()
 		player_state.add_item(item_copy)
 		amount_used = item_starting_amount - item_copy.amount
-		data.set_meta('item_remaining',item_copy)
+		data.set_data('item_remaining',item_copy)
+		#data.set_meta('item_remaining',item_copy)
 	else:
 		player_state.add_item(item)
 		amount_used = item_starting_amount - item.amount
-		data.set_meta('item_remaining',item)
+		data.set_data('item_remaining',item)
+		#data.set_meta('item_remaining',item)
 	#NOTE TODO: need to make sure this uses translation words ideally in a formated
 	#string like 'acquire {item}' also should probably strip the [center] and apply
 	#it in the ui

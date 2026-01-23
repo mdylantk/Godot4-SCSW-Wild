@@ -4,7 +4,7 @@ class_name Action_If_Else extends Base_Action
 @export var true_action : Base_Action
 @export var false_action : Base_Action
 
-func _run(data:Action_State = null) -> bool:
+func _run(data:Action_State) -> bool:
 	var is_true = false
 	if condition != null : 
 		is_true = condition.is_true(data)

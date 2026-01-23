@@ -2,5 +2,5 @@
 extends Base_Action
 
 
-func _run(data:Action_State = null) -> bool:
-	return super(data)
+func _run(action_state:Action_State) -> bool:
+	return super(action_state)

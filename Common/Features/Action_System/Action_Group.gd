@@ -9,7 +9,7 @@ class_name Action_Group extends Base_Action
 
 const comparison_state: Array[bool] = [true,false]
 
-func _run(data:Action_State = null) -> bool:
+func _run(data:Action_State) -> bool:
 	var is_true:bool = comparison_state[comparison]
 	for condition:Base_Conditional in conditions:
 		if comparison == 0:

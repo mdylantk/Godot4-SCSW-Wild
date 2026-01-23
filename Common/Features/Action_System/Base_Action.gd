@@ -9,7 +9,12 @@ class_name Base_Action extends Resource
 #fail may cause a sequence of actions to end or just to check to see if action
 #was sucessful.
 
-func run(data:Action_State = null) -> bool:
+func run(data:Action_State) -> bool:
+	#NOTE: action is likly to fail if action state is null
+	#but some action do not make use of an action state
+	#TODO: decide how to handle if action pass is null
+	#chain action would need a proper state, so having one with
+	#null values may be ideal (but could still break)
 	if data:
 		data._action = self
 	return _run(data)

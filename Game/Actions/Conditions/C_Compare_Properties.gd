@@ -21,9 +21,10 @@ func _is_true(data:Action_State = null, default:bool=true) -> bool:
 		return false
 	#checking for world and game since they may be added later
 	if property_source == "data":
-		if !data.has_meta(property_name):
-			return false
-		value = data.get_meta(property_name)
+		value = data.get_data(property_name,null)
+		#if !data.has_meta(property_name):
+		#	return false
+		#value = data.get_meta(property_name)
 	elif property_source != "game" and property_source != "world" and property_source != "player":
 		if !data.has_meta(property_source):
 			print_debug("source is not included")
