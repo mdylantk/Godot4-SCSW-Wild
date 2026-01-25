@@ -22,7 +22,7 @@ class_name A_Give_Item_To_Player extends Base_Action
 @export var player_state : Player_State = load('uid://c67c2fehtuhni')
 @export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
 
-func run(data:Action_State) -> bool:
+func _run(data:Action_State) -> bool:
 	var item_starting_amount : int
 	var amount_used: int 
 	if item == null:

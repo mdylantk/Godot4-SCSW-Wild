@@ -13,10 +13,10 @@ func _run(data:Action_State) -> bool:
 	var is_true:bool = comparison_state[comparison]
 	for condition:Base_Conditional in conditions:
 		if comparison == 0:
-			if !condition.is_true():
+			if !condition.is_true(data):
 				break
 		elif comparison == 1:
-			if condition.is_true():
+			if condition.is_true(data):
 				is_true = true
 				break
 	if is_true:

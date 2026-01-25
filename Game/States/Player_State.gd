@@ -25,38 +25,9 @@ var _data : Dictionary[String,Variant] = {
 	'_scores':{},
 	'_vars':{},
 	'_numbers':{},
-	'_vectors':{}
+	'_vectors':{},
+	'_collections':{} #reserve for nested dictionaires(or arrays)
 }
-
-#var scores : Dictionary[String,int] = {}
-
-#sets of bitflag ints instead of using
-#an array of bools. reserver for when data gets compress
-#otherwise data will be used
-#var flags : Array[int] = [] 
-
-#NOTE: could use a data object and save directly to it,
-#but there less worry about the data format being incorrect
-#also could convert to exports and add to data, but
-#that would not allow correct typing and could be a pain.
-#can extend player state and add its own way to export
-#defaults for testing or gamemodes
-
-##Savable variable object reserver for string types
-#var _vars : Dictionary[String,String] = {}
-
-##Savable variable object reserver for numbers types
-#var _number_vars : Dictionary[String,Variant] = {}
-
-##Savable variable object reserver for vector like arrays
-#var _vector_vars : Dictionary[String,Array] = {}
-
-#TODO: look into inventory to see how uid or path is extracted
-#or fine a way to extracted.
-#var pawn #NOTE: this should be the pawn class or a savable data struct for rebuilding the pawn
-#could store this in positions 
-#var world_position : Vector2 #this should be set when traveling or saving. global_position should be used
-#for the actual position
 
 #items will be player owned inventory
 #cargo will be specail items owned by the player
@@ -110,6 +81,21 @@ func set_vector(id:String, vector:Variant)->void:
 	_data['_vectors'].set(id,vector_to_array(vector))
 	if old_vector != new_vector:
 		vector_changed.emit(id,vector)
+		
+func has_collection(id:String)->bool:
+	return _data['_collections'].has(id)
+
+##get a ref to a collection dict. if create_new is true, then
+##this will create an empty dictionary for the id
+##NOTE: collections are for stats and collections logs
+##that do not handle their own state (yet). if such collection
+##gets too big, it may be better to use its own state to load 
+##and unload the data.
+func get_collection(id:String, create_new:bool = true)->Dictionary[String,Variant]:
+	if create_new and !has_collection(id):
+		_data.set(id,{} as Dictionary[String,Variant])
+	return _data['_collections'].get(id)
+	
 		
 ##index only applies to advance inventory
 ##TODO: limit amount to max stack size.
@@ -243,6 +229,8 @@ func _reset_state() -> void:
 	_data['_vars']={}
 	_data['_numbers']={}
 	_data['_vectors']={}
+	
+	_data['collections']={}
 	
 	exit_data.data.clear()
 	standard_inventory.clear()
