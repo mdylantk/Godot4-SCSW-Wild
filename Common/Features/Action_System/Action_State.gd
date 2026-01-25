@@ -22,17 +22,31 @@ signal data_changed(key:String, value:Variant)
 #an old action's state).
 
 ##the one that calls the actions. most likly character2d
-var owner : Node
+var owner : Node : 
+	set(value):
+		set_data('_owner',value)
+	get:
+		return get_data('_owner', owner)
 
 ##the one the action effects. most likly interaction component or
 ##null. maybe a character2d or some other node in odd cases
-var target : Node
+var target : Node : 
+	set(value):
+		set_data('_target',value)
+	get:
+		return get_data('_target', target)
 
 
 #NOTE: the action state might not be used for extended action
 #other systems would keep track of the action.
 #this is here incase it is still being used
-var _action : Base_Action
+##DEPRECATED? this should not be depended on. action knows (indirectly)
+##about their state and if action is needed, then it could be extended in a way that is safe.
+var action : Base_Action : 
+	set(value):
+		set_data('_action',value)
+	get:
+		return get_data('_action',action)
 #will use a dictionary instead of data
 #and handle the action state more of a container and
 #interface with the data (all properties related to the data
@@ -41,7 +55,7 @@ var _action : Base_Action
 var _data :Dictionary[String,Variant]
 
 ##return the raw data dictionary
-func get_data(key:String, default:Variant)->Variant:
+func get_data(key:String, default:Variant= null)->Variant:
 	return _data.get(key, default)
 
 ##this will emit data_changed if the data is changed. cull_null
@@ -56,19 +70,21 @@ func set_data(key:String, value:Variant, cull_null:bool = false)-> void:
 		_data.set(key,value)
 	if old_value != value:
 		data_changed.emit(key,value)
-
+		
+##DEPRECATED
 func get_action() -> Base_Action:
-	return _action
+	return action
 
 func _init(new_owner:Node, new_target:Node = null,data:Dictionary[String,Variant]={}) -> void:
-	owner = new_owner
-	target = new_target
 	#NOTE: decided if the meta pass should be used or duplicated. the caller
 	#could pass a ref it tracks or duplicate it not the case, but may be misleading
 	#where it could use the action state instead
+	#NOTE: data need to be set first
 	_data = data
 	#TODO: Remove setting object meta 
 	#if !data.is_empty():
 	#	for key in data:
 	#		set_meta(key, data[key])
+	owner = new_owner
+	target = new_target
 	

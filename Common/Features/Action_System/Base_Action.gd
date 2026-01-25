@@ -16,7 +16,13 @@ func run(data:Action_State) -> bool:
 	#chain action would need a proper state, so having one with
 	#null values may be ideal (but could still break)
 	if data:
-		data._action = self
+		#NOTE: action state probably should not know about it action?
+		#keeping this here, but may default to having action unknown
+		#and let extended actions decided if they need theirselves stored
+		#(also chain actions would work better if they store the starting action
+		#and the progress state or the current action...if needed. such cases
+		#may not be needed)
+		data.action = self
 	return _run(data)
 
 func _run(data:Action_State) -> bool:
