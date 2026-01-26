@@ -95,6 +95,11 @@ func add_fish(fish_data:Dictionary):
 			#new_fish_item.set_type(fish_data["type"]["pick"])
 			new_fish_item  = Item.new(fish_data["type"]["pick"])
 			#new_fish_item.type = fish_data["type"]["pick"]
+			player_state.fish_log.add_fish_to_log(
+				new_fish_item.type_uid,
+				new_fish_item.amount
+			)
+			print_debug(player_state.fish_log._data)
 		else:
 			fish_name = fish_data["type"]["pick"]
 		#var fish_item = fish_item_source.new_item(1,{"name":fish_name})

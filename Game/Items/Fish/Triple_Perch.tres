@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Extended_Item_Type" load_steps=4 format=3 uid="uid://dq580j8d282dx"]
+[gd_resource type="Resource" script_class="Extended_Item_Type" format=3 uid="uid://dq580j8d282dx"]
 
 [ext_resource type="Texture2D" uid="uid://bd5euihgbdggx" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/monochrome-transparent.png" id="1_ima6s"]
 [ext_resource type="Script" uid="uid://b27c0lnktiva0" path="res://Common/Features/Inventory/Extended_Item_Type.gd" id="2_i24ly"]

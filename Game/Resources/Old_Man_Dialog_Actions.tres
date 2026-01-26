@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Action_If_Else" load_steps=7 format=3 uid="uid://bax1gyeyncjmp"]
+[gd_resource type="Resource" script_class="Action_If_Else" format=3 uid="uid://bax1gyeyncjmp"]
 
 [ext_resource type="Script" uid="uid://cbxbd7k6cl4pc" path="res://Common/Features/Action_System/Action_If_Else.gd" id="1_1tgue"]
 [ext_resource type="Script" uid="uid://75pct074im8w" path="res://Game/Actions/Conditions/C_Compare_Properties.gd" id="1_u88dc"]

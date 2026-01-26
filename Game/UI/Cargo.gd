@@ -60,6 +60,10 @@ func update_info(item:Item)->void:
 	for key in item.metadata.keys():
 		%Meta.add_item(str(key,': ', item.metadata[key]))
 	%Meta.visible = true
+	if true: #TODO: Check if fish item type when such is created
+		var log = player_state.fish_log.get_log_of_fish(item.type_uid)
+		%Meta.add_item(str('total caught: ',log.get(Fish_Log.COLLECTION_TYPE.keys()[0],0)))
+		%Meta.add_item(str('total delvivered: ',log.get(Fish_Log.COLLECTION_TYPE.keys()[1],0)))
 	
 func clear_info()->void:
 	%Name.text = ''

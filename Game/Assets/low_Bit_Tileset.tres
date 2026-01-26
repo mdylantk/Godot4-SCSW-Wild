@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=16 format=3 uid="uid://digeb0qjjwxn0"]
+[gd_resource type="TileSet" format=3 uid="uid://digeb0qjjwxn0"]
 
 [ext_resource type="Texture2D" uid="uid://wj2lbe26e5yq" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/Water_Tileset_Transparent.png" id="2_4ocso"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_q5fvj"]

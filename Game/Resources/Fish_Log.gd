@@ -11,15 +11,15 @@
 #and use a string. also the uid is to allow loading the item for the gui
 #so the size and weight can be caculated. could instead assign it as a property
 #instead of an id
-class_name Fish_Log extends Resource
+class_name Fish_Log extends RefCounted
 
 enum COLLECTION_TYPE {CAUGHT,DELIVERED}
 
-@export var player_state : Player_State = load('uid://c67c2fehtuhni')
+#@export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
-var _data : Dictionary[int,Variant] : 
-	get:
-		return player_state.get_collection('fish_log') as Dictionary[int,Variant]
+var _data : Dictionary #: 
+	#get:
+#		return player_state.get_collection('fish_log') as Dictionary[String,Variant]
 
 func get_fish_id(fish:Item_Type)->int:
 	return ResourceLoader.get_resource_uid(fish.resource_path)
@@ -29,7 +29,7 @@ func get_fish_from_id(fish_id)->Item_Type:
 		return load(ResourceUID.get_id_path(fish_id))
 	return
 
-func get_log_of_fish(fish_id:int)->Dictionary[String,Variant]:
+func get_log_of_fish(fish_id:int)->Dictionary:
 	if fish_id == -1:
 		push_error('item dose not have an id.')
 		return {}
@@ -43,7 +43,7 @@ func add_fish_to_log(
 		size:float=0.0,
 		collection_type:COLLECTION_TYPE = COLLECTION_TYPE.CAUGHT
 	)->void:
-	var current_log : Dictionary[String,Variant] = get_log_of_fish(fish_id)
+	var current_log : Dictionary = get_log_of_fish(fish_id)
 	var collection_type_id : String = COLLECTION_TYPE.keys()[collection_type]
 	var old_amount : int = current_log.get(collection_type_id,0)
 	var min_size : float = current_log.get(collection_type_id+'min_size',0.0)

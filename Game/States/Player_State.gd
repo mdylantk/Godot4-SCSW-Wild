@@ -25,9 +25,14 @@ var _data : Dictionary[String,Variant] = {
 	'_scores':{},
 	'_vars':{},
 	'_numbers':{},
-	'_vectors':{},
-	'_collections':{} #reserve for nested dictionaires(or arrays)
+	'_vectors':{}
 }
+
+#collection base classes read and modify the collection dictionary 
+#in player_state._data._collections. They could modfiy their own version
+#and player state could convert to save safe, but most cases the save safe
+#format should be good enough to use as is unless it depends heavily on objects9
+var fish_log : Fish_Log = Fish_Log.new()
 
 #items will be player owned inventory
 #cargo will be specail items owned by the player
@@ -82,19 +87,6 @@ func set_vector(id:String, vector:Variant)->void:
 	if old_vector != new_vector:
 		vector_changed.emit(id,vector)
 		
-func has_collection(id:String)->bool:
-	return _data['_collections'].has(id)
-
-##get a ref to a collection dict. if create_new is true, then
-##this will create an empty dictionary for the id
-##NOTE: collections are for stats and collections logs
-##that do not handle their own state (yet). if such collection
-##gets too big, it may be better to use its own state to load 
-##and unload the data.
-func get_collection(id:String, create_new:bool = true)->Dictionary[String,Variant]:
-	if create_new and !has_collection(id):
-		_data.set(id,{} as Dictionary[String,Variant])
-	return _data['_collections'].get(id)
 	
 		
 ##index only applies to advance inventory
@@ -230,7 +222,7 @@ func _reset_state() -> void:
 	_data['_numbers']={}
 	_data['_vectors']={}
 	
-	_data['collections']={}
+	fish_log._data.clear()
 	
 	exit_data.data.clear()
 	standard_inventory.clear()
@@ -250,6 +242,7 @@ func get_save_data()->Dictionary[String,Variant]:
 	save_data.set('advance_inventory',temp_adv_inv)
 	
 	save_data.set('data',get_metadata())
+	save_data.set('_fish_log', fish_log._data)
 	
 	return save_data
 	
@@ -269,6 +262,9 @@ func load_data(new_data:Dictionary[String,Variant]={})->void:
 	
 	set_metadata(new_data.get('data', get_metadata()))
 	#data = new_data.get('data', data)
+	
+	fish_log._data = _data.get('_fish_log',fish_log._data)
+	
 	loaded.emit()
 	
 	advance_inventory_changed.emit(-1)
