@@ -1,14 +1,14 @@
-[gd_resource type="Resource" script_class="Extended_Item_Type" format=3 uid="uid://c8q8g870m8g0i"]
+[gd_resource type="Resource" script_class="Fish_Item_Type" format=3 uid="uid://c8q8g870m8g0i"]
 
 [ext_resource type="Texture2D" uid="uid://bd5euihgbdggx" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/monochrome-transparent.png" id="1_5brko"]
-[ext_resource type="Script" uid="uid://b27c0lnktiva0" path="res://Common/Features/Inventory/Extended_Item_Type.gd" id="2_jo1hw"]
+[ext_resource type="Script" uid="uid://c4u0jmcbnryt2" path="res://Game/Items/Fish/Fish_Item_Type.gd" id="2_nghaw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_juioi"]
 atlas = ExtResource("1_5brko")
 region = Rect2(561, 289, 17, 17)
 
 [resource]
-script = ExtResource("2_jo1hw")
+script = ExtResource("2_nghaw")
 display_name = "Pike"
 discription = "This is a pike"
 tooltip = "Smells fishy"

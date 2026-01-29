@@ -4,6 +4,8 @@ class_name Random_Table_Resource extends Resource
 @export var fail_weight : int = 0
 @export var table : Array[Weighted_Group_Resource]
 
+#may return details always since it is storing it anyways
+#even though it may not be used (except for advance gui cases or debugging)
 func pick_from_table(return_details = false):
 	#details will return an dictionary of the pick entry and the rarity
 	#rarity 0 should also be a null pick
@@ -11,7 +13,7 @@ func pick_from_table(return_details = false):
 	var details = {
 		"rarity":0,
 		"rolls":[],
-		"pick":""
+		"pick":"" #is a variant type. should ref type and cast(if object) to check type
 	}
 	var fail_roll = 0
 	if fail_weight > 0:

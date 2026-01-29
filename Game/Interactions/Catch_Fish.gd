@@ -1,5 +1,9 @@
 class_name Catch_Fish extends Interactive_Data
 
+#TODO: Change this into the pounce fishing game state
+#and provide an action that set it up. could make it a ref counted
+#and add it to the ui state.
+
 #signal catched(fish_data:Dictionary)
 #signal missed(vaild:bool) #return true if catch was in water, else false
 #signal canceled()
@@ -31,7 +35,7 @@ func _start():
 	#random_table.fail_weight = 10
 	#fisher = instigator
 	#fisher_handler = handler
-	#TEST
+
 	#note: only one fish game per action...but only one should exist if not
 	#dynamicly added
 	#TODO:this seems backwards? this is a resource, but it depends on the fish game
@@ -53,47 +57,43 @@ func _start():
 		fish_game.canceled.connect(on_cancel)
 		
 		for count in range(randi_range(5,15)):
-			var type = pick_fish()
+			var pick_fish_data : Dictionary = pick_fish()
 			var layer = 1
 			var move_rate = randf_range(.001,0.3)
 			var picked_coords = fish_game.get_water_coords().pick_random()
-			if type["pick"] == null:
+			if pick_fish_data.get("pick") == null:
 				break
-			if type["rarity"] >= 3: 
+			#TODO: decide on a number for default rarity. also should not happen
+			#but should handle it incase it dose to help detect it
+			layer = pick_fish_data.get("rarity",0)
+			if layer >= 3: 
 				layer = 3
 				move_rate = randf_range(.5,1)
-			else:
-				layer = type["rarity"]
 			fish_game.add_fish(picked_coords, fish_game.default_fish_atlas_coords, layer,
-				{"move_rate":move_rate,"type":type}
+				{"move_rate":move_rate,"pick_fish_data":pick_fish_data}
 			)
 		fish_game.resume()
-	
-	
-	#TEST END
-func pick_fish():
-	var picked_name = {}
-	if random_table == null : random_table = Fish_Table.new()
-	picked_name = random_table.pick_from_table(true)
-	if picked_name != null:
-		var fish_name = picked_name["pick"]
-		return picked_name
-		if fish_name == "":
-			#todo send a message stating nothing was caught
-			return false
-		pass#name is know, so just need to create it
+
+func pick_fish()->Dictionary:
+	var picked_data : Dictionary = {}
+	if random_table == null :
+		print_debug('No table assigned')
+	else:
+		picked_data = random_table.pick_from_table(true)
+	return picked_data
+
 
 func add_fish(fish_data:Dictionary):
 	if !fish_data.is_empty():
-		print_debug(fish_data["type"])
+		print_debug(fish_data["pick_fish_data"])
 		data["fish_data"] = fish_data
 		var fish_name = "fish"
 		var new_fish_item = null
-		if fish_data["type"]["pick"] as Item_Type:
+		if fish_data["pick_fish_data"]["pick"] as Item_Type:
 			print_debug("MEOW IT IS A FISH!!!")
-			fish_name = fish_data["type"]["pick"].display_name
+			fish_name = fish_data["pick_fish_data"]["pick"].display_name
 			#new_fish_item.set_type(fish_data["type"]["pick"])
-			new_fish_item  = Item.new(fish_data["type"]["pick"])
+			new_fish_item  = Item.new(fish_data["pick_fish_data"]["pick"])
 			#new_fish_item.type = fish_data["type"]["pick"]
 			player_state.fish_log.add_fish_to_log(
 				new_fish_item.type_uid,
@@ -101,7 +101,7 @@ func add_fish(fish_data:Dictionary):
 			)
 			print_debug(player_state.fish_log._data)
 		else:
-			fish_name = fish_data["type"]["pick"]
+			fish_name = fish_data["pick_fish_data"]["pick"]
 		#var fish_item = fish_item_source.new_item(1,{"name":fish_name})
 			new_fish_item  = Item.new(fish_item_source)
 			#new_fish_item.set_type(fish_item_source)
@@ -143,7 +143,7 @@ func add_fish(fish_data:Dictionary):
 		#TODO: need a way to log caught fish. this just statisitic like
 		#number caught, biggest and smallest size caught, and such
 		
-		if fish_data["type"]["rarity"] < 3:
+		if fish_data["pick_fish_data"]["rarity"] < 3:
 			#var total_fish_caught = Savedata_Helper.fetch_player_score(handler,"common_fish_caught")
 			var total_fish_caught = player_state.get_score("common_fish_caught")
 			player_state.set_score("common_fish_caught",total_fish_caught + 1)

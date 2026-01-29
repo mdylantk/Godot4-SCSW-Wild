@@ -1,14 +1,14 @@
-[gd_resource type="Resource" script_class="Extended_Item_Type" format=3 uid="uid://db8k4softx2h4"]
+[gd_resource type="Resource" script_class="Fish_Item_Type" format=3 uid="uid://db8k4softx2h4"]
 
 [ext_resource type="Texture2D" uid="uid://bd5euihgbdggx" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/monochrome-transparent.png" id="1_64w3d"]
-[ext_resource type="Script" uid="uid://b27c0lnktiva0" path="res://Common/Features/Inventory/Extended_Item_Type.gd" id="2_eeue3"]
+[ext_resource type="Script" uid="uid://c4u0jmcbnryt2" path="res://Game/Items/Fish/Fish_Item_Type.gd" id="2_uytbn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_juioi"]
 atlas = ExtResource("1_64w3d")
 region = Rect2(561, 289, 17, 17)
 
 [resource]
-script = ExtResource("2_eeue3")
+script = ExtResource("2_uytbn")
 display_name = "Orange_Eel"
 discription = "This is a orange eel"
 tooltip = "Smells fishy"

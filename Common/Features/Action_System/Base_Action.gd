@@ -8,6 +8,10 @@ class_name Base_Action extends Resource
 #or if it need a fail case. This is more a future prediction that an action
 #fail may cause a sequence of actions to end or just to check to see if action
 #was sucessful.
+#NOTE: the return bool could be for cases that did not go well or failed instead
+#of being canceled cases. canceled cases can be handle in the data
+#TODO: deicide and make sure false is return (probably return true of handled
+#and false means something went wrong and action ran did not do anything)
 
 func run(data:Action_State) -> bool:
 	#NOTE: action is likly to fail if action state is null

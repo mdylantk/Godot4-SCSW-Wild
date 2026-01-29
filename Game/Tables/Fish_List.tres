@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Random_Table_Resource" load_steps=6 format=3 uid="uid://7ik7rawmbjbk"]
+[gd_resource type="Resource" script_class="Random_Table_Resource" format=3 uid="uid://7ik7rawmbjbk"]
 
 [ext_resource type="Script" uid="uid://ba5y562wvvllc" path="res://Common/Features/Random_Tables/Random_Table_Resource.gd" id="1_48f2h"]
 [ext_resource type="Script" uid="uid://y8cn3gola3uw" path="res://Common/Features/Random_Tables/Weighted_Group_Resource.gd" id="2_4al78"]
@@ -8,6 +8,4 @@
 
 [resource]
 script = ExtResource("1_48f2h")
-max_weight_per_roll = 100
-fail_weight = 0
 table = Array[ExtResource("2_4al78")]([ExtResource("3_yyjyo"), ExtResource("4_tngqr"), ExtResource("5_f45bx")])
