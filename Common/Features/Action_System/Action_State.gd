@@ -7,6 +7,10 @@ class_name Action_State extends RefCounted
 #TODO: make sure to try to call set_data so this is called
 signal data_changed(key:String, value:Variant)
 
+const key_on_end : String = '$on_end'
+const key_is_referred : String = '_is_referred'
+const key_is_canceled : String = '_is_canceled'
+
 #TODO: the owner and target might need to be stored in
 #the _data, but the issue is the data probably should not
 #store ref of object (only dict and array)
@@ -47,6 +51,27 @@ var action : Base_Action :
 		set_data('_action',value)
 	get:
 		return get_data('_action',action)
+		
+##state if the action data is being handled
+##by a diffrent system. This is used to see if
+##a action transfer ownership of it state during its run logic.
+##This means the action dose not really end after run, but ends 
+##sometime later. '$on_end' may be added to the data that should be 
+##called when the action is done. 
+var is_referred : bool = false :
+	set(value):
+		_data.set(key_is_referred,value)
+	get:
+		return _data.get(key_is_referred, is_referred)
+
+##This is for referred cases to state the action was force ended instead of natural
+##used to stop state changes from happening on end depending on the system that handles it.
+var is_canceled : bool = false:
+	set(value):
+		_data.set(key_is_canceled,value)
+	get:
+		return _data.get(key_is_canceled, is_canceled)
+	
 #will use a dictionary instead of data
 #and handle the action state more of a container and
 #interface with the data (all properties related to the data
@@ -74,6 +99,13 @@ func set_data(key:String, value:Variant, cull_null:bool = false)-> void:
 ##DEPRECATED
 func get_action() -> Base_Action:
 	return action
+
+#call the end logic if assign.
+#NOTE: might need to clear it after? depends on if all ref
+#are cleared when the action state is removed
+#also depends on if this should be the final end logic.
+func end()->void:
+	get_data(key_on_end, func():pass).call(is_canceled)
 
 func _init(new_owner:Node, new_target:Node = null,data:Dictionary[String,Variant]={}) -> void:
 	#NOTE: decided if the meta pass should be used or duplicated. the caller

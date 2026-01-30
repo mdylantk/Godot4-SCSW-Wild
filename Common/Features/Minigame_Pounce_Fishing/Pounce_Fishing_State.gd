@@ -1,4 +1,19 @@
-class_name Catch_Fish extends Interactive_Data
+class_name Pounce_Fishing_State extends RefCounted
+
+signal start()
+signal catched(fish_data:Dictionary)
+signal missed()
+signal canceled()
+signal end()
+
+#NOTE TODO: the actions that come from interaction should have callables
+#or something (this would not be save safe. so may need to think about this more
+#but probably should use a dedicated system and not worry about saving these cases)
+#that handle when the action is finish. for this, it is when the fishing ui ends
+#the fish needs to know if it was finish or canceled so it can hide or remove itself
+#could assess the gui state, but the action called may do diffrent things
+#so adding a case in action data to act like a signal may be better
+#fish tell data to tell fish it finished indirectly with the callable
 
 #TODO: Change this into the pounce fishing game state
 #and provide an action that set it up. could make it a ref counted
@@ -26,6 +41,7 @@ var fish_game
 #var fisher
 #var fisher_handler
 
+var action_state : Action_State
 
 func _run():
 	_start()
@@ -45,6 +61,8 @@ func _start():
 	#and the idea is to stop depending in global space
 	#this means this needs to be shared or the passed objects need to be pass
 	#by other means
+	start.emit()
+	return
 	if fish_game == null:
 		#TODO: need a state for this so it can comunicate
 		#for now will add to ui_state, but it should be its own system
@@ -82,11 +100,13 @@ func pick_fish()->Dictionary:
 		picked_data = random_table.pick_from_table(true)
 	return picked_data
 
-
+#this handles adding the fish. so it need to be called on_catch
+#as long as the old approch is use. should move over to the fishing
+#gui, but will keep it here to make sure things are ran correctly
 func add_fish(fish_data:Dictionary):
 	if !fish_data.is_empty():
 		print_debug(fish_data["pick_fish_data"])
-		data["fish_data"] = fish_data
+		#data["fish_data"] = fish_data
 		var fish_name = "fish"
 		var new_fish_item = null
 		if fish_data["pick_fish_data"]["pick"] as Item_Type:
@@ -112,15 +132,17 @@ func add_fish(fish_data:Dictionary):
 			
 		
 		var inventory : Inventory
-		if interactor as Character2D:
-			inventory = interactor.get_inventory()
+		if action_state.owner as Character2D:
+			inventory = action_state.owner.get_inventory()
+		#if interactor as Character2D:
+		#	inventory = interactor.get_inventory()
 		else:
 			#old logic, may be fine for some systems, but most enities
 			#should have some kind of inventory interface
 			print_debug("MEOOW THIS SHOULD NOT BE CALLED. planing on disabling it")
 			#may disable this temp since things that interact mostly will be characters
 			#though non characters might have in inventory, but acessing it would be diffrent
-			for child in interactor.get_children():
+			for child in action_state.owner.get_children():
 				if child is Inventory:
 					inventory = child
 					break
@@ -177,4 +199,4 @@ func end_game(cancel : bool = false):#, fish_data:Dictionary = {}):
 	fish_game = null
 	#fisher = null
 	#fisher_handler = null
-	end_interact(cancel)
+	#end_interact(cancel)

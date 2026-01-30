@@ -64,3 +64,9 @@ Note on items:
 	as a Walleye. This would mean rare fish would be a subgroup of the fish type in
 	the log and metadata would be used to state where the subgroup if walleye is
 	rare or not)
+	
+Random Notes:
+	Action system's Action State store data as string base keys. Prefix of '_' 
+	is used for properties an action state make use of. Prefix of '$' is similar,
+	but are for specail case callables (it means that it should be called, but 
+	reserver for certain systems).

@@ -62,6 +62,6 @@ func _run(data:Action_State) -> bool:
 		ui_state.send_notifcation.emit(message)
 		#notify item was removed
 		pass
-	return true
+	return super(data)
 	
 	#return super(data)

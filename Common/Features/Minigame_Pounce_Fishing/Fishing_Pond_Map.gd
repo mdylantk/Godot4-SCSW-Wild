@@ -22,10 +22,16 @@ signal canceled()
 
 @export var fishing_distance : float = 6
 
-@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
+@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5'):
+	set(value):
+		ui_state = value
+		if value:
+			ui_state.pounce_fishing_state.start.connect(on_start)
 
 @onready var cursor = %Cursor
 
+#TODO: Maybe call this in the ready or make sure it calls the needed logic
+var state : Pounce_Fishing_State = Pounce_Fishing_State.new()
 
 #NOTE: dose not always disable collsion on load.
 #either attach to a diffrent viewport or have it run a similar logic flow
@@ -44,6 +50,25 @@ var active_fish : Array[Dictionary]
 var mouse_state: int = 0
 #NOTE: this mean to ignore mouse movement
 var mouse_mode: bool = true
+
+func on_start():
+	for count in range(randi_range(5,15)):
+		var pick_fish_data : Dictionary = state.pick_fish()
+		var layer = 1
+		var move_rate = randf_range(.001,0.3)
+		var picked_coords = get_water_coords().pick_random()
+		if pick_fish_data.get("pick") == null:
+			break
+			#TODO: decide on a number for default rarity. also should not happen
+			#but should handle it incase it dose to help detect it
+		layer = pick_fish_data.get("rarity",0)
+		if layer >= 3: 
+			layer = 3
+			move_rate = randf_range(.5,1)
+		add_fish(picked_coords, default_fish_atlas_coords, layer,
+			{"move_rate":move_rate,"pick_fish_data":pick_fish_data}
+		)
+		resume()
 
 #NOTE: mouse_state = -1 is to prevent input untill a fresh press
 
@@ -79,7 +104,15 @@ func resume():
 	mouse_state = -1
 	#below is a failsafe incase input breaks
 	#though the logic to handle it may be faulty if input bugs out
-	
+
+func catch_missed(vaild:bool = false):
+	if vaild == true:
+		ui_state.send_notifcation.emit("Failed to catch a fish.")
+		#General_Events.send_notifcation("Failed to catch a fish.")
+		state.missed.emit()
+		end()
+	else:
+		end(true)
 
 #NOTE: Start() may be redundent? but also easier to understand
 #TODO: look to see how to make start and resume to be diffrent
@@ -88,13 +121,19 @@ func resume():
 
 #NOTE: This is overriding canvas scene end(). could add super()
 #but will need to make sure it wont break it
-func end():
+func end(is_canceled:bool = false):
 	clear_fish()
-	mouse_state = -1
+	mouse_state = -1 
+	if state.action_state:
+		state.action_state.is_canceled = is_canceled
+		state.action_state.end()
+		state.action_state = null
+	state.end.emit()
 
 func cancel():
-	canceled.emit()
-	end()
+	state.canceled.emit()
+	#canceled.emit()
+	end(true)
 
 func get_water_coords() -> Array[Vector2i]:
 	return %Ground.get_used_cells_by_id(-1, water_atlas_coords)
@@ -238,7 +277,7 @@ func catch_fish(coords:Vector2i):
 						var catch_chance : float = (cursor.value + 20) - (5*index)
 						var roll = randf_range(0,100)
 						if catch_chance <= 0:
-							missed.emit(true)
+							catch_missed(true)
 							return
 						elif roll <= catch_chance:
 							caught_fish_coords = picked_coords
@@ -249,13 +288,17 @@ func catch_fish(coords:Vector2i):
 								):
 									picked_fish["catch_roll"] = roll
 									picked_fish["catch_chance"] = catch_chance
-									catched.emit(picked_fish)
+									state.add_fish(picked_fish)
+									state.catched.emit()
+									end()
+									#catched.emit(picked_fish)
 									return
 		elif vaild_coords[index] == Vector2i(0,0):
 			print_debug("was not in water")
-			missed.emit(false)
+			#state.canceled.emit()
+			#missed.emit(false)
 			return
-	missed.emit(true)
+	catch_missed(true)
 
 
 func _input(event: InputEvent) -> void:
@@ -300,6 +343,8 @@ func update_cursor_position(new_position : Vector2):
 	cursor.position = new_position
 	
 func _ready() -> void:
+	ui_state.pounce_fishing_state = state
+	state.start.connect(on_start)
 	running_changed()
 
 

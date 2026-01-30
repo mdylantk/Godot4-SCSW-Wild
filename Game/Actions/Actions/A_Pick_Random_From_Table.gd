@@ -8,5 +8,5 @@ class_name A_Pick_Random_From_Table extends Base_Action
 func _run(action_state:Action_State) -> bool:
 	if table:
 		action_state.set_data('picked_table_data',table.pick_from_table(true))
-		return true
+		return super(action_state)
 	return false

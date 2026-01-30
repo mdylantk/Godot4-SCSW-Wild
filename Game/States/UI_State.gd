@@ -63,6 +63,7 @@ var enable_player_input :bool = true
 #this is a temp solution to acess the fishing ui
 #should have its own state
 var fishing_game = null
+var pounce_fishing_state : Pounce_Fishing_State
 #var dialog = null
 
 ##this will make sure the mouse mode is update

@@ -53,6 +53,12 @@ func end_interact(canceled:bool = false):
 	_end(canceled)
 	finished.emit(canceled,self)
 	_is_active = false
+	#removing the ref to the data with an empty dictionary
+	#to stop catching ref after the interaction is ended
+	#may be better to use an object so it can be null
+	#so data at end should be invaild unless acessing it during
+	#fishished
+	data = {}
 
 #the default run logic. will call all the steps with an update cycle if vaild
 func _run():

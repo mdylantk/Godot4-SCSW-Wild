@@ -13,6 +13,7 @@ class_name Base_Action extends Resource
 #TODO: deicide and make sure false is return (probably return true of handled
 #and false means something went wrong and action ran did not do anything)
 
+
 func run(data:Action_State) -> bool:
 	#NOTE: action is likly to fail if action state is null
 	#but some action do not make use of an action state
