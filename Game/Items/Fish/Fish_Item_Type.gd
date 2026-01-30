@@ -22,12 +22,3 @@ class_name Fish_Item_Type extends Extended_Item_Type
 #and might not be used if manually declaring them is deem more ideal
 #and use rarity instead for their stats
 @export var rarity : int = 1
-
-#NOTE: may add on use like actions that fish will make use of
-#could be used to fake a catch action by making a catch item (like junk)
-#and provide images for displaying...but need to flag the action data(or item) to
-#ignore adding the item to inventory. could also add it to the item type base
-#and use on_pickup and a flag that state it should be used up when pick up
-#NOTE: may be better to try to have the system use actions instead of using items
-#like that and only handle it that way for specail cases
-@export var on_catch_action : Base_Action
