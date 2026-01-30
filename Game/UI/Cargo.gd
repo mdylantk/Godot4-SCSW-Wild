@@ -53,7 +53,9 @@ func update_info(item:Item)->void:
 	%Discription.text = item.item_type.discription
 	%Meta.clear()
 	%Meta.add_item(str('amount:',item.amount,'/',item.item_type.max_stack_size))
-	%Meta.add_item(str('weight:',item.amount*item.item_type.base_weight))
+	%Meta.add_item(str(
+		'weight:',item.amount*item.item_type.base_weight*item.metadata.get('size',1.0))
+	)
 	#NOTE: meta display is mostly for debugging. some meta would need to
 	#be displayed or used to replace existing info, but for now
 	#this will display as much meta that will fit

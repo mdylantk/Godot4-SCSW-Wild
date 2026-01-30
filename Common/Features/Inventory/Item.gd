@@ -93,7 +93,7 @@ signal metadata_changed(item:Item, key:String)
 		metadata_changed.emit(self,'')
 		changed.emit()
 	get:
-		return data.get('metadata',{} as Dictionary[String,Variant])
+		return data.get_or_add('metadata',{} as Dictionary[String,Variant])
 #the main data of the item. the items should act as an interface to 
 #this data since the data may exist elsewhere and items are normally
 #short lived objects used to catch item resources while needed

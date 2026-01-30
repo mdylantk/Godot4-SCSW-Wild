@@ -22,11 +22,9 @@ signal canceled()
 
 @export var fishing_distance : float = 6
 
-@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5'):
-	set(value):
-		ui_state = value
-		if value:
-			ui_state.pounce_fishing_state.start.connect(on_start)
+@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
+			
+@export var player_state : Player_State = load('uid://c67c2fehtuhni')
 
 @onready var cursor = %Cursor
 
@@ -250,6 +248,35 @@ func _process(_delta):
 		elif mouse_state == 3:
 			mouse_state = 0
 			
+func process_catch(fish_data:Dictionary):
+	if !fish_data.is_empty():
+		var fish_type:Item_Type = fish_data["pick_fish_data"]["pick"] as Item_Type
+		var new_fish_item : Item = null
+		if fish_type:
+			new_fish_item  = Item.new(fish_data["pick_fish_data"]["pick"])
+			if fish_type as Fish_Item_Type:
+				new_fish_item.set_metadata(
+					'size',randf_range(fish_type.min_size,fish_type.max_size)
+				)
+			player_state.fish_log.add_fish_to_log(
+				new_fish_item.type_uid,
+				new_fish_item.amount
+			)
+		else:
+			print_debug('Picked fish is not an item type')
+		
+		player_state.add_item(new_fish_item)
+
+		ui_state.send_notifcation.emit("[center]"+"Acquired "+ fish_type.display_name)
+		
+		if fish_data["pick_fish_data"]["rarity"] < 3:
+			var total_fish_caught = player_state.get_score("common_fish_caught")
+			player_state.set_score("common_fish_caught",total_fish_caught + 1)
+		else:
+			var total_rare_fish_caught = player_state.get_score("rare_fish_caught")
+			player_state.set_score("rare_fish_caught",total_rare_fish_caught + 1)
+	
+			
 func catch_fish(coords:Vector2i):
 	if coords == Vector2i(24,25):
 		cancel()
@@ -288,7 +315,8 @@ func catch_fish(coords:Vector2i):
 								):
 									picked_fish["catch_roll"] = roll
 									picked_fish["catch_chance"] = catch_chance
-									state.add_fish(picked_fish)
+									#state.add_fish(picked_fish)
+									process_catch(picked_fish)
 									state.catched.emit()
 									end()
 									#catched.emit(picked_fish)
