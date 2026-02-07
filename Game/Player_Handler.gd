@@ -1,7 +1,7 @@
 class_name Player_Handler extends Controller_Handler
 
-@export var state : Player_State = load('uid://c67c2fehtuhni')
-@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
+@export var state : Player_State = Player_State.get_default_instance()
+@export var game_state : Game_State = Game_State.get_default_instance()
 
 #@export_file("*.tscn") var default_pawn = "res://Data/Node/Actors/Player.tscn"
 #think pawn will be handled by level and their connection base

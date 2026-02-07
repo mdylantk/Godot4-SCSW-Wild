@@ -7,7 +7,7 @@ extends CanvasLayer
 var state_section:String = "States"
 var state_key:String = "player"
 #todo: use player state and listen to score
-@export var state : Player_State = load('uid://c67c2fehtuhni') :
+@export var state : Player_State = Player_State.get_default_instance() :
 	set(value):
 		if value != state:
 			var old_state = state

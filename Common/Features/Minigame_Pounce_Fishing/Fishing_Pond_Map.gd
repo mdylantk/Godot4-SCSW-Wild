@@ -22,9 +22,9 @@ signal canceled()
 
 @export var fishing_distance : float = 6
 
-@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
+@export var ui_state : UI_State = UI_State.get_default_instance()
 			
-@export var player_state : Player_State = load('uid://c67c2fehtuhni')
+@export var player_state : Player_State = Player_State.get_default_instance()
 
 @onready var cursor = %Cursor
 

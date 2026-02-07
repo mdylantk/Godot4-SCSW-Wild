@@ -1,8 +1,8 @@
 extends Character2D
 
 #@export var interact_cast : ShapeCast2D
-@export var player_state:Player_State = load('uid://c67c2fehtuhni')
-@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
+@export var player_state:Player_State = Player_State.get_default_instance()
+@export var game_state : Game_State = Game_State.get_default_instance()
 #TODO: may remove inventory as a node so the save_state can store it
 #there no reason to have two copies of an item array. an inventory object
 #may still be used since the functions are needed and other stats like limits

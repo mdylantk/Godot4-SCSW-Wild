@@ -21,7 +21,7 @@ signal ui_focus(disable_other_input:bool)
 			%Dialog.visible = !hide_hud
 			%Notify.visible = !hide_hud
 			
-@export var state : UI_State = load('uid://dkc6l4f8ve4t5')
+@export var state : UI_State = UI_State.get_default_instance()
 
 #@export var world_state : World_State = load('uid://b047ftosxvj7p')
 

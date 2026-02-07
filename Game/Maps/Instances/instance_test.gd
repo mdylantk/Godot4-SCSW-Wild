@@ -1,6 +1,6 @@
 extends Tilemap_Handler
 
-@export var player_state : Player_State = load('uid://c67c2fehtuhni')
+@export var player_state : Player_State = Player_State.get_default_instance()
 
 func _ready() -> void:
 	#%Player.brain = Player.controller_brain

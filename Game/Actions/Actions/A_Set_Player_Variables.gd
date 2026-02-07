@@ -5,7 +5,7 @@ class_name A_Set_Player_Variables extends Base_Action
 ##TODO: update to a type dictionary. will need to make sure
 ##existing data do not get erased
 @export var variables : Dictionary
-@export var player_state : Player_State = load('uid://c67c2fehtuhni')
+@export var player_state : Player_State = Player_State.get_default_instance()
 
 func _run(action_state:Action_State) -> bool:
 	#NOTE: need to hande each case for the state.

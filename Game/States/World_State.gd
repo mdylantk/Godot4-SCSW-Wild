@@ -29,7 +29,10 @@ var is_level_loading : bool = false :
 			else:
 				level_ready.emit()
 				
-				
+
+static func get_default_instance()-> State:
+	return load('uid://b047ftosxvj7p')
+
 func _reset_state() -> void:
 	level_uid = default_level_uid
 

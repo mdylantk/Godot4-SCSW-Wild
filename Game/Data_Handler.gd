@@ -35,8 +35,10 @@ signal save_state_ready()
 #will use the game state for path info
 #and will try to move save and load and stuff there as well
 #data my stay for patching
-@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
-@export var client_state : Client_State= load('uid://bnvrjjacwa30l')
+@export var game_state : Game_State = Game_State.get_default_instance()
+#TODO: decided if client state should stay its own or if it should be part of ui
+#state
+@export var client_state : Client_State = Client_State.get_default_instance()
 
 ##the default object for saving data realted to the current game save
 #var save_state : ConfigFile

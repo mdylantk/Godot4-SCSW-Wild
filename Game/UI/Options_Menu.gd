@@ -2,8 +2,8 @@ extends Canvas_Scene
 #signal close(node:Node)
 
 @export var default_focus : Control
-@export var client_state : Client_State= load('uid://bnvrjjacwa30l')
-@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
+@export var client_state : Client_State = Client_State.get_default_instance()
+@export var ui_state : UI_State = UI_State.get_default_instance()
 
 
 #May not be ideal to ref it here, but for now keeping it here for testing and easy refactoring

@@ -10,7 +10,7 @@ class_name A_Set_Dialog extends Base_Action
 @export var cancelable: bool = true
 
 #@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
-@export var dialog_state : Dialog_State = load('uid://ckldc286fg63p')
+@export var dialog_state : Dialog_State = Dialog_State.get_default_instance()
 
 #NOTE: if data is used to format text, large data could be an issue
 #if the system is used correctly, then the data should be small, else

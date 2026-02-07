@@ -2,9 +2,9 @@ class_name Generator_Level extends Base_Level
 
 @export var level_id := "world"
 
-@export var player_state : Player_State = load('uid://c67c2fehtuhni')
-@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
-@export var world_state :World_State = load('uid://b047ftosxvj7p')
+@export var player_state : Player_State = Player_State.get_default_instance()
+@export var game_state : Game_State = Game_State.get_default_instance()
+@export var world_state : World_State = World_State.get_default_instance()
 
 @export var light_color_curve : Gradient = load('uid://cnotvdiw4vtvo')
 #@export var use_game_seed: bool = true

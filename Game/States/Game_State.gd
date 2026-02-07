@@ -30,6 +30,9 @@ var game_time : int = 0
 #it may change still.
 var time_in_day : float = 3600.0
 
+static func get_default_instance()-> State:
+	return load('uid://cnbeqfpaumxj3')
+
 func get_save_path()->String:
 	return default_path + '/' + save_name + '/'
 

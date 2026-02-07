@@ -66,6 +66,9 @@ var fishing_game = null
 var pounce_fishing_state : Pounce_Fishing_State
 #var dialog = null
 
+static func get_default_instance()-> State:
+	return load('uid://dkc6l4f8ve4t5')
+
 ##this will make sure the mouse mode is update
 ##after changing unfocus_mouse_mode or focus_mouse_mode
 ##NOTE: focus_mouse_mode is not meant to be change often

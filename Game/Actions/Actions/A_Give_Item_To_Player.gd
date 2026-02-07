@@ -19,8 +19,8 @@ class_name A_Give_Item_To_Player extends Base_Action
 ##The player state override. Use for debugging or if state exist in a diffrent place
 ## but may use a multiplayer interface that can interact with the non-local player state.
 ##NOTE: multiplayer is not in the project scope
-@export var player_state : Player_State = load('uid://c67c2fehtuhni')
-@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
+@export var player_state : Player_State = Player_State.get_default_instance()
+@export var ui_state : UI_State = UI_State.get_default_instance()
 
 func _run(data:Action_State) -> bool:
 	var item_starting_amount : int

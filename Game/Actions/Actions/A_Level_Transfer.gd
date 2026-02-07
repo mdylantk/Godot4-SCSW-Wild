@@ -13,8 +13,8 @@ class_name A_Level_Transfer extends Base_Action
 
 @export var spawn_index : int = 0
 
-@export var world_events : World_State = load('uid://b047ftosxvj7p')
-@export var player_state : Player_State = load('uid://c67c2fehtuhni')
+@export var world_events : World_State = World_State.get_default_instance()
+@export var player_state : Player_State = Player_State.get_default_instance()
 
 func _run(action_state:Action_State) -> bool:
 	if level_uid.is_empty():

@@ -15,6 +15,8 @@ signal advance_inventory_changed(index:int)
 #since only the amount is importaint.
 signal standard_inventory_changed(id:String)
 
+@export var exit_data : Exit_Data = Exit_Data.new()
+
 #NOTE: _scores could be added to numbers
 #but it be easier to get all scores this way
 #score may get merge with numbers if that is not expected to be common
@@ -57,8 +59,10 @@ var advance_inventory_size : int = 100 :
 		#so like number of magic hands, party memeber slots, transport slots
 		return _data['_numbers'].get('_base_cargo_size',advance_inventory_size)
 
-@export var exit_data : Exit_Data = Exit_Data.new()
 
+
+static func get_default_instance()-> State:
+	return load('uid://c67c2fehtuhni')
 
 func has_score(id:String)->bool:
 	return _data['_scores'].has(id)

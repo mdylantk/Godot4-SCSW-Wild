@@ -3,8 +3,8 @@ class_name Dialog_Handler extends Canvas_Scene
 #signal started()
 #signal ended(canceled)
 
-@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
-@export var state : Dialog_State = load('uid://ckldc286fg63p')
+@export var ui_state : UI_State = UI_State.get_default_instance()
+@export var state : Dialog_State = Dialog_State.get_default_instance()
 
 ##action to run if about to end dialog
 var cancel_action : Base_Action

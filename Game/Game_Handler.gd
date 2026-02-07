@@ -3,8 +3,8 @@
 ##as well as connect to their signals so it can maintain the game loop
 class_name Game_Handler extends Node
 
-@export var state : Game_State = load('uid://cnbeqfpaumxj3')
-@export var world_state : World_State = load('uid://b047ftosxvj7p')
+@export var state : Game_State = Game_State.get_default_instance()
+@export var world_state : World_State = World_State.get_default_instance()
 
 #use the ui child, but this could stay
 @onready var ui : UI_Handler = %UI

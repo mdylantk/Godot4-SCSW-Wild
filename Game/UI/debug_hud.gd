@@ -2,9 +2,9 @@ extends CanvasLayer
 
 @export var enable_debug : bool = true
 
-@export var game_state : Game_State = load('uid://cnbeqfpaumxj3')
-@export var world_state : World_State = load('uid://b047ftosxvj7p')
-@export var player_state : Player_State = load('uid://c67c2fehtuhni')
+@export var game_state : Game_State = Game_State.get_default_instance()
+@export var world_state : World_State = World_State.get_default_instance()
+@export var player_state : Player_State = Player_State.get_default_instance()
 
 var ui_message : String
 

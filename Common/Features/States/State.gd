@@ -10,6 +10,10 @@ signal saving()
 ##called when data is finished being loaded.
 signal loaded()
 
+##Returns a state if a default exists.
+static func get_default_instance()-> State:
+	return null
+
 ##Atempts to convert the pass array into a vector. Type represent the desire vector
 ##where 0 or less will use the array size to guess it and 5 and above will return
 ##the vector as a shallow copy. 1 will return it as a float or int base on the as_int

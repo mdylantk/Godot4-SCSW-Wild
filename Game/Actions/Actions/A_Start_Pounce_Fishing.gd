@@ -2,7 +2,7 @@ class_name A_Start_Pounce_Fishing extends Base_Action
 
 @export var random_table: Random_Table_Resource
 
-@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
+@export var ui_state : UI_State = UI_State.get_default_instance()
 
 
 func _run(action_state:Action_State) -> bool:

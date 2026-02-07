@@ -12,6 +12,9 @@ var config_file = ConfigFile.new()
 var language_keys: Array[String] = ["en", "es"] #this is a placeholder. may keep it here
 #and move it up or have something else handles the ids
 
+static func get_default_instance()-> State:
+	return load('uid://bnvrjjacwa30l')
+
 func set_language(index:int = -1) -> String:
 	if index >= 0 && index < language_keys.size():
 		TranslationServer.set_locale(language_keys[index])
