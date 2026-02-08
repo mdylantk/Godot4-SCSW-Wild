@@ -16,7 +16,7 @@ var update_flagged:bool = false
 
 func get_item(index)->Item:
 	if player_state.advance_inventory.size() > index && index >= 0:
-		return player_state.advance_inventory.get(index)
+		return player_state.advance_inventory.get_item(index)
 	return null
 	
 ##Check to see if there an item in list at the index.
@@ -127,7 +127,9 @@ func refresh_item_list()->void:
 	refresh_flagged = false
 	update_flagged = false
 	items.clear()
-	for item in player_state.advance_inventory:
+	for item_index in range(player_state.advance_inventory.size()):
+		var item = player_state.advance_inventory.get_item(item_index)
+	#for item in player_state.advance_inventory.items:
 		add_item(item)
 	select_item(last_item_selected)
 

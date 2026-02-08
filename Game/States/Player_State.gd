@@ -48,8 +48,13 @@ var fish_log : Fish_Log = Fish_Log.new()
 ##an dictionary of iten uid(for linking display info) and quanities of that item
 var standard_inventory : Dictionary[String,int]
 
-var advance_inventory : Array[Item]
+#var advance_inventory : Array[Item]
+var advance_inventory : Inventory = Inventory.new()
 
+#NOTE:need to have a listen flow for inventory if it becomes an object
+#so that changes to any meta to affect slots will change the inventory
+#slots. also could use a callable to get the current slot amount
+#NOTE: this may not be in used when the object is used.
 var advance_inventory_size : int = 100 :
 	set(value):
 		advance_inventory_size = value
@@ -93,27 +98,11 @@ func set_vector(id:String, vector:Variant)->void:
 		
 	
 		
-##index only applies to advance inventory
-##TODO: limit amount to max stack size.
-##NOTE: this can create half filled stack and might not be desired
-##so either checks and fillers are needed or this is reserve for
-##cases where checks are done before hand or when the desire approch
-##is not wanted.
+#NOTE: may create an object for each inventory type for reusability
+#and to reduce clutter in the player state
 func set_item(item:Item,index:int = 0)->void:
 	if item.item_type as Extended_Item_Type:
-		var item_copy : Item = Item.load_item(item.data)
-		if advance_inventory.size() > index && index >= 0:
-			if item_copy.amount > 0:
-				advance_inventory[index] = item_copy
-			else:
-				advance_inventory.remove_at(index)
-		elif item_copy.amount > 0 && advance_inventory.size() == index:
-			advance_inventory.append(item_copy)
-		else:
-			print_debug('Index for set_item is out of bounds')
-			return
-		advance_inventory_changed.emit(index)
-		return
+		advance_inventory.set_item(item,index)
 	else:
 		standard_inventory.set(item.type_uid,item.amount)
 		standard_inventory_changed.emit(item.type_uid)
@@ -130,71 +119,7 @@ func add_item(new_item:Item)->void:
 	if item_type == null:
 		return
 	if item_type as Extended_Item_Type:
-		var remaining_amount : int = new_item.amount
-		if remaining_amount > 0:
-			for item_slot in range(advance_inventory.size()):
-				var item : Item = advance_inventory.get(item_slot)
-				#item.load_from_dict(item_data)
-				if item.is_similar_to(new_item):
-					remaining_amount = item.increase_amount(remaining_amount)
-					#item_data.assign(item.convert_to_dict())
-					#inventory_modified = true
-					#advance_inventory_changed.emit(item_slot)
-					#slot_update.emit(self,0,item)
-					print_debug('MEOW1 remaining: ', item.amount,' ', advance_inventory.get(item_slot).amount)
-			for new_slot in range(advance_inventory_size-advance_inventory.size()):
-				if remaining_amount > 0:
-					var new_item_stack : Item = Item.load_item(new_item.data,true)
-					var new_amount = remaining_amount
-					if remaining_amount > item_type.max_stack_size:
-						new_amount = item_type.max_stack_size
-						remaining_amount = remaining_amount - new_item_stack.item_type.max_stack_size
-						#advance_inventory_changed.emit(new_slot)
-					else:
-						new_amount = remaining_amount
-						remaining_amount = 0
-					new_item_stack.amount = new_amount
-					advance_inventory.append(new_item_stack)
-					#advance_inventory.append(new_item_stack.convert_to_dict())
-					#inventory.append(new_item_stack)
-					#inventory_modified = true
-					advance_inventory_changed.emit(advance_inventory.size()-1)
-					#slot_update.emit(self,inventory.size()-1,new_item_stack)
-					print_debug('MEOW2 amount: ', new_item_stack.amount,' ',advance_inventory.get(advance_inventory.size()-1).amount)
-				else:
-					break
-		elif remaining_amount < 0:
-			var orignal_size = advance_inventory.size()
-			for i in range(orignal_size):
-				var slot = orignal_size - (i+1)
-				var item = advance_inventory.get(slot)
-				#var item = null
-				#if item_data:
-				#	item = Item.load_item(item_data)
-					#item.load_from_dict(item_data)
-				if item.is_similar_to(new_item):
-					remaining_amount = item.increase_amount(remaining_amount)
-					if item.amount <= 0:
-						advance_inventory.remove_at(slot)
-						#inventory_modified = true
-						#using null to state the item was removed
-						#might not need to know what was removed
-						#but if needed, could pass additional parameter
-						#also may be ideal to pass an object/array
-						#that holds extra info
-						advance_inventory_changed.emit(slot)
-						#slot_update.emit(self,slot,item)
-					#advance_inventory_changed.emit(slot)
-					#else:
-					#	item_data.assign(item.convert_to_dict())
-		#TODO:make sure this is correct
-		#that all cases above will set the remaining amount base on use
-		#should be 0 if used up, but positive is some is left over
-		#or negative if not enoigh was taken away.
-		new_item.amount = remaining_amount
-		#if inventory_modified:
-		#	advance_inventory_changed.emit()
-		print_debug('MEOW3 remaining: ', new_item.amount)
+		advance_inventory.add_item(new_item)
 	else:
 		#would need to store the non object ref to make saving/loading easier
 		var old_amount : int = standard_inventory.get(new_item.type_uid,0)
@@ -237,12 +162,8 @@ func get_save_data()->Dictionary[String,Variant]:
 	var save_data : Dictionary[String,Variant] = _data
 	save_data.set('exit_data',exit_data.data)
 	save_data.set('standard_inventory',standard_inventory)
-	var temp_adv_inv : Array[Dictionary]
-	for item in advance_inventory:
-		if item:
-			temp_adv_inv.append(item.data)
-		else:
-			temp_adv_inv.append({} as Dictionary[String,Variant])
+	var temp_adv_inv : Array[Dictionary] = advance_inventory.get_items_data()
+
 	save_data.set('advance_inventory',temp_adv_inv)
 	
 	save_data.set('data',get_metadata())
@@ -258,11 +179,7 @@ func load_data(new_data:Dictionary[String,Variant]={})->void:
 	exit_data.data = new_data.get('exit_data',exit_data.data)
 	standard_inventory = new_data.get('standard_inventory', standard_inventory)
 	var temp_adv_inv : Array[Dictionary] = new_data.get('advance_inventory', [] as Array[Dictionary])
-	for item_data in temp_adv_inv:
-		if item_data.is_empty():
-			advance_inventory.append(null)
-		advance_inventory.append(Item.load_item(item_data))
-	#advance_inventory = new_data.get('advance_inventory', advance_inventory)
+	advance_inventory.load_items(temp_adv_inv)
 	
 	set_metadata(new_data.get('data', get_metadata()))
 	#data = new_data.get('data', data)
@@ -273,3 +190,10 @@ func load_data(new_data:Dictionary[String,Variant]={})->void:
 	
 	advance_inventory_changed.emit(-1)
 	standard_inventory_changed.emit('')
+
+func on_inventory_changed(slot:int):
+	advance_inventory_changed.emit(slot)
+
+func _init() -> void:
+	advance_inventory.changed.connect(on_inventory_changed)
+	pass

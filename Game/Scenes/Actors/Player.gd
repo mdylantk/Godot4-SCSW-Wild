@@ -8,10 +8,10 @@ extends Character2D
 #may still be used since the functions are needed and other stats like limits
 #also a node can still be useful for providing item drops or static loadouts
 #but any persistant/dynamic inventory would need to be redirected to the save state.
-@onready var inventory = $Inventory
+#@onready var inventory = $Inventory
 
-func get_inventory()->Inventory:
-	return $Inventory
+#func get_inventory()->Inventory:
+#	return $Inventory
 
 func _ready()->void:
 	facing_changed.connect(on_facing_changed)
@@ -44,8 +44,8 @@ func get_save_path()->String:
 #or saved. could also split the saving and loading into functions
 #and then call it to get acess the the instance or give the instance
 func on_autosave(path : String = ""):
-	if inventory != null:
-		save_state.inventory = inventory.inventory
+	#if inventory != null:
+		#save_state.inventory = inventory.inventory
 	save_state.local_position = position
 	super(path)
 	
@@ -53,8 +53,8 @@ func on_autosave(path : String = ""):
 func on_game_loaded(path : String = ""):
 	super(path)
 	#await get_tree().process_frame
-	if inventory != null and save_state != null:
-		inventory.inventory = save_state.inventory
+	#if inventory != null and save_state != null:
+		#inventory.inventory = save_state.inventory
 
 func on_movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2):
 	if direction.x < 0 :

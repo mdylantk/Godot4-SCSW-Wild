@@ -1,9 +1,8 @@
-[gd_scene load_steps=24 format=3 uid="uid://bugclr6n3igb4"]
+[gd_scene format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" uid="uid://bp3atrikcfxmj" path="res://Game/Scenes/Actors/Player.gd" id="1_07gio"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/States/Player_State.tres" id="2_ubr6l"]
-[ext_resource type="PackedScene" uid="uid://bxr6ovitjvqsd" path="res://Common/Features/Inventory/Inventory.tscn" id="3_m3amk"]
 [ext_resource type="Script" uid="uid://ok522b0njxq0" path="res://Game/Interactions/Shaped_Interactor.gd" id="4_qftw7"]
 [ext_resource type="Texture2D" uid="uid://bm67u18sl77a1" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/Characters.png" id="4_ubr6l"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Game/Main_Camera.tscn" id="7_b7ptm"]
@@ -148,35 +147,31 @@ fill = 1
 fill_from = Vector2(0.504274, 0.512821)
 fill_to = Vector2(0.807692, 0.149573)
 
-[node name="Player" type="CharacterBody2D" groups=["Player_Pawns"]]
+[node name="Player" type="CharacterBody2D" unique_id=1959675502 groups=["Player_Pawns"]]
 collision_layer = 261
 collision_mask = 433
 script = ExtResource("1_07gio")
 player_state = ExtResource("2_ubr6l")
 
-[node name="Collsion" type="CollisionShape2D" parent="."]
+[node name="Collsion" type="CollisionShape2D" parent="." unique_id=1752735775]
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_fb00q")
 
-[node name="Inventory" parent="." instance=ExtResource("3_m3amk")]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1889968907]
 sprite_frames = SubResource("SpriteFrames_aymj4")
 animation = &"sit"
 flip_h = true
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_q78uo")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=244854522]
+libraries/ = SubResource("AnimationLibrary_q78uo")
 
-[node name="Shaped_Interactor" type="Node2D" parent="." node_paths=PackedStringArray("shape_cast")]
+[node name="Shaped_Interactor" type="Node2D" parent="." unique_id=645777991 node_paths=PackedStringArray("shape_cast")]
 unique_name_in_owner = true
 position = Vector2(0, 3)
 script = ExtResource("4_qftw7")
 shape_cast = NodePath("ShapeCast2D")
 
-[node name="ShapeCast2D" type="ShapeCast2D" parent="Shaped_Interactor"]
+[node name="ShapeCast2D" type="ShapeCast2D" parent="Shaped_Interactor" unique_id=1049513517]
 visible = false
 enabled = false
 shape = SubResource("RectangleShape2D_ifpql")
@@ -185,28 +180,28 @@ max_results = 2
 collision_mask = 8
 collide_with_areas = true
 
-[node name="Direction" type="Sprite2D" parent="Shaped_Interactor"]
+[node name="Direction" type="Sprite2D" parent="Shaped_Interactor" unique_id=798422277]
 position = Vector2(14, 0)
 scale = Vector2(0.25, 0.25)
 texture = SubResource("AtlasTexture_21snw")
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1475468417]
 collision_layer = 4
 collision_mask = 0
 
-[node name="Hitbox" type="CollisionShape2D" parent="Hurtbox"]
+[node name="Hitbox" type="CollisionShape2D" parent="Hurtbox" unique_id=389826178]
 shape = SubResource("RectangleShape2D_ovqcn")
 debug_color = Color(0.972549, 0, 0, 0.419608)
 
-[node name="Camera2D" parent="." instance=ExtResource("7_b7ptm")]
+[node name="Camera2D" parent="." unique_id=1672797874 instance=ExtResource("7_b7ptm")]
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=634827207]
 position = Vector2(1.6093254e-06, 0)
 scale = Vector2(2.5, 2)
 energy = 0.25
 texture = SubResource("GradientTexture2D_flttt")
 
-[node name="Brain" type="Node" parent="."]
+[node name="Brain" type="Node" parent="." unique_id=272028249]
 unique_name_in_owner = true
 script = ExtResource("8_uks6s")
 controller = ExtResource("9_dfeth")
