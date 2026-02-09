@@ -5,15 +5,17 @@ class_name Player_State extends State
 #transfered
 
 signal score_changed(id:String, new_value:int)
+signal number_changed(id:String, new_value:int)
+signal var_changed(id:String, new_value:String)
 
 signal vector_changed(id:String, new_value:Variant)
 #emits when the inventory structure changes
 #such as items being added, removed, or changed
-signal advance_inventory_changed(index:int)
+#signal advance_inventory_changed(index:int)
 #(should) emits when the amount changes. unlike advance,
 #it lacks an object that represents the item state
 #since only the amount is importaint.
-signal standard_inventory_changed(id:String)
+#signal standard_inventory_changed(id:String)
 
 @export var exit_data : Exit_Data = Exit_Data.new()
 
@@ -46,25 +48,10 @@ var fish_log : Fish_Log = Fish_Log.new()
 #stash (if added) will be a mix of the two or just the latter
 #for a protective storage
 ##an dictionary of iten uid(for linking display info) and quanities of that item
-var standard_inventory : Dictionary[String,int]
+var standard_inventory : Inventory = Inventory.new()
 
 #var advance_inventory : Array[Item]
-var advance_inventory : Inventory = Inventory.new()
-
-#NOTE:need to have a listen flow for inventory if it becomes an object
-#so that changes to any meta to affect slots will change the inventory
-#slots. also could use a callable to get the current slot amount
-#NOTE: this may not be in used when the object is used.
-var advance_inventory_size : int = 100 :
-	set(value):
-		advance_inventory_size = value
-		_data['_numbers'].set('_base_cargo_size',value)
-	get:
-		#Should use a function that add all the modifiers (when they are added)
-		#so like number of magic hands, party memeber slots, transport slots
-		return _data['_numbers'].get('_base_cargo_size',advance_inventory_size)
-
-
+var advance_inventory : Advance_Inventory = Advance_Inventory.new()
 
 static func get_default_instance()-> State:
 	return load('uid://c67c2fehtuhni')
@@ -76,13 +63,58 @@ func set_score(id:String, new_score: int)->void:
 	var old_score = _data['_scores'].get(id,0)
 	if old_score != new_score:
 		_data['_scores'].set(id,new_score)
+		_on_score_changed(id,new_score,old_score)
 		score_changed.emit(id,new_score)
-		value_changed.emit(id+"_score",new_score,old_score)
-		print_debug("meow! set score of ", self, old_score, '->', new_score,' ', id)
+		value_changed.emit("_score",new_score,old_score,[id])
+		#print_debug("meow! set score of ", self, old_score, '->', new_score,' ', id)
 	
 func get_score(id:String)->int:
 	return _data['_scores'].get(id,0)
+	
+func _on_score_changed(id:String, new_score: int, old_score:int)->void:
+	pass 
 
+func has_number(id:String)->bool:
+	return _data['_numbers'].has(id)
+
+func set_number(id:String, new_number: Variant)->void:
+	#TODO: make sure new number is a int or a float and 
+	#handle cases when either is false
+	if !is_number(new_number):
+		push_error('new_number is not a number. Pass it as a int or float')
+		return
+	var old_number = _data['_numbers'].get(id,0)
+	if old_number != new_number:
+		_data['_numbers'].set(id,new_number)
+		_on_number_changed(id,new_number,old_number)
+		number_changed.emit(id,new_number)
+		value_changed.emit("_numbers",new_number,old_number,[id])
+
+func get_number(id:String, default:Variant=0)->Variant:
+	return _data['_numbers'].get(id,default)
+	
+func _on_number_changed(id:String, new_number: Variant, old_number:Variant):
+	if id == '_base_cargo_size' || id == 'magic_hands':
+		update_advance_inventory_size()
+	pass
+
+func has_var(id:String)->bool:
+	return _data['_vars'].has(id)
+
+func set_var(id:String, new_var: String)->void:
+	var old_var = _data['_vars'].get(id,'')
+	if old_var != new_var:
+		_data['_vars'].set(id,new_var)
+		_on_var_changed(id, new_var, old_var)
+		var_changed.emit(id,new_var)
+		value_changed.emit("_vars",new_var,old_var,[id])
+
+func get_var(id:String,default:String='')->String:
+	return _data['_vars'].get(id,default)
+	
+func _on_var_changed(id:String, new_var: String, old_var:String)->void:
+	pass
+	
 func has_vector(id:String)->bool:
 	return _data['_vectors'].has(id)
 
@@ -94,18 +126,29 @@ func set_vector(id:String, vector:Variant)->void:
 	var new_vector : Array = vector_to_array(vector)
 	_data['_vectors'].set(id,vector_to_array(vector))
 	if old_vector != new_vector:
+		_on_vector_changed(id,vector,new_vector,old_vector)
 		vector_changed.emit(id,vector)
-		
+		value_changed.emit("_vectors",new_vector,old_vector,[id])
+
+func _on_vector_changed(id:String,vector_variant:Variant, new_vector:Array,old_vector:Array)->void:
+	pass
 	
-		
+
+func update_advance_inventory_size()->void:
+	advance_inventory.max_size = (
+		get_number('_base_cargo_size',advance_inventory.max_size) +
+		get_number('magic_hands',0)
+	)
+	
+
 #NOTE: may create an object for each inventory type for reusability
 #and to reduce clutter in the player state
 func set_item(item:Item,index:int = 0)->void:
 	if item.item_type as Extended_Item_Type:
 		advance_inventory.set_item(item,index)
 	else:
-		standard_inventory.set(item.type_uid,item.amount)
-		standard_inventory_changed.emit(item.type_uid)
+		standard_inventory.set_amount(item.type, item.amount)
+
 #Note: item pass amount will be changed based on what is taken from it
 #so it will have an amount of 0 unless not all of the item was used up
 #so it may be better to pass a dupicate of the item if the item amount need
@@ -121,21 +164,8 @@ func add_item(new_item:Item)->void:
 	if item_type as Extended_Item_Type:
 		advance_inventory.add_item(new_item)
 	else:
-		#would need to store the non object ref to make saving/loading easier
-		var old_amount : int = standard_inventory.get(new_item.type_uid,0)
-		var new_amount : int = clamp(old_amount + new_item.amount,0,item_type.max_stack_size)
-		new_item.amount -= new_amount
-		#TODO: Decided if the path should be stored instead of id
-		#id may cause issues if change(should not normally) also may
-		#be easier to track down the item type with a path
-		#the issue with paths is that it could change
-		#so having something that states where it is located
-		#would help
-		standard_inventory.set(new_item.type_uid,new_amount)
-		if old_amount != new_amount:
-			standard_inventory_changed.emit(new_item.type_uid)
-		#NOTE: decide if it should return a value representing
-		#what is left over
+		standard_inventory.increase_amount(str(new_item.type_uid),new_item.amount)
+		
 	#TODO: check item is unique to see if it is stored as a 
 	#stardard(false) item or advance(true)
 	#make sure that item has an amount, else make sure to add amount as a parameter
@@ -161,7 +191,7 @@ func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
 	var save_data : Dictionary[String,Variant] = _data
 	save_data.set('exit_data',exit_data.data)
-	save_data.set('standard_inventory',standard_inventory)
+	save_data.set('standard_inventory',standard_inventory.items_data)
 	var temp_adv_inv : Array[Dictionary] = advance_inventory.get_items_data()
 
 	save_data.set('advance_inventory',temp_adv_inv)
@@ -177,8 +207,12 @@ func get_save_data()->Dictionary[String,Variant]:
 func load_data(new_data:Dictionary[String,Variant]={})->void:
 	_data = new_data
 	exit_data.data = new_data.get('exit_data',exit_data.data)
-	standard_inventory = new_data.get('standard_inventory', standard_inventory)
+	standard_inventory.items_data = new_data.get('standard_inventory', standard_inventory.items_data)
 	var temp_adv_inv : Array[Dictionary] = new_data.get('advance_inventory', [] as Array[Dictionary])
+	
+	#should update the size before loading the items just incase
+	#the latter ever needs to depend on size
+	update_advance_inventory_size()
 	advance_inventory.load_items(temp_adv_inv)
 	
 	set_metadata(new_data.get('data', get_metadata()))
@@ -188,12 +222,8 @@ func load_data(new_data:Dictionary[String,Variant]={})->void:
 	
 	loaded.emit()
 	
-	advance_inventory_changed.emit(-1)
-	standard_inventory_changed.emit('')
-
-func on_inventory_changed(slot:int):
-	advance_inventory_changed.emit(slot)
-
-func _init() -> void:
-	advance_inventory.changed.connect(on_inventory_changed)
-	pass
+	#Todo: decide on how to handled inventory change on load
+	#below could work, but a bit of a brute solution. a dedicated load
+	#may be better, but require all listenerns to handle a on load case.
+	advance_inventory.changed.emit(-1)
+	standard_inventory.changed.emit('',-1)

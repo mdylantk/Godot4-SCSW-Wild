@@ -198,7 +198,7 @@ func _on_visibility_changed() -> void:
 #		visible = !visible
 
 func _ready() -> void:
-	player_state.advance_inventory_changed.connect(on_advance_inventory_changed)
+	player_state.advance_inventory.changed.connect(on_advance_inventory_changed)
 
 func _on_exit_pressed() -> void:
 	end()

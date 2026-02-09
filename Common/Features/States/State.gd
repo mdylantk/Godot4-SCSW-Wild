@@ -4,7 +4,7 @@ class_name State extends Resource
 signal notify(type:String, message:Variant)
 ##Called when a Variant value or certain properties are changed
 ##TODO: add types and decided if the name is fine since value feels more number like
-signal value_changed(property, new_value, old_value)
+signal value_changed(property:String, new_value:Variant, old_value:Variant, sub_properties:Array[String])
 ##Called before the a saving so data can be updated.
 signal saving()
 ##called when data is finished being loaded.
@@ -13,7 +13,10 @@ signal loaded()
 ##Returns a state if a default exists.
 static func get_default_instance()-> State:
 	return null
-
+	
+##Return true if the passed value is a float or int
+static func is_number(value:Variant)->bool:
+	return typeof(value) == TYPE_FLOAT || typeof(value) == TYPE_INT
 ##Atempts to convert the pass array into a vector. Type represent the desire vector
 ##where 0 or less will use the array size to guess it and 5 and above will return
 ##the vector as a shallow copy. 1 will return it as a float or int base on the as_int
@@ -67,7 +70,7 @@ static func vector_to_array(vector:Variant)->Array:
 	if typeof(vector) == TYPE_ARRAY:
 		#NOTE: this do not check the type
 		return vector.duplicate()
-	if typeof(vector) == TYPE_FLOAT || typeof(vector) == TYPE_INT:
+	if is_number(vector):
 		return [vector]
 	return []
 
@@ -79,7 +82,7 @@ func set_data(key: String, value: Variant) -> void:
 		old_value = get_meta(key)
 	if old_value != value:
 		set_meta(key,value)
-		value_changed.emit(key, value, old_value)
+		value_changed.emit(key, value, old_value, [] as Array[String])
 
 #NOTE: object meta could be used for the state, but
 #the state should handle it in a diffrent way.

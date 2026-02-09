@@ -172,6 +172,21 @@ func is_equal_to(other_item:Item) -> bool :
 		if amount == other_item.amount:
 			return true
 	return false
+
+#set the amount in a way that limit it to
+#0 and type max stack size. any left over is return
+#NOTE: setting amount directly works as well, but won't 
+#repects these limits
+func set_amount(new_amount:int)->int:
+	if new_amount < 0:
+		amount = 0
+		return new_amount
+	if new_amount > item_type.max_stack_size:
+		amount = item_type.max_stack_size
+		return new_amount - item_type.max_stack_size
+	amount = new_amount
+	return 0
+	
 # this is currently in use. 
 func increase_amount(new_amount:int) -> int:
 	var total_amount : int = amount + new_amount
