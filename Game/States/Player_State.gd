@@ -5,19 +5,23 @@ class_name Player_State extends State
 #transfered
 
 signal score_changed(id:String, new_value:int)
-signal number_changed(id:String, new_value:int)
+signal number_changed(id:String, new_value:Variant)
 signal var_changed(id:String, new_value:String)
 
 signal vector_changed(id:String, new_value:Variant)
-#emits when the inventory structure changes
-#such as items being added, removed, or changed
-#signal advance_inventory_changed(index:int)
-#(should) emits when the amount changes. unlike advance,
-#it lacks an object that represents the item state
-#since only the amount is importaint.
-#signal standard_inventory_changed(id:String)
 
-@export var exit_data : Exit_Data = Exit_Data.new()
+
+##the exit info used on new games (or when the state is reset)
+@export var default_exit_data : Exit_Data = Exit_Data.new()
+##A list of items to add to the player inventories. 
+##NOTE: depending on the item_type and inventory, latter 
+##entries may override similar entries
+@export var default_items : Array[Item]
+
+
+
+##the current exit data in use
+var exit_data : Exit_Data = Exit_Data.new()
 
 #NOTE: _scores could be added to numbers
 #but it be easier to get all scores this way
@@ -183,9 +187,17 @@ func _reset_state() -> void:
 	
 	fish_log._data.clear()
 	
-	exit_data.data.clear()
+	exit_data.data = default_exit_data.data.duplicate()
+	
 	standard_inventory.clear()
 	advance_inventory.clear()
+	for item in default_items:
+		if item == null:
+			continue
+		if (item.item_type as Extended_Item_Type):
+			advance_inventory.set_item(item)
+		else:
+			standard_inventory.set_amount(str(item.type_uid),item.amount)
 	
 func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
@@ -204,6 +216,7 @@ func get_save_data()->Dictionary[String,Variant]:
 
 #and load will load the pass data (if changed) and then notify
 #all that it is ready(aka loaded)
+#TODO: make sure a new game case is handled so the defaults are correctly applied
 func load_data(new_data:Dictionary[String,Variant]={})->void:
 	_data = new_data
 	exit_data.data = new_data.get('exit_data',exit_data.data)

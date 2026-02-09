@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Game_State" load_steps=2 format=3 uid="uid://cnbeqfpaumxj3"]
+[gd_resource type="Resource" script_class="Game_State" format=3 uid="uid://cnbeqfpaumxj3"]
 
 [ext_resource type="Script" uid="uid://caxqk0lkxobrf" path="res://Game/States/Game_State.gd" id="1_j5cly"]
 

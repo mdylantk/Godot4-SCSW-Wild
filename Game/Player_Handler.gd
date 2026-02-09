@@ -95,6 +95,7 @@ func _ready():
 	print_debug("player state", state)
 	game_state.save_event.connect(on_autosave)
 	game_state.load_event.connect(on_game_loaded)
+	game_state.new_game_event.connect(on_new_game)
 
 
 

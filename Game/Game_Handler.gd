@@ -88,14 +88,15 @@ func start_game(is_new:bool = true, save_name:String="default"):
 	#World seed is to help keep the world gen similar or the same between sessions
 	var world_seed : int
 	if state.new_game:
-		randomize()
-		state.random_seed = randi()
+		state.reset_state()
+		#randomize()
+		#state.random_seed = randi()
 		#NOTE: may need to set this to false
 		#after some time or change it to an int to state
 		#the game creation state
 		state.new_game = false
-	else:
-		seed(state.random_seed)
+	#else:
+	seed(state.random_seed)
 	world_seed = state.random_seed
 		
 	#load the maps and assign the seeds. could have a dedicated system
