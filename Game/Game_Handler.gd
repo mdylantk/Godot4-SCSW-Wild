@@ -5,6 +5,7 @@ class_name Game_Handler extends Node
 
 @export var state : Game_State = Game_State.get_default_instance()
 @export var world_state : World_State = World_State.get_default_instance()
+@export var player_state : Player_State = Player_State.get_default_instance()
 
 #use the ui child, but this could stay
 @onready var ui : UI_Handler = %UI

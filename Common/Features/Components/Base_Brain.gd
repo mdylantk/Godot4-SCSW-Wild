@@ -53,6 +53,6 @@ func get_move_to_position(
 #so it should not need to run often. usally when a change is made or to similate reaction time of AI
 ##This may not be needed. parent or handler should set stuff here and it should update
 ##as needed. 
-func update(pawn:Node2D = null, handler: Controller_Handler = null) -> void :
+func update(pawn:Node2D = null) -> void :
 	#print_debug("meowing " + str(pawn))
 	pass

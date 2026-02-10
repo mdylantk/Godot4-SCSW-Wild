@@ -1,4 +1,4 @@
-class_name AI_Handler extends Controller_Handler
+class_name AI_Handler extends Node
 
 #@export var default_pawn : PackedScene = load("uid://bruyakjvb8wwp")  
 @export var controller_name : String = "enemy"
@@ -6,7 +6,9 @@ class_name AI_Handler extends Controller_Handler
 	set(value):
 		state = value
 		state.file_name = controller_name+"_state"
-		
+
+@export var controller : Controller
+
 @export var enable : bool 
 #but this is the enemy to spawn. could be an array, but for testing this will be simple
 var active_pawns: Array[Node] #this may be replace by group if reliable
@@ -35,7 +37,7 @@ func _ready():
 	#var pawn_ref = default_pawn.instantiate()
 	#World.add_child(pawn_ref)
 	#handle_pawn(pawn_ref)
-	super()
+	#super()
 
 #NOTE: this was a test. new system should let the pawn handle itm
 #but the controller could allow requests that the handler can listen to

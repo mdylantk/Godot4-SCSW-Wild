@@ -25,7 +25,7 @@ general/text_to_speech=true
 
 [autoload]
 
-Game="*res://Game/Game_Handler.tscn"
+Game="uid://dvaxx0ke0p27m"
 
 [display]
 
