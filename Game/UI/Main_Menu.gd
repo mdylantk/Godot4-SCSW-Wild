@@ -103,3 +103,4 @@ func _on_continue_button_pressed() -> void:
 	%New_Game_Button.visible = false
 	end()
 	load_game.emit("Default")
+	

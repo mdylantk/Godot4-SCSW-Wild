@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bsmdheegk58lc"
+
+[deps]
+
+files=["res://Game/Assets/Localization/Old_Man_Translations.en.translation", "res://Game/Assets/Localization/Old_Man_Translations.es.translation"]
+
+source_file="res://Game/Assets/Localization/Old_Man_Translations.csv"
+dest_files=["res://Game/Assets/Localization/Old_Man_Translations.en.translation", "res://Game/Assets/Localization/Old_Man_Translations.es.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

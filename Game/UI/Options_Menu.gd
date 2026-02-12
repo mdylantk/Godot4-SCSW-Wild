@@ -40,6 +40,8 @@ func load_settings() -> void:
 	else:
 		%OptionButton.select(0)
 	ui_state.is_touch_enable = touch_ui
+	%TTS_CheckBox.button_pressed = client_state.config_file.get_value("general","tts",false)
+	ui_state.is_tts_enable = %TTS_CheckBox.button_pressed
 	
 
 func on_state_loaded():
@@ -108,3 +110,9 @@ func _on_option_button_item_selected(index: int) -> void:
 
 func _on_exit_pressed() -> void:
 	end()
+
+
+func _on_tts_check_box_toggled(toggled_on: bool) -> void:
+	client_state.config_file.set_value("general","tts",toggled_on)
+	ui_state.is_tts_enable = toggled_on
+	client_state.updated.emit()

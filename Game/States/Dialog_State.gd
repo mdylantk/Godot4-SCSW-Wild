@@ -64,6 +64,14 @@ var accept_task : Callable
 static func get_default_instance()-> State:
 	return load('uid://ckldc286fg63p')
 
+##update the display text base on current state
+##return false if the text was not updated.
+func update_display_text()->bool:
+	if page_index < text_pages.size() and page_index >= 0:
+		display_text = text_pages[page_index].format(format_data)
+		return true
+	return false
+
 func clear_tasks() -> void:
 	cancel_task = func():pass
 	accept_task = func():pass

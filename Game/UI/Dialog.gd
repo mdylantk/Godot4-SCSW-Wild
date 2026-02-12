@@ -7,12 +7,12 @@ class_name Dialog_Handler extends Canvas_Scene
 @export var state : Dialog_State = Dialog_State.get_default_instance()
 
 ##action to run if about to end dialog
-var cancel_action : Base_Action
+#var cancel_action : Base_Action
 ##acttion to run if about to finish dialog
-var accept_action : Base_Action
+#var accept_action : Base_Action
 
 ##handles the text in parts since the display only can fit so much
-var split_text : PackedStringArray
+#var split_text : PackedStringArray
 #var page_index : int = 0
 
 #may need to set/get from state untill sepration from ui is finished
@@ -29,7 +29,13 @@ var is_cancelable:bool = true
 
 #this may need to be ref elsewhere
 #but might be overrided in the gui
-var tts_enable: bool = true
+#TODO: make sure to use the ui state instead
+#the getter is for testing it
+var tts_enable: bool = true :
+	get:
+		if ui_state:
+			return ui_state.is_tts_enable
+		return tts_enable
 
 #TODO: decided if the voices should be catch and if so handles when language changes
 #TODO: see about storing the speak data in the state
@@ -61,12 +67,9 @@ func speak_text(
 func update_page_text(index:int = 0,end_dialog:bool = false):
 	#todo: if typewrite effect is used, forwarding (probably happen before this is calles)
 	#should display all text first
-	if index < state.text_pages.size() and index >= 0:
-		state.display_text = state.text_pages[index].format(state.format_data)
-		#$Text.text = state.display_text
-		#speak_text($Text.text)
-		print_debug(index)
-		state.page_index = index
+	state.page_index = index
+	if state.update_display_text():
+		pass
 	elif !end_dialog:
 		print_debug("is at dialog end, but action disallow dialog to end")
 		return
@@ -182,15 +185,3 @@ func _ready() -> void:
 	state.start.connect(start)
 
 	
-#func update_text():
-#	if dialog_data != null:
-
-#		var dialog_text = dialog_data.get_text(dialog_index)
-#		if dialog_text == null:
-#			dialog_index = 0
-#			end_dialog()
-#		else:
-#	
-#			dialog_index += 1
-#			$Text.text = dialog_text
-#			visible = true

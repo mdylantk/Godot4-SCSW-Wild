@@ -9,6 +9,8 @@ class_name A_Set_Dialog extends Base_Action
 
 @export var cancelable: bool = true
 
+@export var is_translation_key : bool = false
+
 #@export var ui_state : UI_State = load('uid://dkc6l4f8ve4t5')
 @export var dialog_state : Dialog_State = Dialog_State.get_default_instance()
 
@@ -34,7 +36,12 @@ func _run(action_state:Action_State) -> bool:
 	dialog_state.format_data = dialog_data
 	dialog_state.speaker_name = speaker_name
 	dialog_state.speaker_image = speaker_icon
-	dialog_state.source_text = text
+	if is_translation_key:
+		dialog_state.speaker_name = TranslationServer.translate(speaker_name)
+		dialog_state.source_text = TranslationServer.translate(text)
+	else:
+		dialog_state.speaker_name = speaker_name
+		dialog_state.source_text = text
 	dialog_state.show_cancel = cancelable
 	
 	#TODO: NEED TO MAKE SURE data instance is correct

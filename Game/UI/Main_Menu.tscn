@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://b8gbuuqjxib"]
+[gd_scene format=3 uid="uid://b8gbuuqjxib"]
 
 [ext_resource type="Script" uid="uid://kddmwf8rljic" path="res://Game/UI/Main_Menu.gd" id="1_d5n68"]
 [ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_dlif6"]
@@ -8,8 +8,7 @@
 atlas = ExtResource("1_dlif6")
 region = Rect2(816, 357, 16, 16)
 
-[node name="Main_Menu" type="Control" node_paths=PackedStringArray("default_focus")]
-visible = false
+[node name="Main_Menu" type="Control" unique_id=1665003532 node_paths=PackedStringArray("default_focus")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,7 +18,7 @@ grow_vertical = 2
 script = ExtResource("1_d5n68")
 default_focus = [NodePath("MenuVBoxContainer/Resume_Button"), NodePath("MenuVBoxContainer/Continue_Button"), NodePath("MenuVBoxContainer/New_Game_Button")]
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=380462949]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,7 +27,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.784314)
 
-[node name="NinePatchRect" type="NinePatchRect" parent="."]
+[node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=1952677908]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,7 +44,7 @@ patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="MenuVBoxContainer" type="VBoxContainer" parent="."]
+[node name="MenuVBoxContainer" type="VBoxContainer" parent="." unique_id=8267634]
 layout_mode = 1
 anchors_preset = 13
 anchor_left = 0.5
@@ -58,7 +57,7 @@ offset_bottom = -180.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MenuVBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="MenuVBoxContainer" unique_id=1262895032]
 layout_mode = 2
 theme = ExtResource("2_b0gn2")
 theme_override_font_sizes/normal_font_size = 24
@@ -66,40 +65,40 @@ bbcode_enabled = true
 text = "[center]MENU"
 fit_content = true
 
-[node name="HSeparator" type="HSeparator" parent="MenuVBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MenuVBoxContainer" unique_id=1445477179]
 layout_mode = 2
 
-[node name="Resume_Button" type="Button" parent="MenuVBoxContainer"]
+[node name="Resume_Button" type="Button" parent="MenuVBoxContainer" unique_id=1504603842]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme = ExtResource("2_b0gn2")
 text = "RESUME"
 
-[node name="Continue_Button" type="Button" parent="MenuVBoxContainer"]
+[node name="Continue_Button" type="Button" parent="MenuVBoxContainer" unique_id=1621555817]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_b0gn2")
 text = "CONTINUE"
 
-[node name="New_Game_Button" type="Button" parent="MenuVBoxContainer"]
+[node name="New_Game_Button" type="Button" parent="MenuVBoxContainer" unique_id=1602965275]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_b0gn2")
 text = "NEW_GAME"
 
-[node name="Options_Button" type="Button" parent="MenuVBoxContainer"]
+[node name="Options_Button" type="Button" parent="MenuVBoxContainer" unique_id=431179552]
 layout_mode = 2
 theme = ExtResource("2_b0gn2")
 text = "OPTIONS"
 
-[node name="Exit_Button" type="Button" parent="MenuVBoxContainer"]
+[node name="Exit_Button" type="Button" parent="MenuVBoxContainer" unique_id=547475046]
 layout_mode = 2
 focus_neighbor_bottom = NodePath("../../Credits_Button")
 theme = ExtResource("2_b0gn2")
 text = "EXIT"
 
-[node name="Credits_Button" type="Button" parent="."]
+[node name="Credits_Button" type="Button" parent="." unique_id=745861211]
 layout_mode = 0
 offset_left = 650.0
 offset_top = 557.0

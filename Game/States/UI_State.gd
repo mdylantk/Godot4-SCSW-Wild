@@ -38,6 +38,8 @@ var is_touch_enable : bool :
 			else:
 				unfocus_mouse_mode = Input.MOUSE_MODE_HIDDEN
 			touch_enable.emit()
+			
+var is_tts_enable : bool = false
 
 ##The default mouse mode for interactive gui elements
 ##Used to reset focus_mouse_mode if being manually overrided
