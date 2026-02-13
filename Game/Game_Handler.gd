@@ -28,6 +28,7 @@ var _pause_state : Pause_States = Pause_States.UNPAUSED:
 		state.pause_state = value
 		handle_pausing()
 		
+		
 static func secure_path(path:String)->Error:
 	if !DirAccess.dir_exists_absolute(path):
 		return DirAccess.make_dir_recursive_absolute(path)

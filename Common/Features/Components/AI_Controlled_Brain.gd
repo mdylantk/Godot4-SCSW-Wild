@@ -49,7 +49,7 @@ func get_move_to_location(data:Dictionary={}) -> Vector2:
 
 #an example case for func update(): is to see if target is near current location
 #may need to pass location) and if true, change location to a new one. 
-func update(pawn:Node2D = null, handler: Controller_Handler = null) -> void :
+func update(pawn:Node2D = null) -> void :
 	at_target_location = (pawn.global_position - get_move_to_location()).length() < desire_distance
 	pass
 	

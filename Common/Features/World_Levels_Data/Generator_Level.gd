@@ -228,12 +228,19 @@ func _ready() -> void:
 			if (player_state.has_vector('pawn_facing')):
 				%Player.facing_direction = player_state.get_vector('pawn_facing',2,false)
 		2:
+			if player_state.exit_data.override_entry_position:
+				%Player.global_position = (
+					player_state.exit_data.entry_position +
+					player_state.exit_data.entry_offset
+				)
+			%Player.facing_direction = player_state.exit_data.facing_direction
+			%Player.velocity = player_state.exit_data.entry_velocity
 			#may need to let the transfer action handles this and pull
 			#from exit data. may need to make two transfers to reduce clutter
 			#the world transfer use the id while new uses the override position
 			#or keep as one and override position is for local chuck(be confusing though)
-			if (player_state.has_vector('world_location')):
-				%Player.global_position = player_state.get_vector('world_location',2,false)
+			#if (player_state.has_vector('world_location')):
+			#	%Player.global_position = player_state.get_vector('world_location',2,false)
 	#	player_pos = player_state.positions['world_location'] 
 	#var player_pos = Savedata_Helper.fetch_player_position(Player,"world")
 	#%Player.position = player_pos

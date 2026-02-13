@@ -30,6 +30,7 @@ region = Rect2(17, 357, 16, 16)
 script = ExtResource("11_jqk4e")
 level_uid = "uid://lv4hypjjj08a"
 store_exit_point = true
+exit_point_id = "world"
 
 [sub_resource type="Resource" id="Resource_wl3yv"]
 script = ExtResource("7_qdaw7")

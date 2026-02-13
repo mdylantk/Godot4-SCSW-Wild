@@ -43,9 +43,12 @@ var is_level_loading : bool = false :
 static func get_default_instance()-> State:
 	return load('uid://b047ftosxvj7p')
 
+#NOTE: need to handle invaild cases
 func load_level(uid:String, type:int = 0)->void:
-	level_transfer.emit(uid)
+	is_level_loading = true
 	transfer_type = type
+	level_transfer.emit(uid)
+	
 
 func _reset_state() -> void:
 	level_uid = default_level_uid

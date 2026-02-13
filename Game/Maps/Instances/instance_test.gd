@@ -24,5 +24,12 @@ func _ready() -> void:
 			if (player_state.has_vector('pawn_facing')):
 				%Player.facing_direction = player_state.get_vector('pawn_facing',2,false)
 		2:
-			if (player_state.has_vector('old_man_house_location')):
-				%Player.global_position = player_state.get_vector('old_man_house_location',2,false)
+			if player_state.exit_data.override_entry_position:
+				%Player.global_position = (
+					player_state.exit_data.entry_position +
+					player_state.exit_data.entry_offset
+				)
+			%Player.facing_direction = player_state.exit_data.facing_direction
+			%Player.velocity = player_state.exit_data.entry_velocity
+			#if (player_state.has_vector('old_man_house_location')):
+			#	%Player.global_position = player_state.get_vector('old_man_house_location',2,false)

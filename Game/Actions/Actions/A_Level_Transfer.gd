@@ -9,13 +9,16 @@ class_name A_Level_Transfer extends Base_Action
 ##This will allow spawn_location to be used in levels
 ##that allows overriding it
 @export var override_spawn_location: bool = false
+##This withh use the vector stored with this is
+##instead of the vector provided by spawn_location
+@export var spawn_point_id : String = ""
 ##set the pawn in the new level to this position if 
 ##overrided and supported in that level
 @export var spawn_location : Vector2 
 @export var spawn_offset : Vector2 
 @export var store_exit_point: bool = false
 
-@export var exit_point_id:String = "world"
+@export var exit_point_id:String = ""
 
 @export var spawn_index : int = 0
 
@@ -42,6 +45,9 @@ func _run(action_state:Action_State) -> bool:
 		player_state.exit_data.previous_position = old_location
 		player_state.exit_data.override_entry_position = override_spawn_location
 		player_state.exit_data.entry_position = spawn_location
+		if spawn_point_id != '':
+			if (player_state.has_vector(spawn_point_id+"_location")):
+				player_state.exit_data.entry_position = player_state.get_vector(spawn_point_id+"_location",2,false)
 		player_state.exit_data.entry_offset = spawn_offset
 	else:
 		print_debug('owner is not a node2d')
