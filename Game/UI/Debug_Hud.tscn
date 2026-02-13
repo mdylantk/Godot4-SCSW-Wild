@@ -1,31 +1,44 @@
-[gd_scene load_steps=3 format=3 uid="uid://bsvm8im8i0rac"]
+[gd_scene format=3 uid="uid://bsvm8im8i0rac"]
 
 [ext_resource type="Script" uid="uid://bjjdmu67x8vmv" path="res://Game/UI/debug_hud.gd" id="1_ydgd5"]
 [ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Game/Assets/Main_Theme.tres" id="2_qomr1"]
 
-[node name="DebugHUD" type="CanvasLayer"]
+[node name="DebugHUD" type="CanvasLayer" unique_id=1090735633]
 layer = 100
 script = ExtResource("1_ydgd5")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=170958149]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -176.0
-offset_top = 40.0
+offset_left = -254.0
+offset_top = 23.0
 offset_right = -16.0
-offset_bottom = 129.0
+offset_bottom = 563.0
 grow_horizontal = 0
 
-[node name="ColorRect" type="ColorRect" parent="PanelContainer"]
+[node name="ColorRect" type="ColorRect" parent="PanelContainer" unique_id=466775852]
 layout_mode = 2
 color = Color(0, 0, 0, 0.1254902)
 
-[node name="Debug" type="Label" parent="PanelContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/ColorRect" unique_id=1795817847]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Debug" type="Label" parent="PanelContainer/ColorRect/ScrollContainer" unique_id=2041083465]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
 theme = ExtResource("2_qomr1")
 theme_override_constants/line_spacing = 1
+theme_override_font_sizes/font_size = 12
 text = "Debug
 "
 horizontal_alignment = 1
+autowrap_mode = 3

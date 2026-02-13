@@ -13,14 +13,16 @@ class_name A_Level_Transfer extends Base_Action
 
 @export var spawn_index : int = 0
 
-@export var world_events : World_State = World_State.get_default_instance()
+@export var world_state : World_State = World_State.get_default_instance()
 @export var player_state : Player_State = Player_State.get_default_instance()
 
 func _run(action_state:Action_State) -> bool:
+	print_debug('running level transfer to :', level_uid)
 	if level_uid.is_empty():
 		print_debug('no level uid provided')
 		return false
 	if action_state == null:
+		print_debug('no vaild action state')
 		return false
 	if action_state.owner as Node2D:
 		var old_location : Vector2 = action_state.owner.global_position
@@ -32,9 +34,13 @@ func _run(action_state:Action_State) -> bool:
 			player_state.exit_data.entry_velocity = action_state.owner.velocity
 		player_state.exit_data.entry_position = old_location
 	else:
+		print_debug('owner is not a node2d')
 		#may not want to return if not node2d?
 		return false
 	#player_state.exit_data.entry_diection
 	player_state.exit_data.target_level = level_uid
-	world_events.load_level.emit(level_uid, spawn_index)
+	world_state.load_level.emit(level_uid, spawn_index)
+	print_debug('transfer sucess? ', level_uid)
+	#print_debug('world_state: ', world_state, 'connections',world_state.load_level.get_connections())
+	print_debug(player_state)
 	return super(action_state)

@@ -124,10 +124,13 @@ func interact():
 func on_interaction(source_pawn:Node, collider:Node, data:={}):
 	var interaction : Interactive_Component = collider as Interactive_Component
 	if interaction != null:
+		player_state.player_debug_message = 'last interact: ' + str(interaction)
 		#NOTE: will keep the old way, but may add it to base
 		#character? a few interactions types like attack, use, cast
 		#then have the shape or settings used declared in the child
-		interaction.interact(self,collider,data)
+		var interaction_data = interaction.interact(self,collider,data)
+	else:
+		player_state.player_debug_message = ''
 
 func get_move_direction() -> Vector2:
 	return %Brain.get_move_direction(position,velocity)
@@ -139,6 +142,7 @@ func on_controller_unassigned(controller:Controller)->void:
 	controller.action_triggered.disconnect(on_action_triggered)
 	
 func on_action_triggered(action:String, value:Variant)->void:
+	player_state.player_debug_message = ''
 	if action == "Sprint":
 		movement_component.sprint_strength = value
 	if action == "Interact":

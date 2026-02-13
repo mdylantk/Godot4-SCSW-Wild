@@ -120,6 +120,7 @@ shape = SubResource("RectangleShape2D_m2me0")
 [node name="Interact_Component" parent="." unique_id=1306687241 instance=ExtResource("5_80pv0")]
 position = Vector2(88, 120)
 interactive_data = SubResource("Resource_6kvcv")
+enable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interact_Component" unique_id=1386823123]
 shape = SubResource("RectangleShape2D_m2me0")
@@ -127,6 +128,7 @@ shape = SubResource("RectangleShape2D_m2me0")
 [node name="Interact_Component2" parent="." unique_id=986663108 instance=ExtResource("5_80pv0")]
 position = Vector2(88, 120)
 interactive_data = SubResource("Resource_f54ym")
+enable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interact_Component2" unique_id=1013253634]
 position = Vector2(-40, 0)

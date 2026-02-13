@@ -31,7 +31,7 @@ func on_autosave(path : String = ""):
 		DirAccess.make_dir_recursive_absolute(full_path)
 	full_path = full_path + name + ".tres"
 	ResourceSaver.save(new_save_state, full_path)
-	print_debug("autosaving ", full_path)
+	#print_debug("autosaving ", full_path)
 	
 
 #NOTE: using game state here instead of expect the game to call it

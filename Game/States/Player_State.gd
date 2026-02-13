@@ -57,6 +57,8 @@ var standard_inventory : Inventory = Inventory.new()
 #var advance_inventory : Array[Item]
 var advance_inventory : Advance_Inventory = Advance_Inventory.new()
 
+var player_debug_message : String
+
 static func get_default_instance()-> State:
 	return load('uid://c67c2fehtuhni')
 

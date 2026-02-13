@@ -40,6 +40,7 @@ window/stretch/mode="viewport"
 [editor]
 
 naming/node_name_num_separator=2
+export/convert_text_resources_to_binary=false
 
 [file_customization]
 

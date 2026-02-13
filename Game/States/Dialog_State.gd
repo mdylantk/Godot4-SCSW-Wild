@@ -61,6 +61,7 @@ var cancel_task : Callable
 
 var accept_task : Callable
 
+
 static func get_default_instance()-> State:
 	return load('uid://ckldc286fg63p')
 

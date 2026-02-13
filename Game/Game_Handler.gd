@@ -141,13 +141,15 @@ func change_level(uid,spawn_index : int = 0):
 		if !get_tree().tree_changed.is_connected(on_tree_changed):
 			get_tree().tree_changed.connect(on_tree_changed)
 		#tell GUI and controllers that the gamplay is loading(disable imput and such)
-		
+		print_debug("changing level to: ", uid)
 	else:
 		print_debug("Error, unable to load scene")
 
 func on_tree_changed():
 	var level = get_tree().get_current_scene()
+	print_debug("tree changed")
 	if level != null:
+		print_debug("and vaild current scene")
 		get_tree().tree_changed.disconnect(on_tree_changed)
 		level_changed(level)
 		#get_tree().call_group("Players", "reparent_pawn", level)
@@ -252,7 +254,7 @@ func on_save(path : String = ""):
 	#	DirAccess.make_dir_recursive_absolute(full_path)
 	full_path = full_path + "game_state.tres"
 	ResourceSaver.save(new_save_state, full_path)
-	print_debug("autosaving ", full_path)
+	#print_debug("autosaving ", full_path)
 
 
 func _on_autosave_timer_timeout() -> void:
@@ -265,3 +267,4 @@ func _on_world_clock_timeout() -> void:
 	#also time should pause when the game is paused
 	state.game_time += 1
 	pass # Replace with function body.
+	

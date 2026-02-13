@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cc1hxktnb4a1k"]
+[gd_scene format=3 uid="uid://cc1hxktnb4a1k"]
 
 [ext_resource type="Script" uid="uid://c8ibq8bm58xd0" path="res://Game/UI/UI_Handler.gd" id="1_htxbl"]
 [ext_resource type="PackedScene" uid="uid://ctvmde4ov5w2x" path="res://Game/UI/Dialog.tscn" id="2_0wofj"]
@@ -18,30 +18,30 @@
 atlas = ExtResource("6_nymfg")
 region = Rect2(697, 272, 16, 16)
 
-[node name="UI" type="Node" groups=["GUI", "HUD"]]
+[node name="UI" type="Node" unique_id=945801417 groups=["GUI", "HUD"]]
 process_mode = 3
 script = ExtResource("1_htxbl")
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=549266671]
 editor_description = "This is just a container for all the gui. The main goal is to keep elemets scale to the window."
 layer = 10
 
-[node name="Score" parent="HUD" instance=ExtResource("3_qtng4")]
+[node name="Score" parent="HUD" unique_id=1800351382 instance=ExtResource("3_qtng4")]
 unique_name_in_owner = true
 visible = false
 
-[node name="Notify" parent="HUD" instance=ExtResource("4_m1dom")]
+[node name="Notify" parent="HUD" unique_id=1582309316 instance=ExtResource("4_m1dom")]
 unique_name_in_owner = true
 visible = false
 
-[node name="LoadingScreen" parent="HUD" instance=ExtResource("5_t52tc")]
+[node name="LoadingScreen" parent="HUD" unique_id=63901039 instance=ExtResource("5_t52tc")]
 unique_name_in_owner = true
 
-[node name="HomePoint" type="CanvasLayer" parent="HUD"]
+[node name="HomePoint" type="CanvasLayer" parent="HUD" unique_id=1792405578]
 unique_name_in_owner = true
 visible = false
 
-[node name="TextureRect" type="TextureRect" parent="HUD/HomePoint"]
+[node name="TextureRect" type="TextureRect" parent="HUD/HomePoint" unique_id=1926371859]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -54,37 +54,38 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("AtlasTexture_wsma3")
 
-[node name="Touch_UI" parent="." instance=ExtResource("6_3gslv")]
+[node name="Touch_UI" parent="." unique_id=1831469928 instance=ExtResource("6_3gslv")]
 
-[node name="Widgets" type="CanvasLayer" parent="."]
+[node name="Widgets" type="CanvasLayer" parent="." unique_id=277128694]
 
-[node name="Dialog" parent="Widgets" instance=ExtResource("2_0wofj")]
+[node name="Dialog" parent="Widgets" unique_id=320694377 instance=ExtResource("2_0wofj")]
 unique_name_in_owner = true
 visible = false
 
-[node name="FishingPondMap" parent="Widgets" instance=ExtResource("7_531g0")]
+[node name="FishingPondMap" parent="Widgets" unique_id=1336099632 instance=ExtResource("7_531g0")]
 unique_name_in_owner = true
 process_mode = 1
 visible = false
 
-[node name="DebugHUD" parent="." instance=ExtResource("11_r8uiu")]
+[node name="DebugHUD" parent="." unique_id=1389029435 instance=ExtResource("11_r8uiu")]
+visible = false
 
-[node name="Menus" type="CanvasLayer" parent="."]
+[node name="Menus" type="CanvasLayer" parent="." unique_id=85286318]
 
-[node name="Cargo" parent="Menus" instance=ExtResource("12_ify41")]
+[node name="Cargo" parent="Menus" unique_id=901405076 instance=ExtResource("12_ify41")]
 unique_name_in_owner = true
 visible = false
 
-[node name="Credits_Menu" parent="Menus" instance=ExtResource("9_6enyp")]
+[node name="Credits_Menu" parent="Menus" unique_id=1844766974 instance=ExtResource("9_6enyp")]
 unique_name_in_owner = true
 visible = false
 
-[node name="Options_Menu" parent="Menus" instance=ExtResource("11_3jetq")]
+[node name="Options_Menu" parent="Menus" unique_id=1179251978 instance=ExtResource("11_3jetq")]
 unique_name_in_owner = true
 process_mode = 3
 visible = false
 
-[node name="Main_Menu" parent="Menus" instance=ExtResource("8_ufq3w")]
+[node name="Main_Menu" parent="Menus" unique_id=1991776824 instance=ExtResource("8_ufq3w")]
 unique_name_in_owner = true
 process_mode = 3
 

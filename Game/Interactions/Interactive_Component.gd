@@ -9,6 +9,7 @@ signal finished(canceled:bool, data:Interactive_Data, caller:Node)
 #static state.
 
 @export var interactive_data : Interactive_Data
+@export var enable : bool = true
 
 var active_data :Dictionary[Node,Interactive_Data]
 func register_data(caller:Node, data:Interactive_Data):
@@ -42,6 +43,8 @@ func on_finished(canceled:bool,data, caller=null):
 #NOTE: interactee will be self. interact data can have an override or use
 #interactee.owner if it wants more data
 func interact(interactor, interactee = self, metadata = {}):
+	if !enable:
+		return null
 	if interactive_data != null:
 		if !active_data.has(interactor):
 			register_data(interactor, interactive_data.duplicate())
