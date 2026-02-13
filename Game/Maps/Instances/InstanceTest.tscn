@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://hepasgr3svoi"]
+[gd_scene format=4 uid="uid://hepasgr3svoi"]
 
 [ext_resource type="Script" uid="uid://crpchhcupdh7" path="res://Game/Maps/Instances/instance_test.gd" id="1_0wpa2"]
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Game/Assets/low_Bit_Tileset.tres" id="1_o5yrt"]
@@ -16,10 +16,6 @@ region = Rect2(136, 170, 16, 16)
 [sub_resource type="Resource" id="Resource_lnhep"]
 script = ExtResource("6_78t3v")
 level_uid = "uid://cldlaymbe77mn"
-spawn_location = Vector2(0, 0)
-store_entry_point = false
-entry_point_id = &"old_man_house"
-spawn_index = 0
 
 [sub_resource type="Resource" id="Resource_cqq0u"]
 script = ExtResource("7_upu15")
@@ -28,32 +24,32 @@ action = SubResource("Resource_lnhep")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yq7oe"]
 size = Vector2(16, 16)
 
-[node name="TileMap" type="Node2D"]
+[node name="TileMap" type="Node2D" unique_id=1115192231]
 y_sort_enabled = true
 texture_filter = 1
 position = Vector2(-368, -144)
 script = ExtResource("1_0wpa2")
 
-[node name="Ground" type="TileMapLayer" parent="."]
+[node name="Ground" type="TileMapLayer" parent="." unique_id=682872626]
 y_sort_enabled = true
 texture_filter = 1
 use_parent_material = true
 tile_map_data = PackedByteArray("AAAcAAwAAAASABIAAAAcAAsAAAASABEAAAAcAAoAAAASABEAAAAcAAgAAAASABEAAAAcAAcAAAASABEAAAAcAAYAAAASABEAAAAcAAUAAAASABEAAAAcAAQAAAASABAAAAAbAAwAAAARABIAAAAbAAQAAAARABAAAAAaAAQAAAARABAAAAAZAAQAAAARABAAAAAYAAwAAAARABIAAAAXAAwAAAARABIAAAAXAAQAAAARABAAAAAWAAwAAAARABIAAAAWAAQAAAARABAAAAAVAAQAAAARABAAAAAUAAwAAAARABIAAAATAAwAAAARABIAAAATAAQAAAARABAAAAASAAwAAAAQABIAAAASAAoAAAAQABEAAAASAAgAAAAQABEAAAASAAQAAAAQABAAAAAaAAwAAAARABIAAAAYAAQAAAARABAAAAAVAAwAAAARABIAAAASAAsAAAAQABEAAAASAAkAAAAQABEAAAASAAYAAAAQABEAAAASAAUAAAAQABEAAAAZAAwAAAARABIAAAAUAAQAAAARABAAAAASAAcAAAAQABEAAAAcAAkAAAASABEAAAA=")
 tile_set = ExtResource("1_o5yrt")
 
-[node name="Sprite_Object" parent="Ground" instance=ExtResource("2_7ptmx")]
+[node name="Sprite_Object" parent="Ground" unique_id=779944411 instance=ExtResource("2_7ptmx")]
 position = Vector2(376, 152)
 
 [node name="Sprite2D" parent="Ground/Sprite_Object" index="1"]
 texture = SubResource("AtlasTexture_2oobe")
 
-[node name="Interact_Component" parent="Ground/Sprite_Object" instance=ExtResource("4_364tp")]
+[node name="Interact_Component" parent="Ground/Sprite_Object" unique_id=287685768 instance=ExtResource("4_364tp")]
 interactive_data = SubResource("Resource_cqq0u")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Sprite_Object/Interact_Component"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Sprite_Object/Interact_Component" unique_id=385226139]
 shape = SubResource("RectangleShape2D_yq7oe")
 
-[node name="Player" parent="Ground" instance=ExtResource("7_u883d")]
+[node name="Player" parent="Ground" unique_id=1510146332 instance=ExtResource("7_u883d")]
 unique_name_in_owner = true
 position = Vector2(376, 168)
 

@@ -1,7 +1,7 @@
 class_name World_State extends State
 
-signal load_level(uid:String, spawn_index : int)
-signal level_loaded(new_level : Base_Level, spawn_index : int)
+signal level_transfer(uid:String)
+signal level_loaded(new_level : Base_Level)
 signal level_busy()
 signal level_ready()
 #not sure if changed is needed and if loaded the same one
@@ -12,7 +12,17 @@ signal level_ready()
 		default_level_uid = value
 		level_uid = value
 
+#This may be used more as a ref of the current level
+#but player's exit_data may keep the last and current level
+#for saving reasons
 var level_uid : String = default_level_uid
+
+##This represent the reason for the last transfer
+##and is used for other sysyems to deside how to handle the data
+##0: new game (use default data)
+##1: loaded game (use data from a loaded file)
+##2: exit triggered (exit data vaild)(used info in exit data
+var transfer_type : int = 0
 
 #TODO:decide if it should be is_level_ready(inverted bool) or not
 #also the signals might not be reliable
@@ -32,6 +42,10 @@ var is_level_loading : bool = false :
 
 static func get_default_instance()-> State:
 	return load('uid://b047ftosxvj7p')
+
+func load_level(uid:String, type:int = 0)->void:
+	level_transfer.emit(uid)
+	transfer_type = type
 
 func _reset_state() -> void:
 	level_uid = default_level_uid

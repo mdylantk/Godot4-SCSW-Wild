@@ -218,19 +218,22 @@ func _process(delta: float) -> void:
 	
 
 func _ready() -> void:
-	var player_pos : Vector2
-	
-	if (player_state.has_vector('world_location')):
-		player_pos = player_state.get_vector('world_location',2,false)
+	var player_pos : Vector2 = %Player.position
+	match world_state.transfer_type :
+		0:
+			pass
+		1:
+			if (player_state.has_vector('pawn_position')):
+				%Player.global_position = player_state.get_vector('pawn_position',2,false)
+			if (player_state.has_vector('pawn_facing')):
+				%Player.facing_direction = player_state.get_vector('pawn_facing',2,false)
+		2:
+			#may need to let the transfer action handles this and pull
+			#from exit data. may need to make two transfers to reduce clutter
+			#the world transfer use the id while new uses the override position
+			#or keep as one and override position is for local chuck(be confusing though)
+			if (player_state.has_vector('world_location')):
+				%Player.global_position = player_state.get_vector('world_location',2,false)
 	#	player_pos = player_state.positions['world_location'] 
 	#var player_pos = Savedata_Helper.fetch_player_position(Player,"world")
-		%Player.position = player_pos
-		#NOTE: Character state can store pos, but this one most likly will override it
-		#that is fine(if always the case) but this should be moved to a dedicated
-		#exit info struct since this value more dependent on exits
-		#so world pos can be set on entry and on exit as needed. additional points
-		#can be added, but may depend more on a offset vector to change player pos
-		#(which is just the look at line from the player to the desire point.
-		#this will allow Vector2.Zero from not setting player pos to 0,0 since we 
-		#are adding to it, not setting. "world" pos are the only ones that get set
-		#since worlds are large and the player default pos usally is 0,0
+	#%Player.position = player_pos

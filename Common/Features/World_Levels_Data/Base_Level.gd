@@ -1,4 +1,9 @@
 class_name Base_Level extends Node
+#NOTE TODO: a lot of this may be old and unneeded.
+#things like level is loaded is needed, but the level should provide a pawn
+#and send a notication to the world state if a pawn is requested(no pawn provided)
+#so the game can decided how to handle it if the level refuse to
+
 
 #UPDATE TODO: since the level will be a sibling of the handlers (as the current scene)
 #it wont be directly handled. This means can do what it pleases. The world wont know
@@ -33,9 +38,11 @@ var active_age : int = 1
 func is_level_loaded(location:Vector2)->bool:
 	return true
 
+
 #TODO: level should called to world and stated vaild positions or send a list of 
 #object representing a spawn point. this works for now but world should noy assume a level will have this
 #also could pass to the player handler, but world may be able to handle network stuff better
+##NOTE: this may not be used? or will need to be modified
 func get_spawn_position(spawn_index:int=0, handler:Node = null)->Vector2:
 	if use_default_spawn_position:
 		return default_spawn_position

@@ -159,7 +159,7 @@ func _on_touch_ui_changed()->void:
 func _ready() -> void:
 	
 	state.send_notifcation.connect(send_notifcation)
-	state.fishing_game = fishing_game
+	#state.fishing_game = fishing_game
 	#state.dialog = gui_dialog
 	
 	#_on_menu_visibility_changed()

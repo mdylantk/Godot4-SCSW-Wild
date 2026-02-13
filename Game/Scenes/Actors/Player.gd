@@ -46,7 +46,9 @@ func get_save_path()->String:
 func on_autosave(path : String = ""):
 	#if inventory != null:
 		#save_state.inventory = inventory.inventory
-	save_state.local_position = position
+	#save_state.local_position = position
+	player_state.set_vector('pawn_position',global_position)
+	player_state.set_vector('pawn_facing',facing_direction)
 	super(path)
 	
 

@@ -46,48 +46,31 @@ func handle_pausing():
 
 func _ready():
 	
-	#game_events.event.connect(on_event)
-	#make sure pause logic is done base on the default state
-	#else something may be not sync correctly
 	handle_pausing()
 	
-	#NOTE: connect to other handler signals to maintain game flow
-	#since game handler should know all, but none should directly acess it
-	world_state.level_ready.connect(on_level_ready) #level is ready for game logic
-	world_state.level_busy.connect(on_level_busy) #level is still loading up
+	world_state.level_ready.connect(on_level_ready)
+	world_state.level_busy.connect(on_level_busy)
 	
-	
-	#world connecting is a redirect of that logic so
-	#the game do not need to be told to change level. instead the world
-	#can call trigger it
-	world_state.load_level.connect(change_level)
-	#NOTE: need to see the call order related to this
-	#world.level_changing.connect(change_level) #level is about tpo change
-	
+	world_state.level_transfer.connect(change_level)
+
 	ui.ui_focus.connect(on_ui_focus)
+	
 	#Connect to Main Menu to game related triggers
 	ui.main_menu.pause.connect(on_menu_pause)
 	ui.main_menu.resume.connect(on_menu_resume)
 	ui.main_menu.new_game.connect(on_menu_new_game)
 	ui.main_menu.load_game.connect(on_menu_load_game)
 	ui.main_menu.end_game.connect(on_menu_end_game)
-	
-	
 
 @rpc("any_peer","call_local")
-func start_game(is_new:bool = true, save_name:String="default"):
+func start_game(is_new:bool = true, save_name:String = state.default_save_name):
 	
-	#set up the save state, either make sure it new or load from file
-	#Data.init_save(save_name,!is_new)
-	#NOTE setting new_game here may be redundent.
-	#may be safe to use the parameter, but for now
-	#setting it untill tests can be ran
 	state.new_game = is_new
 	state.save_name = save_name
 	
 	#set up at least one persistant seed to use in generators
 	#World seed is to help keep the world gen similar or the same between sessions
-	var world_seed : int
+	#var world_seed : int
 	if state.new_game:
 		state.reset_state()
 		#randomize()
@@ -98,68 +81,43 @@ func start_game(is_new:bool = true, save_name:String="default"):
 		state.new_game = false
 	#else:
 	seed(state.random_seed)
-	world_seed = state.random_seed
+	#world_seed = state.random_seed
 		
 	#load the maps and assign the seeds. could have a dedicated system
 	#to handle this or let the world (or level using world tools) handle it
 	var detail_map = load("uid://087vceuyr40g")
 	var height_map = load("uid://te65swlvsp53")
 	var variation_map = load("uid://cp0b4i2m77i8m")
-	detail_map.seed = world_seed
-	height_map.seed = world_seed
-	variation_map.seed = world_seed
+	detail_map.seed = state.random_seed
+	height_map.seed = state.random_seed
+	variation_map.seed = state.random_seed
 	
-	#moving level change to the new/load game
-	#since level used is depenent on the state
-	#but this set the save/load location
-	#change_level("uid://cldlaymbe77mn")
-	#change_level(world_state.default_level_uid)
-	#change_level(world_state.level_uid)
 	%Autosave_Timer.start()
 	%World_Clock.start()
-	#NOTE: Background music do not need to be here
-	#levels, menus, and such could add their own
-	#but for now this is handling it
+
 	%BackgroundMusic.play()
 	
 
 
 func end_game(full_quit:bool = false):
-	print_debug("ending game")
 	if full_quit:
 		get_tree().quit()
-	#basicly just make sure every system calls an unload
-	#and then either shut down or go to mode_selection
-	
-#Below is the new game change logic
-#NOTE: decide if spawn index is needed. may be able to use
-#player state exit data instead
-func change_level(uid,spawn_index : int = 0):
+
+func change_level(uid:String):
 	if OK == get_tree().change_scene_to_file(uid):
 		world_state.level_uid = uid
 		world_state.is_level_loading = true
 		if !get_tree().tree_changed.is_connected(on_tree_changed):
 			get_tree().tree_changed.connect(on_tree_changed)
-		#tell GUI and controllers that the gamplay is loading(disable imput and such)
-		print_debug("changing level to: ", uid)
 	else:
 		print_debug("Error, unable to load scene")
 
 func on_tree_changed():
 	var level = get_tree().get_current_scene()
-	print_debug("tree changed")
 	if level != null:
-		print_debug("and vaild current scene")
 		get_tree().tree_changed.disconnect(on_tree_changed)
 		level_changed(level)
-		#get_tree().call_group("Players", "reparent_pawn", level)
 		world_state.is_level_loading = false
-		#tell GUI and controllers that the gamplay is may be loaded
-		#though the world may need to pass another signal
-		#like level_ready. the issue is that there no relibale way
-		#to ensure it will be called unless the level is known or a delay 
-		#is used to allow the level to tell the world it is loading and to 
-		#wait for the okay
 
 #NOTE: below may seem redundent, but both the game and level handles setting the level
 #the world could take over the loading of the level, but I wanted the get_tree logic
@@ -171,31 +129,16 @@ func on_tree_changed():
 func on_level_ready():
 	ui.loading = false
 	_pause_state &= ~Pause_States.WORLD_PAUSED
-	pass
+
 ##called when level is loading something and need gameplay pause
 func on_level_busy():
 	ui.loading = true
 	_pause_state |= Pause_States.WORLD_PAUSED
-	pass
-	
-#NOTE: this gives the player a character. either one tag in the level
-#or a fix one provided here(or another handler)
+
+#Not sure if this is needed or used
 func level_changed(new_level:Node):
 	print_debug("level changed: ", new_level)
-	#NOTE: below was to regester a pawn, but may use brain or something similar
-	#to directly assign itself
-	#for child:Node in new_level.get_children():
-	#	if child.is_in_group("player"):
-	#		print_debug("player found")
-	#		Player.pawn = child
-	#		break
-	
 
-#NOTE: UI may not need to have it input paused here. it can, but
-#it should be handling it within in itself. The player is a specail case
-#where UI way need to limited pause the game where world base input is disable
-#Also may be able to flat disbale unprocess input, but that still need to be handled here
-#UI (new) Listerners
 ##toggles if the player input need to be paused or not
 func on_ui_focus(pause_input:bool = true)->void:
 	print_debug(pause_input)
@@ -216,14 +159,18 @@ func on_menu_resume()->void:
 func on_menu_new_game(id:String="default")->void:
 	start_game(true, id)
 	state.new_game_event.emit(state.get_save_path())
-	change_level(world_state.level_uid)
+	world_state.load_level(world_state.level_uid,0)
+	#change_level(world_state.level_uid)
 	_pause_state &= ~Pause_States.USER_PAUSED
 
-func on_menu_load_game(id:String="default")->void:
+func on_menu_load_game(id:String = state.default_save_name)->void:
 	start_game(false, id)
 	on_load(state.get_save_path())
 	state.load_event.emit(state.get_save_path())
-	change_level(world_state.level_uid)
+	#change_level(world_state.level_uid)
+	#Should use the exit data for the owning player
+	world_state.load_level(player_state.exit_data.target_level,1)
+	#change_level(player_state.exit_data.target_level)
 	_pause_state &= ~Pause_States.USER_PAUSED
 	
 func on_menu_end_game()->void:
@@ -233,7 +180,7 @@ func on_menu_end_game()->void:
 
 #TODO: rename these since the game will handle this directly
 #since it will trigger the events
-func on_load(path:String = ""):
+func on_load(path:String = state.default_path):
 	var full_path = path + "controllers/game_state.tres"
 	var loaded_save : Savable_State
 	if ResourceLoader.exists(full_path):
@@ -244,7 +191,7 @@ func on_load(path:String = ""):
 		world_state.load_data(loaded_save.data.get('world_state',{}))
 	print_debug("game state", state)
 		
-func on_save(path : String = ""):
+func on_save(path : String = state.default_path):
 	var new_save_state : Savable_State = Savable_State.new()
 	var full_path = path + "controllers/"
 	secure_path(full_path)

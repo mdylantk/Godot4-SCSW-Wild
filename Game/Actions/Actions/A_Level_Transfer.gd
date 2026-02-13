@@ -5,11 +5,17 @@ class_name A_Level_Transfer extends Base_Action
 #while also managing exit data and such
 
 @export var level_uid : String
-#not going to be used? can modify the player var if needed
-@export var spawn_location : Vector2 
-@export var store_entry_point: bool = false
 
-@export var entry_point_id:StringName = "world"
+##This will allow spawn_location to be used in levels
+##that allows overriding it
+@export var override_spawn_location: bool = false
+##set the pawn in the new level to this position if 
+##overrided and supported in that level
+@export var spawn_location : Vector2 
+@export var spawn_offset : Vector2 
+@export var store_exit_point: bool = false
+
+@export var exit_point_id:String = "world"
 
 @export var spawn_index : int = 0
 
@@ -26,20 +32,24 @@ func _run(action_state:Action_State) -> bool:
 		return false
 	if action_state.owner as Node2D:
 		var old_location : Vector2 = action_state.owner.global_position
-		if store_entry_point:
-			player_state.set_vector(entry_point_id+"_location",old_location)
+		if store_exit_point:
+			player_state.set_vector(exit_point_id+"_location",old_location)
 			#player_state.positions[entry_point_id+"_location"] = old_location
 		if (action_state.owner as Character2D):
 			player_state.exit_data.facing_direction = action_state.owner.facing_direction
 			player_state.exit_data.entry_velocity = action_state.owner.velocity
-		player_state.exit_data.entry_position = old_location
+		player_state.exit_data.previous_level = world_state.level_uid
+		player_state.exit_data.previous_position = old_location
+		player_state.exit_data.override_entry_position = override_spawn_location
+		player_state.exit_data.entry_position = spawn_location
+		player_state.exit_data.entry_offset = spawn_offset
 	else:
 		print_debug('owner is not a node2d')
 		#may not want to return if not node2d?
 		return false
 	#player_state.exit_data.entry_diection
 	player_state.exit_data.target_level = level_uid
-	world_state.load_level.emit(level_uid, spawn_index)
+	world_state.load_level(level_uid,2)
 	print_debug('transfer sucess? ', level_uid)
 	#print_debug('world_state: ', world_state, 'connections',world_state.load_level.get_connections())
 	print_debug(player_state)

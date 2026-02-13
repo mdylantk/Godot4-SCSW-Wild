@@ -9,6 +9,9 @@ class_name UI_State extends State
 #so this is more a placeholder untill each system is built up more
 signal send_notifcation(message : String)
 
+#placeholder for generic button events. may not be used
+#signal button_triggered(id:String,pressed_state:int,source:Node)
+
 #NOTE: may used these as surface level controls
 #but some ui elements will have a state which will handle showing
 #the menu or not. 
@@ -64,7 +67,7 @@ var enable_player_input :bool = true
 	
 #this is a temp solution to acess the fishing ui
 #should have its own state
-var fishing_game = null
+#var fishing_game = null
 var pounce_fishing_state : Pounce_Fishing_State
 #var dialog = null
 
