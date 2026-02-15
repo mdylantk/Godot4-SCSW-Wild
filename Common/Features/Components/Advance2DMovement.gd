@@ -3,7 +3,11 @@ class_name Advance2DMovement extends Movement_Component_2D
 @export var acceleration : float = 1
 @export var deacceleration : float = 0.1
 
-func update_velocity(velocity:Vector2, direction:Vector2 = Vector2.ZERO):
+func calculate_velocity(
+		velocity:Vector2, 
+		direction:Vector2 = Vector2.ZERO,
+		last_collision:KinematicCollision2D = null
+	)->Vector2:
 	var new_velocity:Vector2 = velocity
 	var speed:float = get_speed()
 	

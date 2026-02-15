@@ -160,7 +160,7 @@ func on_menu_resume()->void:
 func on_menu_new_game(id:String="default")->void:
 	start_game(true, id)
 	state.new_game_event.emit(state.get_save_path())
-	world_state.load_level(world_state.level_uid,0)
+	world_state.load_level(world_state.level_uid,World_State.TRANSFER_TYPE.NONE)
 	#change_level(world_state.level_uid)
 	_pause_state &= ~Pause_States.USER_PAUSED
 
@@ -170,7 +170,7 @@ func on_menu_load_game(id:String = state.default_save_name)->void:
 	state.load_event.emit(state.get_save_path())
 	#change_level(world_state.level_uid)
 	#Should use the exit data for the owning player
-	world_state.load_level(player_state.exit_data.target_level,1)
+	world_state.load_level(player_state.exit_data.target_level,World_State.TRANSFER_TYPE.LOAD)
 	#change_level(player_state.exit_data.target_level)
 	_pause_state &= ~Pause_States.USER_PAUSED
 	

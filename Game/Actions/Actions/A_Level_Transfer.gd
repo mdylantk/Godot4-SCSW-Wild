@@ -55,8 +55,8 @@ func _run(action_state:Action_State) -> bool:
 		return false
 	#player_state.exit_data.entry_diection
 	player_state.exit_data.target_level = level_uid
-	world_state.load_level(level_uid,2)
-	print_debug('transfer sucess? ', level_uid)
+	world_state.load_level(level_uid,World_State.TRANSFER_TYPE.EXIT)
+	print_debug('transfer sucess? ', level_uid,' | ', world_state.transfer_type)
 	#print_debug('world_state: ', world_state, 'connections',world_state.load_level.get_connections())
 	print_debug(player_state)
 	return super(action_state)

@@ -1,5 +1,10 @@
 class_name World_State extends State
 
+##NONE type refers to default level set up
+##LOAD type refers restoring level from save
+##EXIT type refers to using exit data to set up the level
+enum TRANSFER_TYPE{NONE,LOAD,EXIT}
+
 signal level_transfer(uid:String)
 signal level_loaded(new_level : Base_Level)
 signal level_busy()
@@ -22,7 +27,7 @@ var level_uid : String = default_level_uid
 ##0: new game (use default data)
 ##1: loaded game (use data from a loaded file)
 ##2: exit triggered (exit data vaild)(used info in exit data
-var transfer_type : int = 0
+var transfer_type : TRANSFER_TYPE = TRANSFER_TYPE.NONE
 
 #TODO:decide if it should be is_level_ready(inverted bool) or not
 #also the signals might not be reliable
@@ -44,7 +49,7 @@ static func get_default_instance()-> State:
 	return load('uid://b047ftosxvj7p')
 
 #NOTE: need to handle invaild cases
-func load_level(uid:String, type:int = 0)->void:
+func load_level(uid:String, type:TRANSFER_TYPE = TRANSFER_TYPE.NONE)->void:
 	is_level_loading = true
 	transfer_type = type
 	level_transfer.emit(uid)

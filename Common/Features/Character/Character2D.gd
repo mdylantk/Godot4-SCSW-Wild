@@ -131,7 +131,10 @@ func move():
 		#and rearange as needed. facing_direction, velocity, others
 		if  direction != Vector2.ZERO:
 			facing_direction = direction 
-		velocity = movement_component.update_velocity(velocity,direction)
+		
+		velocity = movement_component.calculate_velocity(
+			velocity,direction,get_last_slide_collision()
+		)
 	if velocity != Vector2.ZERO:
 		move_and_slide()
 		if get_last_slide_collision() != null:
