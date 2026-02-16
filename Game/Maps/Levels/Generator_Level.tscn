@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cldlaymbe77mn"]
+[gd_scene format=3 uid="uid://cldlaymbe77mn"]
 
 [ext_resource type="Script" uid="uid://dc1yvgwellh6g" path="res://Common/Features/World_Levels_Data/Generator_Level.gd" id="1_alqvx"]
 [ext_resource type="Gradient" uid="uid://cnotvdiw4vtvo" path="res://Game/Assets/day_night_gradient.tres" id="2_6q6h8"]
@@ -11,7 +11,7 @@
 [sub_resource type="Resource" id="Resource_1lsxs"]
 script = ExtResource("7_j7515")
 
-[node name="GeneratorLevel" type="Node2D" node_paths=PackedStringArray("environment_color")]
+[node name="GeneratorLevel" type="Node2D" unique_id=566207621 node_paths=PackedStringArray("environment_color")]
 process_mode = 3
 y_sort_enabled = true
 script = ExtResource("1_alqvx")
@@ -24,12 +24,12 @@ random_chunk_noise_map = ExtResource("3_oov0n")
 environment_data = ExtResource("4_3wiu4")
 environment_color = NodePath("CanvasModulate")
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=226818204]
 unique_name_in_owner = true
 
-[node name="Player" parent="." instance=ExtResource("5_bwkji")]
+[node name="Player" parent="." unique_id=654566087 instance=ExtResource("5_bwkji")]
 unique_name_in_owner = true
 
-[node name="EnemyTest" parent="." instance=ExtResource("6_3e11c")]
+[node name="EnemyTest" parent="." unique_id=522821853 instance=ExtResource("6_3e11c")]
 position = Vector2(-75, -76)
 movement_component = SubResource("Resource_1lsxs")

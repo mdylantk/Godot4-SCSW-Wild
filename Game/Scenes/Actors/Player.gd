@@ -149,3 +149,10 @@ func on_action_triggered(action:String, value:Variant)->void:
 		movement_component.sprint_strength = value
 	if action == "Interact":
 		interact()
+	if action == 'Jump':
+		movement_component.jump(self)
+	
+func move(delta=1.0):
+	player_state.player_debug_message = str(get_move_direction(),velocity)
+	super(delta)
+	

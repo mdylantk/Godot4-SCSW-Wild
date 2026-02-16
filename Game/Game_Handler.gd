@@ -105,6 +105,7 @@ func end_game(full_quit:bool = false):
 		get_tree().quit()
 
 func change_level(uid:String):
+	print_debug('uid = ',uid)
 	if OK == get_tree().change_scene_to_file(uid):
 		world_state.level_uid = uid
 		world_state.is_level_loading = true
@@ -170,7 +171,11 @@ func on_menu_load_game(id:String = state.default_save_name)->void:
 	state.load_event.emit(state.get_save_path())
 	#change_level(world_state.level_uid)
 	#Should use the exit data for the owning player
-	world_state.load_level(player_state.exit_data.target_level,World_State.TRANSFER_TYPE.LOAD)
+	if player_state.exit_data.target_level.is_empty():
+		push_warning('exit data target level is empty. loading default')
+		world_state.load_level(world_state.level_uid,World_State.TRANSFER_TYPE.LOAD)
+	else:
+		world_state.load_level(player_state.exit_data.target_level,World_State.TRANSFER_TYPE.LOAD)
 	#change_level(player_state.exit_data.target_level)
 	_pause_state &= ~Pause_States.USER_PAUSED
 	

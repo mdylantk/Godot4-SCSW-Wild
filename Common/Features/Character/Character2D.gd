@@ -119,7 +119,7 @@ func get_move_direction()->Vector2:
 
 #this is simple and will override any movement that been set. basily a handler(player or ai) can tell it to move
 #in a dir every physic update. may also have a move to location task, but then again the handler could do that
-func move():
+func move(delta:float = 1.0):
 	var direction : Vector2 = get_move_direction()
 	##Note: this brain wont be use. make sure new logic is in get_movr_direction()
 	if movement_component != null:
@@ -131,12 +131,14 @@ func move():
 		#and rearange as needed. facing_direction, velocity, others
 		if  direction != Vector2.ZERO:
 			facing_direction = direction 
+			
 		
-		velocity = movement_component.calculate_velocity(
-			velocity,direction,get_last_slide_collision()
-		)
+		velocity = movement_component.calculate_velocity(direction,self,delta)
+		movement_component.apply_forces(self,delta)
+		
 	if velocity != Vector2.ZERO:
 		move_and_slide()
+		
 		if get_last_slide_collision() != null:
 			if get_last_slide_collision().get_remainder() != Vector2.ZERO:
 				movement_state = MovementStates.STOPPED
@@ -159,7 +161,9 @@ func on_action_triggered(action:String, value:float)-> void:
 		print_debug("MEOOW?")
 		interact()
 		pass
+	if action == 'Jump':
+		movement_component.jump(self)
 
 func _physics_process(delta: float) -> void:
-	move()
+	move(delta)
 	

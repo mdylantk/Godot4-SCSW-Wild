@@ -62,3 +62,6 @@ func _unhandled_input(event:InputEvent):
 				Input.get_axis("Left", "Right"),Input.get_axis("Forward","Back")
 			).normalized())
 			get_viewport().set_input_as_handled()
+	if event.is_action_pressed("Jump"):
+		controller.trigger_action("Jump",1)
+		get_viewport().set_input_as_handled()
