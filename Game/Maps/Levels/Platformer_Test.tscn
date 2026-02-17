@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://b8ak5rrnhd8fa"]
+
+[ext_resource type="Script" uid="uid://chix5ta5ba87p" path="res://Common/Features/World_Levels_Data/Base_Level.gd" id="1_8iy5q"]
+[ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Scenes/Actors/Player.tscn" id="2_it86m"]
+[ext_resource type="Script" uid="uid://d2uxe4dbfwttl" path="res://Common/Features/Components/Advance2DMovement.gd" id="3_sy2k8"]
+[ext_resource type="PackedScene" uid="uid://dakbjl3ve5cul" path="res://Game/Scenes/Actors/Interactive_Body2d.tscn" id="4_byeib"]
+[ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Game/Interactions/Interactive_Component.tscn" id="5_8kfwt"]
+[ext_resource type="Script" uid="uid://cxhenjxcqrr8u" path="res://Game/Actions/Actions/A_Level_Transfer.gd" id="6_1lx2l"]
+[ext_resource type="Script" uid="uid://cel2qwa77xtl5" path="res://Game/Interactions/Action_On_Interact.gd" id="7_tkj4f"]
+
+[sub_resource type="Resource" id="Resource_1rg10"]
+script = ExtResource("3_sy2k8")
+is_platformer = true
+metadata/_custom_type_script = "uid://d2uxe4dbfwttl"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sy2k8"]
+size = Vector2(152, 16)
+
+[sub_resource type="Resource" id="Resource_cfmsw"]
+script = ExtResource("6_1lx2l")
+level_uid = "uid://cldlaymbe77mn"
+override_spawn_location = true
+spawn_point_id = "world"
+metadata/_custom_type_script = "uid://cxhenjxcqrr8u"
+
+[sub_resource type="Resource" id="Resource_d12fj"]
+script = ExtResource("7_tkj4f")
+action = SubResource("Resource_cfmsw")
+metadata/_custom_type_script = "uid://cel2qwa77xtl5"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8n7a2"]
+size = Vector2(16, 16)
+
+[node name="PlatformerTest" type="Node" unique_id=355499107 node_paths=PackedStringArray("player_character")]
+script = ExtResource("1_8iy5q")
+player_character = NodePath("Player")
+metadata/_custom_type_script = "uid://chix5ta5ba87p"
+
+[node name="Player" parent="." unique_id=1959675502 instance=ExtResource("2_it86m")]
+movement_component = SubResource("Resource_1rg10")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1410943632]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=2099543431]
+position = Vector2(4, 24)
+shape = SubResource("RectangleShape2D_sy2k8")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D" unique_id=929970871]
+offset_left = -72.0
+offset_top = 16.0
+offset_right = 80.0
+offset_bottom = 32.0
+
+[node name="Sprite_Object" parent="." unique_id=276416634 instance=ExtResource("4_byeib")]
+position = Vector2(-64, 8)
+
+[node name="Interact_Component" parent="Sprite_Object" unique_id=685307405 instance=ExtResource("5_8kfwt")]
+interactive_data = SubResource("Resource_d12fj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite_Object/Interact_Component" unique_id=1750277828]
+shape = SubResource("RectangleShape2D_8n7a2")
+
+[node name="ColorRect" type="ColorRect" parent="Sprite_Object" unique_id=727328466]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0, 1, 0, 1)

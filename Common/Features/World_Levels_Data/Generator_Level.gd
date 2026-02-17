@@ -2,9 +2,9 @@ class_name Generator_Level extends Base_Level
 
 @export var level_id := "world"
 
-@export var player_state : Player_State = Player_State.get_default_instance()
+#@export var player_state : Player_State = Player_State.get_default_instance()
 @export var game_state : Game_State = Game_State.get_default_instance()
-@export var world_state : World_State = World_State.get_default_instance()
+#@export var world_state : World_State = World_State.get_default_instance()
 
 @export var light_color_curve : Gradient = load('uid://cnotvdiw4vtvo')
 #@export var use_game_seed: bool = true
@@ -218,18 +218,22 @@ func _process(delta: float) -> void:
 	
 
 func _ready() -> void:
-	var player_pos : Vector2 = %Player.position
-	match world_state.transfer_type :
-		World_State.TRANSFER_TYPE.LOAD:
-			if (player_state.has_vector('pawn_position')):
-				%Player.global_position = player_state.get_vector('pawn_position',2,false)
-			if (player_state.has_vector('pawn_facing')):
-				%Player.facing_direction = player_state.get_vector('pawn_facing',2,false)
-		World_State.TRANSFER_TYPE.EXIT:
-			if player_state.exit_data.override_entry_position:
-				%Player.global_position = (
-					player_state.exit_data.entry_position +
-					player_state.exit_data.entry_offset
-				)
-			%Player.facing_direction = player_state.exit_data.facing_direction
-			%Player.velocity = player_state.exit_data.entry_velocity
+	if player_character == null:
+		set_up_player(%Player)
+	else: 
+		super()
+	#var player_pos : Vector2 = %Player.position
+	#match world_state.transfer_type :
+	#	World_State.TRANSFER_TYPE.LOAD:
+	#		if (player_state.has_vector('pawn_position')):
+	#			%Player.global_position = player_state.get_vector('pawn_position',2,false)
+	#		if (player_state.has_vector('pawn_facing')):
+	#			%Player.facing_direction = player_state.get_vector('pawn_facing',2,false)
+	#	World_State.TRANSFER_TYPE.EXIT:
+	#		if player_state.exit_data.override_entry_position:
+	#			%Player.global_position = (
+	#				player_state.exit_data.entry_position +
+	#				player_state.exit_data.entry_offset
+	#			)
+	#		%Player.facing_direction = player_state.exit_data.facing_direction
+	#		%Player.velocity = player_state.exit_data.entry_velocity

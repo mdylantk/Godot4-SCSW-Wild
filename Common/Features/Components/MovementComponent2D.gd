@@ -17,7 +17,7 @@ class_name Movement_Component_2D extends Resource
 ##this is how much sprint will modify the speed
 ##The exact way would be what is declare in get_speed() or other functions.
 @export var sprint_modifier : float = 1.0
-@export var jump_force : float = 8.0
+@export var jump_force : float = 64.0
 
 ##This is the sprint flag, but it is a float incase it needs to be handle as
 ##an input strength
@@ -64,7 +64,7 @@ func calculate_forces_velocity(
 		var new_velocity:Vector2 = Vector2()
 		if jump_velocity != Vector2.ZERO:
 			new_velocity += jump_velocity
-		elif !body.is_on_floor():
+		if !body.is_on_floor() and gravity_enable():
 			new_velocity += gravity_velocity
 		if force_velocity != Vector2.ZERO:
 			new_velocity += force_velocity
@@ -78,6 +78,8 @@ func jump(
 	body:CharacterBody2D = null,
 	up_direction:Vector2 = Vector2.UP
 )->bool:
+	if !gravity_enable():
+		return false
 	if body:
 		if !body.is_on_floor():
 			return false
@@ -102,7 +104,7 @@ func apply_forces(
 )->void:
 	if jump_velocity != Vector2.ZERO:
 		jump_velocity = jump_velocity.move_toward(Vector2.ZERO,1.0)
-	elif !body.is_on_floor() and gravity_enable():
+	if !body.is_on_floor() and gravity_enable():
 		gravity_velocity = gravity_velocity.move_toward(get_gravity(),1.0)
 	else: 
 		gravity_velocity = Vector2.ZERO
@@ -123,4 +125,4 @@ func gravity_enable()->bool:
 ##should try to get the value from a global or shared (world) state
 ##the childen could also apply modifiers as well
 func get_gravity()->Vector2:
-	return Vector2(0.0,8.0)
+	return Vector2(0.0,64.0)

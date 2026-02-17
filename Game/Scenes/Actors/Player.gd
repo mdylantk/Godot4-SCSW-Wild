@@ -35,6 +35,9 @@ func _ready()->void:
 	game_state.load_event.connect(on_game_loaded)
 	on_game_loaded(game_state.get_save_path())
 
+func get_default_movement_component()->Movement_Component_2D:
+	return Advance2DMovement.new()
+
 
 func get_save_path()->String:
 	return "Characters"

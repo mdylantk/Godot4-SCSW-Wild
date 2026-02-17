@@ -24,6 +24,31 @@ class_name Base_Level extends Node
 @export var default_spawn_position : Vector2
 @export var use_default_spawn_position : bool = false
 
+@export var player_character : Node
+@export var player_state : Player_State = Player_State.get_default_instance()
+@export var world_state : World_State = World_State.get_default_instance()
+
+##run the logic that set up the player
+func set_up_player(player_ref:Node = null) -> void:
+	if player_ref:
+		match world_state.transfer_type :
+			World_State.TRANSFER_TYPE.LOAD:
+				if (player_state.has_vector('pawn_position')):
+					player_ref.global_position = player_state.get_vector('pawn_position',2,false)
+				if (player_state.has_vector('pawn_facing')):
+					player_ref.facing_direction = player_state.get_vector('pawn_facing',2,false)
+			World_State.TRANSFER_TYPE.EXIT:
+				if player_state.exit_data.override_entry_position:
+					player_ref.global_position = (
+						player_state.exit_data.entry_position +
+						player_state.exit_data.entry_offset
+					)
+				player_ref.global_position += player_state.exit_data.entry_offset
+				player_ref.facing_direction = player_state.exit_data.facing_direction
+				player_ref.velocity = player_state.exit_data.entry_velocity
+
+
+
 ##this is a counter for the world handler to know if the level need to be culled
 ##the world handler will update it as needed (NOTE: also could store as a metadata)
 ##DEPRECATED the world would not know this. only a single current level will be loaded
@@ -72,3 +97,6 @@ func get_level_scene(position:Vector2) -> Node:
 ##is the point in day.
 func on_time_update(delta:float):
 	environment_color.color = environment_data.get_environment_color()
+	
+func _ready() -> void:
+	set_up_player(player_character)

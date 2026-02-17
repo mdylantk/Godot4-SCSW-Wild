@@ -21,7 +21,7 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 #might be good to think about ways to have saving slotable.
 
 ##This is for caculate velocity change and store varibles related to how it change
-@export var movement_component : Movement_Component_2D = Advance2DMovement.new() :
+@export var movement_component : Movement_Component_2D = get_default_movement_component():
 	set(value):
 		#This will make a copy incase a tres ref was used. The component may
 		#have some values that change such as the sprint strength.
@@ -50,7 +50,11 @@ func get_save_path()->String:
 	if save_path.size() > 1:
 		return save_path[1].split("/"+name)[0]
 	return ""
-	
+
+##allow children character to override the default movement component
+func get_default_movement_component()->Movement_Component_2D:
+	return Movement_Component_2D.new()
+
 func on_new_game(path:String = ""):
 	save_state = Character_State.new()
 	

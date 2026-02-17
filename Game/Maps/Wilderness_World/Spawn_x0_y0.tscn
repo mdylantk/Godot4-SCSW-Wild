@@ -65,6 +65,21 @@ item = SubResource("Resource_n5vac")
 script = ExtResource("7_qdaw7")
 action = SubResource("Resource_kha4h")
 
+[sub_resource type="Resource" id="Resource_kqyom"]
+script = ExtResource("11_jqk4e")
+level_uid = "uid://b8ak5rrnhd8fa"
+store_exit_point = true
+exit_point_id = "world"
+metadata/_custom_type_script = "uid://cxhenjxcqrr8u"
+
+[sub_resource type="Resource" id="Resource_0gjrj"]
+script = ExtResource("7_qdaw7")
+action = SubResource("Resource_kqyom")
+metadata/_custom_type_script = "uid://cel2qwa77xtl5"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_abs8k"]
+size = Vector2(16, 16)
+
 [node name="TileMap" type="Node2D" unique_id=1020334460 node_paths=PackedStringArray("foilage_layer")]
 y_sort_enabled = true
 texture_filter = 1
@@ -134,6 +149,18 @@ enable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interact_Component2" unique_id=1013253634]
 position = Vector2(-40, 0)
 shape = SubResource("RectangleShape2D_m2me0")
+
+[node name="Sprite_Object" parent="." unique_id=891137178 instance=ExtResource("9_eva78")]
+position = Vector2(312, 344)
+
+[node name="Sprite2D_2" type="Sprite2D" parent="Sprite_Object" unique_id=870534539]
+texture = SubResource("AtlasTexture_qphu2")
+
+[node name="Interact_Component" parent="Sprite_Object" unique_id=203342490 instance=ExtResource("5_80pv0")]
+interactive_data = SubResource("Resource_0gjrj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite_Object/Interact_Component" unique_id=1878258457]
+shape = SubResource("RectangleShape2D_abs8k")
 
 [editable path="NCP"]
 [editable path="Old_Man_House"]

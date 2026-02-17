@@ -11,7 +11,7 @@
 [sub_resource type="Resource" id="Resource_1lsxs"]
 script = ExtResource("7_j7515")
 
-[node name="GeneratorLevel" type="Node2D" unique_id=566207621 node_paths=PackedStringArray("environment_color")]
+[node name="GeneratorLevel" type="Node2D" unique_id=566207621 node_paths=PackedStringArray("environment_color", "player_character")]
 process_mode = 3
 y_sort_enabled = true
 script = ExtResource("1_alqvx")
@@ -23,6 +23,7 @@ random_chunks = Array[String](["uid://clicnkneu0ddm", "uid://bngicde5fixcp", "ui
 random_chunk_noise_map = ExtResource("3_oov0n")
 environment_data = ExtResource("4_3wiu4")
 environment_color = NodePath("CanvasModulate")
+player_character = NodePath("Player")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=226818204]
 unique_name_in_owner = true
