@@ -62,6 +62,7 @@ _data = {
 }
 
 [node name="Fish" type="CharacterBody2D" unique_id=1633586613]
+scale = Vector2(0.5, 0.5)
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_d58g8")

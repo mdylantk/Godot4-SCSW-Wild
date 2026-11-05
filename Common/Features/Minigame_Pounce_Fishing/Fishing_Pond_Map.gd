@@ -267,7 +267,7 @@ func process_catch(fish_data:Dictionary):
 		
 		player_state.add_item(new_fish_item)
 
-		ui_state.send_notifcation.emit("[center]"+"Acquired "+ fish_type.display_name)
+		ui_state.send_notifcation.emit("Acquired "+ fish_type.display_name)
 		
 		if fish_data["pick_fish_data"]["rarity"] < 3:
 			var total_fish_caught = player_state.get_score("common_fish_caught")

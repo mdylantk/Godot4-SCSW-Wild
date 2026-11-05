@@ -10,9 +10,10 @@ texture_filter = 1
 script = ExtResource("1_pxaw0")
 foilage_generator = ExtResource("2_adtg8")
 foilage_layer = NodePath("Layer0")
+enable_height_masking = false
 tilemap_layers = [NodePath("Layer0")]
-metadata/_edit_vertical_guides_ = [1024.0]
-metadata/_edit_horizontal_guides_ = [1024.0]
+metadata/_edit_vertical_guides_ = [1024.0, 192.0, 832.0]
+metadata/_edit_horizontal_guides_ = [1024.0, 832.0, 192.0]
 
 [node name="Layer0" type="TileMapLayer" parent="." unique_id=42849026]
 y_sort_enabled = true

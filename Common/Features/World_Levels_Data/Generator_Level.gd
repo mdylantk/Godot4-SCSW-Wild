@@ -222,18 +222,3 @@ func _ready() -> void:
 		set_up_player(%Player)
 	else: 
 		super()
-	#var player_pos : Vector2 = %Player.position
-	#match world_state.transfer_type :
-	#	World_State.TRANSFER_TYPE.LOAD:
-	#		if (player_state.has_vector('pawn_position')):
-	#			%Player.global_position = player_state.get_vector('pawn_position',2,false)
-	#		if (player_state.has_vector('pawn_facing')):
-	#			%Player.facing_direction = player_state.get_vector('pawn_facing',2,false)
-	#	World_State.TRANSFER_TYPE.EXIT:
-	#		if player_state.exit_data.override_entry_position:
-	#			%Player.global_position = (
-	#				player_state.exit_data.entry_position +
-	#				player_state.exit_data.entry_offset
-	#			)
-	#		%Player.facing_direction = player_state.exit_data.facing_direction
-	#		%Player.velocity = player_state.exit_data.entry_velocity

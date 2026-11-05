@@ -30,6 +30,7 @@ unique_name_in_owner = true
 
 [node name="Player" parent="." unique_id=654566087 instance=ExtResource("5_bwkji")]
 unique_name_in_owner = true
+position = Vector2(280, 168)
 
 [node name="EnemyTest" parent="." unique_id=522821853 instance=ExtResource("6_3e11c")]
 position = Vector2(-75, -76)

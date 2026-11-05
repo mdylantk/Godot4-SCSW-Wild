@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://b8ak5rrnhd8fa"]
+[gd_scene format=4 uid="uid://b8ak5rrnhd8fa"]
 
 [ext_resource type="Script" uid="uid://chix5ta5ba87p" path="res://Common/Features/World_Levels_Data/Base_Level.gd" id="1_8iy5q"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Scenes/Actors/Player.tscn" id="2_it86m"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Game/Interactions/Interactive_Component.tscn" id="5_8kfwt"]
 [ext_resource type="Script" uid="uid://cxhenjxcqrr8u" path="res://Game/Actions/Actions/A_Level_Transfer.gd" id="6_1lx2l"]
 [ext_resource type="Script" uid="uid://cel2qwa77xtl5" path="res://Game/Interactions/Action_On_Interact.gd" id="7_tkj4f"]
+[ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Game/Assets/low_Bit_Tileset.tres" id="8_8kfwt"]
 
 [sub_resource type="Resource" id="Resource_1rg10"]
 script = ExtResource("3_sy2k8")
@@ -40,6 +41,8 @@ metadata/_custom_type_script = "uid://chix5ta5ba87p"
 movement_component = SubResource("Resource_1rg10")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1410943632]
+position = Vector2(0, 16)
+scale = Vector2(2.680001, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=2099543431]
 position = Vector2(4, 24)
@@ -52,7 +55,7 @@ offset_right = 80.0
 offset_bottom = 32.0
 
 [node name="Sprite_Object" parent="." unique_id=276416634 instance=ExtResource("4_byeib")]
-position = Vector2(-64, 8)
+position = Vector2(-56, 24)
 
 [node name="Interact_Component" parent="Sprite_Object" unique_id=685307405 instance=ExtResource("5_8kfwt")]
 interactive_data = SubResource("Resource_d12fj")
@@ -66,3 +69,7 @@ offset_top = -8.0
 offset_right = 8.0
 offset_bottom = 8.0
 color = Color(0, 1, 0, 1)
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=201473143]
+tile_map_data = PackedByteArray("AAD+/wIAAAAWAAMAAAD0/wIAAAAWAAMAAAD1/wIAAAAWAAMAAAD2/wIAAAAWAAMAAAD3/wIAAAAWAAMAAAD4/wIAAAAWAAMAAAD5/wIAAAAWAAMAAAD6/wIAAAAWAAMAAAD7/wIAAAAWAAMAAAD8/wIAAAAWAAMAAAD9/wIAAAAWAAMAAAD//wIAAAAWAAMAAAAAAAIAAAAWAAMAAAABAAIAAAAWAAMAAAACAAIAAAAWAAMAAAADAAIAAAAWAAMAAAAEAAIAAAAWAAMAAAAFAAIAAAAWAAMAAAAGAAIAAAAWAAMAAAAHAAIAAAAWAAMAAAAIAAIAAAAWAAMAAAAJAAIAAAAWAAMAAAAKAAIAAAAWAAMAAAALAAIAAAAWAAMAAAD0////AAASAAAAAAD1////AAATAAAAAAD2////AAATAAAAAAD3////AAATAAAAAAD4////AAATAAAAAAD5////AAATAAAAAAD6////AAATAAAAAAD7////AAATAAAAAAD8////AAATAAAAAAD9////AAATAAAAAAD+////AAATAAAAAAD/////AAATAAAAAAAAAP//AAATAAAAAAABAP//AAATAAAAAAACAP//AAATAAAAAAADAP//AAATAAAAAAAEAP//AAATAAAAAAAFAP//AAATAAAAAAAGAP//AAATAAAAAAAHAP//AAATAAAAAAAIAP//AAATAAAAAAAJAP//AAATAAAAAAAKAP//AAATAAAAAAALAP//AAAUAAAAAAD0/wAAAAASAAEAAAD0/wEAAAASAAIAAAALAAAAAAAUAAEAAAALAAEAAAAUAAIAAAD1/wEAAAATAAIAAAD2/wEAAAATAAIAAAD3/wEAAAATAAIAAAD4/wEAAAATAAIAAAD5/wEAAAATAAIAAAD6/wEAAAATAAIAAAD7/wEAAAATAAIAAAD8/wEAAAATAAIAAAD9/wEAAAATAAIAAAD+/wEAAAATAAIAAAD//wEAAAATAAIAAAAAAAEAAAATAAIAAAABAAEAAAATAAIAAAACAAEAAAATAAIAAAADAAEAAAATAAIAAAAEAAEAAAATAAIAAAAFAAEAAAATAAIAAAAGAAEAAAATAAIAAAAHAAEAAAATAAIAAAAIAAEAAAATAAIAAAAJAAEAAAATAAIAAAAKAAEAAAATAAIAAAAIAAAAAAATAAEAAAD6/wAAAAATAAEAAAD9/wAAAAATAAEAAAD3/wAAAAATAAEAAAD1/wAAAAATAAEAAAA=")
+tile_set = ExtResource("8_8kfwt")

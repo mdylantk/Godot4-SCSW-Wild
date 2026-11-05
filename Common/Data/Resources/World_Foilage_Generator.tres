@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Foilage_Generator" load_steps=23 format=3 uid="uid://c7267jk27323m"]
+[gd_resource type="Resource" script_class="Foilage_Generator" format=3 uid="uid://c7267jk27323m"]
 
 [ext_resource type="FastNoiseLite" uid="uid://087vceuyr40g" path="res://Game/Resources/Noise_Maps/World_Detail_Map.tres" id="1_r5rn4"]
 [ext_resource type="Script" uid="uid://c7hm36m1w8roy" path="res://Common/Features/World_Levels_Data/Foilage_Generator.gd" id="2_cdwmf"]
@@ -25,11 +25,12 @@
 
 [resource]
 script = ExtResource("2_cdwmf")
-region_size = 8
-chunk_size = 8
 detail_map = ExtResource("1_r5rn4")
 variation_map = ExtResource("3_6ovfg")
-emptiness = 0.5
+emptiness = null
+grass_weight = null
 grass_set = Array[ExtResource("2_ye7g2")]([ExtResource("3_3gu74"), ExtResource("4_i2aou"), ExtResource("5_8djy1"), ExtResource("6_bqsax")])
+tree_weight = null
 tree_set = Array[ExtResource("2_ye7g2")]([ExtResource("14_qerg1"), ExtResource("15_4amwb"), ExtResource("16_5nw3o"), ExtResource("17_i04af"), ExtResource("18_vhj0f"), ExtResource("19_vxlaf"), ExtResource("20_5ocyn"), ExtResource("21_uvhal"), ExtResource("22_byx8j")])
+rock_weight = null
 rock_set = Array[ExtResource("2_ye7g2")]([ExtResource("8_8f2w1"), ExtResource("9_cotug"), ExtResource("10_jt83g"), ExtResource("11_fxy7i"), ExtResource("12_hi5bb")])

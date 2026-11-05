@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Water_Generator" format=3 uid="uid://pjnqre64113s"]
+
+[ext_resource type="Script" uid="uid://buyp20ahjgmrw" path="res://Common/Features/World_Levels_Data/Water_Generator.gd" id="1_bhsbs"]
+[ext_resource type="FastNoiseLite" uid="uid://te65swlvsp53" path="res://Game/Resources/Noise_Maps/World_Height_Map.tres" id="2_v07ug"]
+[ext_resource type="Resource" uid="uid://c4dvysxnekvww" path="res://Game/Resources/Tiles/Tile_Water.tres" id="3_hc7bi"]
+
+[resource]
+script = ExtResource("1_bhsbs")
+water_map = ExtResource("2_v07ug")
+water_level = -0.5
+water_tile = ExtResource("3_hc7bi")
+metadata/_custom_type_script = "uid://buyp20ahjgmrw"

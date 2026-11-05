@@ -1,4 +1,4 @@
-extends CharacterBody2D
+class_name Fish extends CharacterBody2D
 
 func remove_self():
 	#TODO: Need a way without ref to parent
