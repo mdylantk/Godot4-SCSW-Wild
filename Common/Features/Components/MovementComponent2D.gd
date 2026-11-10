@@ -12,12 +12,16 @@ class_name Movement_Component_2D extends Resource
 #as there are dedicated characters. dedicated movement componets are for cases
 #where one character is used by functions varies base on the componets used
 
-@export var base_speed : float = 64
+#@export var base_speed : float = 64
+@export var max_speed : float = 64
 
 ##this is how much sprint will modify the speed
 ##The exact way would be what is declare in get_speed() or other functions.
 @export var sprint_modifier : float = 1.0
-@export var jump_force : float = 64.0
+@export var jump_force : float = 96.0
+
+@export var gravity : float = 98
+@export var max_gravity : float = 980
 
 ##This is the sprint flag, but it is a float incase it needs to be handle as
 ##an input strength
@@ -42,9 +46,7 @@ func calculate_velocity(
 	var forces_velocity:Vector2 = calculate_forces_velocity(body,delta)
 	
 	if direction != Vector2.ZERO:
-		new_velocity = new_velocity.move_toward(
-			direction*get_speed(),get_speed()
-		) + force_velocity
+		new_velocity = direction*get_max_speed() + force_velocity
 	else:
 		if forces_velocity == Vector2.ZERO:
 			new_velocity = Vector2.ZERO
@@ -52,11 +54,6 @@ func calculate_velocity(
 			new_velocity += force_velocity
 	return new_velocity
 
-#var player_state:Player_State = Player_State.get_default_instance()
-##caculate what the forces would affect. Generally
-##this will be added to the final velocity
-##but advance cases might not use this if their logic require
-##more controll over when and how.
 func calculate_forces_velocity(
 		body:CharacterBody2D = null,
 		delta:float = 1.0
@@ -71,6 +68,13 @@ func calculate_forces_velocity(
 		#player_state.player_debug_message = str(new_velocity)
 		return new_velocity
 
+func can_jump(body:CharacterBody2D = null,up_direction = Vector2.UP) -> bool:
+	if !gravity_enable():
+		return false
+	if body:
+		if !body.is_on_floor():
+			return false
+	return true
 ##set the jump force. if body is passed,
 ##then it may use that to decide if it can jump
 ##As well as modify the direction
@@ -78,12 +82,9 @@ func jump(
 	body:CharacterBody2D = null,
 	up_direction:Vector2 = Vector2.UP
 )->bool:
-	if !gravity_enable():
+	if !can_jump(body, up_direction):
 		return false
-	if body:
-		if !body.is_on_floor():
-			return false
-	#could also apply wall normal for wall jump
+	gravity_velocity = Vector2.ZERO
 	jump_velocity = get_jump_force()*up_direction
 	return true
 
@@ -103,15 +104,18 @@ func apply_forces(
 	delta:float=1.0
 )->void:
 	if jump_velocity != Vector2.ZERO:
-		jump_velocity = jump_velocity.move_toward(Vector2.ZERO,1.0)
+		jump_velocity = jump_velocity.move_toward(Vector2.ZERO,get_gravity()*delta)
 	if !body.is_on_floor() and gravity_enable():
-		gravity_velocity = gravity_velocity.move_toward(get_gravity(),1.0)
+		gravity_velocity = gravity_velocity.move_toward(get_gravity_direction()*get_max_gravity(),get_gravity()*delta)
 	else: 
 		gravity_velocity = Vector2.ZERO
-	force_velocity = force_velocity.move_toward(Vector2.ZERO,1.0)
+		
+	force_velocity = force_velocity.move_toward(Vector2.ZERO,delta)
 
-func get_speed()->float:
-	return (sprint_modifier*sprint_strength+1)*base_speed
+#func get_speed()->float:
+#	return (sprint_modifier*sprint_strength+1)*base_speed
+func get_max_speed()->float:
+	return (sprint_modifier*sprint_strength+1)*max_speed
 	
 func get_jump_force()->float:
 	return jump_force
@@ -124,5 +128,9 @@ func gravity_enable()->bool:
 ##get the gravity. allows children to override it
 ##should try to get the value from a global or shared (world) state
 ##the childen could also apply modifiers as well
-func get_gravity()->Vector2:
-	return Vector2(0.0,64.0)
+func get_gravity()->float:
+	return gravity
+func get_gravity_direction()->Vector2:
+	return Vector2(0.0,1.0)
+func get_max_gravity()->float:
+	return max_gravity

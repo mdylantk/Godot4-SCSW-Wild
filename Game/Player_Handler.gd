@@ -33,21 +33,34 @@ func on_autosave(path : String = ""):
 	ResourceSaver.save(new_save_state, full_path)
 	#print_debug("autosaving ", full_path)
 	
-
+var is_sprinting = false
 #NOTE: using game state here instead of expect the game to call it
 #incase this is moved off the game handler.
 func _ready():
 	game_state.save_event.connect(on_autosave)
 	game_state.load_event.connect(on_game_loaded)
 	game_state.new_game_event.connect(on_new_game)
-
-func _unhandled_input(event:InputEvent):
-	if paused : return
 	
+func _input(event:InputEvent) -> void:
+	#should not consume actions inputs here. this is for modifiers that state needs to be sync
+	#may need a flag to disable checking some keys here. movement currenlt have its own solution and 
+	#probably do not need to be added here
 	if event.is_action("Sprint"):
 		if controller != null:
 			controller.trigger_action("Sprint",event.get_action_strength("Sprint"))
-			get_viewport().set_input_as_handled()
+
+func _unhandled_input(event:InputEvent):
+	if paused : return
+	#make sure sprint is sync
+	
+	#if (is_sprinting != bool(event.get_action_strength("Sprint"))):
+	#	is_sprinting = bool(event.get_action_strength("Sprint"))
+	#	if controller != null:
+	#		controller.trigger_action("Sprint",event.get_action_strength("Sprint"))
+	#		if event.is_action("Sprint"):
+		#if controller != null:
+		#	controller.trigger_action("Sprint",event.get_action_strength("Sprint"))
+	#			get_viewport().set_input_as_handled()
 
 	if event.is_action_pressed("Accept"):
 		if controller != null:

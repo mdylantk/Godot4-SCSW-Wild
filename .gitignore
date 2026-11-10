@@ -27,3 +27,4 @@ mono_crash.*.json
 !.gitignore
 
 
+/addons/minimize_html_build

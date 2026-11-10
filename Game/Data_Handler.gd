@@ -1,3 +1,8 @@
+#TODO: probably should turn this into a state handler and split asset managerment
+#to a asset handler(even thoiugh resource loader basicly the asset manager, 
+#so in this case the asset manager works with assets included externally
+#which in this case is the user declared music)
+#NOTE: may also move some of the path or io functions to a lib if spliting this
 class_name Data_Handler extends Node
 
 
