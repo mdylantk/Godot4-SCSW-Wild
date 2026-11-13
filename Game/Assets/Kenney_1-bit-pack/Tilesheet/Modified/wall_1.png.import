@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dn0jc50wyemmk"
-path="res://.godot/imported/colored_packed.png-8eb30bbe07563337ff3dc3b02ed27bd3.ctex"
+uid="uid://clm2djf18q47q"
+path="res://.godot/imported/wall_1.png-2957847296f782a9d06b4e61e59b2ff5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored_packed.png"
-dest_files=["res://.godot/imported/colored_packed.png-8eb30bbe07563337ff3dc3b02ed27bd3.ctex"]
+source_file="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/wall_1.png"
+dest_files=["res://.godot/imported/wall_1.png-2957847296f782a9d06b4e61e59b2ff5.ctex"]
 
 [params]
 
