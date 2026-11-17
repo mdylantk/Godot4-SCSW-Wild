@@ -1,7 +1,7 @@
 [gd_resource type="TileSet" format=3 uid="uid://digeb0qjjwxn0"]
 
 [ext_resource type="Texture2D" uid="uid://b47hym7yonftl" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/surface.webp" id="2_7bka3"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_q5fvj"]
+[ext_resource type="Texture2D" uid="uid://kfu7vyt1dcgx" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_q5fvj"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_k4pyf"]
 polygon = PackedVector2Array(-1, 5, 1, 5, 1, 7, -1, 7)

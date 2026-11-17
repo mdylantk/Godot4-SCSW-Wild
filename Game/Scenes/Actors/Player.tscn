@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://bugclr6n3igb4"]
 
 [ext_resource type="Script" uid="uid://bp3atrikcfxmj" path="res://Game/Scenes/Actors/Player.gd" id="1_07gio"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_ps8hu"]
 [ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/States/Player_State.tres" id="2_ubr6l"]
+[ext_resource type="Texture2D" uid="uid://dtatap4u6h70p" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/characters.webp" id="3_fxka5"]
 [ext_resource type="Script" uid="uid://ok522b0njxq0" path="res://Game/Interactions/Shaped_Interactor.gd" id="4_qftw7"]
-[ext_resource type="Texture2D" uid="uid://bm67u18sl77a1" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/Characters.png" id="4_ubr6l"]
+[ext_resource type="Texture2D" uid="uid://bspaf3rwj4mdf" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/effects.webp" id="5_syxs1"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Game/Main_Camera.tscn" id="7_b7ptm"]
 [ext_resource type="Script" uid="uid://bgqgcg12is206" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Game/Controllers/Player_Controller.tres" id="9_dfeth"]
@@ -12,49 +12,63 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fb00q"]
 size = Vector2(14, 6)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_d6ua0"]
-atlas = ExtResource("4_ubr6l")
-region = Rect2(80, 112, 16, 16)
+[sub_resource type="AtlasTexture" id="AtlasTexture_g4v7s"]
+atlas = ExtResource("3_fxka5")
+region = Rect2(208, 32, 32, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_l2wt0"]
-atlas = ExtResource("4_ubr6l")
-region = Rect2(96, 112, 16, 16)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_aymj4"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d6ua0")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_l2wt0")
-}],
-"loop": true,
-"name": &"sit",
-"speed": 5.0
-}]
-
-[sub_resource type="Animation" id="Animation_du65h"]
-resource_name = "idle"
+[sub_resource type="Animation" id="Animation_5br2c"]
 length = 0.001
-tracks/0/type = "method"
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D")
+tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"values": [{
-"args": [&"sit", 1.0, false],
-"method": &"play"
-}]
+"update": 1,
+"values": [1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:offset")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:flip_h")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_du65h"]
+resource_name = "idle"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
 }
 
 [sub_resource type="Animation" id="Animation_7orey"]
@@ -63,7 +77,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D:flip_h")
+tracks/0/path = NodePath("Sprite2D:flip_h")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -79,7 +93,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D:flip_h")
+tracks/0/path = NodePath("Sprite2D:flip_h")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -93,28 +107,26 @@ tracks/0/keys = {
 resource_name = "default"
 length = 0.6
 loop_mode = 1
-tracks/0/type = "method"
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D")
+tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"values": [{
-"args": [&"default", 1.0, false],
-"method": &"play"
-}]
+"update": 1,
+"values": [0]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("AnimatedSprite2D:offset")
+tracks/1/path = NodePath("Sprite2D:offset")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6),
+"times": PackedFloat32Array(0.033333335, 0.3, 0.6),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(0, -1), Vector2(0, 0)]
@@ -122,6 +134,7 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_q78uo"]
 _data = {
+&"RESET": SubResource("Animation_5br2c"),
 &"idle": SubResource("Animation_du65h"),
 &"left": SubResource("Animation_7orey"),
 &"right": SubResource("Animation_meqo5"),
@@ -132,8 +145,8 @@ _data = {
 size = Vector2(6, 6)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_21snw"]
-atlas = ExtResource("2_ps8hu")
-region = Rect2(442, 187, 16, 16)
+atlas = ExtResource("5_syxs1")
+region = Rect2(32, 0, 16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ovqcn"]
 size = Vector2(14, 12)
@@ -157,10 +170,11 @@ player_state = ExtResource("2_ubr6l")
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_fb00q")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1889968907]
-sprite_frames = SubResource("SpriteFrames_aymj4")
-animation = &"sit"
-flip_h = true
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1721988025]
+self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
+texture = SubResource("AtlasTexture_g4v7s")
+hframes = 2
+frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=244854522]
 libraries/ = SubResource("AnimationLibrary_q78uo")
@@ -181,6 +195,7 @@ collision_mask = 8
 collide_with_areas = true
 
 [node name="Direction" type="Sprite2D" parent="Shaped_Interactor" unique_id=798422277]
+self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
 position = Vector2(14, 0)
 scale = Vector2(0.25, 0.25)
 texture = SubResource("AtlasTexture_21snw")

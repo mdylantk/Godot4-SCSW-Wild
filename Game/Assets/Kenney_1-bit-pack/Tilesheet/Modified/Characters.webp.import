@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtatap4u6h70p"
-path="res://.godot/imported/Characters.webp-d30cbabbb9ffa781f500dd0c85279f1a.ctex"
+path="res://.godot/imported/characters.webp-80f84e4f451fbb7c00af5d88d832cc3e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/Characters.webp"
-dest_files=["res://.godot/imported/Characters.webp-d30cbabbb9ffa781f500dd0c85279f1a.ctex"]
+source_file="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/characters.webp"
+dest_files=["res://.godot/imported/characters.webp-80f84e4f451fbb7c00af5d88d832cc3e.ctex"]
 
 [params]
 

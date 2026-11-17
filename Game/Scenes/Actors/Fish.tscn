@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dghoogotf0r7u"]
 
 [ext_resource type="Script" uid="uid://cxwqiaqfqaxje" path="res://Game/Scenes/Actors/Fish.gd" id="1_d58g8"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_xhkgq"]
+[ext_resource type="Texture2D" uid="uid://bspaf3rwj4mdf" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/effects.webp" id="2_gssy5"]
 [ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Game/Interactions/Interactive_Component.tscn" id="5_2a1kj"]
 [ext_resource type="Resource" uid="uid://7ik7rawmbjbk" path="res://Game/Tables/Fish_List.tres" id="5_8acdy"]
 [ext_resource type="Script" uid="uid://bib5swgk8wmfr" path="res://Game/Actions/Actions/A_Start_Pounce_Fishing.gd" id="5_gssy5"]
@@ -11,8 +11,8 @@
 size = Vector2(16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_84wnk"]
-atlas = ExtResource("2_xhkgq")
-region = Rect2(595, 187, 16, 16)
+atlas = ExtResource("2_gssy5")
+region = Rect2(0, 32, 96, 16)
 
 [sub_resource type="Resource" id="Resource_k8i6g"]
 script = ExtResource("5_gssy5")
@@ -29,36 +29,40 @@ size = Vector2(16, 16)
 
 [sub_resource type="Animation" id="Animation_b4c0c"]
 resource_name = "Idle"
-length = 1.8
-loop_mode = 2
+length = 0.6
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:flip_h")
+tracks/0/path = NodePath("Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [false, true, false, true, false, true, false]
+"values": [0, 1, 2, 3, 4, 5]
 }
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:flip_v")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+
+[sub_resource type="Animation" id="Animation_gssy5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false, false, true, true, true, false, false]
+"values": [0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_72kqa"]
 _data = {
-&"Idle": SubResource("Animation_b4c0c")
+&"Idle": SubResource("Animation_b4c0c"),
+&"RESET": SubResource("Animation_gssy5")
 }
 
 [node name="Fish" type="CharacterBody2D" unique_id=1633586613]
@@ -71,9 +75,10 @@ script = ExtResource("1_d58g8")
 shape = SubResource("RectangleShape2D_34u5r")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=328843255]
+self_modulate = Color(1, 1, 1, 0.49803922)
 texture_filter = 1
 texture = SubResource("AtlasTexture_84wnk")
-flip_h = true
+hframes = 6
 
 [node name="Interact_Component" parent="." unique_id=308824127 instance=ExtResource("5_2a1kj")]
 interactive_data = SubResource("Resource_a3rtw")

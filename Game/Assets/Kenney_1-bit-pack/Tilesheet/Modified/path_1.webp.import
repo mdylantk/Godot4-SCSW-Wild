@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6uojyg5w7s57"
-path="res://.godot/imported/structure_1.webp-046cd9e5d290b9dd0c714dea496a530d.ctex"
+uid="uid://dfgbg7g7i1oaw"
+path="res://.godot/imported/path_1.webp-1d4794c6aeb67c727b48a0452ca500ec.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/structure_1.webp"
-dest_files=["res://.godot/imported/structure_1.webp-046cd9e5d290b9dd0c714dea496a530d.ctex"]
+source_file="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/path_1.webp"
+dest_files=["res://.godot/imported/path_1.webp-1d4794c6aeb67c727b48a0452ca500ec.ctex"]
 
 [params]
 
