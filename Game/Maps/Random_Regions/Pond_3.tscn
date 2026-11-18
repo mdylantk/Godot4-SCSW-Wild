@@ -4,10 +4,11 @@
 [ext_resource type="Script" uid="uid://c3vqnafptavcg" path="res://Common/Data/Scripts/One_Bit_Tilemap.gd" id="2_x6uql"]
 [ext_resource type="PackedScene" uid="uid://dghoogotf0r7u" path="res://Game/Scenes/Actors/Fish.tscn" id="3_hnumo"]
 
-[node name="Pond_0" type="Node2D" unique_id=317241032 node_paths=PackedStringArray("foilage_layer")]
+[node name="Pond_0" type="Node2D" unique_id=317241032 node_paths=PackedStringArray("foilage_layer", "tile_layers")]
 y_sort_enabled = true
 script = ExtResource("2_x6uql")
 foilage_layer = NodePath("Layer1")
+tile_layers = [NodePath("Layer1")]
 
 [node name="Layer1" type="TileMapLayer" parent="." unique_id=1105098647]
 y_sort_enabled = true

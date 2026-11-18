@@ -9,9 +9,13 @@ signal on_chunk_ready(pos)
 
 @export var water_generator : Generator_Data = load("uid://pjnqre64113s")
 @export var fish_enitity : PackedScene = load("uid://dghoogotf0r7u")
-
-@export var foilage_layer : TileMapLayer
-
+##this is still needed untill there a better way to declare the layer for genertation
+##may even pass the tile layers plus some metadata to the generator so it do more of the work
+#@export var foilage_layer : TileMapLayer
+##assign tile layers to be checked or managed by this node
+@export var tile_layers : Array[TileMapLayer]
+##since there may be a few tile layers4r
+@export var default_tile_size : Vector2i = Vector2i(16,16)
 ##masks that are applied to certain generators that may need smoothing within this map. 
 ##Currently it is only a circle mask 
 @export var enable_height_masking: bool = true
@@ -29,44 +33,47 @@ var processing_step: int = 0
 
 func _ready():
 	call_deferred("generate")
-	#set_meta("is_ready", false)
-	#if !y_sort_enabled:
-	#	y_sort_enabled = true #note this override it,but currently y sort is wanted and new tilemaps is not including it
-
-	#if foilage_generator != null and foilage_layer != null:
-	#	foilage_generator.generate(foilage_layer)
-	#	foilage_generator.scene_finished.connect(on_scene_finished)
-	#else:
-	#	is_ready = true
-	pass
-
-#TODO: either have this or tilemap handler have a secondary ready event
-#that is called when all the generators and setup code is ran kind of like before
-#but since tilemap handler will be known to the world generator, the signal can be listen too
-func on_scene_finished(generator : Generator_Data, scene:Node):
-	if scene == foilage_layer:
-		set_meta("is_ready",true)
-		is_ready = true
-		#set_meta("is_ready", true)
-		#there is no need to listen once finished
-		foilage_generator.scene_finished.disconnect(on_scene_finished)
 		
 		
 @export var region_size : int = 8
 @export var chunk_size : int = 8
+
+##Get an array of tile data at the provide coords. flags is an otinal parameter
+##for extentions to filter out which layers get checked. target is the array
+##return incase one want to reuse that same array
+func get_tiles(coord:Vector2i=Vector2i(), flags:int = 0, target = []) -> Array[TileData]:
+	#var data = foilage_layer.get_cell_tile_data(coord)
+	#if (data):
+	#	target.append(data)
+	for tile_layer in tile_layers:
+		var data = tile_layer.get_cell_tile_data(coord)
+		if (data):
+			target.append(data)
+	return target
+
+##get the tile sized used by this node. Flags to filter if there more than one 
+##managed standard. This is for chunk base generation, but should try to use the
+##size of the tile map that is being worked with. The function will allow overriding it to fetch
+##that tilemap tile size
+func get_tile_size(flag:int=0)->Vector2i:
+	return default_tile_size
+
 func generate()->void:
 	is_ready = false
 	var data : Tile_Info
 	var coord : Vector2i
 	var global_coord : Vector2i
+	var tile_size:Vector2i = get_tile_size()
 	#TODO may need to put masks in a global object or resource
 	#could allow these to add it if they block generations then remove it when they load in. only issues is chunks that generated before
 	#so may be better to have it for static chunks and have random chunks "work with: world generation
 	#NOTE:when adding a mask to self, need to make sure it is  center since most tilemaps are top left orgin
-	var tile_max_size = max(foilage_layer.tile_set.tile_size.x,foilage_layer.tile_set.tile_size.y)
+	var tile_max_size = max(tile_size.x,tile_size.y)
 	var map_size = chunk_size*region_size*tile_max_size
 	var map_radius = map_size/2.0
 	var masks:Array = []
+	var tileData:Array[TileData]
+	
 	if (enable_height_masking):
 		masks.append([
 			global_position.x + map_radius + height_mask_offset.x,
@@ -81,7 +88,7 @@ func generate()->void:
 	#may need to be a resource so it can be declare in the editor
 	for region_x in range(region_size):
 		for region_y in range(region_size):
-			if foilage_generator and foilage_layer:
+			if foilage_generator and tile_layers[0]:
 				for chunk_x in range(chunk_size):
 					for chunk_y in range(chunk_size):
 						coord = Vector2i(
@@ -89,27 +96,31 @@ func generate()->void:
 						)
 						var tile_data: Tile_Info
 						var waterId = -1
-						global_coord.x = coord.x*foilage_layer.tile_set.tile_size.x +global_position.x
-						global_coord.y = coord.y*foilage_layer.tile_set.tile_size.y +global_position.y
-						if foilage_layer.get_cell_tile_data(coord) == null: 
+						global_coord.x = coord.x*tile_size.x +global_position.x
+						global_coord.y = coord.y*tile_size.y +global_position.y
+						tileData.clear()
+						get_tiles(coord,0,tileData)
+						if (tileData.size() == 0):
+							
+						#if foilage_layer.get_cell_tile_data(coord) == null: 
 							if (water_generator):
 								tile_data = water_generator.get_tile_info(global_coord,masks)
 								if (tile_data):
-									waterId  = water_generator.get_connection_id(global_coord,foilage_layer.tile_set.tile_size.x,foilage_layer.tile_set.tile_size.y,masks)
+									waterId  = water_generator.get_connection_id(global_coord,tile_size.x,tile_size.y,masks)
 							if (tile_data == null):
 								tile_data =  foilage_generator.get_tile_info(global_coord)
 							if (tile_data):
 								if(waterId >= 0):
 									#TODO: probably should let the generator read the tilemap or layer to check for existing tiles
 									#so it can merge better with static content
-									foilage_layer.set_cell(coord,tile_data.source_id,water_generator.connection_pos(waterId))
+									tile_layers[0].set_cell(coord,tile_data.source_id,water_generator.connection_pos(waterId))
 									if (waterId != 14 && waterId != 0 && fish_enitity):
 										if (randf() <= fish_spawn_chance):
 											var fish = fish_enitity.instantiate()
-											fish.global_position = foilage_layer.map_to_local(coord)
+											fish.global_position = tile_layers[0].map_to_local(coord)
 											add_child(fish)
 								else:
-									foilage_layer.set_cell(coord,tile_data.source_id,tile_data.atlas_coords)
+									tile_layers[0].set_cell(coord,tile_data.source_id,tile_data.atlas_coords)
 						#if foilage_layer.get_cell_tile_data(coord) == null: 
 						#	data = foilage_generator.get_tile_info(coord)
 						#	if data:

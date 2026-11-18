@@ -1,22 +1,24 @@
-[gd_scene load_steps=7 format=3 uid="uid://ctvmde4ov5w2x"]
+[gd_scene format=3 uid="uid://ctvmde4ov5w2x"]
 
 [ext_resource type="Script" uid="uid://d1ebj0rj4cmic" path="res://Game/UI/Dialog.gd" id="1_le745"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_xduuh"]
+[ext_resource type="Texture2D" uid="uid://d0djepcwpg3h3" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/items_1.webp" id="2_yig56"]
+[ext_resource type="Texture2D" uid="uid://ccm57tc1fganm" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/props_2.webp" id="3_4xd8r"]
 [ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Game/Assets/Main_Theme.tres" id="3_fehv7"]
+[ext_resource type="Texture2D" uid="uid://dtatap4u6h70p" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/characters.webp" id="5_43lqd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ilfco"]
-atlas = ExtResource("2_xduuh")
-region = Rect2(799, 136, 16, 16)
+atlas = ExtResource("2_yig56")
+region = Rect2(16, 224, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fakkd"]
-atlas = ExtResource("2_xduuh")
-region = Rect2(816, 255, 16, 16)
+atlas = ExtResource("3_4xd8r")
+region = Rect2(224, 96, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jkry8"]
-atlas = ExtResource("2_xduuh")
-region = Rect2(442, 170, 16, 16)
+atlas = ExtResource("5_43lqd")
+region = Rect2(32, 224, 16, 16)
 
-[node name="Dialog" type="Control"]
+[node name="Dialog" type="Control" unique_id=523716124]
 process_mode = 1
 layout_mode = 3
 anchors_preset = 15
@@ -27,7 +29,8 @@ grow_vertical = 2
 script = ExtResource("1_le745")
 metadata/_custom_type_script = "uid://coh1abp5m41eo"
 
-[node name="NinePatchRect2" type="NinePatchRect" parent="."]
+[node name="NinePatchRect2" type="NinePatchRect" parent="." unique_id=1053540196]
+self_modulate = Color(0.7490196, 0.4745098, 0.34509805, 1)
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -45,7 +48,8 @@ patch_margin_top = 8
 patch_margin_right = 8
 patch_margin_bottom = 8
 
-[node name="NinePatchRect" type="NinePatchRect" parent="."]
+[node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=981444292]
+self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -63,7 +67,7 @@ patch_margin_top = 4
 patch_margin_right = 4
 patch_margin_bottom = 4
 
-[node name="Name" type="RichTextLabel" parent="."]
+[node name="Name" type="RichTextLabel" parent="." unique_id=813262574]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -79,7 +83,7 @@ text = "[center]Name"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Text" type="RichTextLabel" parent="."]
+[node name="Text" type="RichTextLabel" parent="." unique_id=484973036]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -95,7 +99,8 @@ theme = ExtResource("3_fehv7")
 bbcode_enabled = true
 text = "test"
 
-[node name="Icon" type="TextureRect" parent="."]
+[node name="Icon" type="TextureRect" parent="." unique_id=1129641672]
+self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

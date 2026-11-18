@@ -1,12 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://c0ygb7le6picm"]
+[gd_scene format=3 uid="uid://c0ygb7le6picm"]
 
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="1_2t6pa"]
+[ext_resource type="Texture2D" uid="uid://cuvom41jrb1ud" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/icons.webp" id="1_2t6pa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_r1j0k"]
 atlas = ExtResource("1_2t6pa")
-region = Rect2(680, 238, 16, 16)
+region = Rect2(224, 64, 16, 16)
 
-[node name="Exit" type="TextureButton"]
+[node name="Exit" type="TextureButton" unique_id=1636081744]
+self_modulate = Color(1, 0, 0, 1)
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0

@@ -2,12 +2,13 @@
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Game/Assets/low_Bit_Tileset.tres" id="1_tfhm6"]
 [ext_resource type="Script" uid="uid://djq00sspc6rbv" path="res://Common/Features/Minigame_Pounce_Fishing/Fishing_Pond_Map.gd" id="2_22xfp"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="3_fxox0"]
+[ext_resource type="Texture2D" uid="uid://5or1y8dk73qp" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/icons_2.webp" id="2_l8qs2"]
+[ext_resource type="Texture2D" uid="uid://kfu7vyt1dcgx" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="3_fxox0"]
 [ext_resource type="PackedScene" uid="uid://c0ygb7le6picm" path="res://Game/Scenes/Exit_Button.tscn" id="4_v7qvn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kqd4q"]
-atlas = ExtResource("3_fxox0")
-region = Rect2(595, 204, 16, 16)
+atlas = ExtResource("2_l8qs2")
+region = Rect2(0, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6dnll"]
 atlas = ExtResource("3_fxox0")
@@ -35,6 +36,7 @@ color = Color(0, 0, 0, 1)
 
 [node name="Cursor" type="TextureProgressBar" parent="." unique_id=333292572]
 unique_name_in_owner = true
+self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
 layout_mode = 0
 offset_left = 384.0
 offset_top = 352.0

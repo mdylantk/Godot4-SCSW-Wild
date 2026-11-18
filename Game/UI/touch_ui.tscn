@@ -1,104 +1,112 @@
-[gd_scene load_steps=12 format=3 uid="uid://da7l5mwu2x5w2"]
+[gd_scene format=3 uid="uid://da7l5mwu2x5w2"]
 
 [ext_resource type="Script" uid="uid://p3kkvhtbs06w" path="res://Game/UI/touch_ui.gd" id="1_x78kw"]
-[ext_resource type="Texture2D" uid="uid://c800psxid2h7u" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="2_1hg6i"]
+[ext_resource type="Texture2D" uid="uid://cuvom41jrb1ud" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/icons.webp" id="2_1hg6i"]
+[ext_resource type="Texture2D" uid="uid://d0djepcwpg3h3" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/items_1.webp" id="3_2xl6m"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ify41"]
 atlas = ExtResource("2_1hg6i")
-region = Rect2(560, 254, 18, 18)
+region = Rect2(64, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f6n6d"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(798, 85, 17, 17)
+atlas = ExtResource("3_2xl6m")
+region = Rect2(144, 176, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2xl6m"]
 atlas = ExtResource("2_1hg6i")
-region = Rect2(476, 340, 16, 17)
+region = Rect2(64, 160, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bxr1p"]
 atlas = ExtResource("2_1hg6i")
-region = Rect2(527, 340, 16, 16)
+region = Rect2(112, 160, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wdvgc"]
 atlas = ExtResource("2_1hg6i")
-region = Rect2(493, 340, 17, 16)
+region = Rect2(80, 160, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v6c2k"]
 atlas = ExtResource("2_1hg6i")
-region = Rect2(510, 340, 16, 16)
+region = Rect2(96, 160, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7jdwk"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(680, 0, 16, 16)
+atlas = ExtResource("3_2xl6m")
+region = Rect2(16, 32, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x78kw"]
 atlas = ExtResource("2_1hg6i")
-region = Rect2(663, 221, 16, 16)
+region = Rect2(176, 64, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1hg6i"]
 atlas = ExtResource("2_1hg6i")
-region = Rect2(680, 221, 16, 16)
+region = Rect2(192, 64, 16, 16)
 
-[node name="Touch_UI" type="CanvasLayer"]
+[node name="Touch_UI" type="CanvasLayer" unique_id=684229919]
 layer = 110
 script = ExtResource("1_x78kw")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1823585460]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -176.0
+offset_left = -232.0
 offset_top = 16.0
-offset_right = -8.0
+offset_right = -124.0
 offset_bottom = 40.0
 grow_horizontal = 0
+scale = Vector2(2, 2)
 alignment = 1
 
-[node name="Main_Menu_Button" type="TextureButton" parent="HBoxContainer"]
+[node name="Main_Menu_Button" type="TextureButton" parent="HBoxContainer" unique_id=1060231436]
 process_mode = 3
+self_modulate = Color(0.7490196, 0.4745098, 0.34509805, 1)
 layout_mode = 2
 texture_normal = SubResource("AtlasTexture_ify41")
 
-[node name="Cargo_Button" type="TextureButton" parent="HBoxContainer"]
+[node name="Cargo_Button" type="TextureButton" parent="HBoxContainer" unique_id=1660882931]
+self_modulate = Color(0.7490196, 0.4745098, 0.34509805, 1)
 layout_mode = 2
 texture_normal = SubResource("AtlasTexture_f6n6d")
 
-[node name="Directions" type="VBoxContainer" parent="."]
+[node name="Directions" type="VBoxContainer" parent="." unique_id=80014743]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 56.0
-offset_top = -111.99997
-offset_right = 112.0
-offset_bottom = -55.0
+offset_left = 64.0
+offset_top = -136.0
+offset_right = 120.0
+offset_bottom = -79.0
 grow_vertical = 0
-scale = Vector2(1.5, 1.5)
+scale = Vector2(2, 2)
 
-[node name="Up" type="TextureButton" parent="Directions"]
+[node name="Up" type="TextureButton" parent="Directions" unique_id=1354062129]
+self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = SubResource("AtlasTexture_2xl6m")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Directions"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Directions" unique_id=1784142077]
 layout_mode = 2
 alignment = 1
 
-[node name="Left" type="TextureButton" parent="Directions/HBoxContainer"]
+[node name="Left" type="TextureButton" parent="Directions/HBoxContainer" unique_id=1945671054]
+self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 size_flags_horizontal = 2
 texture_normal = SubResource("AtlasTexture_bxr1p")
 
-[node name="Right" type="TextureButton" parent="Directions/HBoxContainer"]
+[node name="Right" type="TextureButton" parent="Directions/HBoxContainer" unique_id=1681018958]
+self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 size_flags_horizontal = 10
 texture_normal = SubResource("AtlasTexture_wdvgc")
 
-[node name="Down" type="TextureButton" parent="Directions"]
+[node name="Down" type="TextureButton" parent="Directions" unique_id=1737672868]
+self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = SubResource("AtlasTexture_v6c2k")
 
-[node name="Actions" type="HBoxContainer" parent="."]
+[node name="Actions" type="HBoxContainer" parent="." unique_id=1326213852]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -113,15 +121,18 @@ grow_vertical = 0
 scale = Vector2(2, 2)
 alignment = 1
 
-[node name="Sprint" type="TextureButton" parent="Actions"]
+[node name="Sprint" type="TextureButton" parent="Actions" unique_id=390804301]
+modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 texture_normal = SubResource("AtlasTexture_7jdwk")
 
-[node name="Accept" type="TextureButton" parent="Actions"]
+[node name="Accept" type="TextureButton" parent="Actions" unique_id=1208510062]
+self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 texture_normal = SubResource("AtlasTexture_x78kw")
 
-[node name="Cancel" type="TextureButton" parent="Actions"]
+[node name="Cancel" type="TextureButton" parent="Actions" unique_id=1405683230]
+self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 texture_normal = SubResource("AtlasTexture_1hg6i")
 

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Tile_Info" format=3 uid="uid://cgo3x7culm7qj"]
+
+[ext_resource type="Script" uid="uid://df2p05the2ipl" path="res://Common/Data/Scripts/Tile_Info.gd" id="1_0d10l"]
+
+[resource]
+script = ExtResource("1_0d10l")
+name = "Tree8"
+source_id = 3
+atlas_coords = Vector2i(11, 1)

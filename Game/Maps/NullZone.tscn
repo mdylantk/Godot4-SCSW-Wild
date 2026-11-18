@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bfu88ysypa0qs"]
+[gd_scene format=3 uid="uid://bfu88ysypa0qs"]
 
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Game/Assets/low_Bit_Tileset.tres" id="1_rgbj2"]
 [ext_resource type="Script" uid="uid://c3vqnafptavcg" path="res://Common/Data/Scripts/One_Bit_Tilemap.gd" id="2_rj0p0"]
@@ -6,18 +6,19 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k4uua"]
 size = Vector2(528, 528)
 
-[node name="NullZone" type="Node2D" node_paths=PackedStringArray("foilage_layer")]
+[node name="NullZone" type="Node2D" unique_id=180501453 node_paths=PackedStringArray("foilage_layer", "tile_layers")]
 visible = false
 y_sort_enabled = true
 script = ExtResource("2_rj0p0")
 foilage_layer = NodePath("Layer0")
+tile_layers = [NodePath("Layer0")]
 
-[node name="Layer0" type="TileMapLayer" parent="."]
+[node name="Layer0" type="TileMapLayer" parent="." unique_id=1496704593]
 use_parent_material = true
 tile_set = ExtResource("1_rgbj2")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=52835614]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=950435020]
 position = Vector2(264, 264)
 shape = SubResource("RectangleShape2D_k4uua")
