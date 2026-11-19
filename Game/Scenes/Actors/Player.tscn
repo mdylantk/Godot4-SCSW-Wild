@@ -212,8 +212,7 @@ debug_color = Color(0.972549, 0, 0, 0.419608)
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=634827207]
 position = Vector2(1.6093254e-06, 0)
-scale = Vector2(2.5, 2)
-energy = 0.25
+energy = 0.1
 texture = SubResource("GradientTexture2D_flttt")
 
 [node name="Brain" type="Node" parent="." unique_id=272028249]

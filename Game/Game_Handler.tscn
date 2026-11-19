@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dvaxx0ke0p27m"]
+[gd_scene format=3 uid="uid://dvaxx0ke0p27m"]
 
 [ext_resource type="Script" uid="uid://dfe83mkcmeuy7" path="res://Game/Game_Handler.gd" id="1_gpdo0"]
 [ext_resource type="PackedScene" uid="uid://cc1hxktnb4a1k" path="res://Game/UI/UI_Handler.tscn" id="2_2spbq"]
@@ -10,28 +10,28 @@
 [ext_resource type="AudioStream" uid="uid://bba37ge2fakbi" path="res://Game/Audio/Background_Stream.tres" id="9_4tkt8"]
 [ext_resource type="Script" uid="uid://dlecb755vv3wq" path="res://Game/Audio/RepeatAudioStreamPlayer.gd" id="10_upx7b"]
 
-[node name="Game_Handler" type="Node2D" groups=["Game_Handler", "Savable"]]
+[node name="Game_Handler" type="Node2D" unique_id=1039341812 groups=["Game_Handler", "Savable"]]
 y_sort_enabled = true
 script = ExtResource("1_gpdo0")
 
-[node name="UI" parent="." instance=ExtResource("2_2spbq")]
+[node name="UI" parent="." unique_id=1920246779 instance=ExtResource("2_2spbq")]
 unique_name_in_owner = true
 
-[node name="DataHandler" parent="." instance=ExtResource("2_s3n5n")]
+[node name="DataHandler" parent="." unique_id=929859905 instance=ExtResource("2_s3n5n")]
 
-[node name="AI_Handler" type="Node2D" parent="."]
+[node name="AI_Handler" type="Node2D" parent="." unique_id=1280781734]
 script = ExtResource("3_8kfs5")
-enable = true
 controller = ExtResource("4_ounbx")
+enable = true
 
-[node name="Server_Handler" type="Node" parent="."]
+[node name="Server_Handler" type="Node" parent="." unique_id=2001555237]
 unique_name_in_owner = true
 script = ExtResource("7_clhfr")
 
-[node name="Player_Handler" parent="." instance=ExtResource("5_amjxa")]
+[node name="Player_Handler" parent="." unique_id=1096859616 instance=ExtResource("5_amjxa")]
 unique_name_in_owner = true
 
-[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=865166290]
 unique_name_in_owner = true
 process_mode = 3
 stream = ExtResource("9_4tkt8")
@@ -41,11 +41,11 @@ autoplay = true
 mix_target = 1
 script = ExtResource("10_upx7b")
 
-[node name="Autosave_Timer" type="Timer" parent="."]
+[node name="Autosave_Timer" type="Timer" parent="." unique_id=1392275677]
 unique_name_in_owner = true
 wait_time = 5.0
 
-[node name="World_Clock" type="Timer" parent="."]
+[node name="World_Clock" type="Timer" parent="." unique_id=684845737]
 unique_name_in_owner = true
 process_mode = 1
 wait_time = 0.1

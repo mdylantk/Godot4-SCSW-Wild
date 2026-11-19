@@ -9,6 +9,8 @@ class_name Generator_Level extends Base_Level
 @export var light_color_curve : Gradient = load('uid://cnotvdiw4vtvo')
 #@export var use_game_seed: bool = true
 
+##The default min light
+@export var ambient_light_color:Color = Color(0.1, 0.1, 0.1, 1.0)
 #TODO: make it so it will use all the generator instead of [0]
 #this would require data passs/return instead of setting directly
 #Tile generator to run on nonstatic tilemaps.
@@ -209,12 +211,12 @@ func caculate_active_regions(world_coord:Vector2):
 
 
 func _process(delta: float) -> void:
-	
 	caculate_active_regions(get_viewport().get_camera_2d().global_position)
 	world_state.is_level_loading = is_ready
 	#var time : float = fmod(game_state.game_time,100.0)
 	var time : float = fmod(game_state.game_time/game_state.time_in_day,1.0)
-	%CanvasModulate.color = light_color_curve.sample(time)
+	%CanvasModulate.color = light_color_curve.sample(time) + ambient_light_color
+	%CanvasModulate.color.clamp()
 	
 
 func _ready() -> void:

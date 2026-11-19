@@ -16,6 +16,7 @@ process_mode = 3
 y_sort_enabled = true
 script = ExtResource("1_alqvx")
 light_color_curve = ExtResource("2_6q6h8")
+ambient_light_color = Color(0.09985284, 0.09985284, 0.3491902, 1)
 static_chunks = {
 Vector2(0, 0): "uid://blyxjt47otoln"
 }

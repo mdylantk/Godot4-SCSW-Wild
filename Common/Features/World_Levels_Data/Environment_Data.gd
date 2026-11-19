@@ -8,6 +8,7 @@ signal time_update(delta:float)
 @export var day_time : float
 @export var sun_rise : bool
 @export var environment_color : Gradient
+@export var min_light = 0.9
 
 func forward_time(rate:float=0.01)->void:
 	if day_time >= 1:
@@ -21,6 +22,5 @@ func forward_time(rate:float=0.01)->void:
 	time_update.emit(rate)
 		
 func get_environment_color()->Color:
-	if environment_color == null:
-		return Color(day_time,day_time,day_time)
-	return environment_color.sample(day_time)
+	var color:Color = environment_color.sample(day_time) if environment_color != null else Color(day_time,day_time,day_time)
+	return color

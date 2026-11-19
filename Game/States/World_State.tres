@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="world_events" load_steps=2 format=3 uid="uid://b047ftosxvj7p"]
+[gd_resource type="Resource" script_class="World_State" format=3 uid="uid://b047ftosxvj7p"]
 
 [ext_resource type="Script" uid="uid://c318wbx6jcgvn" path="res://Game/States/World_State.gd" id="1_h2cbr"]
 
