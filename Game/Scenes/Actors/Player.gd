@@ -10,6 +10,12 @@ extends Character2D
 #but any persistant/dynamic inventory would need to be redirected to the save state.
 #@onready var inventory = $Inventory
 
+var passing = false:
+	set(value):
+		if (passing != value):
+			passing = value
+			set_collision_mask_value(2,!passing)
+
 #func get_inventory()->Inventory:
 #	return $Inventory
 
@@ -157,5 +163,9 @@ func on_action_triggered(action:String, value:Variant)->void:
 	
 func move(delta=1.0):
 	player_state.player_debug_message = str(get_move_direction(),velocity)
+	if (get_move_direction().y > 0):
+		passing = true
+	else:
+		passing = false
 	super(delta)
 	

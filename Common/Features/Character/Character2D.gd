@@ -139,7 +139,8 @@ func move(delta:float = 1.0):
 		
 		velocity = movement_component.calculate_velocity(direction,self,delta)
 		movement_component.apply_forces(self,delta)
-		
+	
+	
 	if velocity != Vector2.ZERO:
 		move_and_slide()
 		
@@ -154,6 +155,7 @@ func move(delta:float = 1.0):
 			movement_state = MovementStates.WALKING
 		return true
 	else:
+		move_and_slide()
 		movement_state = MovementStates.IDLE
 		return false
 

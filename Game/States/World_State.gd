@@ -4,6 +4,7 @@ class_name World_State extends State
 ##LOAD type refers restoring level from save
 ##EXIT type refers to using exit data to set up the level
 enum TRANSFER_TYPE{NONE,LOAD,EXIT}
+enum WORLD_TYPE{TOP_DOWN, PLATFORM, OTHER}
 
 signal level_transfer(uid:String)
 signal level_loaded(new_level : Base_Level)
@@ -16,6 +17,12 @@ signal level_ready()
 	set(value):
 		default_level_uid = value
 		level_uid = value
+		
+@export var world_type : WORLD_TYPE = WORLD_TYPE.TOP_DOWN #or "platform" #or others. may use an enum
+#@export var gravity_enable : bool = false #not needed. world type can disable it or zero gravity direction can also
+@export var gravity : float = 98
+@export var max_gravity : float = 980
+@export var gravity_direction : Vector2 = Vector2(0.0,1.0)
 
 #This may be used more as a ref of the current level
 #but player's exit_data may keep the last and current level
@@ -69,3 +76,9 @@ func load_data(new_data:Dictionary[String,Variant]={})->void:
 	level_uid = new_data.get('level_uid',level_uid)
 	set_metadata(new_data.get('data', get_metadata()))
 	loaded.emit()
+	
+func gravity_enable():
+	#will return true unless type disable it
+	if (world_type == WORLD_TYPE.TOP_DOWN):
+		return false
+	return true

@@ -3,11 +3,33 @@
 ##as well as connect to their signals so it can maintain the game loop
 class_name Game_Handler extends Node
 
-@export var state : Game_State = Game_State.get_default_instance()
-@export var world_state : World_State = World_State.get_default_instance()
-@export var player_state : Player_State = Player_State.get_default_instance()
+#NOTE: either acess the states from Game or use the correct uid
+@export var game_state : State = load("uid://cnbeqfpaumxj3") :
+	set(value):
+		Game.game_state = value
+@export var client_state : State = load("uid://bnvrjjacwa30l"):
+	set(value):
+		Game.client_state = value
+@export var player_state : State = load("uid://c67c2fehtuhni"):
+	set(value):
+		Game.player_state = value
+@export var world_state : State = load("uid://b047ftosxvj7p"):
+	set(value):
+		Game.world_state = value
+@export var ui_state : State = load("uid://dkc6l4f8ve4t5"):
+	set(value):
+		Game.ui_state = value
+@export var dialog_state : State = load("uid://ckldc286fg63p"):
+	set(value):
+		Game.dialog_state = value
+
+
+#@export var state : Game_State = Game_State.get_default_instance()
+#@export var world_state : World_State = World_State.get_default_instance()
+#@export var player_state : Player_State = Player_State.get_default_instance()
 
 #use the ui child, but this could stay
+#Note: could use the ui state to interact
 @onready var ui : UI_Handler = %UI
 
 
@@ -25,7 +47,7 @@ const PAUSE_LEVEL : int = Pause_States.GAME_PAUSED
 var _pause_state : Pause_States = Pause_States.UNPAUSED:
 	set(value):
 		_pause_state = value
-		state.pause_state = value
+		game_state.pause_state = value
 		handle_pausing()
 		
 		
@@ -54,34 +76,36 @@ func _ready():
 	
 	world_state.level_transfer.connect(change_level)
 
-	ui.ui_focus.connect(on_ui_focus)
+	ui_state.ui_focus_changed.connect(on_ui_focus)
 	
 	#Connect to Main Menu to game related triggers
-	ui.main_menu.pause.connect(on_menu_pause)
-	ui.main_menu.resume.connect(on_menu_resume)
-	ui.main_menu.new_game.connect(on_menu_new_game)
-	ui.main_menu.load_game.connect(on_menu_load_game)
-	ui.main_menu.end_game.connect(on_menu_end_game)
+	#TODO: The ui state could emit these and this could listen to the id
+	#or could provide the full signals to connect to
+	ui_state.pause.connect(on_menu_pause)
+	ui_state.resume.connect(on_menu_resume)
+	ui_state.new_game.connect(on_menu_new_game)
+	ui_state.load_game.connect(on_menu_load_game)
+	ui_state.end_game.connect(on_menu_end_game)
 
 @rpc("any_peer","call_local")
-func start_game(is_new:bool = true, save_name:String = state.default_save_name):
+func start_game(is_new:bool = true, save_name:String = game_state.default_save_name):
 	
-	state.new_game = is_new
-	state.save_name = save_name
+	game_state.new_game = is_new
+	game_state.save_name = save_name
 	
 	#set up at least one persistant seed to use in generators
 	#World seed is to help keep the world gen similar or the same between sessions
 	#var world_seed : int
-	if state.new_game:
-		state.reset_state()
+	if game_state.new_game:
+		game_state.reset_state()
 		#randomize()
 		#state.random_seed = randi()
 		#NOTE: may need to set this to false
 		#after some time or change it to an int to state
 		#the game creation state
-		state.new_game = false
+		game_state.new_game = false
 	#else:
-	seed(state.random_seed)
+	seed(game_state.random_seed)
 	#world_seed = state.random_seed
 		
 	#load the maps and assign the seeds. could have a dedicated system
@@ -89,9 +113,9 @@ func start_game(is_new:bool = true, save_name:String = state.default_save_name):
 	var detail_map = load("uid://087vceuyr40g")
 	var height_map = load("uid://te65swlvsp53")
 	var variation_map = load("uid://cp0b4i2m77i8m")
-	detail_map.seed = state.random_seed
-	height_map.seed = state.random_seed
-	variation_map.seed = state.random_seed
+	detail_map.seed = game_state.random_seed
+	height_map.seed = game_state.random_seed
+	variation_map.seed = game_state.random_seed
 	
 	%Autosave_Timer.start()
 	%World_Clock.start()
@@ -131,6 +155,9 @@ func on_tree_changed():
 func on_level_ready():
 	ui.loading = false
 	_pause_state &= ~Pause_States.WORLD_PAUSED
+	
+	
+	
 
 ##called when level is loading something and need gameplay pause
 func on_level_busy():
@@ -141,9 +168,9 @@ func on_level_busy():
 func level_changed(new_level:Node):
 	print_debug("level changed: ", new_level)
 
+
 ##toggles if the player input need to be paused or not
 func on_ui_focus(pause_input:bool = true)->void:
-	print_debug(pause_input)
 	#TODO may need a better way. might just pause the game and have some system
 	#process. the issue is the character moves, so the direction set need to be reset
 	%Player_Handler.paused = pause_input
@@ -160,15 +187,15 @@ func on_menu_resume()->void:
 	
 func on_menu_new_game(id:String="default")->void:
 	start_game(true, id)
-	state.new_game_event.emit(state.get_save_path())
+	game_state.new_game_event.emit(game_state.get_save_path())
 	world_state.load_level(world_state.level_uid,World_State.TRANSFER_TYPE.NONE)
 	#change_level(world_state.level_uid)
 	_pause_state &= ~Pause_States.USER_PAUSED
 
-func on_menu_load_game(id:String = state.default_save_name)->void:
+func on_menu_load_game(id:String = game_state.default_save_name)->void:
 	start_game(false, id)
-	on_load(state.get_save_path())
-	state.load_event.emit(state.get_save_path())
+	on_load(game_state.get_save_path())
+	game_state.load_event.emit(game_state.get_save_path())
 	#change_level(world_state.level_uid)
 	#Should use the exit data for the owning player
 	if player_state.exit_data.target_level.is_empty():
@@ -186,22 +213,22 @@ func on_menu_end_game()->void:
 
 #TODO: rename these since the game will handle this directly
 #since it will trigger the events
-func on_load(path:String = state.default_path):
+func on_load(path:String = game_state.default_path):
 	var full_path = path + "controllers/game_state.tres"
 	var loaded_save : Savable_State
 	if ResourceLoader.exists(full_path):
 		loaded_save = ResourceLoader.load(full_path,"",0)
 	print_debug("loaded",loaded_save,' ',full_path)
 	if (loaded_save):
-		state.load_data(loaded_save.data.get('game_state',{}))
+		game_state.load_data(loaded_save.data.get('game_state',{}))
 		world_state.load_data(loaded_save.data.get('world_state',{}))
-	print_debug("game state", state)
+	print_debug("game state", game_state)
 		
-func on_save(path : String = state.default_path):
+func on_save(path : String = game_state.default_path):
 	var new_save_state : Savable_State = Savable_State.new()
 	var full_path = path + "controllers/"
 	secure_path(full_path)
-	new_save_state.data.set('game_state',state.get_save_data())
+	new_save_state.data.set('game_state',game_state.get_save_data())
 	new_save_state.data.set('world_state',world_state.get_save_data())
 	#if !DirAccess.dir_exists_absolute(full_path):
 	#	DirAccess.make_dir_recursive_absolute(full_path)
@@ -211,13 +238,13 @@ func on_save(path : String = state.default_path):
 
 
 func _on_autosave_timer_timeout() -> void:
-	on_save(state.get_save_path())
-	state.save_event.emit(state.get_save_path())
+	on_save(game_state.get_save_path())
+	game_state.save_event.emit(game_state.get_save_path())
 
 
 func _on_world_clock_timeout() -> void:
 	#NOTE: this is fine only if time increase at a fixed rate
 	#also time should pause when the game is paused
-	state.game_time += 1
+	game_state.game_time += 1
 	pass # Replace with function body.
 	

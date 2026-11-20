@@ -2,11 +2,11 @@ class_name Main_Menu extends Canvas_Scene
 signal request_focus_change(id:String)
 
 #game signals
-signal resume()
-signal pause()
-signal new_game(id:String)
-signal load_game(id:String)
-signal end_game()
+#signal resume()
+#signal pause()
+#signal new_game(id:String)
+#signal load_game(id:String)
+#signal end_game()
 
 #ui signals(for displaying submenus)
 signal options_pressed()
@@ -26,7 +26,8 @@ signal credits_pressed()
 func start()->void:
 	super()
 	#Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	pause.emit()
+	#pause.emit()
+	Game.ui_state.pause.emit()
 	if visible and !default_focus.is_empty():
 		for focus_object in default_focus:
 			if focus_object.visible:
@@ -36,7 +37,8 @@ func start()->void:
 func end()->void:
 	super()
 	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	resume.emit()
+	#resume.emit()
+	Game.ui_state.resume.emit()
 
 
 func _input(event: InputEvent) -> void:
@@ -50,14 +52,12 @@ func _on_resume_button_pressed() -> void:
 	visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	end()
-	resume.emit()
-	#get_tree().paused = false
-	print_debug("resume pressed")
+	Game.ui_state.pressed.emit("resume")
+	Game.ui_state.resume.emit()
 
 
 func _on_new_game_button_pressed() -> void:
 	#Game.start_game(true)
-	print_debug("new game pressed")
 	%Resume_Button.visible = true
 	#%LoadingScreen.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
@@ -66,41 +66,36 @@ func _on_new_game_button_pressed() -> void:
 	visible = false
 	%New_Game_Button.visible = false
 	%Continue_Button.visible = false
-	#%HomePoint.visible = true
 	end()
-	new_game.emit()
+	Game.ui_state.new_game.emit()
+	Game.ui_state.pressed.emit("new_game")
 
 func _on_options_button_pressed() -> void:
-	print_debug("options pressed")
 	#request_focus_change.emit("options")
 	end()
 	options_pressed.emit()
+	Game.ui_state.pressed.emit("options")
 	#options_menu.visible = true
 
 
 func _on_exit_button_pressed() -> void:
-	print_debug("exit pressed")
-	#Game.end_game(true)
-	end_game.emit()
+	Game.ui_state.end_game.emit()
+	Game.ui_state.pressed.emit("end_game")
 
 
 func _on_credits_button_pressed() -> void:
-	print_debug("credits pressed")
-	#request_focus_change.emit("credits")
 	end()
 	credits_pressed.emit()
-	#credits_menu.visible = true
+	Game.ui_state.pressed.emit("credits")
 
 
 func _on_continue_button_pressed() -> void:
-	#Game.start_game(false)
-	print_debug("continue pressed")
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	#get_tree().paused = false
 	visible = false
 	%Resume_Button.visible = true
 	%Continue_Button.visible = false
 	%New_Game_Button.visible = false
 	end()
-	load_game.emit("Default")
+	Game.ui_state.load_game.emit("Default")
+	Game.ui_state.pressed.emit("continue")
 	

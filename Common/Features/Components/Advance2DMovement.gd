@@ -4,7 +4,7 @@ class_name Advance2DMovement extends Movement_Component_2D
 @export var deacceleration : float = 256
 var acceleration_velocity : Vector2
 ##this is a test to try out gravity and platforming
-@export var is_platformer : bool = false
+#@export var is_platformer : bool = false
 ##a way to test gravity values
 
 @export var max_jumps : int = 2
@@ -20,7 +20,7 @@ func calculate_velocity(
 	if is_platformer:
 		#limit movement to the x axis
 		new_velocity = Vector2(body.velocity.x,0.0)
-		new_direction = Vector2(direction.x,0.0)
+		new_direction = Vector2(direction.x,max(direction.y,0.0))
 	#var speed:float = get_speed()
 	var forces_velocity:Vector2 = calculate_forces_velocity(body,delta)
 

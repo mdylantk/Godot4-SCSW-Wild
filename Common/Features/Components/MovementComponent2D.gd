@@ -20,8 +20,12 @@ class_name Movement_Component_2D extends Resource
 @export var sprint_modifier : float = 1.0
 @export var jump_force : float = 96.0
 
-@export var gravity : float = 98
-@export var max_gravity : float = 980
+##allow gravity, jumps, and limited directions for platform levels
+@export var is_platformer : bool = false :
+	get():
+		#return false
+		return Game.world_state.world_type == World_State.WORLD_TYPE.PLATFORM
+
 
 ##This is the sprint flag, but it is a float incase it needs to be handle as
 ##an input strength
@@ -46,12 +50,20 @@ func calculate_velocity(
 	var forces_velocity:Vector2 = calculate_forces_velocity(body,delta)
 	
 	if direction != Vector2.ZERO:
-		new_velocity = direction*get_max_speed() + force_velocity
+		new_velocity = new_velocity.move_toward(
+			direction*get_max_speed(),get_max_speed()*delta
+		)
+		new_velocity += forces_velocity
+		#new_velocity = direction*get_max_speed() + force_velocity
 	else:
 		if forces_velocity == Vector2.ZERO:
 			new_velocity = Vector2.ZERO
 		else:
-			new_velocity += force_velocity
+			new_velocity = new_velocity.move_toward(
+			Vector2.ZERO,get_max_speed()*delta
+		)
+		new_velocity += forces_velocity
+			#new_velocity = force_velocity
 	return new_velocity
 
 func calculate_forces_velocity(
@@ -97,6 +109,12 @@ func add_additional_force(
 	)->void:
 		force_velocity += direction*force
 
+func clear_forces():
+	force_velocity  = Vector2.ZERO
+
+func clear_force(id:String=""):
+	force_velocity  = Vector2.ZERO
+
 ##apply all forces after velocity is caculated
 ##this will reduce forces velocity in most cases
 func apply_forces(
@@ -123,14 +141,19 @@ func get_jump_force()->float:
 ##allow children to override this. by default
 ##falling and jumping will not be enable
 func gravity_enable()->bool:
+	if (is_platformer):
+		return true
 	return false
 
 ##get the gravity. allows children to override it
 ##should try to get the value from a global or shared (world) state
 ##the childen could also apply modifiers as well
 func get_gravity()->float:
-	return gravity
+	return Game.world_state.gravity
+	#return 98
 func get_gravity_direction()->Vector2:
-	return Vector2(0.0,1.0)
+	return Game.world_state.gravity_direction
+	#return Vector2(0.0,1.0)
 func get_max_gravity()->float:
-	return max_gravity
+	return Game.world_state.max_gravity
+	#return 980

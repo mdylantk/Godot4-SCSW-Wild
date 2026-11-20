@@ -11,6 +11,11 @@ signal saving()
 signal loaded()
 
 ##Returns a state if a default exists.
+##NOTE: may remove this and have the nodes decided how to get the ref to this
+##either by a singlton or making sure the correct one is ref by uid or object ref
+##mostly since this tends to use uid strings in extentions and the other approach would use
+##a ref to a static object (aka class). Latter is easier to set up being at one spot
+##and can have a node to be used to assign them(as long as the node is the first to load)
 static func get_default_instance()-> State:
 	return null
 	

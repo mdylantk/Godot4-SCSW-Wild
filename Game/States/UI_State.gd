@@ -29,6 +29,25 @@ signal close(id:String)
 signal show(id:String)
 #to hid a element
 signal hide(id:String)
+#a button/ui press event notifier if it is expose public and not part of another signal
+#a form of a ui event bus for additional cases without needing to know the source
+signal pressed(id:String,event_data:Dictionary)
+
+#Main menu/ core game ui signals
+@warning_ignore("unused_signal")
+signal resume()
+@warning_ignore("unused_signal")
+signal pause()
+@warning_ignore("unused_signal")
+signal new_game(id:String)
+@warning_ignore("unused_signal")
+signal load_game(id:String)
+@warning_ignore("unused_signal")
+signal end_game()
+
+#ui handler signals for control
+@warning_ignore("unused_signal")
+signal ui_focus_changed(in_focus:bool)
 
 signal touch_enable()
 
@@ -83,3 +102,10 @@ func update_mouse_mode()->void:
 		Input.mouse_mode = focus_mouse_mode
 	else:
 		Input.mouse_mode = unfocus_mouse_mode
+		
+		
+func on_clicked_debug(id, data = {}):
+	print_debug("ui state on clicked ran with: " + id + " " +str(data))
+#mostly fordebugging
+func _init() -> void:
+	pressed.connect(on_clicked_debug)

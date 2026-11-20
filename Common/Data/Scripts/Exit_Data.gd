@@ -110,6 +110,14 @@ class_name Exit_Data extends Resource
 		var vector : Array = data.get('entry_velocity',[entry_velocity.x,entry_velocity.y])
 		return Vector2(vector[0],vector[1])
 
+@export var default_position : Vector2 :
+	set(value):
+		default_position = value
+		data.set('default_position', [value.x, value.y])
+	get:
+		var vector : Array = data.get('default_position',[entry_velocity.x,entry_velocity.y])
+		return Vector2(vector[0],vector[1])
+
 var data: Dictionary[String,Variant]
 #other data may be added to metadata if needed, but if it is used enough,
 #then it should be delared here

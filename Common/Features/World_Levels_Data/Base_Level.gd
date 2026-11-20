@@ -28,9 +28,13 @@ class_name Base_Level extends Node
 @export var player_state : Player_State = Player_State.get_default_instance()
 @export var world_state : World_State = World_State.get_default_instance()
 
+@export var world_type : World_State.WORLD_TYPE = World_State.WORLD_TYPE.TOP_DOWN
+
 ##run the logic that set up the player
 func set_up_player(player_ref:Node = null) -> void:
 	if player_ref:
+		#may not use default position, but it is where the pawn was at.
+		player_state.exit_data.default_position = player_ref.global_position
 		match world_state.transfer_type :
 			World_State.TRANSFER_TYPE.LOAD:
 				if (player_state.has_vector('pawn_position')):
@@ -38,6 +42,7 @@ func set_up_player(player_ref:Node = null) -> void:
 				if (player_state.has_vector('pawn_facing')):
 					player_ref.facing_direction = player_state.get_vector('pawn_facing',2,false)
 			World_State.TRANSFER_TYPE.EXIT:
+				
 				if player_state.exit_data.override_entry_position:
 					player_ref.global_position = (
 						player_state.exit_data.entry_position +
@@ -46,6 +51,7 @@ func set_up_player(player_ref:Node = null) -> void:
 				player_ref.global_position += player_state.exit_data.entry_offset
 				player_ref.facing_direction = player_state.exit_data.facing_direction
 				player_ref.velocity = player_state.exit_data.entry_velocity
+				player_state.set_vector('pawn_position',player_ref.global_position)
 
 
 
@@ -99,4 +105,5 @@ func on_time_update(delta:float):
 	environment_color.color = environment_data.get_environment_color()
 	
 func _ready() -> void:
+	world_state.world_type = world_type
 	set_up_player(player_character)

@@ -1,7 +1,7 @@
 class_name UI_Handler extends Node
 
 
-signal ui_focus(disable_other_input:bool)
+#signal ui_focus_changed(disable_other_input:bool)
 
 ##for the game handler to listen to. states that the game should be pause or resumed
 ##ideally the UI will be the only input that will request it. events(such as scene change)
@@ -82,7 +82,7 @@ func change_menu(new_menu:Canvas_Scene ):
 		state.ui_in_focus = false
 		#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	state.update_mouse_mode()
-	ui_focus.emit(state.ui_in_focus)
+	state.ui_focus_changed.emit(state.ui_in_focus)
 	on_focus_change()
 
 func on_focus_change():
@@ -144,7 +144,7 @@ func _on_menu_visibility_changed() -> void:
 		%Options_Menu.visible or 
 		%Cargo.visible
 	)
-	ui_focus.emit(state.ui_in_focus)
+	state.ui_focus_changed.emit(state.ui_in_focus)
 	on_focus_change()
 		#TODO: have menu objects in one major scene so the lot can have their visibilty
 		#changed all at once. That would allow they check only need to check
