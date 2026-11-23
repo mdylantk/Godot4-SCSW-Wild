@@ -16,4 +16,4 @@ func _on_visibility_changed() -> void:
 		#%CollisionShape2D.disabled = visible
 		
 func get_move_direction()->Vector2:
-	return %Brain.get_move_direction(position, velocity)
+	return %Brain.get_move_direction(position, body.velocity)

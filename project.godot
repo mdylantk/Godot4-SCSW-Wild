@@ -205,6 +205,10 @@ locale/translations=PackedStringArray("res://Game/Assets/Localization/MainMenuTr
 2d_physics/layer_11="Blocking_Shallow_Water"
 2d_physics/layer_12="Blocking_Deep_Water"
 
+[physics]
+
+2d/default_gravity=100.0
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

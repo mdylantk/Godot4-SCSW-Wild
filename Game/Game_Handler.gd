@@ -32,6 +32,9 @@ class_name Game_Handler extends Node
 #Note: could use the ui state to interact
 @onready var ui : UI_Handler = %UI
 
+#store the default incase the level dose not apply any
+var default_gravity:float = ProjectSettings.get_setting("physics/2d/default_gravity", 100)
+var default_gravity_vector:Vector2 =ProjectSettings.get_setting("physics/2d/default_gravity_vector", Vector2(0, 1))
 
 #Note: mostly a concept to allow various pause situaltion stored in one var
 #After a certain value, the tree would pause, else only certain systems will be 
@@ -86,6 +89,10 @@ func _ready():
 	ui_state.new_game.connect(on_menu_new_game)
 	ui_state.load_game.connect(on_menu_load_game)
 	ui_state.end_game.connect(on_menu_end_game)
+	
+	#decide if this should be in ui or game. ui kind of incorrectly named since it mostly gui
+	#but could offload input stuff to it
+	Input.joy_connection_changed.connect(_on_joy_connection_change)
 
 @rpc("any_peer","call_local")
 func start_game(is_new:bool = true, save_name:String = game_state.default_save_name):
@@ -135,6 +142,9 @@ func change_level(uid:String):
 		world_state.is_level_loading = true
 		if !get_tree().tree_changed.is_connected(on_tree_changed):
 			get_tree().tree_changed.connect(on_tree_changed)
+			#reset settings to default
+			ProjectSettings.set_setting("physics/2d/default_gravity", default_gravity)
+			ProjectSettings.set_setting("physics/2d/default_gravity_vector", default_gravity_vector)
 	else:
 		print_debug("Error, unable to load scene")
 
@@ -248,3 +258,12 @@ func _on_world_clock_timeout() -> void:
 	game_state.game_time += 1
 	pass # Replace with function body.
 	
+
+
+
+func _on_joy_connection_change(device, connected):
+	if not connected:
+		Input.action_release("Left")
+		Input.action_release("Right")
+		Input.action_release("Forward")
+		Input.action_release("Back")

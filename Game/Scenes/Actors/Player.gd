@@ -14,7 +14,8 @@ var passing = false:
 	set(value):
 		if (passing != value):
 			passing = value
-			set_collision_mask_value(2,!passing)
+			if(body):
+				body.set_collision_mask_value(2,!passing)
 
 #func get_inventory()->Inventory:
 #	return $Inventory
@@ -34,7 +35,7 @@ func _ready()->void:
 	#NOTE: direction in exitdata is more for spawning so it is for the
 	#level to process
 	facing_direction = player_state.exit_data.facing_direction
-	velocity = player_state.exit_data.entry_velocity
+	$CharacterBody2D.velocity = player_state.exit_data.entry_velocity
 	
 	
 	game_state.save_event.connect(on_autosave)
@@ -144,26 +145,32 @@ func on_interaction(source_pawn:Node, collider:Node, data:={}):
 		player_state.player_debug_message = ''
 
 func get_move_direction() -> Vector2:
-	return %Brain.get_move_direction(position,velocity)
+	return %Brain.get_move_direction(position)
 
 func on_controller_assigned(controller:Controller)->void:
 	controller.action_triggered.connect(on_action_triggered)
 
 func on_controller_unassigned(controller:Controller)->void:
 	controller.action_triggered.disconnect(on_action_triggered)
+
+
 	
-func on_action_triggered(action:String, value:Variant)->void:
-	player_state.player_debug_message = ''
-	if action == "Sprint":
-		movement_component.sprint_strength = value
-	if action == "Interact":
-		interact()
-	if action == 'Jump':
-		movement_component.jump(self)
-	
+
 func move(delta=1.0):
-	player_state.player_debug_message = str(get_move_direction(),velocity)
-	if (get_move_direction().y > 0):
+	#NOTE: Still not syncing with sprint
+	#var sprint_state = %Brain.get_action_state("Sprint")
+	#movement_component.sprint_strength =  sprint_state if sprint_state else 0.0
+	var direction:Vector2 = get_move_direction()
+	if body is CharacterBody2D:
+		player_state.player_debug_message = (
+			"\n d "+str(direction) + 
+			" \n v " +str(body.velocity)+ 
+			" \n jv " +str(movement_component.jump_velocity) 
+		)
+	if body is RigidBody2D:
+		player_state.player_debug_message = str(direction) + str(body.linear_velocity)
+		
+	if (direction.y > 0):
 		passing = true
 	else:
 		passing = false

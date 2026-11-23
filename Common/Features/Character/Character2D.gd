@@ -1,4 +1,4 @@
-class_name Character2D extends CharacterBody2D
+class_name Character2D extends Node2D
 
 #NOTE: brain, controller, movement, and save state should stay
 #need to clean up and try finishing the base components
@@ -19,6 +19,8 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
 #NOTE: Moving game state ref to characters that save or need it
 #might be good to think about ways to have saving slotable.
+
+@export var body : PhysicsBody2D
 
 ##This is for caculate velocity change and store varibles related to how it change
 @export var movement_component : Movement_Component_2D = get_default_movement_component():
@@ -121,43 +123,43 @@ func interact()->void:
 func get_move_direction()->Vector2:
 	return Vector2()
 
-#this is simple and will override any movement that been set. basily a handler(player or ai) can tell it to move
-#in a dir every physic update. may also have a move to location task, but then again the handler could do that
-func move(delta:float = 1.0):
-	var direction : Vector2 = get_move_direction()
-	##Note: this brain wont be use. make sure new logic is in get_movr_direction()
-	if movement_component != null:
-		if direction != facing_direction:
-			movement_state = MovementStates.TURNING
-		#NOTE: facing_direction and direction are diffrent, but 
-		#for now facing_direction = direction since this is not an advance case
-		#TODO: break this into functions that can be overrided
-		#and rearange as needed. facing_direction, velocity, others
-		if  direction != Vector2.ZERO:
+func update_movement_state(direction: Vector2):
+	if direction != facing_direction:
+		movement_state = MovementStates.TURNING
+		if direction != Vector2.ZERO:
 			facing_direction = direction 
-			
-		
-		velocity = movement_component.calculate_velocity(direction,self,delta)
-		movement_component.apply_forces(self,delta)
-	
-	
+	var velocity: Vector2
+	if body is RigidBody2D:
+		velocity = body.linear_velocity
+	if body is CharacterBody2D:
+		velocity = body.velocity
 	if velocity != Vector2.ZERO:
-		move_and_slide()
-		
-		if get_last_slide_collision() != null:
-			if get_last_slide_collision().get_remainder() != Vector2.ZERO:
-				movement_state = MovementStates.STOPPED
-				return true
-		#get_last_slide_collision().get_remainder()
 		if movement_component.sprint_strength > 0:
 			movement_state = MovementStates.SPRINTING
 		else:
 			movement_state = MovementStates.WALKING
-		return true
 	else:
-		move_and_slide()
-		movement_state = MovementStates.IDLE
-		return false
+		if direction == Vector2.ZERO:
+			movement_state = MovementStates.IDLE
+		else:
+			movement_state = MovementStates.STOPPED
+#this is simple and will override any movement that been set. basily a handler(player or ai) can tell it to move
+#in a dir every physic update. may also have a move to location task, but then again the handler could do that
+func move(delta:float = 1.0):
+	var direction = get_move_direction()
+	var old_position = body.position
+	var moved = movement_component.move(direction,body,delta)
+	if moved:
+		var position_diffrence = body.position - old_position
+		if body != self:
+			global_position += position_diffrence
+			body.position = old_position
+			#global_position= body.global_position
+			#body.position = Vector2.ZERO
+	update_movement_state(direction)
+	return moved
+	
+
 
 func on_action_triggered(action:String, value:float)-> void:
 	if action == "Sprint":
@@ -168,7 +170,8 @@ func on_action_triggered(action:String, value:float)-> void:
 		interact()
 		pass
 	if action == 'Jump':
-		movement_component.jump(self)
+		movement_component.jump(body)
+
 
 func _physics_process(delta: float) -> void:
 	move(delta)

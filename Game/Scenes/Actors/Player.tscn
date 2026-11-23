@@ -9,9 +9,6 @@
 [ext_resource type="Script" uid="uid://bgqgcg12is206" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Game/Controllers/Player_Controller.tres" id="9_dfeth"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_g4v7s"]
-radius = 2.0
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_g4v7s"]
 atlas = ExtResource("3_fxka5")
 region = Rect2(208, 32, 32, 16)
@@ -163,15 +160,13 @@ fill_to = Vector2(0.807692, 0.149573)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_57qmd"]
 size = Vector2(14, 1)
 
-[node name="Player" type="CharacterBody2D" unique_id=1959675502 groups=["Player_Pawns"]]
-collision_layer = 261
-collision_mask = 435
+[sub_resource type="CircleShape2D" id="CircleShape2D_g4v7s"]
+radius = 2.0
+
+[node name="Player" type="Node2D" unique_id=395318402 node_paths=PackedStringArray("body") groups=["Player_Pawns"]]
 script = ExtResource("1_07gio")
 player_state = ExtResource("2_ubr6l")
-
-[node name="Collsion" type="CollisionShape2D" parent="." unique_id=945379963]
-position = Vector2(0, 4)
-shape = SubResource("CircleShape2D_g4v7s")
+body = NodePath("CharacterBody2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1721988025]
 self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
@@ -229,3 +224,11 @@ controller = ExtResource("9_dfeth")
 position = Vector2(0, -3.5)
 shape = SubResource("RectangleShape2D_57qmd")
 one_way_collision = true
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1268195745]
+collision_layer = 261
+collision_mask = 435
+
+[node name="Collsion" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1930655629]
+position = Vector2(0, 4)
+shape = SubResource("CircleShape2D_g4v7s")

@@ -15,7 +15,16 @@ signal state_change()
 ##is vaild
 @export var direction : Vector2
 
-func trigger_action(action:String, value:Variant):
+##some actions may persistent such as sprint so it be to store them
+##so their state can be checked
+@export var action_states : Dictionary[String,Variant]
+
+func get_action_state(action:String):
+	return action_states.get(action)
+
+func trigger_action(action:String, value:Variant = 1, persistent:bool = false):
+	if (persistent):
+		action_states.set(action,value)
 	action_triggered.emit(action,value)
 
 #NOTE: lots of these are part of the brain. may need to rename it for what it is

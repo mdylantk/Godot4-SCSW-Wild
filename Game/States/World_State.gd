@@ -4,6 +4,7 @@ class_name World_State extends State
 ##LOAD type refers restoring level from save
 ##EXIT type refers to using exit data to set up the level
 enum TRANSFER_TYPE{NONE,LOAD,EXIT}
+##world types for configuring the physics and other features
 enum WORLD_TYPE{TOP_DOWN, PLATFORM, OTHER}
 
 signal level_transfer(uid:String)
@@ -20,9 +21,6 @@ signal level_ready()
 		
 @export var world_type : WORLD_TYPE = WORLD_TYPE.TOP_DOWN #or "platform" #or others. may use an enum
 #@export var gravity_enable : bool = false #not needed. world type can disable it or zero gravity direction can also
-@export var gravity : float = 98
-@export var max_gravity : float = 980
-@export var gravity_direction : Vector2 = Vector2(0.0,1.0)
 
 #This may be used more as a ref of the current level
 #but player's exit_data may keep the last and current level

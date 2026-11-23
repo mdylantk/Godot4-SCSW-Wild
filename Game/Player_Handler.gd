@@ -40,14 +40,37 @@ func _ready():
 	game_state.save_event.connect(on_autosave)
 	game_state.load_event.connect(on_game_loaded)
 	game_state.new_game_event.connect(on_new_game)
-	
+
+##a brute force check to see if the button is pressed
+##wont be used or rarly should be used here, but 
+##it is here to show it can work and should make a dedicated input handler
+##to help fight ghosting when input state needs to be accurat
+##NOTE: the ui handler could manage it too and would not need to abstract input from gui
+##since it is handle as part of it
+func is_action_pressed(action:String)->bool:
+	#verify if shift is pressed
+	var sprint_input_events = InputMap.action_get_events("Sprint")
+	var pressed = false
+	for event in sprint_input_events:
+		if event is InputEventJoypadButton:
+			var button_index = (event as InputEventJoypadButton).button_index
+			if (Input.is_joy_button_pressed(0,button_index)):
+				pressed = Input.is_joy_button_pressed(0,button_index)
+		elif event is InputEventKey:
+			var keycode = event.keycode if bool(event.keycode) else event.physical_keycode
+			if (Input.is_key_pressed(keycode)):
+				pressed = Input.is_key_pressed(keycode)
+	return pressed
+
 func _input(event:InputEvent) -> void:
-	#should not consume actions inputs here. this is for modifiers that state needs to be sync
-	#may need a flag to disable checking some keys here. movement currenlt have its own solution and 
-	#probably do not need to be added here
+	#some actions states need to be sync with states on the controller
+	#and having ui comsume them may mess it up. may need to set state directly
+	#for some actions instead of triggering the action
 	if event.is_action("Sprint"):
 		if controller != null:
-			controller.trigger_action("Sprint",event.get_action_strength("Sprint"))
+			var action_state: float = event.get_action_strength("Sprint")
+			if (controller.action_states.get("Sprint") != action_state):
+				controller.trigger_action("Sprint",event.get_action_strength("Sprint"),true)
 
 func _unhandled_input(event:InputEvent):
 	if paused : return

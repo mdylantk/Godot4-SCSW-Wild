@@ -30,3 +30,9 @@ func get_move_direction(position:Vector2, velocity:Vector2=Vector2()) -> Vector2
 	if controller:
 		return controller.direction
 	return Vector2()
+
+##some actions are togglable and this is where one could look them up
+func get_action_state(action:String, default_state:Variant = 0)->Variant:
+	if controller:
+		return controller.action_states.get(action)
+	return default_state
