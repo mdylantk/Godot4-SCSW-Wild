@@ -1,44 +1,25 @@
 [gd_scene format=3 uid="uid://da7l5mwu2x5w2"]
 
 [ext_resource type="Script" uid="uid://p3kkvhtbs06w" path="res://Game/UI/touch_ui.gd" id="1_x78kw"]
-[ext_resource type="Texture2D" uid="uid://cuvom41jrb1ud" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/icons.webp" id="2_1hg6i"]
+[ext_resource type="Texture2D" uid="uid://cemqlfc4aqmgf" path="res://Game/Assets/atlas/menu.tres" id="2_lg0wf"]
 [ext_resource type="Texture2D" uid="uid://d0djepcwpg3h3" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/items_1.webp" id="3_2xl6m"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ify41"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(64, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_f6n6d"]
-atlas = ExtResource("3_2xl6m")
-region = Rect2(144, 176, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2xl6m"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(64, 160, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bxr1p"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(112, 160, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wdvgc"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(80, 160, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_v6c2k"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(96, 160, 16, 16)
+[ext_resource type="Texture2D" uid="uid://1riv2psmehkq" path="res://Game/Assets/atlas/inventory.tres" id="3_mhxbx"]
+[ext_resource type="Texture2D" uid="uid://dlr7ksay5vjwm" path="res://Game/Assets/atlas/up_arrow_1.tres" id="4_xl4df"]
+[ext_resource type="Texture2D" uid="uid://bcdq15re0jjdb" path="res://Game/Assets/atlas/up_arrow_full_1.tres" id="5_8eop0"]
+[ext_resource type="Texture2D" uid="uid://chfmltofry4b6" path="res://Game/Assets/atlas/left_arrow_1.tres" id="6_8t84b"]
+[ext_resource type="Texture2D" uid="uid://bop74sdmqmvsx" path="res://Game/Assets/atlas/left_arrow_full_1.tres" id="7_kclpj"]
+[ext_resource type="Texture2D" uid="uid://ce6qln68pdc0d" path="res://Game/Assets/atlas/right_arrow_1.tres" id="8_atl7t"]
+[ext_resource type="Texture2D" uid="uid://dixiu5fdw575n" path="res://Game/Assets/atlas/right_arrow_full_1.tres" id="9_25355"]
+[ext_resource type="Texture2D" uid="uid://il8f0xdrlk1e" path="res://Game/Assets/atlas/down_arrow_1.tres" id="10_g0128"]
+[ext_resource type="Texture2D" uid="uid://dk5pen6kg4r6c" path="res://Game/Assets/atlas/down_arrow_full_1.tres" id="11_26h2r"]
+[ext_resource type="Texture2D" uid="uid://cuaytyxwu11g0" path="res://Game/Assets/atlas/up_arrow_2.tres" id="12_ancam"]
+[ext_resource type="Texture2D" uid="uid://bs4romfmdaokx" path="res://Game/Assets/atlas/up_arrow_full_2.tres" id="13_1bheh"]
+[ext_resource type="Texture2D" uid="uid://bukg36frpj7ft" path="res://Game/Assets/atlas/accept.tres" id="15_nf1xb"]
+[ext_resource type="Texture2D" uid="uid://dkjf3rvj2jbug" path="res://Game/Assets/atlas/cancel.tres" id="16_pbe2w"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7jdwk"]
 atlas = ExtResource("3_2xl6m")
 region = Rect2(16, 32, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_x78kw"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(176, 64, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1hg6i"]
-atlas = ExtResource("2_1hg6i")
-region = Rect2(192, 64, 16, 16)
 
 [node name="Touch_UI" type="CanvasLayer" unique_id=684229919]
 layer = 110
@@ -60,12 +41,12 @@ alignment = 1
 process_mode = 3
 self_modulate = Color(0.7490196, 0.4745098, 0.34509805, 1)
 layout_mode = 2
-texture_normal = SubResource("AtlasTexture_ify41")
+texture_normal = ExtResource("2_lg0wf")
 
 [node name="Cargo_Button" type="TextureButton" parent="HBoxContainer" unique_id=1660882931]
 self_modulate = Color(0.7490196, 0.4745098, 0.34509805, 1)
 layout_mode = 2
-texture_normal = SubResource("AtlasTexture_f6n6d")
+texture_normal = ExtResource("3_mhxbx")
 
 [node name="Directions" type="VBoxContainer" parent="." unique_id=80014743]
 anchors_preset = 2
@@ -82,7 +63,8 @@ scale = Vector2(2, 2)
 self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 size_flags_horizontal = 4
-texture_normal = SubResource("AtlasTexture_2xl6m")
+texture_normal = ExtResource("4_xl4df")
+texture_pressed = ExtResource("5_8eop0")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Directions" unique_id=1784142077]
 layout_mode = 2
@@ -92,19 +74,22 @@ alignment = 1
 self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 size_flags_horizontal = 2
-texture_normal = SubResource("AtlasTexture_bxr1p")
+texture_normal = ExtResource("6_8t84b")
+texture_pressed = ExtResource("7_kclpj")
 
 [node name="Right" type="TextureButton" parent="Directions/HBoxContainer" unique_id=1681018958]
 self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 size_flags_horizontal = 10
-texture_normal = SubResource("AtlasTexture_wdvgc")
+texture_normal = ExtResource("8_atl7t")
+texture_pressed = ExtResource("9_25355")
 
 [node name="Down" type="TextureButton" parent="Directions" unique_id=1737672868]
 self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
 size_flags_horizontal = 4
-texture_normal = SubResource("AtlasTexture_v6c2k")
+texture_normal = ExtResource("10_g0128")
+texture_pressed = ExtResource("11_26h2r")
 
 [node name="Actions" type="HBoxContainer" parent="." unique_id=1326213852]
 anchors_preset = 3
@@ -121,6 +106,12 @@ grow_vertical = 0
 scale = Vector2(2, 2)
 alignment = 1
 
+[node name="Jump" type="TextureButton" parent="Actions" unique_id=332994025]
+self_modulate = Color(0.9372549, 0.7137255, 0.16470589, 1)
+layout_mode = 2
+texture_normal = ExtResource("12_ancam")
+texture_pressed = ExtResource("13_1bheh")
+
 [node name="Sprint" type="TextureButton" parent="Actions" unique_id=390804301]
 modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
@@ -129,12 +120,12 @@ texture_normal = SubResource("AtlasTexture_7jdwk")
 [node name="Accept" type="TextureButton" parent="Actions" unique_id=1208510062]
 self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
-texture_normal = SubResource("AtlasTexture_x78kw")
+texture_normal = ExtResource("15_nf1xb")
 
 [node name="Cancel" type="TextureButton" parent="Actions" unique_id=1405683230]
 self_modulate = Color(0.9607843, 0.7254902, 0.16862746, 1)
 layout_mode = 2
-texture_normal = SubResource("AtlasTexture_1hg6i")
+texture_normal = ExtResource("16_pbe2w")
 
 [connection signal="pressed" from="HBoxContainer/Main_Menu_Button" to="." method="_on_main_menu_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Cargo_Button" to="." method="_on_cargo_button_pressed"]
@@ -146,6 +137,8 @@ texture_normal = SubResource("AtlasTexture_1hg6i")
 [connection signal="button_up" from="Directions/HBoxContainer/Right" to="." method="_on_right_button_up"]
 [connection signal="button_down" from="Directions/Down" to="." method="_on_down_button_down"]
 [connection signal="button_up" from="Directions/Down" to="." method="_on_down_button_up"]
+[connection signal="button_down" from="Actions/Jump" to="." method="_on_jump_button_down"]
+[connection signal="button_up" from="Actions/Jump" to="." method="_on_jump_button_up"]
 [connection signal="button_down" from="Actions/Sprint" to="." method="_on_sprint_button_down"]
 [connection signal="button_up" from="Actions/Sprint" to="." method="_on_sprint_button_up"]
 [connection signal="button_down" from="Actions/Accept" to="." method="_on_accept_button_down"]

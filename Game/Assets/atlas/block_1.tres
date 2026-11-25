@@ -1,0 +1,6 @@
+[gd_resource type="AtlasTexture" format=3 uid="uid://bfm4q51s1kan0"]
+
+[ext_resource type="Texture2D" uid="uid://cpajrjetu8fg1" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/props.webp" id="1_t8uhs"]
+
+[resource]
+atlas = ExtResource("1_t8uhs")

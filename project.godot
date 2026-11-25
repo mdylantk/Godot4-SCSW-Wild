@@ -42,6 +42,10 @@ window/stretch/mode="viewport"
 naming/node_name_num_separator=2
 export/convert_text_resources_to_binary=false
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/action_system/plugin.cfg", "res://addons/minimize_html_build/plugin.cfg")
+
 [file_customization]
 
 folder_colors={

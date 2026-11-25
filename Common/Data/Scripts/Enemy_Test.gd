@@ -1,5 +1,6 @@
 class_name EnemyTest extends Character2D
 
+
 func _ready() -> void:
 	_on_visibility_changed()
 	#if brain == null:
@@ -17,3 +18,4 @@ func _on_visibility_changed() -> void:
 		
 func get_move_direction()->Vector2:
 	return %Brain.get_move_direction(position, body.velocity)
+	

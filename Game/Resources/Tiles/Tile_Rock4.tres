@@ -5,5 +5,5 @@
 [resource]
 script = ExtResource("1_jlylu")
 name = "Rock4"
-source_id = 0
-atlas_coords = Vector2i(3, 0)
+source_id = 2
+atlas_coords = Vector2i(3, 16)

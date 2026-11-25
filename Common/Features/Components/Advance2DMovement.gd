@@ -1,6 +1,7 @@
 class_name Advance2DMovement extends Movement_Component_2D
 
 @export var acceleration : float = 256
+#NOTE TODO: should add an option to loose all acc velocity when colling with a wall
 @export var deacceleration : float = 256
 var acceleration_velocity : Vector2
 
@@ -39,7 +40,17 @@ func apply_velocity(direction:Vector2, body:PhysicsBody2D, delta:float=1.0) -> b
 		if (direction == Vector2.ZERO):
 			acceleration_velocity = acceleration_velocity.move_toward(Vector2.ZERO,deacceleration*delta)
 		else:
-			acceleration_velocity = acceleration_velocity.move_toward(direction*get_max_speed(),acceleration*get_sprint_factor()*delta)
+			if (is_on_floor(body)):
+				acceleration_velocity = acceleration_velocity.move_toward(
+					direction * get_max_speed() * get_sprint_factor(),
+					acceleration*get_sprint_factor()*delta
+					)
+			else:
+				acceleration_velocity = acceleration_velocity.move_toward(
+					direction * get_max_speed(),
+					acceleration*delta
+					)
+			
 		body.velocity = acceleration_velocity
 		return true
 	return false

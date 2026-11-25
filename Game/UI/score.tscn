@@ -4,15 +4,11 @@
 [ext_resource type="Resource" uid="uid://c67c2fehtuhni" path="res://Game/States/Player_State.tres" id="2_cw3fs"]
 [ext_resource type="Texture2D" uid="uid://d0djepcwpg3h3" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/items_1.webp" id="3_s4uko"]
 [ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Game/Assets/Main_Theme.tres" id="3_vjhty"]
-[ext_resource type="Texture2D" uid="uid://cuvom41jrb1ud" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/icons.webp" id="4_bc6q8"]
+[ext_resource type="Texture2D" uid="uid://b8aobdud426o7" path="res://Game/Assets/atlas/fish.tres" id="4_s4uko"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yh7fh"]
 atlas = ExtResource("3_s4uko")
 region = Rect2(16, 224, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5p3lt"]
-atlas = ExtResource("4_bc6q8")
-region = Rect2(32, 32, 16, 16)
 
 [node name="Score" type="CanvasLayer" unique_id=915775001]
 script = ExtResource("1_xhj6g")
@@ -36,7 +32,7 @@ offset_left = 16.0
 offset_top = 16.0
 offset_right = 56.0
 offset_bottom = 56.0
-texture = SubResource("AtlasTexture_5p3lt")
+texture = ExtResource("4_s4uko")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=279476240]
 offset_left = 64.0

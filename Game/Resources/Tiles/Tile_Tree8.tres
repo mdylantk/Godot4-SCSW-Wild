@@ -5,5 +5,5 @@
 [resource]
 script = ExtResource("1_7r5a6")
 name = "Tree8"
-source_id = 3
-atlas_coords = Vector2i(9, 1)
+source_id = 2
+atlas_coords = Vector2i(9, 17)

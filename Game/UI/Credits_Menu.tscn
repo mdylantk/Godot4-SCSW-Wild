@@ -2,11 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bww8bngq5a6h5" path="res://Game/UI/Credits_Menu.gd" id="1_tdwf1"]
 [ext_resource type="PackedScene" uid="uid://c0ygb7le6picm" path="res://Game/Scenes/Exit_Button.tscn" id="2_lnlsw"]
-[ext_resource type="Texture2D" uid="uid://ccm57tc1fganm" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/props_2.webp" id="3_lnlsw"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_trfd7"]
-atlas = ExtResource("3_lnlsw")
-region = Rect2(112, 112, 16, 16)
+[ext_resource type="Texture2D" uid="uid://dr7q2gdb4tlut" path="res://Game/Assets/atlas/border.tres" id="3_lnlsw"]
 
 [node name="Credits_Menu" type="Control" unique_id=2006110956]
 layout_mode = 3
@@ -50,7 +46,7 @@ offset_right = 800.0
 offset_bottom = 600.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("AtlasTexture_trfd7")
+texture = ExtResource("3_lnlsw")
 patch_margin_left = 8
 patch_margin_top = 8
 patch_margin_right = 8

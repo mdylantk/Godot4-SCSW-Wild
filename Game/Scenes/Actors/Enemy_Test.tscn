@@ -16,7 +16,6 @@ size = Vector2(16, 16)
 size = Vector2(16, 16)
 
 [node name="EnemyTest" type="Node2D" unique_id=1708438005 node_paths=PackedStringArray("body") groups=["enemies"]]
-scale = Vector2(0.5, 0.5)
 script = ExtResource("1_sxhnx")
 body = NodePath("CharacterBody2D")
 

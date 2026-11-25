@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bspaf3rwj4mdf" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/effects.webp" id="2_gssy5"]
 [ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Game/Interactions/Interactive_Component.tscn" id="5_2a1kj"]
 [ext_resource type="Resource" uid="uid://7ik7rawmbjbk" path="res://Game/Tables/Fish_List.tres" id="5_8acdy"]
-[ext_resource type="Script" uid="uid://bib5swgk8wmfr" path="res://Game/Actions/Actions/A_Start_Pounce_Fishing.gd" id="5_gssy5"]
+[ext_resource type="Script" uid="uid://bib5swgk8wmfr" path="res://Game/action_system/actions/A_Start_Pounce_Fishing.gd" id="5_gssy5"]
 [ext_resource type="Script" uid="uid://cel2qwa77xtl5" path="res://Game/Interactions/Action_On_Interact.gd" id="6_25myu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_34u5r"]

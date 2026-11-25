@@ -1,11 +1,7 @@
 [gd_scene format=3 uid="uid://c6qkqs4t14j5w"]
 
-[ext_resource type="Texture2D" uid="uid://ccm57tc1fganm" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/props_2.webp" id="1_n64d4"]
+[ext_resource type="Texture2D" uid="uid://dr7q2gdb4tlut" path="res://Game/Assets/atlas/border.tres" id="1_n64d4"]
 [ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Game/Assets/Main_Theme.tres" id="2_441cm"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3gslv"]
-atlas = ExtResource("1_n64d4")
-region = Rect2(224, 96, 16, 16)
 
 [node name="LoadingScreen" type="CanvasLayer" unique_id=920752953]
 layer = 9
@@ -30,7 +26,7 @@ offset_right = -8.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("AtlasTexture_3gslv")
+texture = ExtResource("1_n64d4")
 patch_margin_left = 8
 patch_margin_top = 8
 patch_margin_right = 8

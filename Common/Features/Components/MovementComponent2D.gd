@@ -1,21 +1,19 @@
-#NOTE: decided to have this handle a passed body
-#but also decided to focus on character body while allowing PhysicsBody2D for future extentions
-#also most parameters should have dedicated getter function
-#may keep jump in base as well as gravity
-
+##This is to allow movement logic to be esaier to reuse and swap out
 class_name Movement_Component_2D extends Resource
 
-#NOTE: Decided to pass a the body instead of figuring out a way to split
-#the info form the body. A custom body (done in c++) would be more ideal so that
-#the logic used for these possible infomation can be spit into an object to be pass
-#around instead of cipong infomation every frame
-
-#TODO: Maybe have a dedicated movement state (refcounted?) that
-#the component uses for advances cases. it will hold the lastest collsion
-#data and extra (dynamic) properties. that would allow this to be more than 
-#a veclodity caculator and manage the pass state. NOTE: this is fine as long
-#as there are dedicated characters. dedicated movement componets are for cases
-#where one character is used by functions varies base on the componets used
+#TODO: Decide if most var should keep their dedicated getters or acess them directly
+#they are there so later one could add callables to modify the propery instead of 
+#modifing the export properties
+#in short, this may be something to make a c++ base for keeping the base use fast
+#then extending it to take callables to modify values dynamicly
+#also could rename the exports to defaults and have the extentsions add a dynamic value 
+#if it uses it or add the getter instead to speed up this base class
+#also can split the top down and platformer logic in diffrent extensions but will mean 
+#dulip logic (such if both want to use advance movement)
+#also should add back in base speed, but do not use move_towarge, but use the
+#diffrence between velocity length and max speed (and maybe use a diffrent velocity
+#like in advance to isolate from the total velocity)
+ 
 
 #@export var base_speed : float = 64
 @export var max_speed : float = 100
@@ -30,6 +28,9 @@ class_name Movement_Component_2D extends Resource
 @export var jump_counter_gravity : float = 1.0
 @export var push_force : float = 100
 @export var enable_gravity : bool = false
+##a way to fake being on floor for 2d top-down to share logic between the two systems
+##it also can be use as an on_floor flag for top-down
+@export var always_on_floor : bool = false
 var jump_velocity: Vector2
 var jumped:bool
 
@@ -50,17 +51,19 @@ func get_sprint_factor()->float:
 	return sprint_modifier*sprint_strength+1
 
 func get_max_speed()->float:
-	return get_sprint_factor()*max_speed
+	return max_speed
 	
 func get_jump_force()->float:
 	return jump_force + (jump_counter_gravity*get_gravity())
 	
 func get_push_force()->float:
-	return push_force * get_sprint_factor()
+	return push_force
 
 #var on_floor:bool = false
 
 func is_on_floor(body:PhysicsBody2D):
+	if always_on_floor:
+		return true
 	if (body as CharacterBody2D):
 		return body.is_on_floor()
 	return false
@@ -101,17 +104,21 @@ func apply_forces(direction:Vector2, body:PhysicsBody2D, delta:float=1.0)-> bool
 	return false
 func apply_velocity(direction:Vector2, body:PhysicsBody2D, delta:float=1.0) -> bool:
 	if (body as CharacterBody2D):
-		body.velocity = direction * get_max_speed()
+		if (is_on_floor(body)):
+			body.velocity = direction * get_max_speed() * get_sprint_factor()
+		else:
+			body.velocity = direction * get_max_speed()
 		return true
 	return false
 
 func apply_push(body:PhysicsBody2D, delta:float=1.0):
 	if (body as CharacterBody2D):
+		var force : float = get_sprint_factor() * get_push_force() if is_on_floor(body) else get_push_force()
 		for i in body.get_slide_collision_count():
 			var other_body = body.get_slide_collision(i)
 			if other_body.get_collider() is RigidBody2D:
 				other_body.get_collider().apply_central_force(
-					-other_body.get_normal() * get_push_force()
+					-other_body.get_normal() * force
 				)
 
 func move(direction:Vector2, body:PhysicsBody2D, delta:float=1.0):

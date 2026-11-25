@@ -6,6 +6,7 @@
 [ext_resource type="Resource" uid="uid://drg3ed6i36xt7" path="res://Common/Data/Resources/World_Environment_Data.tres" id="4_3wiu4"]
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Scenes/Actors/Player.tscn" id="5_bwkji"]
 [ext_resource type="PackedScene" uid="uid://bruyakjvb8wwp" path="res://Game/Scenes/Actors/Enemy_Test.tscn" id="6_3e11c"]
+[ext_resource type="Resource" uid="uid://dkk0feq5rkppx" path="res://Game/Resources/movement_components/movement_player_topdown.tres" id="6_6q6h8"]
 [ext_resource type="Script" uid="uid://krd8d8rl2p4u" path="res://Common/Features/Components/MovementComponent2D.gd" id="7_j7515"]
 
 [sub_resource type="Resource" id="Resource_1lsxs"]
@@ -32,6 +33,7 @@ unique_name_in_owner = true
 [node name="Player" parent="." unique_id=654566087 instance=ExtResource("5_bwkji")]
 unique_name_in_owner = true
 position = Vector2(280, 168)
+movement_component = ExtResource("6_6q6h8")
 
 [node name="EnemyTest" parent="." unique_id=522821853 instance=ExtResource("6_3e11c")]
 position = Vector2(-75, -76)

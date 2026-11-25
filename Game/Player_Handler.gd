@@ -5,6 +5,8 @@ class_name Player_Handler extends Node
 @export var state : Player_State = Player_State.get_default_instance()
 @export var game_state : Game_State = Game_State.get_default_instance()
 
+@export var debug_state = {}
+
 var paused : bool = false:
 	set(value):
 		paused = value
@@ -23,6 +25,8 @@ func on_game_loaded(path:String = ""):
 	print_debug("loaded",loaded_save,' ',full_path)
 	if (loaded_save):
 		state.load_data(loaded_save.data)
+		
+	debug_state = state._data
 		
 func on_autosave(path : String = ""):
 	var new_save_state : Savable_State = Savable_State.new(state.get_save_data())

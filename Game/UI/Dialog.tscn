@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://d1ebj0rj4cmic" path="res://Game/UI/Dialog.gd" id="1_le745"]
 [ext_resource type="Texture2D" uid="uid://d0djepcwpg3h3" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/items_1.webp" id="2_yig56"]
-[ext_resource type="Texture2D" uid="uid://ccm57tc1fganm" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/props_2.webp" id="3_4xd8r"]
 [ext_resource type="Theme" uid="uid://iipxt41yiebb" path="res://Game/Assets/Main_Theme.tres" id="3_fehv7"]
+[ext_resource type="Texture2D" uid="uid://ckp6ik122cta7" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/props_1.webp" id="3_yig56"]
 [ext_resource type="Texture2D" uid="uid://dtatap4u6h70p" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/characters.webp" id="5_43lqd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ilfco"]
@@ -11,8 +11,8 @@ atlas = ExtResource("2_yig56")
 region = Rect2(16, 224, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fakkd"]
-atlas = ExtResource("3_4xd8r")
-region = Rect2(224, 96, 16, 16)
+atlas = ExtResource("3_yig56")
+region = Rect2(192, 160, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jkry8"]
 atlas = ExtResource("5_43lqd")

@@ -12,7 +12,6 @@ func call_input_event(action:String, pressed:bool = true, strength:int = 1.0)->v
 	input_event.strength = strength
 	Input.parse_input_event(input_event)
 
-
 func _on_main_menu_button_pressed() -> void:
 	call_input_event("Start")
 	await get_tree().process_frame
@@ -91,4 +90,14 @@ func _on_sprint_button_down() -> void:
 
 func _on_sprint_button_up() -> void:
 	call_input_event("Sprint", false)
+	pass # Replace with function body.
+
+
+func _on_jump_button_down() -> void:
+	call_input_event("Jump")
+	pass # Replace with function body.
+
+
+func _on_jump_button_up() -> void:
+	call_input_event("Jump", false)
 	pass # Replace with function body.

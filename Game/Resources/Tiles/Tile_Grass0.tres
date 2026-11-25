@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_ptr6n")
-name = "Empty"
-source_id = 3
-atlas_coords = Vector2i(4, 0)
+name = "Grass0"
+source_id = 2
+atlas_coords = Vector2i(4, 16)

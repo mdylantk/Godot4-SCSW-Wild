@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" format=3 uid="uid://dr7q2gdb4tlut"]
+
+[ext_resource type="Texture2D" uid="uid://cpajrjetu8fg1" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/props.webp" id="1_oa28q"]
+
+[resource]
+atlas = ExtResource("1_oa28q")
+region = Rect2(288, 160, 16, 16)

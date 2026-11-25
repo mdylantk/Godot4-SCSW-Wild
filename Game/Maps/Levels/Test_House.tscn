@@ -6,8 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Scenes/Actors/Player.tscn" id="3_bxav4"]
 [ext_resource type="Texture2D" uid="uid://kfu7vyt1dcgx" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/colored-transparent.png" id="4_xglwj"]
 [ext_resource type="PackedScene" uid="uid://bnt60muvh63sj" path="res://Game/Interactions/Interactive_Component.tscn" id="5_ve77s"]
-[ext_resource type="Script" uid="uid://cxhenjxcqrr8u" path="res://Game/Actions/Actions/A_Level_Transfer.gd" id="6_4riuh"]
+[ext_resource type="Script" uid="uid://cxhenjxcqrr8u" path="res://Game/action_system/actions/A_Level_Transfer.gd" id="6_4riuh"]
 [ext_resource type="Script" uid="uid://cel2qwa77xtl5" path="res://Game/Interactions/Action_On_Interact.gd" id="7_b3p2y"]
+[ext_resource type="Resource" uid="uid://dkk0feq5rkppx" path="res://Game/Resources/movement_components/movement_player_topdown.tres" id="9_2jotm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2oobe"]
 atlas = ExtResource("4_xglwj")
@@ -58,5 +59,6 @@ shape = SubResource("RectangleShape2D_yq7oe")
 [node name="Player" parent="." unique_id=1959675502 instance=ExtResource("3_bxav4")]
 unique_name_in_owner = true
 position = Vector2(376, 168)
+movement_component = ExtResource("9_2jotm")
 
 [editable path="TileMap/Ground/Sprite_Object"]

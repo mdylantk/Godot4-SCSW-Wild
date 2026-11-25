@@ -1,0 +1,8 @@
+[gd_resource type="AtlasTexture" format=3 uid="uid://cuaytyxwu11g0"]
+
+[ext_resource type="Texture2D" uid="uid://cuvom41jrb1ud" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/icons.webp" id="1_xy61q"]
+
+[resource]
+atlas = ExtResource("1_xy61q")
+region = Rect2(80, 128, 16, 16)
+filter_clip = true

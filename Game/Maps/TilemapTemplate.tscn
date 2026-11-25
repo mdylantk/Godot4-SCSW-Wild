@@ -4,12 +4,11 @@
 [ext_resource type="Resource" uid="uid://c7267jk27323m" path="res://Common/Data/Resources/World_Foilage_Generator.tres" id="2_adtg8"]
 [ext_resource type="TileSet" uid="uid://digeb0qjjwxn0" path="res://Game/Assets/low_Bit_Tileset.tres" id="3_s2now"]
 
-[node name="TileMap" type="Node2D" unique_id=2123895089 node_paths=PackedStringArray("foilage_layer", "tile_layers", "tilemap_layers")]
+[node name="TileMap" type="Node2D" unique_id=2123895089 node_paths=PackedStringArray("tile_layers", "tilemap_layers")]
 y_sort_enabled = true
 texture_filter = 1
 script = ExtResource("1_pxaw0")
 foilage_generator = ExtResource("2_adtg8")
-foilage_layer = NodePath("Layer0")
 tile_layers = [NodePath("Layer0")]
 enable_height_masking = false
 tilemap_layers = [NodePath("Layer0")]
