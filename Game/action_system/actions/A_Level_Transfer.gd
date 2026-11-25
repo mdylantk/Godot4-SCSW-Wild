@@ -34,13 +34,13 @@ func _run(action_state:Action_State) -> bool:
 		print_debug('no vaild action state')
 		return false
 	if action_state.owner as Node2D:
-		var old_location : Vector2 = action_state.owner.global_position
+		var old_location = action_state.owner.global_position 
 		if store_exit_point:
 			player_state.set_vector(exit_point_id+"_location",old_location)
-			#player_state.positions[entry_point_id+"_location"] = old_location
 		if (action_state.owner as Character2D):
 			player_state.exit_data.facing_direction = action_state.owner.facing_direction
 			player_state.exit_data.entry_velocity = action_state.owner.body.velocity
+			
 		player_state.exit_data.previous_level = world_state.level_uid
 		player_state.exit_data.previous_position = old_location
 		player_state.exit_data.override_entry_position = override_spawn_location

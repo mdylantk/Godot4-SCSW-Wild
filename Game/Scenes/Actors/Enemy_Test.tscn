@@ -5,33 +5,19 @@
 [ext_resource type="Script" uid="uid://5khicdu88ftq" path="res://Game/Scenes/Actors/AI_Brain.gd" id="4_1t4af"]
 [ext_resource type="Resource" uid="uid://0jak16wccjq4" path="res://Game/Controllers/AI_Controller.tres" id="5_v6ko2"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_o64lb"]
-atlas = ExtResource("2_38svj")
-region = Rect2(160, 48, 16, 16)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uhyft"]
+size = Vector2(16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0xekb"]
 size = Vector2(16, 16)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_uhyft"]
-size = Vector2(16, 16)
+[sub_resource type="AtlasTexture" id="AtlasTexture_o64lb"]
+atlas = ExtResource("2_38svj")
+region = Rect2(160, 48, 16, 16)
 
-[node name="EnemyTest" type="Node2D" unique_id=1708438005 node_paths=PackedStringArray("body") groups=["enemies"]]
+[node name="EnemyTest" type="Node2D" unique_id=1696993754 node_paths=PackedStringArray("body") groups=["enemies"]]
 script = ExtResource("1_sxhnx")
 body = NodePath("CharacterBody2D")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1134764979]
-self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
-z_index = 1
-y_sort_enabled = true
-texture = SubResource("AtlasTexture_o64lb")
-
-[node name="Hurtbox" type="Area2D" parent="." unique_id=585021843]
-collision_layer = 4
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1913090875]
-shape = SubResource("RectangleShape2D_0xekb")
-debug_color = Color(0.972549, 0, 0, 0.419608)
 
 [node name="Brain" type="Node" parent="." unique_id=1665713517]
 unique_name_in_owner = true
@@ -46,4 +32,16 @@ collision_mask = 0
 unique_name_in_owner = true
 shape = SubResource("RectangleShape2D_uhyft")
 
-[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[node name="Hurtbox" type="Area2D" parent="CharacterBody2D" unique_id=585021843]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/Hurtbox" unique_id=1913090875]
+shape = SubResource("RectangleShape2D_0xekb")
+debug_color = Color(0.972549, 0, 0, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D" unique_id=1134764979]
+self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
+z_index = 1
+y_sort_enabled = true
+texture = SubResource("AtlasTexture_o64lb")

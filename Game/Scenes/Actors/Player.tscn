@@ -9,16 +9,15 @@
 [ext_resource type="Script" uid="uid://bgqgcg12is206" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Game/Controllers/Player_Controller.tres" id="9_dfeth"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_g4v7s"]
-atlas = ExtResource("3_fxka5")
-region = Rect2(208, 32, 32, 16)
+[sub_resource type="CircleShape2D" id="CircleShape2D_g4v7s"]
+radius = 2.0
 
 [sub_resource type="Animation" id="Animation_5br2c"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("CharacterBody2D/Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -30,7 +29,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:offset")
+tracks/1/path = NodePath("CharacterBody2D/Sprite2D:offset")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -42,7 +41,7 @@ tracks/1/keys = {
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:flip_h")
+tracks/2/path = NodePath("CharacterBody2D/Sprite2D:flip_h")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
@@ -58,7 +57,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("CharacterBody2D/Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -74,7 +73,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:flip_h")
+tracks/0/path = NodePath("CharacterBody2D/Sprite2D:flip_h")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -90,7 +89,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:flip_h")
+tracks/0/path = NodePath("CharacterBody2D/Sprite2D:flip_h")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -107,7 +106,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/path = NodePath("CharacterBody2D/Sprite2D:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -119,7 +118,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:offset")
+tracks/1/path = NodePath("CharacterBody2D/Sprite2D:offset")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -138,15 +137,9 @@ _data = {
 &"walk": SubResource("Animation_sgr0e")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ifpql"]
-size = Vector2(6, 6)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_21snw"]
-atlas = ExtResource("5_syxs1")
-region = Rect2(32, 0, 16, 16)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ovqcn"]
-size = Vector2(14, 12)
+[sub_resource type="AtlasTexture" id="AtlasTexture_g4v7s"]
+atlas = ExtResource("3_fxka5")
+region = Rect2(208, 32, 32, 16)
 
 [sub_resource type="Gradient" id="Gradient_80qsn"]
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
@@ -157,25 +150,62 @@ fill = 1
 fill_from = Vector2(0.504274, 0.512821)
 fill_to = Vector2(0.807692, 0.149573)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_57qmd"]
-size = Vector2(14, 1)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ovqcn"]
+size = Vector2(14, 12)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_g4v7s"]
-radius = 2.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ifpql"]
+size = Vector2(6, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_21snw"]
+atlas = ExtResource("5_syxs1")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_syxs1"]
+radius = 6.0827627
 
 [node name="Player" type="Node2D" unique_id=395318402 node_paths=PackedStringArray("body") groups=["Player_Pawns"]]
 script = ExtResource("1_07gio")
 player_state = ExtResource("2_ubr6l")
 body = NodePath("CharacterBody2D")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1721988025]
+[node name="Brain" type="Node" parent="." unique_id=272028249]
+unique_name_in_owner = true
+script = ExtResource("8_uks6s")
+controller = ExtResource("9_dfeth")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1268195745]
+collision_layer = 261
+collision_mask = 435
+
+[node name="Collsion" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1930655629]
+position = Vector2(0, 4)
+shape = SubResource("CircleShape2D_g4v7s")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody2D" unique_id=244854522]
+unique_name_in_owner = true
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_q78uo")
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D" unique_id=1721988025]
 self_modulate = Color(0.8117647, 0.7764706, 0.72156864, 1)
 texture = SubResource("AtlasTexture_g4v7s")
 hframes = 2
 frame = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=244854522]
-libraries/ = SubResource("AnimationLibrary_q78uo")
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=634827207]
+position = Vector2(1.6093254e-06, 0)
+energy = 0.1
+texture = SubResource("GradientTexture2D_flttt")
+
+[node name="Camera2D" parent="." unique_id=1672797874 instance=ExtResource("7_b7ptm")]
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1475468417]
+collision_layer = 4
+collision_mask = 0
+
+[node name="Hitbox" type="CollisionShape2D" parent="Hurtbox" unique_id=389826178]
+shape = SubResource("RectangleShape2D_ovqcn")
+debug_color = Color(0.972549, 0, 0, 0.419608)
 
 [node name="Shaped_Interactor" type="Node2D" parent="." unique_id=645777991 node_paths=PackedStringArray("shape_cast")]
 unique_name_in_owner = true
@@ -198,37 +228,8 @@ position = Vector2(14, 0)
 scale = Vector2(0.25, 0.25)
 texture = SubResource("AtlasTexture_21snw")
 
-[node name="Hurtbox" type="Area2D" parent="." unique_id=1475468417]
-collision_layer = 4
-collision_mask = 0
-
-[node name="Hitbox" type="CollisionShape2D" parent="Hurtbox" unique_id=389826178]
-shape = SubResource("RectangleShape2D_ovqcn")
-debug_color = Color(0.972549, 0, 0, 0.419608)
-
-[node name="Camera2D" parent="." unique_id=1672797874 instance=ExtResource("7_b7ptm")]
-
-[node name="PointLight2D" type="PointLight2D" parent="." unique_id=634827207]
-position = Vector2(1.6093254e-06, 0)
-energy = 0.1
-texture = SubResource("GradientTexture2D_flttt")
-
-[node name="Brain" type="Node" parent="." unique_id=272028249]
-unique_name_in_owner = true
-script = ExtResource("8_uks6s")
-controller = ExtResource("9_dfeth")
-
 [node name="TopCollsion" type="StaticBody2D" parent="." unique_id=1638265053]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TopCollsion" unique_id=1643475463]
-position = Vector2(0, -3.5)
-shape = SubResource("RectangleShape2D_57qmd")
+shape = SubResource("CircleShape2D_syxs1")
 one_way_collision = true
-
-[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1268195745]
-collision_layer = 261
-collision_mask = 435
-
-[node name="Collsion" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1930655629]
-position = Vector2(0, 4)
-shape = SubResource("CircleShape2D_g4v7s")

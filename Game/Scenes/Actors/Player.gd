@@ -57,7 +57,7 @@ func on_autosave(path : String = ""):
 	#if inventory != null:
 		#save_state.inventory = inventory.inventory
 	#save_state.local_position = position
-	player_state.set_vector('pawn_position',global_position)
+	player_state.set_vector('pawn_position',body.global_position)
 	player_state.set_vector('pawn_facing',facing_direction)
 	super(path)
 	
@@ -70,48 +70,49 @@ func on_game_loaded(path : String = ""):
 
 func on_movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2):
 	if direction.x < 0 :
-		$AnimationPlayer.play("left")
+		%AnimationPlayer.play("left")
 	elif direction.x > 0: 
-		$AnimationPlayer.play("right")
+		%AnimationPlayer.play("right")
 	
 	match new_value:
 		MovementStates.IDLE:
-			$AnimationPlayer.play("idle")
+			%AnimationPlayer.play("idle")
 		MovementStates.SPRINTING:
-			$AnimationPlayer.speed_scale = 2
-			$AnimationPlayer.queue("walk")
+			%AnimationPlayer.speed_scale = 2
+			%AnimationPlayer.queue("walk")
 		MovementStates.WALKING:
-			$AnimationPlayer.speed_scale = 1
-			$AnimationPlayer.queue("walk")
+			%AnimationPlayer.speed_scale = 1
+			%AnimationPlayer.queue("walk")
 		MovementStates.STOPPED:
-			$AnimationPlayer.play("walk",-1,0)
+			%AnimationPlayer.play("walk",-1,0)
 	return
 	if new_value == MovementStates.IDLE:
-		$AnimationPlayer.queue("idle")
+		%AnimationPlayer.queue("idle")
 		#$AnimatedSprite2D.play("sit")
 		#$AnimationPlayer.stop()
-		$Shaped_Interactor.visible = false
+		%Shaped_Interactor.visible = false
 	elif new_value == MovementStates.STOPPED:
 		#$AnimatedSprite2D.play("default")
 		#$AnimationPlayer.stop()
-		$Shaped_Interactor.visible = true
+		%Shaped_Interactor.visible = true
 	else:
 		if new_value == MovementStates.SPRINTING:
-			$AnimationPlayer.speed_scale = 2
+			%AnimationPlayer.speed_scale = 2
 		else:
-			$AnimationPlayer.speed_scale = 1
+			%AnimationPlayer.speed_scale = 1
 		if old_value == MovementStates.IDLE:
-			$AnimationPlayer.queue("walk")
+			%AnimationPlayer.queue("walk")
 			#$AnimatedSprite2D.play("default")
 		elif old_value == MovementStates.STOPPED:
-			$AnimationPlayer.queue("walk")
-		$Shaped_Interactor.visible = true
+			%AnimationPlayer.queue("walk")
+		%Shaped_Interactor.visible = true
 
 func on_facing_changed(new_facing:Vector2,old_facing:Vector2):
 	#update the spite to indicate hit direction
 	#$Direction.position = new_facing * 12
 	#interact_cast.target_position = new_facing * 24
-	$Shaped_Interactor.look_at((new_facing)+$Shaped_Interactor.global_position)
+	
+	%Shaped_Interactor.look_at((new_facing)+%Shaped_Interactor.global_position)
 	#NOTE: move this here so that Character2D wont need to depend on
 	#sprite2d. the issue is that this logic need to be applied to anything that want to use it
 	#but can just subtype sprite enities and animate sprite enities if needed\
@@ -121,13 +122,13 @@ func on_facing_changed(new_facing:Vector2,old_facing:Vector2):
 	#ref animated sprite 2d. 
 	#may be able to assume then animation player and use keywords instead of
 	#direcly accessing it (with overriding the functions if default too limiting
-	if $AnimationPlayer != null :
-		var last_animation: String = $AnimationPlayer.current_animation
+	if %AnimationPlayer != null :
+		var last_animation: String = %AnimationPlayer.current_animation
 		if new_facing.x < 0 :
-			$AnimationPlayer.play("left")
+			%AnimationPlayer.play("left")
 			#$AnimatedSprite2D.flip_h = true
 		elif new_facing.x > 0: 
-			$AnimationPlayer.play("right")
+			%AnimationPlayer.play("right")
 			#$AnimatedSprite2D.flip_h = false
 
 func interact():
@@ -145,7 +146,7 @@ func on_interaction(source_pawn:Node, collider:Node, data:={}):
 		player_state.player_debug_message = ''
 
 func get_move_direction() -> Vector2:
-	return %Brain.get_move_direction(position)
+	return %Brain.get_move_direction(body.position)
 
 func on_controller_assigned(controller:Controller)->void:
 	controller.action_triggered.connect(on_action_triggered)

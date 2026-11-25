@@ -1,8 +1,8 @@
 class_name EnemyTest extends Character2D
 
 
-func _ready() -> void:
-	_on_visibility_changed()
+#func _ready() -> void:
+	#_on_visibility_changed()
 	#if brain == null:
 	#	brain = AI_Controlled_Brain.new()
 	#var players:Array[Node] = get_tree().get_nodes_in_group("Player_Pawns")
@@ -12,10 +12,11 @@ func _ready() -> void:
 		#brain.update(player)
 	
 
-func _on_visibility_changed() -> void:
-	%CollisionShape2D.set_deferred("disabled",!visible)
+#func _on_visibility_changed() -> void:
+	#pass
+	#%CollisionShape2D.set_deferred("disabled",!visible)
 		#%CollisionShape2D.disabled = visible
 		
 func get_move_direction()->Vector2:
-	return %Brain.get_move_direction(position, body.velocity)
+	return %Brain.get_move_direction(global_position, body.velocity)
 	

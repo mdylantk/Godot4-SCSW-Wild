@@ -15,6 +15,8 @@ signal movement_state_change(new_value:MovementStates, old_value:MovementStates,
 
 signal save_state_changed(old:Character_State, new:Character_State)
 
+signal body_moved(body : PhysicsBody2D, old_position:Vector2, difference:Vector2)
+
 enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 
 #NOTE: Moving game state ref to characters that save or need it
@@ -143,6 +145,14 @@ func update_movement_state(direction: Vector2):
 			movement_state = MovementStates.IDLE
 		else:
 			movement_state = MovementStates.STOPPED
+			
+func _body_moved(body : PhysicsBody2D,old_position:Vector2, difference:Vector2):
+	#sync position by default. can always override this to disable it
+	if (difference != Vector2.ZERO):
+		global_position += difference
+		body.position = old_position
+	body_moved.emit(body, old_position, difference)
+			
 #this is simple and will override any movement that been set. basily a handler(player or ai) can tell it to move
 #in a dir every physic update. may also have a move to location task, but then again the handler could do that
 func move(delta:float = 1.0):
@@ -150,12 +160,7 @@ func move(delta:float = 1.0):
 	var old_position = body.position
 	var moved = movement_component.move(direction,body,delta)
 	if moved:
-		var position_diffrence = body.position - old_position
-		if body != self:
-			global_position += position_diffrence
-			body.position = old_position
-			#global_position= body.global_position
-			#body.position = Vector2.ZERO
+		_body_moved(body, old_position, body.position - old_position)
 	update_movement_state(direction)
 	return moved
 	
@@ -171,7 +176,6 @@ func on_action_triggered(action:String, value:float)-> void:
 		pass
 	if action == 'Jump':
 		movement_component.jump(body)
-
 
 func _physics_process(delta: float) -> void:
 	move(delta)
