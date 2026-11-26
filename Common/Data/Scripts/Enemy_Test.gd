@@ -1,6 +1,5 @@
 class_name EnemyTest extends Character2D
 
-
 #func _ready() -> void:
 	#_on_visibility_changed()
 	#if brain == null:

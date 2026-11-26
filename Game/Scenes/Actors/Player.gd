@@ -26,10 +26,7 @@ func _ready()->void:
 
 	%Shaped_Interactor.interaction.connect(on_interaction)
 
-	if %Brain.controller:
-		on_controller_assigned(%Brain.controller)
-	%Brain.controller_assigned.connect(on_controller_assigned)
-	%Brain.controller_unassigned.connect(on_controller_unassigned)
+	%Brain.action_triggered.connect(on_action_triggered)
 	
 	
 	#NOTE: direction in exitdata is more for spawning so it is for the
@@ -45,28 +42,17 @@ func _ready()->void:
 func get_default_movement_component()->Movement_Component_2D:
 	return Advance2DMovement.new()
 
-
-func get_save_path()->String:
-	return "Characters"
-
 	
 #NOTE: may need a class level save object so the data can be extracted
 #or saved. could also split the saving and loading into functions
 #and then call it to get acess the the instance or give the instance
 func on_autosave(path : String = ""):
-	#if inventory != null:
-		#save_state.inventory = inventory.inventory
-	#save_state.local_position = position
 	player_state.set_vector('pawn_position',body.global_position)
 	player_state.set_vector('pawn_facing',facing_direction)
-	super(path)
 	
 
 func on_game_loaded(path : String = ""):
-	super(path)
-	#await get_tree().process_frame
-	#if inventory != null and save_state != null:
-		#inventory.inventory = save_state.inventory
+	pass
 
 func on_movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2):
 	if direction.x < 0 :
@@ -86,26 +72,7 @@ func on_movement_state_change(new_value:MovementStates, old_value:MovementStates
 		MovementStates.STOPPED:
 			%AnimationPlayer.play("walk",-1,0)
 	return
-	if new_value == MovementStates.IDLE:
-		%AnimationPlayer.queue("idle")
-		#$AnimatedSprite2D.play("sit")
-		#$AnimationPlayer.stop()
-		%Shaped_Interactor.visible = false
-	elif new_value == MovementStates.STOPPED:
-		#$AnimatedSprite2D.play("default")
-		#$AnimationPlayer.stop()
-		%Shaped_Interactor.visible = true
-	else:
-		if new_value == MovementStates.SPRINTING:
-			%AnimationPlayer.speed_scale = 2
-		else:
-			%AnimationPlayer.speed_scale = 1
-		if old_value == MovementStates.IDLE:
-			%AnimationPlayer.queue("walk")
-			#$AnimatedSprite2D.play("default")
-		elif old_value == MovementStates.STOPPED:
-			%AnimationPlayer.queue("walk")
-		%Shaped_Interactor.visible = true
+
 
 func on_facing_changed(new_facing:Vector2,old_facing:Vector2):
 	#update the spite to indicate hit direction
@@ -116,20 +83,7 @@ func on_facing_changed(new_facing:Vector2,old_facing:Vector2):
 	#NOTE: move this here so that Character2D wont need to depend on
 	#sprite2d. the issue is that this logic need to be applied to anything that want to use it
 	#but can just subtype sprite enities and animate sprite enities if needed\
-	return
-	
-	#TODO: could have animation player handler fliping so this wont need to worry about
-	#ref animated sprite 2d. 
-	#may be able to assume then animation player and use keywords instead of
-	#direcly accessing it (with overriding the functions if default too limiting
-	if %AnimationPlayer != null :
-		var last_animation: String = %AnimationPlayer.current_animation
-		if new_facing.x < 0 :
-			%AnimationPlayer.play("left")
-			#$AnimatedSprite2D.flip_h = true
-		elif new_facing.x > 0: 
-			%AnimationPlayer.play("right")
-			#$AnimatedSprite2D.flip_h = false
+
 
 func interact():
 	%Shaped_Interactor.interact(self)
@@ -148,14 +102,6 @@ func on_interaction(source_pawn:Node, collider:Node, data:={}):
 func get_move_direction() -> Vector2:
 	return %Brain.get_move_direction(body.position)
 
-func on_controller_assigned(controller:Controller)->void:
-	controller.action_triggered.connect(on_action_triggered)
-
-func on_controller_unassigned(controller:Controller)->void:
-	controller.action_triggered.disconnect(on_action_triggered)
-
-
-	
 
 func move(delta=1.0):
 	#NOTE: Still not syncing with sprint

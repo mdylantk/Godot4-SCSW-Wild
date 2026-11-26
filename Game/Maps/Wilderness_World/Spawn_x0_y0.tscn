@@ -14,6 +14,8 @@
 [ext_resource type="Resource" uid="uid://tv0nok4shwhw" path="res://Game/Items/Fish/King_Walleye.tres" id="12_vk6f4"]
 [ext_resource type="Script" uid="uid://dpcfqu6pi0uwi" path="res://Common/Features/Inventory/Item.gd" id="13_0rf3b"]
 [ext_resource type="Script" uid="uid://duo75yc6pgaxj" path="res://Game/action_system/actions/A_Give_Item_To_Player.gd" id="14_gnhg2"]
+[ext_resource type="Resource" uid="uid://x517m2u6per1" path="res://Game/States/test_state.tres" id="15_abs8k"]
+[ext_resource type="Texture2D" uid="uid://bm67u18sl77a1" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/Characters.png" id="16_jh267"]
 
 [sub_resource type="Resource" id="Resource_u6lsk"]
 script = ExtResource("7_qdaw7")
@@ -79,6 +81,31 @@ metadata/_custom_type_script = "uid://cel2qwa77xtl5"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_abs8k"]
 size = Vector2(16, 16)
+
+[sub_resource type="GDScript" id="GDScript_57qmd"]
+script/source = "extends Character2D
+
+@export var point : float = 1
+@export var points : float = 0
+
+func _ready() -> void:
+	character_state.value_changed.connect(on_changed)
+	print_debug(character_state.get_local_scene())
+	
+
+func on_changed(property:String, new_value:Variant, old_value:Variant):
+	points = character_state.get_data(\"points\",points)
+	
+func _on_interactive_component_body_entered(body: Node2D) -> void:
+	character_state.set_data(\"points\",character_state.get_data(\"points\",0)+point)
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g4v7s"]
+atlas = ExtResource("16_jh267")
+region = Rect2(112, 32, 16, 16)
 
 [node name="TileMap" type="Node2D" unique_id=1020334460 node_paths=PackedStringArray("tile_layers")]
 y_sort_enabled = true
@@ -161,6 +188,40 @@ interactive_data = SubResource("Resource_0gjrj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite_Object/Interact_Component" unique_id=1878258457]
 shape = SubResource("RectangleShape2D_abs8k")
+
+[node name="test1" type="Node2D" parent="." unique_id=1888218685 node_paths=PackedStringArray("body")]
+position = Vector2(128, 128)
+script = SubResource("GDScript_57qmd")
+body = NodePath("")
+character_state = ExtResource("15_abs8k")
+metadata/_custom_type_script = "uid://tvjt2y7qu2xc"
+
+[node name="Interactive_Component" type="Area2D" parent="test1" unique_id=1092902335]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="test1/Interactive_Component" unique_id=678829470]
+shape = SubResource("RectangleShape2D_g4v7s")
+
+[node name="Sprite2D" type="Sprite2D" parent="test1" unique_id=1289628502]
+texture = SubResource("AtlasTexture_g4v7s")
+
+[node name="test2" type="Node2D" parent="." unique_id=1115342002 node_paths=PackedStringArray("body")]
+position = Vector2(104, 128)
+script = SubResource("GDScript_57qmd")
+point = 8.0
+body = NodePath("")
+character_state = ExtResource("15_abs8k")
+metadata/_custom_type_script = "uid://tvjt2y7qu2xc"
+
+[node name="Sprite2D" type="Sprite2D" parent="test2" unique_id=759986141]
+texture = SubResource("AtlasTexture_g4v7s")
+
+[node name="Interactive_Component" type="Area2D" parent="test2" unique_id=1907779122]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="test2/Interactive_Component" unique_id=2014099476]
+shape = SubResource("RectangleShape2D_g4v7s")
+
+[connection signal="body_entered" from="test1/Interactive_Component" to="test1" method="_on_interactive_component_body_entered"]
+[connection signal="body_entered" from="test2/Interactive_Component" to="test2" method="_on_interactive_component_body_entered"]
 
 [editable path="NCP"]
 [editable path="Old_Man_House"]

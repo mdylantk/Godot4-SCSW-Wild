@@ -27,6 +27,10 @@ The game flow is being reworked to follow a more simple approch:
 	editor is set up to be used. main level or active scene being the current 
 	scene using godot ways of loading and unloading it. The use of groups for 
 	grouping up nodes. 
+	-static instances as singleton could be used, but only for implemention. 
+	I plan on using Game to store shared resources and objects, but may change 
+	in the future for a state manager autoload or static instance(probably called database, data,
+	or something along the lines of data or state)
 	
 Note on the save system:
 	Originally I was going to save and load the state, but managing the

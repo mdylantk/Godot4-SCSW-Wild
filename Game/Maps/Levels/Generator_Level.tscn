@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bugclr6n3igb4" path="res://Game/Scenes/Actors/Player.tscn" id="5_bwkji"]
 [ext_resource type="PackedScene" uid="uid://bruyakjvb8wwp" path="res://Game/Scenes/Actors/Enemy_Test.tscn" id="6_3e11c"]
 [ext_resource type="Resource" uid="uid://dkk0feq5rkppx" path="res://Game/Resources/movement_components/movement_player_topdown.tres" id="6_6q6h8"]
-[ext_resource type="Script" uid="uid://krd8d8rl2p4u" path="res://Common/Features/Components/MovementComponent2D.gd" id="7_j7515"]
+[ext_resource type="Script" uid="uid://krd8d8rl2p4u" path="res://addons/game_base/components/movement_component2d.gd" id="7_j7515"]
 
 [sub_resource type="Resource" id="Resource_1lsxs"]
 script = ExtResource("7_j7515")

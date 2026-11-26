@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://ok522b0njxq0" path="res://Game/Interactions/Shaped_Interactor.gd" id="4_qftw7"]
 [ext_resource type="Texture2D" uid="uid://bspaf3rwj4mdf" path="res://Game/Assets/Kenney_1-bit-pack/Tilesheet/Modified/effects.webp" id="5_syxs1"]
 [ext_resource type="PackedScene" uid="uid://4fyq70ae6854" path="res://Game/Main_Camera.tscn" id="7_b7ptm"]
-[ext_resource type="Script" uid="uid://bgqgcg12is206" path="res://Common/Features/Controller_and_Brain/Brain.gd" id="8_uks6s"]
+[ext_resource type="Script" uid="uid://bgqgcg12is206" path="res://addons/game_base/brains/brain.gd" id="8_uks6s"]
 [ext_resource type="Resource" uid="uid://coptu6xuweq38" path="res://Game/Controllers/Player_Controller.tres" id="9_dfeth"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g4v7s"]

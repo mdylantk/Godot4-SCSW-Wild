@@ -6,14 +6,16 @@ class_name Character2D extends Node2D
 #have an enum or depend on a enum in the base class
 
 #TODO: the parameters may need to change. could reduce to data or change the type (target to targets)
-#TODO: maybe not have these in the base class? They depend on areas or similar
+#TODO: maybe not have these in the base class?  on_action_triggered could replace it
 signal attacked(attacker, target, data)
 signal interacted(instigator, interactee, data)
 
 signal facing_changed(new_facing:Vector2, old_facing:Vector2)
 signal movement_state_change(new_value:MovementStates, old_value:MovementStates, direction:Vector2)
 
-signal save_state_changed(old:Character_State, new:Character_State)
+#decided how save states work for base character. load and save could be added and do nothing
+#and have player and things override them or leave them out for group call or something
+signal character_state_changed(old_state: State, new_state: State)
 
 signal body_moved(body : PhysicsBody2D, old_position:Vector2, difference:Vector2)
 
@@ -23,7 +25,6 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 #might be good to think about ways to have saving slotable.
 
 @export var body : PhysicsBody2D
-
 ##This is for caculate velocity change and store varibles related to how it change
 @export var movement_component : Movement_Component_2D = get_default_movement_component():
 	set(value):
@@ -36,53 +37,32 @@ enum MovementStates { IDLE, STOPPED, WALKING, SPRINTING, TURNING }
 		if facing_direction != value:
 			facing_changed.emit(value, facing_direction)
 			facing_direction = value
-
-var save_state : Character_State :
+##this will duplicate the character state 
+##on ready or when ever the state is changed if true.
+@export var clone_character_state: bool
+@export var character_state : State:
 	set(value):
-		var old_state = save_state
-		save_state = value
-		if old_state != save_state:
-			save_state_changed.emit(old_state,save_state)
+		#NOTE: this may not be called if a default is assigned
+		#also should handle null state or have it create a generic one if null
+		var old_state = character_state
+		if (value):
+			if (value.template_state or clone_character_state):
+				#states should try not to have resources that need to be clone on dup
+				#if it dose, then an additonal call will be needed or deep set to true if all cases needs to be clone
+				character_state = value.duplicate()
+				character_state_changed.emit(old_state,value)
+				return
+		character_state = value
+		character_state_changed.emit(old_state,value)
 
-#NOTE: maybe i am overthinking this. name should be good enough. level may save 
-#the full state of all enemies on save and load likewise. can add them to a dir base on
-#ownership
-func get_save_path()->String:
-	#NOTE: may want to expose this and use a format. level and name is needed
-	#for dynamic types, but global types just need a name
-	var save_path : PackedStringArray = get_path().get_concatenated_names().split("root/")
-	if save_path.size() > 1:
-		return save_path[1].split("/"+name)[0]
-	return ""
+#func character_state_changed(old_state: State, new_state: State) :
+#	pass
+
+
 
 ##allow children character to override the default movement component
 func get_default_movement_component()->Movement_Component_2D:
 	return Movement_Component_2D.new()
-
-func on_new_game(path:String = ""):
-	save_state = Character_State.new()
-	
-func on_game_loaded(path:String = ""):
-	var full_path = path + get_save_path() + "/" + name + ".tres"
-	if ResourceLoader.exists(full_path):
-		save_state = ResourceLoader.load(full_path,"",0)
-	if save_state == null:
-		on_new_game(path)
-	print_debug("loading ", full_path)
-		
-func on_autosave(path : String = ""):
-	var full_path = path + get_save_path()
-	if save_state:
-		#NOTE: due to using character state only for saving
-		#there is little reason to call get_save_data
-		#savable_state was the old way of saving the state
-		#now it just need something to save to
-		save_state.fetch_save_data()
-		if !DirAccess.dir_exists_absolute(full_path):
-			DirAccess.make_dir_recursive_absolute(full_path)
-		full_path = full_path + "/" + name + ".tres"
-		ResourceSaver.save(save_state, full_path)
-		#print_debug("autosaving ", full_path)
 
 
 var movement_state : MovementStates = MovementStates.IDLE:
@@ -92,13 +72,13 @@ var movement_state : MovementStates = MovementStates.IDLE:
 			movement_state = value
 			
 
-
-func brain_assigned(new_brain:Base_Brain):
-	new_brain.action_triggered.connect(on_action_triggered)
-	pass
-func brain_unassigned(old_brain:Base_Brain):
-	old_brain.action_triggered.disconnect(on_action_triggered)
-	pass
+#may keep the brain for more control for the base character, but it might be changed to a resource
+#func brain_assigned(new_brain:Base_Brain):
+#	new_brain.action_triggered.connect(on_action_triggered)
+#	pass
+#func brain_unassigned(old_brain:Base_Brain):
+#	old_brain.action_triggered.disconnect(on_action_triggered)
+#	pass
 
 func get_inventory()->Advance_Inventory:
 	return null
@@ -178,5 +158,7 @@ func on_action_triggered(action:String, value:float)-> void:
 		movement_component.jump(body)
 
 func _physics_process(delta: float) -> void:
+	if (!body || !movement_component):
+		return
 	move(delta)
 	

@@ -44,6 +44,7 @@ func get_save_path()->String:
 
 
 func _reset_state() -> void:
+	super()
 	if randomize_seed:
 		randomize()
 		random_seed = randi()
@@ -57,7 +58,7 @@ func _reset_state() -> void:
 	
 func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
-	var save_data : Dictionary[String,Variant]
+	var save_data : Dictionary[String,Variant] = super()
 	save_data.set('_random_seed',random_seed)
 	#save_data.set('new_game',new_game) #might not need to save this
 	save_data.set('_game_time',game_time)
@@ -69,6 +70,7 @@ func get_save_data()->Dictionary[String,Variant]:
 #and load will load the pass data (if changed) and then notify
 #all that it is ready(aka loaded)
 func load_data(new_data:Dictionary[String,Variant]={})->void:
+	super(new_data)
 	random_seed = new_data.get('_random_seed', default_random_seed)
 	#new_game = new_data.get('new_game', new_game)
 	game_time = new_data.get('_game_time', default_game_time)

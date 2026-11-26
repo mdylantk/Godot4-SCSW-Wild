@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="State" format=3 uid="uid://x517m2u6per1"]
+
+[ext_resource type="Script" uid="uid://k6enk3eukf8t" path="res://addons/game_base/states/state.gd" id="1_rfxjb"]
+
+[resource]
+script = ExtResource("1_rfxjb")
+metadata/_custom_type_script = "uid://k6enk3eukf8t"

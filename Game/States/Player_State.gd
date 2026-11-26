@@ -71,7 +71,7 @@ func set_score(id:String, new_score: int)->void:
 		_data['_scores'].set(id,new_score)
 		_on_score_changed(id,new_score,old_score)
 		score_changed.emit(id,new_score)
-		value_changed.emit("_score",new_score,old_score,[id])
+		value_changed.emit("_score."+id,new_score,old_score)
 		#print_debug("meow! set score of ", self, old_score, '->', new_score,' ', id)
 	
 func get_score(id:String)->int:
@@ -94,7 +94,7 @@ func set_number(id:String, new_number: Variant)->void:
 		_data['_numbers'].set(id,new_number)
 		_on_number_changed(id,new_number,old_number)
 		number_changed.emit(id,new_number)
-		value_changed.emit("_numbers",new_number,old_number,[id])
+		value_changed.emit("_numbers."+id,new_number,old_number)
 
 func get_number(id:String, default:Variant=0)->Variant:
 	return _data['_numbers'].get(id,default)
@@ -113,7 +113,7 @@ func set_var(id:String, new_var: String)->void:
 		_data['_vars'].set(id,new_var)
 		_on_var_changed(id, new_var, old_var)
 		var_changed.emit(id,new_var)
-		value_changed.emit("_vars",new_var,old_var,[id])
+		value_changed.emit("_vars."+id,new_var,old_var)
 
 func get_var(id:String,default:String='')->String:
 	return _data['_vars'].get(id,default)
@@ -134,7 +134,7 @@ func set_vector(id:String, vector:Variant)->void:
 	if old_vector != new_vector:
 		_on_vector_changed(id,vector,new_vector,old_vector)
 		vector_changed.emit(id,vector)
-		value_changed.emit("_vectors",new_vector,old_vector,[id])
+		value_changed.emit("_vectors."+id,new_vector,old_vector)
 
 func _on_vector_changed(id:String,vector_variant:Variant, new_vector:Array,old_vector:Array)->void:
 	pass
@@ -181,6 +181,7 @@ func add_item(new_item:Item)->void:
 	
 
 func _reset_state() -> void:
+	super()
 	_data.clear()
 	_data['_scores']={}
 	_data['_vars']={}
@@ -204,13 +205,14 @@ func _reset_state() -> void:
 func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
 	var save_data : Dictionary[String,Variant] = _data
+	save_data.merge(super())
 	save_data.set('exit_data',exit_data.data)
 	save_data.set('standard_inventory',standard_inventory.items_data)
 	var temp_adv_inv : Array[Dictionary] = advance_inventory.get_items_data()
 
 	save_data.set('advance_inventory',temp_adv_inv)
 	
-	save_data.set('data',get_metadata())
+	#save_data.set('data',get_metadata())
 	save_data.set('_fish_log', fish_log._data)
 	
 	return save_data
@@ -220,7 +222,11 @@ func get_save_data()->Dictionary[String,Variant]:
 #all that it is ready(aka loaded)
 #TODO: make sure a new game case is handled so the defaults are correctly applied
 func load_data(new_data:Dictionary[String,Variant]={})->void:
+	super(new_data)
 	_data = new_data
+	#erasing metadata since it should be set as resoirce meta after super is called
+	#and there no need to keep two copies.
+	_data.erase("_metadata")
 	exit_data.data = new_data.get('exit_data',exit_data.data)
 	standard_inventory.items_data = new_data.get('standard_inventory', standard_inventory.items_data)
 	var temp_adv_inv : Array[Dictionary] = new_data.get('advance_inventory', [] as Array[Dictionary])
@@ -230,7 +236,7 @@ func load_data(new_data:Dictionary[String,Variant]={})->void:
 	update_advance_inventory_size()
 	advance_inventory.load_items(temp_adv_inv)
 	
-	set_metadata(new_data.get('data', get_metadata()))
+	#set_metadata(new_data.get('data', get_metadata()))
 	#data = new_data.get('data', data)
 	
 	fish_log._data = _data.get('_fish_log',fish_log._data)

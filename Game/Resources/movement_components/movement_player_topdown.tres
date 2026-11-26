@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="Movement_Component_2D" format=3 uid="uid://dkk0feq5rkppx"]
 
-[ext_resource type="Script" uid="uid://krd8d8rl2p4u" path="res://Common/Features/Components/MovementComponent2D.gd" id="1_wsiev"]
+[ext_resource type="Script" uid="uid://krd8d8rl2p4u" path="res://addons/game_base/components/movement_component2d.gd" id="1_wsiev"]
 
 [resource]
 script = ExtResource("1_wsiev")

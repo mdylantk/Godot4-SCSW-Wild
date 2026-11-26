@@ -28,7 +28,6 @@ class_name Base_Level extends Node
 @export var player_state : Player_State = Player_State.get_default_instance()
 @export var world_state : World_State = World_State.get_default_instance()
 
-@export var world_type : World_State.WORLD_TYPE = World_State.WORLD_TYPE.TOP_DOWN
 @export var use_default_gravity : bool = false
 @export var gravity : float = 0
 @export var gravity_direction : Vector2

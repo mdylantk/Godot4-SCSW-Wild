@@ -4,11 +4,23 @@ class_name State extends Resource
 signal notify(type:String, message:Variant)
 ##Called when a Variant value or certain properties are changed
 ##TODO: add types and decided if the name is fine since value feels more number like
-signal value_changed(property:String, new_value:Variant, old_value:Variant, sub_properties:Array[String])
+signal value_changed(property:String, new_value:Variant, old_value:Variant)
 ##Called before the a saving so data can be updated.
 signal saving()
 ##called when data is finished being loaded.
 signal loaded()
+
+##state if the state is used as a template and should be cloned when assigned
+@export var template_state:bool = false
+
+##the metadata to set on load or reset. metadata is used to store data 
+##for generic states, but extended states should provided named and typed feilds
+@export var default_metadata:Dictionary[String,Variant] = {}
+
+#TODO: states should have a flag to state if they are shared(default) or a template(duplicated on set)
+#also maybe add a setter and getter for all states and a notify system for them
+#though need to try to save and load as basic type. other states convert to a vaild save data
+#could keep storing as metadata though
 
 ##Returns a state if a default exists.
 ##NOTE: may remove this and have the nodes decided how to get the ref to this
@@ -79,7 +91,6 @@ static func vector_to_array(vector:Variant)->Array:
 		return [vector]
 	return []
 
-
 ##this will set an id in metadata while also notifing it was changed
 func set_data(key: String, value: Variant) -> void:
 	var old_value = null
@@ -87,12 +98,12 @@ func set_data(key: String, value: Variant) -> void:
 		old_value = get_meta(key)
 	if old_value != value:
 		set_meta(key,value)
-		value_changed.emit(key, value, old_value, [] as Array[String])
-
-#NOTE: object meta could be used for the state, but
-#the state should handle it in a diffrent way.
-#The base stare has this as a way to be used
-#without extending it
+		value_changed.emit(key, value, old_value)
+		
+##this is another way of calling get_meta to match get_data
+##it may be overriden if metadata is not being used to extend the state
+func get_data(key: String, default: Variant) -> Variant:
+	return get_meta(key, default)
 
 func is_meta_key_public(id:Variant)->bool:
 	if !(id.begins_with("_") || id.begins_with(".")):
@@ -117,12 +128,19 @@ func clear_metadata():
 	for id in get_meta_list():
 		if is_meta_key_public(id):
 			remove_meta(id)
-
-##trigger the saving event as well as compile all savable properties into a dict
-func fetch_save_data()->Dictionary[String,Variant]:
+	
+func _reset_state() -> void:
+	clear_metadata()
+	set_metadata(default_metadata)
+	
+func get_save_data()->Dictionary[String,Variant]:
 	saving.emit()
-	return {}
+	var save_data : Dictionary[String,Variant] = {"_metadata":get_metadata()}
+	return save_data
 
-##load the data passed and then triggers the loaded event
-func load_data(data:Dictionary[String,Variant]={})->void:
+func load_data(new_data:Dictionary[String,Variant]={})->void:
+	if (new_data.is_empty()):
+		set_metadata(default_metadata)
+	else:
+		set_metadata(new_data.get("_metadata", default_metadata))	
 	loaded.emit()

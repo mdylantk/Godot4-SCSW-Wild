@@ -4,8 +4,6 @@ class_name World_State extends State
 ##LOAD type refers restoring level from save
 ##EXIT type refers to using exit data to set up the level
 enum TRANSFER_TYPE{NONE,LOAD,EXIT}
-##world types for configuring the physics and other features
-enum WORLD_TYPE{TOP_DOWN, PLATFORM, OTHER}
 
 signal level_transfer(uid:String)
 signal level_loaded(new_level : Base_Level)
@@ -19,9 +17,6 @@ signal level_ready()
 		default_level_uid = value
 		level_uid = value
 		
-@export var world_type : WORLD_TYPE = WORLD_TYPE.TOP_DOWN #or "platform" #or others. may use an enum
-#@export var gravity_enable : bool = false #not needed. world type can disable it or zero gravity direction can also
-
 #This may be used more as a ref of the current level
 #but player's exit_data may keep the last and current level
 #for saving reasons
@@ -61,22 +56,19 @@ func load_level(uid:String, type:TRANSFER_TYPE = TRANSFER_TYPE.NONE)->void:
 	
 
 func _reset_state() -> void:
+	super()
 	level_uid = default_level_uid
 
 func get_save_data()->Dictionary[String,Variant]:
-	var save_data : Dictionary[String,Variant]
 	saving.emit()
+	var save_data : Dictionary[String,Variant] = super()
 	save_data.set('level_uid',level_uid)
-	save_data.set('data',get_metadata())
+	#save_data.set('data',get_metadata())
 	return save_data
 
 func load_data(new_data:Dictionary[String,Variant]={})->void:
+	super(new_data)
 	level_uid = new_data.get('level_uid',level_uid)
-	set_metadata(new_data.get('data', get_metadata()))
+	#set_metadata(new_data.get('data', get_metadata()))
 	loaded.emit()
 	
-func gravity_enable():
-	#will return true unless type disable it
-	if (world_type == WORLD_TYPE.TOP_DOWN):
-		return false
-	return true

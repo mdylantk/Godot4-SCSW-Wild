@@ -21,6 +21,9 @@ func set_language(index:int = -1) -> String:
 		return language_keys[index]
 	return ""
 
+#TODO NOTE: figure out how to handle client state. it not handling stuff like regular state is
+#it dose not need to store a config file and could be updated as itself
+#but need to see how the old approch was handle to properly switch it over
 func load_data(data:Dictionary[String,Variant]={})->void:
 	print_debug('MEOW LOAD DATA IN CLIENT STATE CALLED')
 	var sound_volume = config_file.get_value("sound","music_volume",30)
